@@ -1,0 +1,39 @@
+{
+  name: 'invoice approval',             // workflow name
+  initialState: 'new',                  // init state
+  finalStates = ['payed', 'canceled'],  // final states
+  objectStateFieldName = 'status',       // object field where state is stored
+  transitions: [
+    {
+        from: 'new',                    // from state (required)
+        event: 'match',                 // event (required)
+        guard: 'new-to-matched-guard',  // guard (predefined function name, optional)
+        to: 'matched',                  // to state (required)
+        action: 'new-to-matched-action' // action (predefined function name, optional)
+    },
+    ...
+  ]
+}
+
+
+FSM.read
+- workflow definition
+- action and guards implementation
+
+var workflowDefinitionProvider = WorkflowDefinitionProvider()
+// register workflow
+workflowDefinitionProvider.register({definition, guards, actions})
+
+var workflow = new Workflow(workflowDefinitionProvider, worlkflowName);
+
+// both 'start' and 'sendEvent' return Promise e.g. async execution
+workflow.start({object})                 // start/initialize workflow
+workflow.sendEvent({object, event, data}) // send event
+workflow.availableEvents({object})            // list of available events
+workflow.currentState({object})           // current state
+
+workflow.is({state, object})              // is object in state
+workflow.isFinal({state})                 // state is final or not
+workflow.can({state, object})             // whether event is available
+workflow.cannot({event, object})          // whether event is not available
+...
