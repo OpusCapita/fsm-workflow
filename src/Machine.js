@@ -43,7 +43,14 @@ export default class Machine {
   }
 
   // returns a  lits of events (names) that are available at current object state
-  availableEvents({object}) {
+  availableTransitions({object}) {
+    const from = this.currentState({object});
+    // we can cut each transition to 'event' and 'auto', but not now (may be later)
+    return this.machineDefinition.findAvailableTransitions({
+      from,
+      object,
+      context
+    });
   }
 
 }

@@ -11,7 +11,7 @@ const createMachineCorrectly = ({promise} = {}) => {
   );
 }
 
-describe('constructing machine', function() {
+describe('machine: constructor', function() {
   it('should throw Error as machineDefinitionProvider is not defined', function() {
     assert.throws(() => {new Machine()}, Error);
   });

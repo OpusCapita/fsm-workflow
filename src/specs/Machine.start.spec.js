@@ -14,8 +14,7 @@ const createMachine = ({} = {}) => {
   );
 }
 
-describe('start machine', function() {
-
+describe('machine: start', function() {
   it('returns promise', function() {
     const result = createMachine().start({
       object: {

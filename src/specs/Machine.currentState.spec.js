@@ -10,8 +10,8 @@ const createMachine = () => {
   );
 }
 
-describe('current object state within the machine', function() {
-  it('has corect value', function() {
+describe('machine: currentState', function() {
+  it('has returns correct value', function() {
     const state = 'new';
     const object = {
       [MachineDefinition.getDefaultObjectStateFieldName()]: state

@@ -55,10 +55,19 @@ var machineDefinition = new MachineDefinition({schema, guards, actions})
 var machine = new Machine(machineDefinition, context);
 
 // both 'start' and 'sendEvent' return Promise e.g. async execution
-machine.start({object})                 // start/initialize workflow
-machine.sendEvent({object, event, data}) // send event
-machine.availableEvents({object})            // list of available events
-machine.currentState({object})           // current state
+
+// start/initialize workflow
+machine.start({object})
+
+// send event
+machine.sendEvent({object, event, data})
+
+// list of available events: {event, auto}, e.g. event
+// and auto(matic) functions for checking if event should/could be sent automatically
+machine.availableTransitions({object})
+
+// gets current state
+machine.currentState({object})
 
 machine.is({state, object})              // is object in state
 machine.isFinal({state})                 // state is final or not
