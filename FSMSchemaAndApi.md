@@ -1,5 +1,5 @@
 
-### FSM Schema
+### Machine Schema
 
 ```
 {
@@ -44,19 +44,27 @@
 }
 ```
 
-FSM definition
-- workflow schema // transitions, initialState, finalState, etc.
-// todo describe more how action is declared (name, arguments), how its call
-// is defined (explicit/implicit parameters)
-- action
-// todo describe more how action is declared (name, arguments), how its call
-// is defined (explicit/implicit parameters)
-- guards
-// conditions that could be checked/called from outside the FSM to take a
-// decision if transition should be executed automatically
-// (defined in the same way as guards)
-- auto
+### Machine definition
 
+<dl>
+  <dt>schema</dt>
+  <dd>transitions, initialState, finalState, etc.</dd>
+  
+  <dt>actions</dt>
+  <dd>predefined named actions, <i>todo</i> describe more how action is declared (name, arguments), how its call is defined (explicit/implicit parameters)
+  </dd>
+
+  <dt>guards</dt> 
+  <dd>conditions that could be checked/called from outside the FSM to take a decision if transition should be executed automatically, <i>todo</i> describe/define in detail</dd>
+
+  <dt>autos</dt> 
+  <dd>conditions specified in schema that gives possibility to application (external task manager) possibilit to determine whether event shoud/could be sent automatically, <i>todo</i> describe/define in detail</dd>
+</dl>
+
+
+### FSM API
+
+```
 var machineDefinition = new MachineDefinition({schema, guards, actions})
 // register workflow
 var machine = new Machine(machineDefinition, context);
@@ -86,3 +94,4 @@ machine.cannot({event, object})    // whether event is not available
 // hooks
 machine.onStartTransition()   // returns promise
 machine.onFinishTransition()  // returns promise
+```
