@@ -2,7 +2,7 @@ import assert from 'assert';
 import Machine from '../machine';
 import MachineDefinition from '../MachineDefinition';
 
-const createMachineCorrectly = ({promise} = {}) => {
+const createMachineCorrectly = ({ promise } = {}) => {
   return new Machine(
     {
       machineDefinition: new MachineDefinition(),
@@ -13,16 +13,20 @@ const createMachineCorrectly = ({promise} = {}) => {
 
 describe('machine: constructor', function() {
   it('should throw Error as machineDefinitionProvider is not defined', function() {
-    assert.throws(() => {new Machine()}, Error);
+    assert.throws(() => {
+      return new Machine()
+    }, Error);
   });
 
   it('should throw Error as machine name is not defined', function() {
-    assert.throws(() => {new Machine({machineDefinitionProvider: {}});}, Error);
+    assert.throws(() => {
+      return new Machine({ machineDefinitionProvider: {} });
+    }, Error);
   });
 
   it('should throw Error as machine definition is not found', function() {
     assert.throws(() => {
-      new Machine(
+      return new Machine(
         {
           machineDefinitionProvider: {
             definitions: {
@@ -46,7 +50,7 @@ describe('machine: constructor', function() {
 
   it('check passed machine promise', function() {
     const promise = 'MegaPromise';
-    const w = createMachineCorrectly({promise});
+    const w = createMachineCorrectly({ promise });
     assert.equal(w.promise, promise);
   });
 });

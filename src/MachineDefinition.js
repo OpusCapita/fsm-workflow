@@ -1,5 +1,5 @@
 export default class MachineDefinition {
-  constructor({schema, guards = {}, actions = {}, promise = MachineDefinition.defaultPromise()} = {}) {
+  constructor({ schema, guards = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
     // todo validate schema
     if (!promise) {
       throw new Error('promise is undefined');
@@ -28,7 +28,7 @@ export default class MachineDefinition {
     return require('bluebird').Promise
   }
 
-  findAvailableTransitions({from, event, object, context} = {}) {
+  findAvailableTransitions({ from, event, object, context } = {}) {
     // if from is not specified, then no transition is available
     if (!from) {
       // to do throw proper error
@@ -37,7 +37,7 @@ export default class MachineDefinition {
     const { transitions } = this.schema;
     // if not transitions, the return empty list
     if (!transitions) {
-      return this.promise.resolve({transitions: []});
+      return this.promise.resolve({ transitions: [] });
     }
     const checkFrom = (transition) => {
       return transition.from === from;
@@ -50,7 +50,7 @@ export default class MachineDefinition {
       return transition.event === event;
     }
     const checkGuards = (transition) => {
-      const {guards, from, to, event} = transition;
+      const { guards, from, to, event } = transition;
       // if guards are undefined
       if (!guards) {
         return true;
@@ -60,12 +60,13 @@ export default class MachineDefinition {
         const guard = this.guards[guards[i].name];
         // guard is defined in schema, but is not really defined -> error!!!
         if (!guard) {
+          // eslint-disable-next-line max-len
           throw new Error(`Guard '${guards[i].name}' is specified in one the transitions but is not found/implemented!`);
         }
         // if guard return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
         // additionally object and context are also passed
-        if (!guard({...guards[i].arguments, from, to, event, object, context})) {
+        if (!guard({ ...guards[i].arguments, from, to, event, object, context })) {
           return false
         }
       }
@@ -82,12 +83,12 @@ export default class MachineDefinition {
               checkGuards(transition);
           }
         );
-        resolve({transitions: foundTransitions});
-      } catch(e) {
+        resolve({ transitions: foundTransitions });
+      } catch (e) {
         reject(e);
       }
     });
   }
 
-  static getDefaultObjectStateFieldName() { return 'status' };
+  static getDefaultObjectStateFieldName() { return 'status' }
 }

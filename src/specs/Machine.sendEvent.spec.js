@@ -2,8 +2,8 @@ import assert from 'assert';
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
-let createMachine = ({actions = {}} = {}) => {
-  return new Machine (
+let createMachine = ({ actions = {} } = {}) => {
+  return new Machine(
     {
       machineDefinition: new MachineDefinition({
         schema: {
@@ -49,26 +49,26 @@ let createMachine = ({actions = {}} = {}) => {
 describe('machine: sendEvent', function() {
   it('sends "move" event that moves object to the next state correctly', function() {
     const machine = createMachine();
-    const object = {status: 'started'};
+    const object = { status: 'started' };
 
     return machine.sendEvent({
       object,
       event: 'move'
-    }).then(({object}) => {
+    }).then(({ object }) => {
       assert.equal(object.status, 'first-stop');
     });
   });
 
   it('sends "step-back" event that does not exist', function() {
     const machine = createMachine();
-    const object = {status: 'first-stop'};
+    const object = { status: 'first-stop' };
 
     return machine.sendEvent({
       object,
       event: 'step-back'
     }).then(() => {
       assert.fail(null, null, "event/transition 'step-back' is not available from state 'first-stop'");
-    }).catch(({object, from, event, message}) => {
+    }).catch(({ object, from, event, message }) => {
       // object status is not changed
       assert.equal(object.status, 'first-stop');
       assert.equal(from, 'first-stop');
@@ -77,36 +77,37 @@ describe('machine: sendEvent', function() {
     });
   });
 
-  it ('sends "move (action is not defined)" that requires action execution, but action is not defined/implemented', () => {
+  // eslint-disable-next-line max-len
+  it('sends "move (action is not defined)" that requires action execution, but action is not defined/implemented', () => {
     const machine = createMachine();
-    const object = {status: 'first-stop'};
+    const object = { status: 'first-stop' };
 
     return machine.sendEvent({
       object,
       event: "move (action is not defined)"
     }).then(() => {
+      // eslint-disable-next-line max-len
       assert.fail(null, null, "event/transition 'move (action is not defined)' should fail as sepcified action(s) is not defined");
-    }).catch(({object, from, event, message}) => {
+    }).catch(({ object, from, event, message }) => {
       // console.log(message);
       assert(message);
     });
-
   });
 
-  it ('sends "move (action is defined)" that requires predefined action execution', () => {
+  it('sends "move (action is defined)" that requires predefined action execution', () => {
     const sendEmailResult = {};
     const actions = {
-      'sendEmail': ({first, second, object, from, to, event}) => {
+      'sendEmail': ({ first, second, object, from, to, event }) => {
         return sendEmailResult;
       }
     };
-    const machine = createMachine({actions});
-    const object = {status: 'first-stop'};
+    const machine = createMachine({ actions });
+    const object = { status: 'first-stop' };
 
     return machine.sendEvent({
       object,
       event: "move (action is defined)"
-    }).then(({object, actionExecutionResutls}) => {
+    }).then(({ object, actionExecutionResutls }) => {
       assert.equal(object.status, 'second-stop');
       assert(actionExecutionResutls);
       assert.equal(actionExecutionResutls.length, 1);

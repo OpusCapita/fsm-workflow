@@ -16,7 +16,6 @@ describe('machine: currentState', function() {
     const object = {
       [MachineDefinition.getDefaultObjectStateFieldName()]: state
     };
-    assert.equal(createMachine().currentState({object}), state);
+    assert.equal(createMachine().currentState({ object }), state);
   });
-
 });

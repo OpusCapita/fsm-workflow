@@ -14,7 +14,7 @@ describe('machine: findAvailableTransitions', function() {
       sendEmail: () => {}
     };
 
-    const createMachine = ({context = {}}) => {
+    const createMachine = ({ context = {} }) => {
       return new Machine(
         {
           machineDefinition: {
@@ -32,8 +32,8 @@ describe('machine: findAvailableTransitions', function() {
       );
     }
 
-    const machine = createMachine({context});
+    const machine = createMachine({ context });
 
-    return machine.availableTransitions({object});
+    return machine.availableTransitions({ object });
   });
 });

@@ -3,7 +3,7 @@ import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
 const createMachine = ({} = {}) => {
-  return new Machine (
+  return new Machine(
     {
       machineDefinition: new MachineDefinition({
         schema: {
@@ -30,7 +30,7 @@ describe('machine: start', function() {
         status: 'none'
       }
     });
-    return result.then(({object}) => {
+    return result.then(({ object }) => {
       // console.log(`object '${JSON.stringify(object)}'`)
       assert.equal(object.status, 'started');
     })

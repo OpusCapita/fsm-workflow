@@ -10,7 +10,7 @@ describe('machine definition: findAvailableTransitions', function() {
 
   it("returns empty list if transition are not defined in machine schema", function() {
     // 0 transitions
-    return new MachineDefinition().findAvailableTransitions({from: 'anyState'}).then(({transitions}) => {
+    return new MachineDefinition().findAvailableTransitions({ from: 'anyState' }).then(({ transitions }) => {
       assert(transitions);
       assert.equal(transitions.length, 0);
     });
@@ -41,46 +41,46 @@ describe('machine definition: findAvailableTransitions', function() {
       }
     )
     return Promise.all([
-      machineDefinition.findAvailableTransitions({from: 'a'}).then(({transitions}) => {
+      machineDefinition.findAvailableTransitions({ from: 'a' }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 2);
       }),
       machineDefinition.findAvailableTransitions({
         from: 'a',
         event: 'a->b'
-      }).then(({transitions}) => {
+      }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 1);
       }),
       machineDefinition.findAvailableTransitions({
         from: 'a',
         event: 'a->c'
-      }).then(({transitions}) => {
+      }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 1);
       }),
       machineDefinition.findAvailableTransitions({
         from: 'a',
         event: 'a->a'
-      }).then(({transitions}) => {
+      }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 0);
       }),
-      machineDefinition.findAvailableTransitions({from: 'b'}).then(({transitions}) => {
+      machineDefinition.findAvailableTransitions({ from: 'b' }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 1);
       }),
       machineDefinition.findAvailableTransitions({
         from: 'b',
         event: 'b->c'
-      }).then(({transitions}) => {
+      }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 1);
       }),
       machineDefinition.findAvailableTransitions({
         from: 'b',
         event: 'b->a'
-      }).then(({transitions}) => {
+      }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 0);
       })
@@ -109,11 +109,11 @@ describe('machine definition: findAvailableTransitions', function() {
           ]
         },
         guards: {
-          'a-to-b': ({object}) => {
+          'a-to-b': ({ object }) => {
             return object.enabled;
           }
         }
-    });
+      });
 
     // todo: check exact transitions, not only array length
     it("guard forbids transition", function() {
