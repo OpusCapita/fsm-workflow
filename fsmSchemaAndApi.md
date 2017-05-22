@@ -1,4 +1,3 @@
-
 ### Machine Schema
 
 ```
@@ -49,15 +48,15 @@
 <dl>
   <dt>schema</dt>
   <dd>transitions, initialState, finalState, etc.</dd>
-  
+
   <dt>actions</dt>
   <dd>predefined named actions, <i>todo</i> describe more how action is declared (name, arguments), how its call is defined (explicit/implicit parameters)
   </dd>
 
-  <dt>guards</dt> 
+  <dt>guards</dt>
   <dd>conditions that could be checked/called from outside the FSM to take a decision if transition should be executed automatically, <i>todo</i> describe/define in detail</dd>
 
-  <dt>autos</dt> 
+  <dt>autos</dt>
   <dd>conditions specified in schema that gives possibility to application (external task manager) possibilit to determine whether event shoud/could be sent automatically, <i>todo</i> describe/define in detail</dd>
 </dl>
 
