@@ -21,12 +21,15 @@ condition/expression/function = guard)
 - task list is based on domain object (could be done externally with the
 help of FSM by accessing available events)
 
-### Later
+#### Later
 
 - graphical editor
 - logging
 - analysis
 - automatic (times) transitions
+
+#### [FSM definition and API](fsmSchemaAndApi.md)
+
 
 ### Existing FSM libs review
 
