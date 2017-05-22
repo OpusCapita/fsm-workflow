@@ -1,5 +1,4 @@
-## fsm-workflow
-FSM workflow (for Node.js)
+## FSM workflow (for Node.js)
 
 ### Introduction
 Workflow is based on Finite State Machine
