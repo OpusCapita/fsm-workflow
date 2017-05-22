@@ -3,18 +3,20 @@ import MachineDefinition from '../MachineDefinition';
 
 describe('machine definition: findAvailableTransitions', function() {
   it("throws an error if 'from' is not specified", function() {
-    assert.throws(() => {
-      new MachineDefinition().findAvailableTransitions();
-    });
+    return new MachineDefinition().findAvailableTransitions().then(() => {
+      assert.equal("then method is called", "error is thrown", "it is expected that error is thrown")
+    }).catch((e) => {assert(e, 'Error is thrown as expected')});
   });
 
   it("returns empty list if transition are not defined in machine schema", function() {
     // 0 transitions
-    const transitions = new MachineDefinition().findAvailableTransitions({from: 'anyState'});
-    assert(transitions && transitions.length === 0);
+    return new MachineDefinition().findAvailableTransitions({from: 'anyState'}).then(({transitions}) => {
+      assert(transitions);
+      assert.equal(transitions.length, 0);
+    });
   });
 
-  it("returns appropriate transitions for specified 'from' and 'event'", function() {
+  it("finds appropriate transitions for specified 'from' and 'event'", function() {
     const machineDefinition = new MachineDefinition(
       {
         schema: {
@@ -38,53 +40,54 @@ describe('machine definition: findAvailableTransitions', function() {
         }
       }
     )
-    // todo: check exact transitions, not only array length
-    assert.equal(
-      machineDefinition.findAvailableTransitions({from: 'a'}).length,
-      2
-    );
-    assert.equal(
+    return Promise.all([
+      machineDefinition.findAvailableTransitions({from: 'a'}).then(({transitions}) => {
+        assert(transitions);
+        assert.equal(transitions.length, 2);
+      }),
       machineDefinition.findAvailableTransitions({
         from: 'a',
         event: 'a->b'
-      }).length,
-      1
-    );
-    assert.equal(
+      }).then(({transitions}) => {
+        assert(transitions);
+        assert.equal(transitions.length, 1);
+      }),
       machineDefinition.findAvailableTransitions({
         from: 'a',
         event: 'a->c'
-      }).length,
-      1
-    );
-    assert.equal(
+      }).then(({transitions}) => {
+        assert(transitions);
+        assert.equal(transitions.length, 1);
+      }),
       machineDefinition.findAvailableTransitions({
         from: 'a',
         event: 'a->a'
-      }).length,
-      0
-    );
-    assert.equal(
-      machineDefinition.findAvailableTransitions({from: 'b'}).length,
-      1
-    );
-    assert.equal(
+      }).then(({transitions}) => {
+        assert(transitions);
+        assert.equal(transitions.length, 0);
+      }),
+      machineDefinition.findAvailableTransitions({from: 'b'}).then(({transitions}) => {
+        assert(transitions);
+        assert.equal(transitions.length, 1);
+      }),
       machineDefinition.findAvailableTransitions({
         from: 'b',
         event: 'b->c'
-      }).length,
-      1
-    );
-    assert.equal(
+      }).then(({transitions}) => {
+        assert(transitions);
+        assert.equal(transitions.length, 1);
+      }),
       machineDefinition.findAvailableTransitions({
         from: 'b',
         event: 'b->a'
-      }).length,
-      0
-    );
+      }).then(({transitions}) => {
+        assert(transitions);
+        assert.equal(transitions.length, 0);
+      })
+    ]);
   });
 
-  it("return transition only if 'guard accepts object'", function() {
+  describe("'guarded' transitions", function() {
     const machineDefinition = new MachineDefinition(
       {
         schema: {
@@ -111,24 +114,28 @@ describe('machine definition: findAvailableTransitions', function() {
           }
         }
     });
+
     // todo: check exact transitions, not only array length
-    assert.equal(
-      machineDefinition.findAvailableTransitions({
+    it("guard forbids transition", function() {
+      return machineDefinition.findAvailableTransitions({
         from: 'a',
         object: {
           enabled: false
         }
-      }).length,
-      0
-    );
-    assert.equal(
-      machineDefinition.findAvailableTransitions({
+      }).then((result) => {
+        return assert.equal(result.transitions.length, 0)
+      });
+    });
+
+    it("guard permits transition", function() {
+      return machineDefinition.findAvailableTransitions({
         from: 'a',
         object: {
           enabled: true
         }
-      }).length,
-      1
-    );
+      }).then((result) => {
+        return assert.equal(result.transitions.length, 1)
+      });
+    });
   });
 });

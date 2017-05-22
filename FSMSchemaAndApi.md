@@ -44,11 +44,18 @@
 }
 ```
 
-FSM.read
-- workflow schema
+FSM definition
+- workflow schema // transitions, initialState, finalState, etc.
+// todo describe more how action is declared (name, arguments), how its call
+// is defined (explicit/implicit parameters)
 - action
+// todo describe more how action is declared (name, arguments), how its call
+// is defined (explicit/implicit parameters)
 - guards
-- ... later "conditions for automatic execution(event sending)"
+// conditions that could be checked/called from outside the FSM to take a
+// decision if transition should be executed automatically
+// (defined in the same way as guards)
+- auto
 
 var machineDefinition = new MachineDefinition({schema, guards, actions})
 // register workflow
@@ -59,18 +66,23 @@ var machine = new Machine(machineDefinition, context);
 // start/initialize workflow
 machine.start({object})
 
-// send event
-machine.sendEvent({object, event, data})
-
 // list of available events: {event, auto}, e.g. event
 // and auto(matic) functions for checking if event should/could be sent automatically
 machine.availableTransitions({object})
 
-// gets current state
-machine.currentState({object})
+// send event
+// returns promise
+// in case of successful transition then function will be called with one parameters
+// that is an JSON with the following structure:
+// - object - object in new state (the same reference that is passed as parameter)
+machine.sendEvent({event, object, request})
 
-machine.is({state, object})              // is object in state
-machine.isFinal({state})                 // state is final or not
-machine.can({state, object})             // whether event is available
-machine.cannot({event, object})          // whether event is not available
-...
+machine.currentState({object})     // gets current state
+machine.is({state, object})        // is object in state
+machine.isFinal({state})           // state is final or not
+machine.can({state, object})       // whether event is available
+machine.cannot({event, object})    // whether event is not available
+
+// hooks
+machine.onStartTransition()   // returns promise
+machine.onFinishTransition()  // returns promise

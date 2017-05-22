@@ -1,6 +1,9 @@
 export default class MachineDefinition {
-  constructor({schema, guards, actions} = {}) {
-    // todo validate input data
+  constructor({schema, guards = {}, actions = {}, promise = MachineDefinition.defaultPromise()} = {}) {
+    // todo validate schema
+    if (!promise) {
+      throw new Error('promise is undefined');
+    }
     // console.log(`schema '${JSON.stringify(schema)}'`);
     this.schema = {
       objectStateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
@@ -8,25 +11,33 @@ export default class MachineDefinition {
     };
     // guards is an object, where each property is implemented guard name and
     // value is guard(function) itself
-    this.guards = guards || {};
+    this.guards = guards;
     // actions is an object, where each property is implemented action name and
     // value is action(function) itself
-    this.actions = actions || {};
-    // create hashes (JS object) for fast search with name as a property
-    // this._guardsByName = guardsByName(this.guards);
-    // this._actionsByName = actionsByName(this.actions);
+    this.actions = actions;
+    this.promise = promise;
+  }
+
+  static defaultPromise() {
+    // if machine works in Node, the Promise is available out of the box
+    // e.g. global.Promise
+    if (global && global.Promise) {
+      return global.Promise
+    }
+    // otherwise using bluebird implementation
+    return require('bluebird').Promise
   }
 
   findAvailableTransitions({from, event, object, context} = {}) {
     // if from is not specified, then no transition is available
     if (!from) {
       // to do throw proper error
-      throw new Error("'from' is not defined`");
+      return this.promise.reject(new Error("'from' is not defined"));
     }
     const { transitions } = this.schema;
     // if not transitions, the return empty list
     if (!transitions) {
-      return [];
+      return this.promise.resolve({transitions: []});
     }
     const checkFrom = (transition) => {
       return transition.from === from;
@@ -61,14 +72,21 @@ export default class MachineDefinition {
 
       return true;
     }
-    console.log(`transitions '${JSON.stringify(transitions)}'`);
-    return transitions.filter(
-      (transition) => {
-        return checkFrom(transition) &&
-          checkEvent(transition) &&
-          checkGuards(transition);
+    // console.log(`transitions '${JSON.stringify(transitions)}'`);
+    return new Promise((resolve, reject) => {
+      try {
+        const foundTransitions = transitions.filter(
+          (transition) => {
+            return checkFrom(transition) &&
+              checkEvent(transition) &&
+              checkGuards(transition);
+          }
+        );
+        resolve({transitions: foundTransitions});
+      } catch(e) {
+        reject(e);
       }
-    );
+    });
   }
 
   static getDefaultObjectStateFieldName() { return 'status' };
