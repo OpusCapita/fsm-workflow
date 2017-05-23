@@ -1,7 +1,12 @@
-var blessed = require("blessed");
+const blessed = require("blessed");
 
-const createForm = ({screen, formProperties = {}, availableEvents = ['a', 'b'], onSubmit = () => {}}) => {
-  var form = blessed.form({
+const createForm = ({
+  screen,
+  formProperties = {},
+  availableEvents = [],
+  onSubmit = () => {}
+}) => {
+  const form = blessed.form({
     mouse: true,
     keys: true,
     vi: true,
@@ -16,56 +21,39 @@ const createForm = ({screen, formProperties = {}, availableEvents = ['a', 'b'], 
   });
 
   form.on("submit", function(data) {
-    availableEvents.find((event) => {
+    availableEvents.find(event => {
       if (data[event]) {
-        onSubmit({event});
+        onSubmit({ event });
         return;
-        // let content = output.getContent();
-        // let content = '';
-        // content = `sending event: '${event}'\n` + content;
-        // console.log(content)
-        // output.setContent(content);
-        // screen.render();
       }
-    })
+    });
   });
 
-  // var layout = blessed.layout({
-  //   parent: form,
-  //   top: 'center',
-  //   left: 'center',
-  //   width: '100%',
-  //   height: '100%',
-  //   border: 'line'
-  // });
-
-  var set = blessed.radioset({
+  const radioset = blessed.radioset({
     parent: form,
-    shrink: true,
-  });
+    shrink: true
+  })
 
   let top = 0;
-
-  for (var i = 0; i < availableEvents.length; i++) {
-    blessed.radiobutton({
-      parent: set,
+  const options = [];
+  for (let i = 0; i < availableEvents.length; i++) {
+    options.push(blessed.radiobutton({
+      parent: radioset,
       mouse: true,
       keys: true,
       shrink: true,
       top: top++,
-      // left: 0,
       shrink: true,
       name: availableEvents[i],
       content: availableEvents[i]
-    });
+    }));
   }
 
-  var submit = blessed.button({
+  const submit = blessed.button({
     parent: form,
     mouse: true,
     keys: true,
     top: 10,
-    // left: 0,
     shrink: true,
     name: "submit",
     content: "submit",
@@ -80,15 +68,17 @@ const createForm = ({screen, formProperties = {}, availableEvents = ['a', 'b'], 
         bg: "blue"
       }
     }
-    // ,
-    // border: 'line'
   });
 
   submit.on("press", function() {
     form.submit();
   });
 
-  // form.submit();
+  if (options.length > 0) {
+    options[0].focus();
+  }
+  screen.render();
+
   return form;
 };
 

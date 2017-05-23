@@ -1,48 +1,36 @@
-var chalk = require("chalk");
-var clear = require("clear");
-var CLI = require("clui");
-var figlet = require("figlet");
-var inquirer = require("inquirer");
-var Preferences = require("preferences");
-var Spinner = CLI.Spinner;
-var lodash = require("lodash");
-var fs = require("fs");
+let fs = require("fs");
 
-var createForm = require('./index-form').default;
+let createForm = require('./index-form').default;
 
-var MachineDefinition = require('../../src/MachineDefinition').default;
-var Machine = require('../../src/Machine').default;
+let MachineDefinition = require('../../src/MachineDefinition').default;
+let Machine = require('../../src/Machine').default;
 
-// var fsmSchema = require('./fsm-schema.json');
-var machineSchemaAsText = fs.readFileSync('./machine-schema.json', 'utf8')
+let machineSchemaAsText = fs.readFileSync('./machine-schema.json', 'utf8')
 
-var machineDefinition = new MachineDefinition({
+let machineDefinition = new MachineDefinition({
   schema: JSON.parse(machineSchemaAsText)
 });
 
-var invoiceMachine = new Machine({machineDefinition});
+let invoiceMachine = new Machine({machineDefinition});
 
-var invoice = {
+let invoice = {
   status: 'none'
 };
 
-clear();
-// console.log(
-//   chalk.yellow(
-//     figlet.textSync('Invoice machine', { horizontalLayout: 'full' })
-//   )
-// );
-
-var blessed = require('blessed');
-var program = blessed.program()
+let blessed = require('blessed');
+let program = blessed.program()
 
 // Create a screen object.
-var screen = blessed.screen({
-  smartCSR: true
+let screen = blessed.screen({
+  smartCSR: true,
+  cursor: {
+    shape: 'line',
+    blink: true,
+  }
 });
 
 // title box
-var titleBox = blessed.box({
+let titleBox = blessed.box({
   parent: screen,
   top: 0,
   left: 0,
@@ -56,39 +44,37 @@ var titleBox = blessed.box({
 
 // let availableEvents = [];
 
-const appendToOutput = (text) => {
-  let content = output.getContent();
+const logMessage = (text) => {
+  let content = outputBox.getContent();
   content = text + '\n' + content.trim();
-  output.setContent(content);
+  outputBox.setContent(content);
+  screen.render();
+}
+const updateObjectContent = (object) => {
+  objectBox.setContent(JSON.stringify(invoice, null, '\t'));
   screen.render();
 }
 
 const handleFormSubmit = ({event}) => {
   // console.log('opa');
-  appendToOutput(`Sending event '${event} ...'\n`);
+  logMessage(`Sending event '${event} ...'\n`);
   invoiceMachine.sendEvent({
     object: invoice,
     event,
   }).then(({object}) => {
-    appendToOutput("invoice machine has been started...");
     invoice = object;
-    objectBox.setContent(JSON.stringify(invoice, null, '\t'))
-    screen.render();
-    appendToOutput("finding events that are available...");
-    return invoiceMachine.availableTransitions({
-      object: invoice
-    })
+    logMessage("invoice machine has been started...");
+    updateObjectContent({object});
+    logMessage("finding events that are available...");
+    return invoiceMachine.availableTransitions({object})
   }).then(({transitions}  ) => {
     const availableEvents = transitions.map((transition) => {
       return transition.event
     });
-    appendToOutput(`available events '${availableEvents}'`);
+    logMessage(`available events '${availableEvents}'`);
     recreateForm({availableEvents});
-    screen.render();
   }).catch(({message}) => {
-    appendToOutput(`error '${message}'`);
-    formBox.focus();
-    screen.render();
+    logMessage(`error '${message}'`);
   });
 }
 
@@ -108,9 +94,9 @@ const recreateForm = ({availableEvents}) => {
   });
 };
 
-var formBox = recreateForm({availableEvents: []})
+let formBox = recreateForm({availableEvents: []})
 
-var output = blessed.scrollabletext({
+let outputBox = blessed.scrollabletext({
   parent: screen,
   mouse: true,
   keys: true,
@@ -122,7 +108,7 @@ var output = blessed.scrollabletext({
   content: ""
 });
 
-var objectBox = blessed.box({
+let objectBox = blessed.box({
   parent: screen,
   left: '50%+1',
   top: 3,
@@ -132,7 +118,7 @@ var objectBox = blessed.box({
   content: JSON.stringify(invoice, null, '\t')
 });
 
-var fsmSchemaBox = blessed.box({
+let fsmSchemaBox = blessed.box({
   parent: screen,
   left: '50%+1',
   top: '30%',
@@ -158,33 +144,24 @@ screen.key(['escape', 'q', 'C-c'], function(ch, key) {
   return process.exit(0);
 });
 
-// Focus our element.
-formBox.focus();
-
 // Render the screen.
 screen.render();
 
-appendToOutput("starting invoice machine...")
+logMessage("starting invoice machine...")
 invoiceMachine.start({
   object: invoice
 }).then(({object}) => {
-  appendToOutput("invoice machine has been started...");
   invoice = object;
-  objectBox.setContent(JSON.stringify(invoice, null, '\t'))
-  screen.render();
-  appendToOutput("finding events that are available...");
-  return invoiceMachine.availableTransitions({
-    object: invoice
-  })
+  logMessage("invoice machine has been started...");
+  updateObjectContent({object});
+  logMessage("finding events that are available...");
+  return invoiceMachine.availableTransitions({object});
 }).then(({transitions}  ) => {
   const availableEvents = transitions.map((transition) => {
     return transition.event
   });
-  appendToOutput(`available events '${availableEvents}'`);
+  logMessage(`available events '${availableEvents}'`);
   recreateForm({availableEvents});
-  screen.render();
 }).catch(({message}) => {
-  appendToOutput(`error '${message}'`);
-  formBox.focus();
-  screen.render();
+  logMessage(`error '${message}'`);
 });
