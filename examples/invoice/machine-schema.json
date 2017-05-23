@@ -1,7 +1,7 @@
 {
   "name": "invoice approval",
   "initialState": "open",
-  "finalStates": ["authorized"],
+  "finalStates": ["approved"],
   "objectStateFieldName": "status",
   "transitions": [{
     "from": "open",
