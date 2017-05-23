@@ -7,7 +7,6 @@ var Preferences = require("preferences");
 var Spinner = CLI.Spinner;
 var lodash = require("lodash");
 var fs = require("fs");
-var files = require('./lib/files');
 
 var createForm = require('./index-form').default;
 
