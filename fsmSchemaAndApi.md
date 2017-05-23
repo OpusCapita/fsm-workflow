@@ -2,38 +2,38 @@
 
 ```
 {
-  name: 'invoice approval',             // workflow name
-  initialState: 'new',                  // init state
-  finalStates = ['payed', 'canceled'],  // final states
-  objectStateFieldName = 'status',       // object field where state is stored
-  transitions: [
+  "name": "invoice approval",                // workflow name
+  "initialState": "open",                   // init state
+  "finalStates": ["authorized", "canceled"],  // final states
+  "objectStateFieldName": "status",           // object field where state is stored
+  "transitions": [
     {
-        from: 'new',                    // from state (required)
-        event: 'match',                 // event (required)
-        guards: [                       // list/array of guards
+        "from": "new",                    // from state (required)
+        "event": "match",                 // event (required)
+        "guards": [                       // list/array of guards
           {                               // guard is name of predefined function that returns true or false
-            name: 'new-to-matched-guard'
-            arguments: {
-              argumentName1: ..someValue..
-              argumentName2: ..someValue..
+            "name": "new-to-matched-guard"
+            "arguments": {
+              "argument1": ..someValue..
+              "argument2": ..someValue..
             }
         ],
-        to: 'matched',                     // to state (required)
-        actions: [                         // list/array of actions
-          {                                // action is a name of predefined function
-            name: 'new-to-matched-action'  // that executes the logic needed by this transition
-            arguments: {
-              argumentName1: ..someValue..
-              argumentName2: ..someValue..
+        "to": "matched",                     // to state (required)
+        "actions": [                         // list/array of actions
+          {                                  // action is a name of predefined function
+            "name": "new-to-matched-action"  // that executes the logic needed by this transition
+            "arguments": {
+              "argument1": ..someValue..
+              "argument2": ..someValue..
             }
           }
         ],
-        auto: [                             // .. later
-          {                                 // list of conditions, if each returns true then event
-              name: 'automatic-condition'   // needs/could to be sent by application without user
-              arguments: {
-                argumentName1: ..someValue..
-                argumentName2: ..someValue..
+        "auto": [                            // .. later
+          {                                  // list of conditions, if each returns true then event
+              "name": "automatic-condition"  // needs/could to be sent by application without user
+              "arguments": {
+                "argument1": ..someValue..
+                "argument2": ..someValue..
               }
           }
         ]
