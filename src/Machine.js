@@ -36,7 +36,7 @@ export default class Machine {
     return object[objectStateFieldName];
   }
 
-	// returns a  lits of events (names) that are available at current object state
+	// returns a lits of events (names) that are available at current object state
   availableTransitions({ object }) {
 		// calculate from state
     const from = this.currentState({ object });
@@ -53,10 +53,8 @@ export default class Machine {
 	// send event
 	// object - stateful object
 	// event - name of the event to be send
-	// data - event data that is passed from outside in addition to event provided
-	// by user/app that could be used in actions
 	// request - event request data
-  sendEvent({ object, event, data, request }) {
+  sendEvent({ object, event, request }) {
     const { machineDefinition } = this;
     const { objectStateFieldName } = machineDefinition.schema;
 		// calculate from state
