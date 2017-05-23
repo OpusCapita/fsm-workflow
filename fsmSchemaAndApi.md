@@ -17,6 +17,7 @@
               "argument1": ..someValue..
               "argument2": ..someValue..
             }
+          }
         ],
         "to": "matched",                     // to state (required)
         "actions": [                         // list/array of actions
@@ -82,13 +83,13 @@ machine.availableTransitions({object})
 // in case of successful transition then function will be called with one parameters
 // that is an JSON with the following structure:
 // - object - object in new state (the same reference that is passed as parameter)
-machine.sendEvent({event, object, request})
+machine.sendEvent({object, event, request})
 
-machine.currentState({object})     // gets current state
-machine.is({state, object})        // is object in state
-machine.isFinal({state})           // state is final or not
-machine.can({state, object})       // whether event is available
-machine.cannot({event, object})    // whether event is not available
+machine.currentState({ object })     // gets current state
+machine.is({ object, state})        // is object in state
+machine.isFinal({ state })           // state is final or not
+machine.can({ object, event })       // whether event is available
+machine.cannot({ object, event })    // whether event is not available
 
 // hooks
 machine.onStartTransition()   // returns promise

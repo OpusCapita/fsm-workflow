@@ -10,12 +10,13 @@ const createMachine = () => {
   );
 }
 
-describe('machine: currentState', function() {
+describe('machine: is', function() {
   it('returns correct value', function() {
     const state = 'new';
     const object = {
       [MachineDefinition.getDefaultObjectStateFieldName()]: state
     };
-    assert.equal(createMachine().currentState({ object }), state);
+    assert.equal(createMachine().is({ object, state }), true);
+    assert.equal(createMachine().is({ object, state: 'incorrect' }), false);
   });
 });

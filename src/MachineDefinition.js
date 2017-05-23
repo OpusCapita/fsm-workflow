@@ -2,11 +2,12 @@ export default class MachineDefinition {
   constructor({ schema, guards = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
     // todo validate schema
     if (!promise) {
-      throw new Error('promise is undefined');
+      throw new Error("promise is undefined");
     }
     // console.log(`schema '${JSON.stringify(schema)}'`);
     this.schema = {
       objectStateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
+      finalStates: [],
       ...schema
     };
     // guards is an object, where each property is implemented guard name and
@@ -22,10 +23,10 @@ export default class MachineDefinition {
     // if machine works in Node, the Promise is available out of the box
     // e.g. global.Promise
     if (global && global.Promise) {
-      return global.Promise
+      return global.Promise;
     }
     // otherwise using bluebird implementation
-    return require('bluebird').Promise
+    return require("bluebird").Promise;
   }
 
   findAvailableTransitions({ from, event, object, context } = {}) {
@@ -39,17 +40,17 @@ export default class MachineDefinition {
     if (!transitions) {
       return this.promise.resolve({ transitions: [] });
     }
-    const checkFrom = (transition) => {
+    const checkFrom = transition => {
       return transition.from === from;
-    }
-    const checkEvent = (transition) => {
+    };
+    const checkEvent = transition => {
       // if event is not specified then event does not metter for search
       if (!event) {
         return true;
       }
       return transition.event === event;
-    }
-    const checkGuards = (transition) => {
+    };
+    const checkGuards = transition => {
       const { guards, from, to, event } = transition;
       // if guards are undefined
       if (!guards) {
@@ -61,28 +62,26 @@ export default class MachineDefinition {
         // guard is defined in schema, but is not really defined -> error!!!
         if (!guard) {
           // eslint-disable-next-line max-len
-          throw new Error(`Guard '${guards[i].name}' is specified in one the transitions but is not found/implemented!`);
+          throw new Error(
+            `Guard '${guards[i].name}' is specified in one the transitions but is not found/implemented!`
+          );
         }
         // if guard return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
         // additionally object and context are also passed
         if (!guard({ ...guards[i].arguments, from, to, event, object, context })) {
-          return false
+          return false;
         }
       }
 
       return true;
-    }
+    };
     // console.log(`transitions '${JSON.stringify(transitions)}'`);
     return new Promise((resolve, reject) => {
       try {
-        const foundTransitions = transitions.filter(
-          (transition) => {
-            return checkFrom(transition) &&
-              checkEvent(transition) &&
-              checkGuards(transition);
-          }
-        );
+        const foundTransitions = transitions.filter(transition => {
+          return checkFrom(transition) && checkEvent(transition) && checkGuards(transition);
+        });
         resolve({ transitions: foundTransitions });
       } catch (e) {
         reject(e);
@@ -90,5 +89,7 @@ export default class MachineDefinition {
     });
   }
 
-  static getDefaultObjectStateFieldName() { return 'status' }
+  static getDefaultObjectStateFieldName() {
+    return "status";
+  }
 }
