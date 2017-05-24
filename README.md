@@ -40,7 +40,7 @@ import {MachineDefinition, Machine} from 'fsm-workflow';
 
 Machine definition consist of:
 - [schema](#schema)
-- [actions](#actions)
+- [actions](#action)
 - [guards](#guard)
 - [auto](#auto)
 
