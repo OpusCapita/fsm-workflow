@@ -58,7 +58,7 @@
   <dd>conditions that could be checked/called from outside the FSM to take a decision if transition should be executed automatically, <i>todo</i> describe/define in detail</dd>
 
   <dt>autos</dt>
-  <dd>conditions specified in schema that gives possibility to application (external task manager) possibilit to determine whether event shoud/could be sent automatically, <i>todo</i> describe/define in detail</dd>
+  <dd>conditions specified in schema that gives possibility to application (external task manager) possibility to determine whether event shoud/could be sent automatically, <i>todo</i> describe/define in detail</dd>
 </dl>
 
 
