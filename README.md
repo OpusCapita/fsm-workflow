@@ -39,10 +39,10 @@ import {MachineDefinition, Machine} from 'fsm-workflow';
 ## Machine definition
 
 Machine definition consist of:
-- schema
-- actions
-- guards
-- (auto)
+- [schema](#schema)
+- [actions](#actions)
+- [guards](#guard)
+- [auto](#auto)
 
 ```javascript
 const machineDefinition = new MachineDefinition({
