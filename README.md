@@ -106,32 +106,18 @@ Defines machine transitions and initialization options
 
 In schema you needs to define an array of available machine transitions. Typically a transition is triggered by an _event_ and happens between _from_ and _to_ states. Optionally each transition can have _actions_, _guards_ and _auto_ (defines conditions that if satisfied then event could be sent automatically).
 
-##### Action
-
-Actions (action = function) are executed during transition (not during existing or entering states). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit arguments like _object_, _from_, _to_, etc. During transition machine executes each action in defined order. Each action gets _actionExecutionResutls_ argument which serves as an accumulator from perviously called actions, where each property is an action name and value is value returned by action.
-
-##### Guard
-
-Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false).
-
-Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
-
-##### Auto (requires discussion)
-
-Transition could be marked as automatic using _auto_ property. It defines array of
-conditions(functions, each return true or false). Check for whether object in current state has (at least one) automatic transition needs to be done by external task manager (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
-
 #### Initial state
 
 You can define the initial state by setting the _initialState_ property:
 
 ```javascript
 var machineDefinition = new MachineDefinition({
-
-  initial: 'start'
-  transitions: [
-    {from: 'start', event: 'run', to: 'finish'}
-  ]
+  schema: {
+    initial: 'start'
+    transitions: [
+      {from: 'start', event: 'run', to: 'finish'}
+    ]
+  }
 });
 
 const object = {status: 'none'};
@@ -150,13 +136,31 @@ You can define the final states (one or many) by setting the _finalStates_ prope
 
 ```javascript
 var machineDefinition = new MachineDefinition({
-  initial: 'start',
-  finalStates: ['finish'],
-  transitions: [
-    {from: 'start', event: 'run', to: 'finish'}
-  ]
+  schema: {
+    initial: 'start',
+    finalStates: ['finish'],
+    transitions: [
+      {from: 'start', event: 'run', to: 'finish'}
+    ]
+  }
 });
 ```
+
+### Action
+
+Actions (action = function) are executed during transition (not during existing or entering states). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit arguments like _object_, _from_, _to_, etc. During transition machine executes each action in defined order. Each action gets _actionExecutionResutls_ argument which serves as an accumulator from perviously called actions, where each property is an action name and value is value returned by action.
+
+### Guard
+
+Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false).
+
+Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
+
+### Auto (requires discussion)
+
+Transition could be marked as automatic using _auto_ property. It defines array of
+conditions(functions, each return true or false). Check for whether object in current state has (at least one) automatic transition needs to be done by external task manager (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
+
 
 ## Stateful object as a process
 
@@ -164,11 +168,13 @@ Machine does not have own state, all the transitions are performed over object w
 
 ```javascript
 var machineDefinition = new MachineDefinition({
-  initial: 'start'
-  finalStates: ['finish'],
-  transitions: [
-    {from: 'start', event: 'run', to: 'finish'}
-  ]
+  schema: {
+    initial: 'start'
+    finalStates: ['finish'],
+    transitions: [
+      {from: 'start', event: 'run', to: 'finish'}
+    ]
+  }
 });
 
 const object = {status: 'none'};
