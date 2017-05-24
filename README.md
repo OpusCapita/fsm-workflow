@@ -104,28 +104,22 @@ Defines machine transitions and initialization options
 
 #### Transitions
 
-In schema you needs to define an array of available machine transitions.
-Typically a transition is triggered by an _event_ and happens between
-_from_ and _to_ states. Optionally in each transition you can define list(array) of:
-- actions
-- guards
-- (auto)
+In schema you needs to define an array of available machine transitions. Typically a transition is triggered by an _event_ and happens between _from_ and _to_ states. Optionally each transition can have _actions_, _guards_ and _auto_ (defines conditions that if satisfied then event could be sent automatically).
 
 ##### Action
 
-Actions are executed during transition (not during existing/or entering states). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit things like _object_, _from_, _to_, _event_. During transition machine executes each action in specified order. Each action gets _actionExecutionResutls_ argument as a result accumulator from perviously called actions, where each property is an action name and value is value returned by action.
+Actions (action = function) are executed during transition (not during existing or entering states). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit arguments like _object_, _from_, _to_, etc. During transition machine executes each action in defined order. Each action gets _actionExecutionResutls_ argument which serves as an accumulator from perviously called actions, where each property is an action name and value is value returned by action.
 
 ##### Guard
 
-Guards are used to protect transitions. Guard could be treated as a condition.
-Guards defines the same way like an Action but it should return boolean result (true or false).
+Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false).
 
 Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
 
 ##### Auto (requires discussion)
 
 Transition could be marked as automatic using _auto_ property. It defines array of
-conditions(functions, each return true or false). Could be evaluated/called by external task manager to take a decision if transition/event could be send automatically without user interaction.
+conditions(functions, each return true or false). Check for whether object in current state has (at least one) automatic transition needs to be done by external task manager (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
 
 #### Initial state
 
