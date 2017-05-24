@@ -220,5 +220,7 @@ machine.onStartTransition()   // returns promise
 machine.onFinishTransition()  // returns promise
 ```
 
+Not: basic ideas on how API looks like are taken from [fsm-as-promised](https://github.com/vstirbu/fsm-as-promised)
+
 #### [Existing FSM libs review](existingFsmLibsReview.md)
 #### [FSM definition and API](fsmSchemaAndApi.md)
