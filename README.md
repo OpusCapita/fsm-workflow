@@ -47,15 +47,15 @@ Machine definition consist of:
 ```javascript
 const machineDefinition = new MachineDefinition({
   schema: {
-    "name": "invoice approval",               
-    "initialState": "open",                   
-    "finalStates": ["approved"],
-    "objectStateFieldName": "status",         
-    "transitions": [
+    name: "invoice approval",               
+    initialState: "open",                   
+    finalStates: ["approved"],
+    objectStateFieldName: "status",         
+    transitions: [
       {
-          "from": "open",                    
-          "event": "approve",                 
-          "guards": [                       
+          from: "open",                    
+          event: "approve",                 
+          guards: [                       
             {                               
               "name": "validate",
               "arguments": {
@@ -64,8 +64,8 @@ const machineDefinition = new MachineDefinition({
               }
             }
           ],
-          "to": "approved",                   
-          "actions": [                       
+          to: "approved",                   
+          actions: [                       
             {                                
               "name": "archive",
               "arguments": {
@@ -74,7 +74,7 @@ const machineDefinition = new MachineDefinition({
               }
             }
           ],
-          "auto": [                          
+          auto: [                          
             {                                
                 "name": "lastlyUpdatedMoreThan24hAgo",
                 "arguments": {
@@ -87,13 +87,13 @@ const machineDefinition = new MachineDefinition({
     ]
   },
   actions: {
-    'archive': function({argument1, argument1}) {}
+    archive: function({argument1, argument1}) {}
   },
   guards: {
-    'validate': function({argument1, argument1}) {}
+    validate: function({argument1, argument1}) {}
   }
   auto: {
-    'lastlyUpdatedMoreThan24hAgo': function({argument1, argument1}) {}
+    lastlyUpdatedMoreThan24hAgo: function({argument1, argument1}) {}
   }
 });
 ```
