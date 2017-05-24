@@ -119,7 +119,7 @@ Actions are executed during transition (not during existing/or entering states).
 Guards are used to protect transitions. Guard could be treated as a condition.
 Guards defines the same way like an Action but it should return boolean result (true or false).
 
-Note: Very similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
+Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
 
 ##### Auto (requires discussion)
 
