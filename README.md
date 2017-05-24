@@ -7,7 +7,7 @@ Workflow is based on Finite State Machine implemented in JS using promises.
 workflow object. Multiple workflows could be defined for one business object,
 it means that for each workflow owns state field should be use
 - one state per workflow execution (no parallelism)
-- action is executed in the transition, not in the node/state
+- actions are executed in the transition, not in the node/state
 - no event sending inside the workflow itself (in action)
 - no variables in state workflow: all variables/data need to be stored in
 the business objects (e.g. invoice)
@@ -15,6 +15,7 @@ the business objects (e.g. invoice)
 - workflow definition stored as JSON
 - guard support (transition/event availability is defined via
 condition/expression/function = guard)
+- hierarchical states machines are not supported
 
 #### Notes
 
