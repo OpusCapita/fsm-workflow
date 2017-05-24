@@ -42,7 +42,7 @@ Machine definition consist of:
 - [schema](#schema)
 - [actions](#action)
 - [guards](#guard)
-- [auto](#auto)
+- [auto](#auto-requires-discussion)
 
 ```javascript
 const machineDefinition = new MachineDefinition({
