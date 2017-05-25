@@ -1,0 +1,18 @@
+{
+  "id": "order1",
+  "workflows": {
+    "order-workflow-1": {
+      "id": "order-workflow-1",
+      "parentId": "",
+      "state": "inProgress",
+      "params": "",
+      "revisions": [
+        {
+          "changedBy": "admin",
+          "changedOn": "123123123213",
+          "diff": {}
+        }
+      ]
+    }
+  }
+}

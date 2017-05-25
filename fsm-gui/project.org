@@ -1,0 +1,39 @@
+* Finite State Machine
+** fasdf
+
+* Finite State Machine GUI
+** Inspectable objects defenition
+*** Entry/global Transition
+**** Name
+**** Description
+***** Properties
+***** Validators
+***** Post functions
+*** Transition
+**** Name
+**** Description
+***** Triggers
+***** Conditions
+***** Properties
+***** Validators
+***** Post functions
+*** State
+**** Name
+**** Description
+***** Properties
+** Options defenition
+*** Property (no - predefined list)
+**** Property Key
+**** Property Value
+*** Triggers (predefined list) ?
+    A trigger is an event that initiates an automatic transition for an object. Examples of triggers include the creation of a pull request, the rejection of a code review, and more. Send feedback on triggers.
+    Caveats: Conditions, validators, and permissions will be ignored for automatic transitions. Global transitions can be automated with triggers, but please read our guide first.
+*** Conditions (predefined list)
+**** Name
+**** Description
+*** Validators (predefined list)
+**** Name
+**** Description
+*** Post functions (predefined list)
+**** Name
+**** Description

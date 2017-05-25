@@ -1,0 +1,30 @@
+{
+  "name": "fsm-service",
+  "version": "0.0.1-beta.0",
+  "description": "Service for fsm-gui",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --watch src index"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kvolkovich-sc/fsm-gui.git"
+  },
+  "keywords": [
+    "fsm"
+  ],
+  "author": "Kirill Volkovich",
+  "bugs": {
+    "url": "https://github.com/kvolkovich-sc/fsm-gui/issues"
+  },
+  "homepage": "https://github.com/kvolkovich-sc/fsm-gui#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "fs-extra": "^3.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
