@@ -13,7 +13,7 @@ const initialState = {
   viewportScale: 1,
   viewportPanOffset: { x: 0, y: 0 },
   showGrid: true,
-  snapDistance: 12,
+  snapDistance: 20,
   viewportSize: 10000,
   stickyPoints: { },
   lastMouseDownPoint: null,

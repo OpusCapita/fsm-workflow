@@ -70,7 +70,7 @@ export function startCreateNewTransition(x, y, stateNodeKey, pointIndex) {
   };
 }
 
-export function finishCreateNewTransition(transitionKey, stateNodeKey, pointIndex) {
+export function finishCreateNewTransition(transitionKey, stateNodeKey = null, pointIndex = null) {
   return (dispatch) => {
     dispatch(updateTransition(transitionKey, { to: stateNodeKey, toPoint: pointIndex }));
     dispatch({ type: FINISH_CREATE_NEW_TRANSITION });

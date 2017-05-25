@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { Provider, connect } from 'react-redux';
 import ApiClient from './redux/ApiClient';
 
+import { Helmet } from "react-helmet";
 import ToolbarContainer from '../ToolbarContainer';
 import ViewportContainer from '../ViewportContainer';
 import StatusLineContainer from '../StatusLineContainer';
@@ -29,7 +30,9 @@ const defaultProps = {
 };
 
 @connect(
-  state => ({}),
+  state => ({
+    transitionCreationStarted: state.newTransition.creationStarted
+  }),
   dispatch => ({
     actions: bindActionCreators({
       ...viewportActions,
@@ -52,8 +55,17 @@ class AppLayout extends Component {
   }
 
   render() {
+    const {
+      transitionCreationStarted
+    } = this.props;
+
     return (
       <div className="fsm--app" ref={this.handleAppRef}>
+        <Helmet>
+          <style type="text/css">
+            {transitionCreationStarted ? `.fsm--app { cursor: crosshair !important; }` : ``}
+          </style>
+        </Helmet>
         <div>
           <ToolbarContainer />
         </div>

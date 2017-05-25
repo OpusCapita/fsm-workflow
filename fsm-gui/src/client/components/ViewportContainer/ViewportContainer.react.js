@@ -75,17 +75,6 @@ export default class ViewportContainer extends Component {
       panning: false
     };
 
-    // To view crossair on transition creation
-    const cursorCss = '* { cursor: crosshair !important; }';
-    this.cursorStyleElement = document.createElement('style');
-    this.cursorStyleElement.type = 'text/css';
-    if (this.cursorStyleElement.styleSheet) {
-      this.cursorStyleElement.styleSheet.cssText = cursorCss;
-    } else {
-      this.cursorStyleElement.appendChild(document.createTextNode(cursorCss));
-    }
-
-
     this.handleDeleteKey = this.handleDeleteKey.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -184,25 +173,15 @@ export default class ViewportContainer extends Component {
       pointIndex
     );
 
-    document.head.appendChild(this.cursorStyleElement);
-
-    document.body.addEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.addEventListener('mousemove', this.handleTransitionCreationMouseMove);
   }
 
   handleStateNodePointMouseUp(e, stateNodeKey, pointIndex, pointPosition) {
-    const transitionCreationFinished = (
-      this.props.transitionCreationStarted &&
-        typeof stateNodeKey !== 'undefined' &&
-        typeof pointIndex !== 'undefined'
-    );
-    if (transitionCreationFinished) {
+    e.stopPropagation();
+    if (this.props.transitionCreationStarted) {
       this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition, stateNodeKey, pointIndex);
     }
 
-    // document.head.removeChild(this.cursorStyleElement);
-
-    document.body.removeEventListener('mouseup', this.handleStateNodePointMouseUp);
     document.body.removeEventListener('mousemove', this.handleTransitionCreationMouseMove);
   }
 
@@ -278,6 +257,10 @@ export default class ViewportContainer extends Component {
     }
 
     this.setState({ panning: false });
+
+    if (this.props.transitionCreationStarted) {
+      this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition);
+    }
   }
 
   handleClick(e) {

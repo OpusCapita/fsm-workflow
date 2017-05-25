@@ -10,6 +10,7 @@ const paddingV = 20;
 const paddingH = 60;
 const pointOffset = 1;
 const pointOffsetMultiper = 2;
+const snapOffsetCompensation = pointOffset * pointOffsetMultiper * 4;
 const outlinePadding = 3;
 const getContrastColor = (color, amount = 10) => tinycolor(color).getBrightness() > 70 ?
   tinycolor(color).darken(amount) :
@@ -244,7 +245,7 @@ class StateNode extends PureComponent {
               className={`fsm--state-node__point-active-area`}
               cx={pointPosition.xG}
               cy={pointPosition.yG}
-              r={this.props.snapDistance}
+              r={this.props.snapDistance - snapOffsetCompensation}
               fill={contrastBg}
               opacity={this.props.showPoints || selected ? 0.3 : 0}
             />
