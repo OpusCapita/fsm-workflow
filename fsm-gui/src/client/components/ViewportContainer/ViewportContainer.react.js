@@ -1,3 +1,5 @@
+// TODO - it is easy to split this giant file. JUST DO IT!!!
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Viewport from '../Viewport';
