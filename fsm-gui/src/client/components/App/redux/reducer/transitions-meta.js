@@ -1,8 +1,8 @@
 import { createTransition, updateTransition, deleteTransition } from './transitions';
 import { updateSelectedItem, ITEM_TYPES } from './selected-item';
 
-const START_CREATE_NEW_TRANSITION = 'fsm/new-transition/START_CREATE_NEW_TRANSITION';
-const FINISH_CREATE_NEW_TRANSITION = 'fsm/new-transition/FINISH_CREATE_NEW_TRANSITION';
+const START_CREATE_NEW_TRANSITION = 'fsm/transitions-meta/START_CREATE_NEW_TRANSITION';
+const FINISH_CREATE_NEW_TRANSITION = 'fsm/transitions-meta/FINISH_CREATE_NEW_TRANSITION';
 
 const initialState = {
   creationStarted: false,

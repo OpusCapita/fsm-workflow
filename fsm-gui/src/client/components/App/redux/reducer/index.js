@@ -5,7 +5,7 @@ import fsm from './fsm';
 import stateNodes from './state-nodes';
 import selectedItem from './selected-item';
 import transitions from './transitions';
-import newTransition from './new-transition';
+import transitionsMeta from './transitions-meta';
 
 export default combineReducers({
   fsm,
@@ -14,5 +14,5 @@ export default combineReducers({
   stateNodes,
   selectedItem,
   transitions,
-  newTransition
+  transitionsMeta
 });

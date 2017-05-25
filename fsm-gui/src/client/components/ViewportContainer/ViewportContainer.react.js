@@ -7,7 +7,7 @@ import * as viewportActions from '../App/redux/reducer/viewport';
 import * as selectedItemActions from '../App/redux/reducer/selected-item';
 import * as stateNodesActions from '../App/redux/reducer/state-nodes';
 import * as transitionsActions from '../App/redux/reducer/transitions';
-import * as newTransitionActions from '../App/redux/reducer/new-transition';
+import * as transitionsMetaActions from '../App/redux/reducer/transitions-meta';
 import * as layoutActions from '../App/redux/reducer/layout';
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 import { straightensBezier } from '../../svg-utils';
@@ -54,8 +54,8 @@ const defaultProps = {
     snapDistance: state.viewport.snapDistance,
     selectedItemType: state.selectedItem.itemType,
     selectedItemId: state.selectedItem.itemId,
-    transitionCreationStarted: state.newTransition.creationStarted,
-    lastCreatedTransition: state.newTransition.lastCreated,
+    transitionCreationStarted: state.transitionsMeta.creationStarted,
+    lastCreatedTransition: state.transitionsMeta.lastCreated,
     hoveredStateNode: state.selectedItem.hoveredStateNode,
     viewportFocused: state.layout.viewportFocused
   }),
@@ -64,7 +64,7 @@ const defaultProps = {
     ...selectedItemActions,
     ...stateNodesActions,
     ...transitionsActions,
-    ...newTransitionActions,
+    ...transitionsMetaActions,
     ...layoutActions
   }, dispatch) })
 )
@@ -141,7 +141,7 @@ export default class ViewportContainer extends Component {
   }
 
   handlePan(e, draggableData) {
-    if(this.state.panning) {
+    if (this.state.panning) {
       let x = this.props.viewportPanOffset.x + draggableData.deltaX / this.props.viewportScale;
       let y = this.props.viewportPanOffset.y + draggableData.deltaY / this.props.viewportScale;
       this.props.actions.updateViewportPanOffset({ x, y });
@@ -240,6 +240,7 @@ export default class ViewportContainer extends Component {
   }
 
   handleTransitionMouseDown(e, key) {
+    console.log('mouseDown');
     e.stopPropagation();
     this.props.actions.updateSelectedItem(ITEM_TYPES.TRANSITION, key);
   }

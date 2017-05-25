@@ -31,7 +31,7 @@ const defaultProps = {
 
 @connect(
   state => ({
-    transitionCreationStarted: state.newTransition.creationStarted
+    transitionCreationStarted: state.transitionsMeta.creationStarted
   }),
   dispatch => ({
     actions: bindActionCreators({
