@@ -84,10 +84,10 @@ export function snapStateNodePoints(getState) {
     const snapPoint2Key = `${ITEM_TYPES.STATE}.${transition.to}.${transition.toPoint}`;
     const snapPoint1 = stickyPoints[snapPoint1Key];
     const snapPoint2 = stickyPoints[snapPoint2Key];
-    points[0] = snapPoint1.x;
-    points[1] = snapPoint1.y;
-    points[6] = snapPoint2.x;
-    points[7] = snapPoint2.y;
+    points[0] = snapPoint1 ? snapPoint1.x : points[0];
+    points[1] = snapPoint1 ? snapPoint1.y : points[1];
+    points[6] = snapPoint2 ? snapPoint2.x : points[6];
+    points[7] = snapPoint2 ? snapPoint2.y : points[7];
     const newTransition = Object.assign({}, transition, { points });
 
     return Object.assign({}, accum, { [transitionKey]: newTransition });
