@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import BezierCurve from '../BezierCurve';
+import uuid from 'uuid/v4';
 import './BezierTransition.less';
 import { DraggableCore } from 'react-draggable';
 
@@ -62,6 +63,8 @@ class BezierTransition extends PureComponent {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleClick = this.handleClick.bind(this);
+
+    this.markerId = "fsm--bezier-transition__arrow_" + uuid();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -107,7 +110,7 @@ class BezierTransition extends PureComponent {
 
     let markerPath = arrowPosition === 1 ?
       `M${arrowSize},0 L${arrowSize},${arrowSize / 2} L${0},${arrowSize / 4}` :
-      `M0,0 L0,${arrowSize / 2} L${arrowSize},${arrowSize / 4}`;
+        `M0,0 L0,${arrowSize / 2} L${arrowSize},${arrowSize / 4}`;
 
     return (
       <g
@@ -117,7 +120,7 @@ class BezierTransition extends PureComponent {
       >
         <defs>
           <marker
-            id="fsm--bezier-transition__arrow"
+            id={this.markerId}
             markerWidth={arrowSize}
             markerHeight={arrowSize}
             refX={arrowPosition === 1 ? arrowSize / 6 : arrowSize - arrowSize / 6}
@@ -135,8 +138,8 @@ class BezierTransition extends PureComponent {
           onChange={this.handleBezierChange}
           label={label}
           scale={scale}
-          markerStart={arrowPosition === 1 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
-          markerEnd={arrowPosition === 2 ? 'url(#fsm--bezier-transition__arrow)' : 'none'}
+          markerStart={arrowPosition === 1 ? `url(#${this.markerId})` : 'none'}
+          markerEnd={arrowPosition === 2 ? `url(#${this.markerId})` : 'none'}
           pointSize={pointSize}
           stroke={color}
           strokeWidth={lineWidth}

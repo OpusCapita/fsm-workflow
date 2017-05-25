@@ -141,6 +141,7 @@ class BezierCurve extends PureComponent {
       onPoint4Drag,
       ...restProps
     } = this.props;
+    console.log(bezier);
 
     let curve = new Bezier(...bezier);
     let d = curve.toSVG();

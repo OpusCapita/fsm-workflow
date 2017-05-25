@@ -97,6 +97,7 @@
     "redux-thunk": "2.2.0",
     "reselect": "3.0.1",
     "superagent": "3.5.2",
-    "tinycolor2": "^1.4.1"
+    "tinycolor2": "^1.4.1",
+    "uuid": "^3.0.1"
   }
 }

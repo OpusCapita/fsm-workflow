@@ -103,7 +103,7 @@ export default class ViewportContainer extends Component {
      If you remove it you loose about 10 frames per second */
     const cursorPositionChanged = this.props.cursorPosition && (
       this.props.cursorPosition.x !== nextProps.cursorPosition.x ||
-        this.props.cursorPosition.y !== nextProps.cursorPosition.y
+      this.props.cursorPosition.y !== nextProps.cursorPosition.y
     );
 
     if(this.props.viewportScale !== nextProps.viewportScale) {
@@ -324,7 +324,7 @@ export default class ViewportContainer extends Component {
       const showPoints = hoveredStateNode === stateNodeKey || selected || transitionCreationStarted;
       let selectedPoints = [];
 
-      if(
+      if (
         selectedItemType === ITEM_TYPES.TRANSITION &&
         transitions[selectedItemId] &&
         transitions[selectedItemId].from === stateNodeKey
@@ -333,7 +333,7 @@ export default class ViewportContainer extends Component {
         selectedPoints = [transitions[selectedItemId].fromPoint];
       }
 
-      if(
+      if (
         selectedItemType === ITEM_TYPES.TRANSITION &&
         transitions[selectedItemId] &&
         transitions[selectedItemId].to === stateNodeKey
