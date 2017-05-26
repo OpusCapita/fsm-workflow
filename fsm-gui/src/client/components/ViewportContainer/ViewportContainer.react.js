@@ -98,13 +98,14 @@ export default class ViewportContainer extends Component {
     this.handleStateNodeMouseEneter = this.handleStateNodeMouseEnter.bind(this);
     this.handleStateNodeMouseLeave = this.handleStateNodeMouseLeave.bind(this);
     this.handleStateNodeDrag = this.handleStateNodeDrag.bind(this);
+    this.handleStateNodePointMouseDown = this.handleStateNodePointMouseDown.bind(this);
+    this.handleStateNodePointMouseUp = this.handleStateNodePointMouseUp.bind(this);
     this.handleTransitionChange = this.handleTransitionChange.bind(this);
     this.handleTransitionMouseDown = this.handleTransitionMouseDown.bind(this);
     this.handleTransitionClick = this.handleTransitionClick.bind(this);
-    this.handleStateNodePointMouseDown = this.handleStateNodePointMouseDown.bind(this);
-    this.handleStateNodePointMouseUp = this.handleStateNodePointMouseUp.bind(this);
     this.handleTransitionCreationMouseMove = this.handleTransitionCreationMouseMove.bind(this);
     this.handleDetachedTransitionMouseMove = this.handleDetachedTransitionMouseMove.bind(this);
+    this.handleTransitionPointDragStart = this.handleTransitionPointDragStart.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -297,6 +298,16 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateTransition(transitionKey, updatedTransition);
   }
 
+  handleTransitionPointDragStart(transitionKey, e, draggableData, pointIndex) {
+    if(pointIndex === 1 || pointIndex === 4) {
+      const isPointFrom = pointIndex === 1;
+      this.props.actions.startMoveDetachedTransition(transitionKey, isPointFrom);
+      this.detachedTransitionMouseMoveHandler =
+        (e) => this.handleDetachedTransitionMouseMove(e, transitionKey, isPointFrom);
+      document.body.addEventListener('mousemove', this.detachedTransitionMouseMoveHandler);
+    }
+  }
+
   handleTransitionMouseDown(e, key) {
     e.stopPropagation();
     this.props.actions.updateSelectedItem(ITEM_TYPES.TRANSITION, key);
@@ -461,6 +472,7 @@ export default class ViewportContainer extends Component {
           onChange={(bezierPoints, d) => this.handleTransitionChange(transitionKey, bezierPoints, d)}
           onClick={(e) => this.handleTransitionClick(e, transitionKey)}
           onMouseDown={(e) => this.handleTransitionMouseDown(e, transitionKey)}
+          onPointDragStart={(e, draggableData, pointIndex) => this.handleTransitionPointDragStart(transitionKey, e, draggableData, pointIndex)}
           arrowPosition={2}
           arrowSize={30}
           selected={selected}

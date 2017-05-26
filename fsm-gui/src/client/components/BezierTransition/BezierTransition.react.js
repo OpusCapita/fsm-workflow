@@ -23,6 +23,8 @@ const propTypes = {
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   onClick: PropTypes.func,
+  onPointDragStart: PropTypes.func,
+  onPointDragStop: PropTypes.func,
   pointSize: PropTypes.number,
   pointsColor1: PropTypes.string,
   pointsColor2: PropTypes.string,
@@ -47,6 +49,8 @@ const defaultProps = {
   onMouseDown: () => {},
   onMouseUp: () => {},
   onClick: () => {},
+  onPointDragStart: () => {},
+  onPointDragStop: () => {},
   pointSize: 12,
   pointsColor1: "#0f0",
   pointsColor2: "#f00",
@@ -63,6 +67,8 @@ class BezierTransition extends PureComponent {
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handlePointDragStart = this.handlePointDragStart.bind(this);
+    this.handlePointDragStop = this.handlePointDragStop.bind(this);
 
     this.markerId = "fsm--bezier-transition__arrow_" + uuid();
   }
@@ -85,6 +91,14 @@ class BezierTransition extends PureComponent {
 
   handleClick(e) {
     this.props.onClick(e);
+  }
+
+  handlePointDragStart(e, draggableData, pointIndex) {
+    this.props.onPointDragStart(e, draggableData, pointIndex);
+  }
+
+  handlePointDragStop(e, draggableData, pointIndex) {
+    this.props.onPointDragStop(e, draggableData, pointIndex);
   }
 
   render() {
@@ -144,6 +158,14 @@ class BezierTransition extends PureComponent {
           stroke={color}
           strokeWidth={lineWidth}
           showControls={selected}
+      onPoint1DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 1)}
+      onPoint2DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 2)}
+      onPoint3DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 3)}
+      onPoint4DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 4)}
+      onPoint1DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 1)}
+      onPoint2DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 2)}
+      onPoint3DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 3)}
+      onPoint4DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 4)}
         />
       </g>
     );

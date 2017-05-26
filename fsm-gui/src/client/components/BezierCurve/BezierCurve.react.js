@@ -11,6 +11,14 @@ const paddingH = 30;
 const propTypes = {
   bezier: PropTypes.arrayOf(PropTypes.number),
   onChange: PropTypes.func,
+  onPoint1DragStart: PropTypes.func,
+  onPoint2DragStart: PropTypes.func,
+  onPoint3DragStart: PropTypes.func,
+  onPoint4DragStart: PropTypes.func,
+  onPoint1DragStop: PropTypes.func,
+  onPoint2DragStop: PropTypes.func,
+  onPoint3DragStop: PropTypes.func,
+  onPoint4DragStop: PropTypes.func,
   onPoint1Drag: PropTypes.func,
   onPoint2Drag: PropTypes.func,
   onPoint3Drag: PropTypes.func,
@@ -28,6 +36,14 @@ const defaultProps = {
   bezier: [0,0 , 0,0 , 0,0 , 0,0],
   onChange: () => {},
   label: '',
+  onPoint1DragStart: () => {},
+  onPoint2DragStart: () => {},
+  onPoint3DragStart: () => {},
+  onPoint4DragStart: () => {},
+  onPoint1DragStop: () => {},
+  onPoint2DragStop: () => {},
+  onPoint3DragStop: () => {},
+  onPoint4DragStop: () => {},
   onPoint1Drag: () => {},
   onPoint2Drag: () => {},
   onPoint3Drag: () => {},
@@ -139,6 +155,14 @@ class BezierCurve extends PureComponent {
       onPoint2Drag,
       onPoint3Drag,
       onPoint4Drag,
+      onPoint1DragStart,
+      onPoint2DragStart,
+      onPoint3DragStart,
+      onPoint4DragStart,
+      onPoint1DragStop,
+      onPoint2DragStop,
+      onPoint3DragStop,
+      onPoint4DragStop,
       ...restProps
     } = this.props;
 
@@ -168,6 +192,8 @@ class BezierCurve extends PureComponent {
         />
         <DraggableCore
           onDrag={this.handlePoint1Drag}
+          onStart={this.props.onPoint1DragStart}
+          onStop={this.props.onPoint1DragStop}
           grid={snap ? [snapStep, snapStep] : null}
         >
           <rect
@@ -183,6 +209,8 @@ class BezierCurve extends PureComponent {
         </DraggableCore>
         <DraggableCore
           onDrag={this.handlePoint2Drag}
+          onStart={this.props.onPoint2nDragStart}
+          onStop={this.props.onPoint2DragStop}
           grid={snap ? [snapStep, snapStep] : null}
         >
           <rect
@@ -210,6 +238,8 @@ class BezierCurve extends PureComponent {
         />
         <DraggableCore
           onDrag={this.handlePoint4Drag}
+          onStart={this.props.onPoint4DragStart}
+          onStop={this.props.onPoint4DragStop}
           grid={snap ? [snapStep, snapStep] : null}
         >
           <rect
@@ -225,6 +255,8 @@ class BezierCurve extends PureComponent {
         </DraggableCore>
         <DraggableCore
           onDrag={this.handlePoint3Drag}
+          onStart={this.props.onPoint3DragStart}
+          onStop={this.props.onPoint3DragStop}
           grid={snap ? [snapStep, snapStep] : null}
         >
           <rect

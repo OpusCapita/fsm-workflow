@@ -97,7 +97,6 @@ export function startMoveDetachedTransition(transitionKey, isPointFrom) {
 
 export function finishMoveDetachedTransition(transitionKey, stateNodeKey = null, pointIndex = null, isPointFrom) {
   return (dispatch) => {
-    console.log(transitionKey, stateNodeKey, pointIndex, isPointFrom);
     if (isPointFrom) {
       dispatch(updateTransition(transitionKey, { from: stateNodeKey, fromPoint: pointIndex }));
     } else {
