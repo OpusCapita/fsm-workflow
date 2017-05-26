@@ -31,7 +31,8 @@ const defaultProps = {
 
 @connect(
   state => ({
-    transitionCreationStarted: state.transitionsMeta.creationStarted
+    transitionCreationStarted: state.transitionsMeta.creationStarted,
+    transitionDetachedMoveStarted: state.transitionsMeta.detachedMoveStarted
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -56,14 +57,17 @@ class AppLayout extends Component {
 
   render() {
     const {
-      transitionCreationStarted
+      transitionCreationStarted,
+      transitionDetachedMoveStarted
     } = this.props;
+
+    const crosshairCursor = transitionCreationStarted || transitionDetachedMoveStarted;
 
     return (
       <div className="fsm--app" ref={this.handleAppRef}>
         <Helmet>
           <style type="text/css">
-            {transitionCreationStarted ? `.fsm--app { cursor: crosshair !important; }` : ``}
+            {crosshairCursor ? `.fsm--app { cursor: crosshair !important; }` : ``}
           </style>
         </Helmet>
         <div>

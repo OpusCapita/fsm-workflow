@@ -37,6 +37,9 @@ const propTypes = {
   hoveredStateNode: PropTypes.string,
   transitionCreationStarted: PropTypes.bool,
   lastCreatedTransition: PropTypes.string,
+  transitionDetachedMoveStarted: PropTypes.bool,
+  detachedMoveStartedAtPointFrom: PropTypes.bool,
+  lastDetachedTransition: PropTypes.string,
   viewportFocused: PropTypes.bool
 };
 
@@ -58,6 +61,9 @@ const defaultProps = {
     selectedItemId: state.selectedItem.itemId,
     transitionCreationStarted: state.transitionsMeta.creationStarted,
     lastCreatedTransition: state.transitionsMeta.lastCreated,
+    transitionDetachedMoveStarted: state.transitionsMeta.detachedMoveStarted,
+    lastDetachedTransition: state.transitionsMeta.lastDetached,
+    detachedMoveStartedAtPointFrom: state.transitionsMeta.detachedMoveStartedAtPointFrom,
     hoveredStateNode: state.selectedItem.hoveredStateNode,
     viewportFocused: state.layout.viewportFocused
   }),
@@ -98,6 +104,7 @@ export default class ViewportContainer extends Component {
     this.handleStateNodePointMouseDown = this.handleStateNodePointMouseDown.bind(this);
     this.handleStateNodePointMouseUp = this.handleStateNodePointMouseUp.bind(this);
     this.handleTransitionCreationMouseMove = this.handleTransitionCreationMouseMove.bind(this);
+    this.handleDetachedTransitionMouseMove = this.handleDetachedTransitionMouseMove.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -168,9 +175,29 @@ export default class ViewportContainer extends Component {
   }
 
   handleStateNodePointMouseDown(e, stateNodeKey, pointIndex, pointPosition) {
+    const { cursorPosition, selectedItemType, selectedItemId, transitions } = this.props;
+    const transitionKey = selectedItemId;
+    const transition = transitions[transitionKey];
+
+    const detachedTransition = (
+      selectedItemType === ITEM_TYPES.TRANSITION && (
+        (transition.from === stateNodeKey && transition.fromPoint === pointIndex) ||
+        (transition.to === stateNodeKey && transition.toPoint === pointIndex)
+      )
+    );
+
+    if(detachedTransition) {
+      const isPointFrom = transition.from === stateNodeKey && transition.fromPoint === pointIndex;
+      this.props.actions.startMoveDetachedTransition(transitionKey, isPointFrom);
+      this.detachedTransitionMouseMoveHandler =
+        (e) => this.handleDetachedTransitionMouseMove(e, transitionKey, isPointFrom);
+      document.body.addEventListener('mousemove', this.detachedTransitionMouseMoveHandler);
+      return;
+    }
+
     this.props.actions.startCreateNewTransition(
-      this.props.cursorPosition.x,
-      this.props.cursorPosition.y,
+      cursorPosition.x,
+      cursorPosition.y,
       stateNodeKey,
       pointIndex
     );
@@ -184,7 +211,15 @@ export default class ViewportContainer extends Component {
       this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition, stateNodeKey, pointIndex);
     }
 
-    document.body.removeEventListener('mousemove', this.handleTransitionCreationMouseMove);
+    if (this.props.transitionDetachedMoveStarted) {
+      this.props.actions.finishMoveDetachedTransition(
+        this.props.lastDetachedTransition,
+        stateNodeKey,
+        pointIndex,
+        this.props.detachedMoveStartedAtPointFrom
+      );
+      document.body.removeEventListener('mousemove', this.detachedTransitionMouseMoveHandler);
+    }
   }
 
   handleStateNodePointRef(ref, stateNodeKey, pointIndex, pointPosition) {
@@ -194,6 +229,27 @@ export default class ViewportContainer extends Component {
     }
     const pointKey = `${ITEM_TYPES.STATE}.${stateNodeKey}.${pointIndex}`;
     this.props.actions.registerStickyPoint(pointKey, pointPosition);
+  }
+
+  handleDetachedTransitionMouseMove(e, transitionKey, isPointFrom) {
+    // Detached transition - when you start drag transition from state-node point.
+
+    const { transitions, cursorPosition } = this.props;
+    const transition = transitions[transitionKey];
+    const deltaX = (this.lastCursorPosition && this.lastCursorPosition.x || 0) - cursorPosition.x;
+    const deltaY = (this.lastCursorPosition && this.lastCursorPosition.y || 0) - cursorPosition.y;
+    const points = [].concat(transition.points);
+
+    if(isPointFrom) {
+      points[0] = this.props.cursorPosition.x + deltaX;
+      points[1] = this.props.cursorPosition.y + deltaY;
+    } else {
+      points[6] = this.props.cursorPosition.x + deltaX;
+      points[7] = this.props.cursorPosition.y + deltaY;
+    }
+
+    this.lastCursorPosition = { ...this.props.cursorPosition };
+    this.props.actions.updateTransition(transitionKey, { points });
   }
 
   handleTransitionCreationMouseMove(e) {
@@ -242,7 +298,6 @@ export default class ViewportContainer extends Component {
   }
 
   handleTransitionMouseDown(e, key) {
-    console.log('mouseDown');
     e.stopPropagation();
     this.props.actions.updateSelectedItem(ITEM_TYPES.TRANSITION, key);
   }
@@ -263,6 +318,17 @@ export default class ViewportContainer extends Component {
 
     if (this.props.transitionCreationStarted) {
       this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition);
+    }
+
+    console.log('mouseup');
+    if (this.props.transitionDetachedMoveStarted) {
+      this.props.actions.finishMoveDetachedTransition(
+        this.props.lastDetachedTransition,
+        null,
+        null,
+        this.props.detachedMoveStartedAtPointFrom
+      );
+      document.body.removeEventListener('mousemove', this.detachedTransitionMouseMoveHandler);
     }
   }
 
@@ -318,6 +384,7 @@ export default class ViewportContainer extends Component {
       selectedItemType,
       selectedItemId,
       transitionCreationStarted,
+      detachedMoveStartedAtPointFrom,
       viewportFocused
     } = this.props;
 
