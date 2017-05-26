@@ -83,6 +83,8 @@ export default class ViewportContainer extends Component {
       panning: false
     };
 
+    this.lastCursorPosition = null;
+
     this.handleDeleteKey = this.handleDeleteKey.bind(this);
     this.handleWheel = this.handleWheel.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -240,6 +242,8 @@ export default class ViewportContainer extends Component {
       );
       document.body.removeEventListener('mousemove', this.detachedTransitionMouseMoveHandler);
     }
+
+    this.lastCursorPosition = null;
   }
 
   handleStateNodePointRef(ref, stateNodeKey, pointIndex, pointPosition) {
@@ -256,8 +260,8 @@ export default class ViewportContainer extends Component {
 
     const { transitions, cursorPosition } = this.props;
     const transition = transitions[transitionKey];
-    const deltaX = (this.lastCursorPosition && this.lastCursorPosition.x || 0) - cursorPosition.x;
-    const deltaY = (this.lastCursorPosition && this.lastCursorPosition.y || 0) - cursorPosition.y;
+    const deltaX = this.lastCursorPosition ? this.lastCursorPosition.x - cursorPosition.x : 0;
+    const deltaY = this.lastCursorPosition ? this.lastCursorPosition.y - cursorPosition.y : 0;
     const points = [].concat(transition.points);
 
     if(isPointFrom) {
@@ -280,8 +284,8 @@ export default class ViewportContainer extends Component {
       return false;
     }
 
-    const deltaX = (this.lastCursorPosition && this.lastCursorPosition.x || 0) - cursorPosition.x;
-    const deltaY = (this.lastCursorPosition && this.lastCursorPosition.y || 0) - cursorPosition.y;
+    const deltaX = this.lastCursorPosition ? this.lastCursorPosition.x - cursorPosition.x : 0;
+    const deltaY = this.lastCursorPosition ? this.lastCursorPosition.y - cursorPosition.y : 0;
     const points = newTransition.points
       .slice(0, 6)
       .concat([
@@ -363,6 +367,8 @@ export default class ViewportContainer extends Component {
       );
       document.body.removeEventListener('mousemove', this.detachedTransitionMouseMoveHandler);
     }
+
+    this.lastCursorPosition = null;
   }
 
   handleClick(e) {
