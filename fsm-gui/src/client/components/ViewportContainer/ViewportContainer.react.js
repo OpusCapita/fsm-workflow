@@ -12,7 +12,7 @@ import * as transitionsActions from '../App/redux/reducer/transitions';
 import * as transitionsMetaActions from '../App/redux/reducer/transitions-meta';
 import * as layoutActions from '../App/redux/reducer/layout';
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
-import { straightensBezier } from '../../svg-utils';
+import { straightensBezier, getDistance } from '../../svg-utils';
 
 import BezierTransition from '../BezierTransition';
 import StateNode from '../StateNode';
@@ -188,6 +188,7 @@ export default class ViewportContainer extends Component {
     const { cursorPosition, selectedItemType, selectedItemId, transitions } = this.props;
     const transitionKey = selectedItemId;
     const transition = transitions[transitionKey];
+    this.transitionCreationStartedAt = Object.assign({}, cursorPosition);
 
     const detachedTransition = (
       selectedItemType === ITEM_TYPES.TRANSITION && (
@@ -218,7 +219,16 @@ export default class ViewportContainer extends Component {
   handleStateNodePointMouseUp(e, stateNodeKey, pointIndex, pointPosition) {
     e.stopPropagation();
     if (this.props.transitionCreationStarted) {
-      this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition, stateNodeKey, pointIndex);
+      const transitionLength = getDistance(
+        this.transitionCreationStartedAt.x, this.transitionCreationStartedAt.y,
+        this.props.cursorPosition.x, this.props.cursorPosition.y
+      );
+      this.props.actions.finishCreateNewTransition(
+        this.props.lastCreatedTransition,
+        stateNodeKey,
+        pointIndex,
+        transitionLength
+      );
     }
 
     if (this.props.transitionDetachedMoveStarted) {
@@ -337,7 +347,11 @@ export default class ViewportContainer extends Component {
     this.setState({ panning: false });
 
     if (this.props.transitionCreationStarted) {
-      this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition);
+      const transitionLength = getDistance(
+        this.transitionCreationStartedAt.x, this.transitionCreationStartedAt.y,
+        this.props.cursorPosition.x, this.props.cursorPosition.y
+      );
+      this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition, null, null, transitionLength);
     }
 
     if (this.props.transitionDetachedMoveStarted) {

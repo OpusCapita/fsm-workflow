@@ -6,6 +6,8 @@ const FINISH_CREATE_NEW_TRANSITION = 'fsm/transitions-meta/FINISH_CREATE_NEW_TRA
 const START_MOVE_DETACHED_TRANSITION = 'fsm/transitions-meta/START_MOVE_DETACHED_TRANSITION';
 const FINISH_MOVE_DETACHED_TRANSITION = 'fsm/transitions-meta/FINISH_MOVE_DETACHED_TRANSITION';
 
+const minTransitionLength = 10;
+
 const initialState = {
   creationStarted: false,
   lastCreated: null,
@@ -83,10 +85,16 @@ export function startCreateNewTransition(x, y, stateNodeKey, pointIndex) {
   };
 }
 
-export function finishCreateNewTransition(transitionKey, stateNodeKey = null, pointIndex = null) {
+export function finishCreateNewTransition(transitionKey, stateNodeKey = null, pointIndex = null, transitionLength) {
   return (dispatch) => {
     dispatch(updateTransition(transitionKey, { to: stateNodeKey, toPoint: pointIndex }));
     dispatch({ type: FINISH_CREATE_NEW_TRANSITION });
+
+    if(transitionLength < minTransitionLength) {
+      dispatch(deleteTransition(transitionKey));
+      return;
+    }
+
     dispatch(updateSelectedItem(ITEM_TYPES.TRANSITION, transitionKey));
   };
 }
