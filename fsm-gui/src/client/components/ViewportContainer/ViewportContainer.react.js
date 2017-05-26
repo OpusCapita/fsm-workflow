@@ -108,6 +108,15 @@ export default class ViewportContainer extends Component {
     this.handleTransitionPointDragStart = this.handleTransitionPointDragStart.bind(this);
   }
 
+  componentWillUnmount() {
+    if(this.detachedTransitionMouseMoveHandler) {
+      document.body.removeEventListener('mousemove', this.detachedTransitionMouseMoveHandler);
+    }
+    if(this.handleTransitionCreationMouseMove) {
+      document.body.removeEventListener('mousemove', this.handleTransitionCreationMouseMove);
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     /* Perf optimization. Avoid frequent rerenders
      If you remove it you loose about 10 frames per second */
@@ -331,7 +340,6 @@ export default class ViewportContainer extends Component {
       this.props.actions.finishCreateNewTransition(this.props.lastCreatedTransition);
     }
 
-    console.log('mouseup');
     if (this.props.transitionDetachedMoveStarted) {
       this.props.actions.finishMoveDetachedTransition(
         this.props.lastDetachedTransition,
