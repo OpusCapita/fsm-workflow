@@ -410,8 +410,7 @@ export default class ViewportContainer extends Component {
         transitions[selectedItemId] &&
         transitions[selectedItemId].from === stateNodeKey
       ) {
-
-        selectedPoints = [transitions[selectedItemId].fromPoint];
+        selectedPoints = selectedPoints.concat([transitions[selectedItemId].fromPoint]);
       }
 
       if (
@@ -419,7 +418,7 @@ export default class ViewportContainer extends Component {
         transitions[selectedItemId] &&
         transitions[selectedItemId].to === stateNodeKey
       ) {
-        selectedPoints = [transitions[selectedItemId].toPoint];
+        selectedPoints = selectedPoints.concat([transitions[selectedItemId].toPoint]);
       }
 
       return (
