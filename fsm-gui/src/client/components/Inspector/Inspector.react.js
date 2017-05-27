@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import TransitionInspector from '../TransitionInspector';
+
 import './Inspector.less';
 
 const propTypes = {};
@@ -9,10 +9,11 @@ const defaultProps = {};
 export default
 class Inspector extends PureComponent {
   render() {
+    const { children } = this.props;
+
     return (
       <div className="fsm--inspector">
-        <div></div>
-        <TransitionInspector />
+        {children}
       </div>
     );
   }

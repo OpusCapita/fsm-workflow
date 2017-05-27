@@ -71,21 +71,20 @@
         "fromPoint": 0,
         "toPoint": 7,
         "options": {
-          "properties": {
-
-          },
-          "triggers": {
-
-          },
-          "conditions": {
-
-          },
-          "validators": {
-
-          },
-          "postFunctions": {
-
-          }
+          "guards": [{
+            "name": "Is validated",
+            "arguments": {
+              "argument1": "some value 1",
+              "argument2": "some value 2"
+            }
+          }],
+          "actions": [{
+            "name": "Send mail",
+            "arguments": {
+              "argument1": "some value 1",
+              "argument2": "some value 2"
+            }
+          }]
         },
         "points": [20,20, 20,100, 40,100, 100,40]
       }

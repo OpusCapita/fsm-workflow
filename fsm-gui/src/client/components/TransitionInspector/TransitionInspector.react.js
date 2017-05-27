@@ -1,31 +1,74 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'opuscapita-react-ui-buttons/lib/Button';
-import VerticalList from 'opuscapita-react-ui-autocompletes/lib/VerticalList';
+import SelectableTable from '../SelectableTable';
 import './TransitionInspector.less';
 
+import addSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/add_box.svg';
+import deleteSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/clear.svg';
+
 const defaultTransitionOptions = {
-  'properties': { label: 'Properties', onClick: () => {}, count: 0 },
-  'triggers': { label: 'Triggers', onClick: () => {}, count: 5 },
-  'conditions': { label: 'Conditions', onClick: () => {}, count: 0 },
-  'validators': { label: 'Validators', onClick: () => {}, count: 8 },
-  'postFunction': { label: 'Post Functions', onClick: () => {}, count: 0 }
+  'guards': {
+    name: 'Conditions',
+    onAdd: () => {},
+    onDelete: () => {},
+    items: [{
+      "name": "Order has been paid",
+      "arguments": {
+        "isPaid": true
+      }
+    }]
+  },
+  'actions': {
+    name: 'Actions',
+    onAdd: () => {},
+    onDelete: () => {},
+    items: [{
+      "name": "Notify email",
+      "arguments": {
+        "to": "Mr.Smith",
+        "subject": "Order approve",
+        "body": "Dear Mr.Smith...."
+      }
+    }, {
+      "name": "Notify slack",
+      "arguments": {
+        "team": "opuscapita-team",
+        "channel": "orders"
+      }
+    }, {
+      "name": "Approve order",
+      "arguments": {
+        "orderId": "order-7"
+      }
+    }]
+  }
 };
 
 const propTypes = {
-  onSave: PropTypes.func,
-  transitionOptions: PropTypes.objectOf(
+  options: PropTypes.objectOf(
     PropTypes.shape({
-      count: PropTypes.number,
-      label: PropTypes.string,
-      onClick: PropTypes.func
+      name: PropTypes.string,
+      items: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string,
+        arguments: PropTypes.objectOf(PropTypes.string)
+      })),
+      onAdd: PropTypes.func,
+      onDelete: PropTypes.func
     })
-  )
+  ),
+  name: PropTypes.string,
+  description: PropTypes.string,
+  onNameChange: PropTypes.func,
+  onDescriptionChange: PropTypes.func
 };
 
 const defaultProps = {
-  onSave: () => {},
-  transitionOptions: defaultTransitionOptions
+  options: defaultTransitionOptions,
+  name: '',
+  description: '',
+  onNameChange: () => {},
+  onDescriptionChange: () => {}
 };
 
 export default
@@ -35,13 +78,64 @@ class TransitionInspector extends Component {
     this.state = {
 
     };
+
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+  }
+
+  handleNameChange(e) {
+    this.props.onNameChange(e);
+  }
+
+  handleDescriptionChange(e) {
+    this.props.onDescriptionChange(e);
   }
 
   render() {
     const {
-      onSave,
-      transitionOptions
+      name,
+      description,
+      options
     } = this.props;
+
+    const optionsElement = Object.keys(options).length ? (
+      Object.keys(options).map(optionKey => (
+        <div key={optionKey} className="fsm--transition-inspector__option">
+          <div className="fsm--transition-inspector__option-header">
+            <label className="control-label">{options[optionKey].name}:</label>
+          </div>
+          <div className="fsm--transition-inspector__option-content">
+            <SelectableTable
+              items={
+                options[optionKey].items.reduce((accum, item, index) =>
+                  Object.assign({}, accum, { [index]: [item.name] }),
+                {})
+              }
+              onChange={() => {}}
+              selectedItem={''}
+              actions={{
+                remove: {
+                  svg: deleteSVG,
+                  title: 'Delete',
+                  action: (e, itemKey) => console.log(e, itemKey)
+                }
+              }}
+            />
+          </div>
+          <div className="fsm--transition-inspector__option-footer">
+            <Button
+              className="fsm--transition-inspector__option-control"
+              title="Add"
+              color="#0277bd"
+              bgColor="#fff"
+              contentPosition="before"
+              svg={addSVG}
+
+            />
+          </div>
+        </div>
+      ))
+    ) : null;
 
     return (
       <div className="fsm--transition-inspector">
@@ -49,26 +143,24 @@ class TransitionInspector extends Component {
         <div className="fsm--transition-inspector__main-properties">
           <div className="form-group">
             <label className="control-label">Name:</label>
-            <input className="form-control" />
+            <input
+              className="form-control"
+              value={name || ''}
+              onChange={this.handleNameChange}
+            />
           </div>
           <div className="form-group">
             <label className="control-label">Description:</label>
             <textarea
               className="form-control fsm--transition-inspector__description-textarea"
-              rows={6}
+              value={description || ''}
+              onChange={this.handleDescriptionChange}
+              rows={3}
             />
           </div>
           <div>
-            <label className="control-label">Options:</label>
             <div className="fsm--transition-inspector__options">
-              {Object.keys(transitionOptions).map(optionId => (
-                <div key={optionId} className="fsm--transition-inspector__option">
-                  <button type="button" className="btn btn-link fsm--transition-inspector__option-button">
-                    {transitionOptions[optionId].label}
-                  </button>
-                  <span>&nbsp;({transitionOptions[optionId].count || '0'})</span>
-                </div>
-              ))}
+              {optionsElement}
             </div>
           </div>
           <div className="fsm--transition-inspector__action-buttons">
@@ -76,13 +168,6 @@ class TransitionInspector extends Component {
               label="Delete transition"
               color="#fff"
               bgColor="#B71C1C"
-              style={{ marginBottom: '12px' }}
-              className="fsm--transition-inspector__action-button"
-            />
-            <Button
-              label="Save transition"
-              color="#fff"
-              bgColor="#0277BD"
               className="fsm--transition-inspector__action-button"
             />
           </div>

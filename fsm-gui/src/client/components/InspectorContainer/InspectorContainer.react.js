@@ -1,10 +1,12 @@
 import React, { PureComponent, PropTypes } from 'react';
+import './InspectorContainer.less';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Inspector from '../Inspector';
 import { spring, Motion } from 'react-motion';
-import './InspectorContainer.less';
+import Inspector from '../Inspector';
+import TransitionInspectorContainer from '../TransitionInspectorContainer';
 
+import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 import * as layoutActions from '../App/redux/reducer/layout';
 
 const propTypes = {
@@ -16,12 +18,29 @@ const defaultProps = {
 
 @connect(
   state => ({
-    showInspector: state.layout.showInspector
+    showInspector: state.layout.showInspector,
+    selectedItemType: state.selectedItem.itemType,
+    selectedItemId: state.selectedItem.itemId,
+    transitions: state.transitions,
+    stateNodes: state.stateNodes
   }),
   dispatch => ({ actions: bindActionCreators(layoutActions, dispatch) })
 )
 export default class InspectorContainer extends PureComponent {
+  renderInspectorChild() {
+    if(this.props.selectedItemType === ITEM_TYPES.TRANSITION) {
+      return (
+        <TransitionInspectorContainer
+          transitionKey={this.props.selectedItemId}
+        />
+      );
+    }
+    return null;
+  }
+
   render() {
+    let inspectorChild = this.renderInspectorChild();
+
     return (
       <Motion
         defaultStyle={{
@@ -41,7 +60,9 @@ export default class InspectorContainer extends PureComponent {
               boxShadow: `rgba(0, 0, 0, ${interpolatedStyle.y}) 0px 0px 12px`
             }}
           >
-            <Inspector />
+            <Inspector>
+              {inspectorChild}
+            </Inspector>
           </div>
         )}
       </Motion>
