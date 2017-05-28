@@ -3,6 +3,7 @@ import './TransitionInspectorContainer.less';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import TransitionInspector from '../TransitionInspector';
+import { capitalize } from '../../utils';
 
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 
@@ -21,9 +22,16 @@ export default class TransitionInspectorContainer extends PureComponent {
   render() {
     const { transitionKey, transitions } = this.props;
     const transition = transitions[transitionKey];
-    console.log('trsk', transitionKey);
-    console.log('trs', transitions);
-    console.log('tr', transition);
+    const options = Object.keys(transition.options).reduce((accum, optionKey) => {
+      const option = transition.options[optionKey];
+      return Object.assign({}, accum, { [optionKey]: {
+        name: capitalize(optionKey),
+        onAdd: () => {},
+        onDelete: () => {},
+        items: option
+      }});
+    }, {});
+
     if(!transition) {
       return null;
     }
@@ -34,7 +42,7 @@ export default class TransitionInspectorContainer extends PureComponent {
         description={transition.description}
         onNameChange={(e) => console.log(e)}
         onDescriptionChange={(e) => console.log(e)}
-        options={transition.options}
+        options={options}
       />
     );
   }

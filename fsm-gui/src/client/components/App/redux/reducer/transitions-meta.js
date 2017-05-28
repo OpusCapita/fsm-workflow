@@ -1,5 +1,6 @@
 import { createTransition, updateTransition, deleteTransition } from './transitions';
 import { updateSelectedItem, ITEM_TYPES } from './selected-item';
+import { capitalize } from '../../../../utils.js';
 
 const START_CREATE_NEW_TRANSITION = 'fsm/transitions-meta/START_CREATE_NEW_TRANSITION';
 const FINISH_CREATE_NEW_TRANSITION = 'fsm/transitions-meta/FINISH_CREATE_NEW_TRANSITION';
@@ -16,10 +17,6 @@ const initialState = {
   lastDetached: null
 };
 
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 const transitionKeyPrefix = 'transition_';
 const transitionTemplate = {
   "name": null,
@@ -29,21 +26,8 @@ const transitionTemplate = {
   "fromPoint": null,
   "toPoint": null,
   "options": {
-    "properties": {
-
-    },
-    "triggers": {
-
-    },
-    "conditions": {
-
-    },
-    "validators": {
-
-    },
-    "postFunctions": {
-
-    }
+    "guards": [],
+    "actions": []
   },
   "points": [0,0, 0,0, 0,0, 0,0]
 };

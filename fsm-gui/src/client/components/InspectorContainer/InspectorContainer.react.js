@@ -3,7 +3,6 @@ import './InspectorContainer.less';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { spring, Motion } from 'react-motion';
-import Inspector from '../Inspector';
 import TransitionInspectorContainer from '../TransitionInspectorContainer';
 
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
@@ -27,7 +26,7 @@ const defaultProps = {
   dispatch => ({ actions: bindActionCreators(layoutActions, dispatch) })
 )
 export default class InspectorContainer extends PureComponent {
-  renderInspectorChild() {
+  renderInspector() {
     if(this.props.selectedItemType === ITEM_TYPES.TRANSITION) {
       return (
         <TransitionInspectorContainer
@@ -39,7 +38,7 @@ export default class InspectorContainer extends PureComponent {
   }
 
   render() {
-    let inspectorChild = this.renderInspectorChild();
+    let inspector = this.renderInspector();
 
     return (
       <Motion
@@ -60,9 +59,7 @@ export default class InspectorContainer extends PureComponent {
               boxShadow: `rgba(0, 0, 0, ${interpolatedStyle.y}) 0px 0px 12px`
             }}
           >
-            <Inspector>
-              {inspectorChild}
-            </Inspector>
+            {inspector}
           </div>
         )}
       </Motion>

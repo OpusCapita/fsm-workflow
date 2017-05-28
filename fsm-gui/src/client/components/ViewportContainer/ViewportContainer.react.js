@@ -386,16 +386,18 @@ export default class ViewportContainer extends Component {
   }
 
   handleDeleteKey(e) {
+    const { viewportFocused } = this.props;
+
     if(this.props.selectedItemType === ITEM_TYPES.VIEWPORT) {
       return false;
     }
 
-    if(this.props.selectedItemType === ITEM_TYPES.STATE) {
+    if(this.props.selectedItemType === ITEM_TYPES.STATE && viewportFocused) {
       this.props.actions.deleteStateNode(this.props.selectedItemId);
       this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
     }
 
-    if(this.props.selectedItemType === ITEM_TYPES.TRANSITION) {
+    if(this.props.selectedItemType === ITEM_TYPES.TRANSITION && viewportFocused) {
       this.props.actions.deleteTransition(this.props.selectedItemId);
       this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
     }

@@ -41,6 +41,7 @@ class SelectableTable extends Component {
       <td
         className={`
           fsm--selectable-table__item
+          fsm--selectable-table__item--actions
           ${itemKey === selectedItem ? 'fsm--selectable-table__item--selected' : ''}`
         }
       >
