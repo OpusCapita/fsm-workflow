@@ -10,7 +10,6 @@ import deleteSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/clear.svg';
 
 const defaultOptions = {
   'guards': {
-    name: 'Conditions',
     onAdd: () => {},
     onDelete: () => {},
     items: [{
@@ -21,7 +20,6 @@ const defaultOptions = {
     }]
   },
   'actions': {
-    name: 'Actions',
     onAdd: () => {},
     onDelete: () => {},
     items: [{

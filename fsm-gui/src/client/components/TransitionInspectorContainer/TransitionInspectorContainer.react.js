@@ -22,6 +22,11 @@ export default class TransitionInspectorContainer extends PureComponent {
   render() {
     const { transitionKey, transitions } = this.props;
     const transition = transitions[transitionKey];
+
+    if(!transition) {
+      return null;
+    }
+
     const options = Object.keys(transition.options).reduce((accum, optionKey) => {
       const option = transition.options[optionKey];
       return Object.assign({}, accum, { [optionKey]: {
@@ -31,10 +36,6 @@ export default class TransitionInspectorContainer extends PureComponent {
         items: option
       }});
     }, {});
-
-    if(!transition) {
-      return null;
-    }
 
     return (
       <TransitionInspector

@@ -1,39 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Inspector from '../Inspector';
-import './TransitionInspector.less';
+import './StateNodeInspector.less';
 
 const defaultOptions = {
-  'guards': {
+  'properties': {
+    name: 'Properties',
     onAdd: () => {},
     onDelete: () => {},
     items: [{
-      "name": "Order has been paid",
+      "name": "Property 1",
       "arguments": {
-        "isPaid": true
-      }
-    }]
-  },
-  'actions': {
-    onAdd: () => {},
-    onDelete: () => {},
-    items: [{
-      "name": "Notify email",
-      "arguments": {
-        "to": "Mr.Smith",
-        "subject": "Order approve",
-        "body": "Dear Mr.Smith...."
+        "key": "prop 1 key",
+        "value": "prop 1 value"
       }
     }, {
-      "name": "Notify slack",
+      "name": "Property 2",
       "arguments": {
-        "team": "opuscapita-team",
-        "channel": "orders"
-      }
-    }, {
-      "name": "Approve order",
-      "arguments": {
-        "orderId": "order-7"
+        "key": "prop 2 key",
+        "value": "prop 2 value"
       }
     }]
   }
@@ -66,7 +51,7 @@ const defaultProps = {
 };
 
 export default
-class TransitionInspector extends Component {
+class StateNodeInspector extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -92,16 +77,16 @@ class TransitionInspector extends Component {
       options
     } = this.props;
 
-    const statesChooserElement = (
-      <div>States chooser should be here</div>
+    const transitionsListElement = (
+      <div>Transitions list should be here</div>
     );
 
     return (
-      <div className="fsm--transition-inspector">
+      <div className="fsm--state-node-inspector">
         <Inspector
-          title="Transition"
-          contentElement1={statesChooserElement}
+          title="State"
           name={name}
+          contentElement1={transitionsListElement}
           description={description}
           onNameChange={this.handleNameChange}
           onDesriptionChange={this.handleDescriptionChange}
@@ -112,5 +97,5 @@ class TransitionInspector extends Component {
   }
 }
 
-TransitionInspector.propTypes = propTypes;
-TransitionInspector.defaultProps = defaultProps;
+StateNodeInspector.propTypes = propTypes;
+StateNodeInspector.defaultProps = defaultProps;

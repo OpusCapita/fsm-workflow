@@ -405,9 +405,9 @@ export default class ViewportContainer extends Component {
 
   handleKeyDown(e) {
     switch(e.which) {
-      case 8: this.handleDeleteKey(e); // Backspace key
-      case 9: this.handleTabKey(e); // TAB key
-      case 46: this.handleDeleteKey(e); // Del key
+      case 8: this.handleDeleteKey(e); break; // Backspace key
+      case 9: this.handleTabKey(e); break; // TAB key
+      case 46: this.handleDeleteKey(e); break; // Del key
       default: return false;
     }
   }
