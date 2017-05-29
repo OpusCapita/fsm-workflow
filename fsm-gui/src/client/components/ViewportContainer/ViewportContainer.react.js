@@ -94,6 +94,8 @@ export default class ViewportContainer extends Component {
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleMouseDownOutside = this.handleMouseDownOutside.bind(this);
+    this.handleMouseUpOutside = this.handleMouseUpOutside.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleStateNodeClick = this.handleStateNodeClick.bind(this);
     this.handleStateNodeMouseDown = this.handleStateNodeMouseDown.bind(this);
@@ -343,8 +345,9 @@ export default class ViewportContainer extends Component {
 
   handleMouseUp(e) {
     const cursorHasMoved = Math.abs(this.mouseDownX - e.clientX) > 0 || Math.abs(this.mouseDownY - e.clientY) > 0;
+    const mouseMovedFromOutside = this.mouseDownX === null || this.mouseDownY === null;
 
-    if(!cursorHasMoved) {
+    if(!cursorHasMoved && !mouseMovedFromOutside) {
       this.props.actions.updateSelectedItem(ITEM_TYPES.VIEWPORT);
     }
 
@@ -375,7 +378,27 @@ export default class ViewportContainer extends Component {
     this.props.actions.updateLayoutProperty('viewportFocused', true);
   }
 
+  handleMouseDownOutside(e) {
+    console.log('down');
+    this.mouseDownX = null;
+    this.mouseDownY = null;
+
+    this.props.actions.updateLayoutProperty('viewportFocused', false);
+  }
+
+  handleMouseUpOutside(e) {
+    console.log('up');
+
+    this.mouseDownX = null;
+    this.mouseDownY = null;
+
+    this.props.actions.updateLayoutProperty('viewportFocused', false);
+  }
+
   handleClickOutside(e) {
+    this.mouseDownX = null;
+    this.mouseDownY = null;
+
     this.props.actions.updateLayoutProperty('viewportFocused', false);
   }
 
@@ -425,6 +448,7 @@ export default class ViewportContainer extends Component {
       selectedItemType,
       selectedItemId,
       transitionCreationStarted,
+      transitionDetachedMoveStarted,
       detachedMoveStartedAtPointFrom,
       viewportFocused
     } = this.props;
@@ -432,7 +456,9 @@ export default class ViewportContainer extends Component {
     const stateNodesElements = Object.keys(stateNodes).map(stateNodeKey => {
       const stateNode = stateNodes[stateNodeKey];
       const selected = selectedItemType === ITEM_TYPES.STATE && selectedItemId === stateNodeKey;
-      const showPoints = hoveredStateNode === stateNodeKey || selected || transitionCreationStarted;
+      const showPoints = (
+        hoveredStateNode === stateNodeKey || selected || transitionCreationStarted || transitionDetachedMoveStarted
+      );
       let selectedPoints = [];
 
       if (
@@ -524,6 +550,8 @@ export default class ViewportContainer extends Component {
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onClick={this.handleClick}
+        onMouseDownOutside={this.handleMouseDownOutside}
+        onMouseUpOutside={this.handleMouseUpOutside}
         onClickOutside={this.handleClickOutside}
         onKeyDown={this.handleKeyDown}
         panOffsetX={viewportPanOffset.x}

@@ -104,7 +104,7 @@ class TransitionInspector extends Component {
           name={name}
           description={description}
           onNameChange={this.handleNameChange}
-          onDesriptionChange={this.handleDescriptionChange}
+          onDescriptionChange={this.handleDescriptionChange}
           options={options}
         />
       </div>

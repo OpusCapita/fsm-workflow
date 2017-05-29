@@ -39,6 +39,8 @@ const defaultProps = {
   onMouseLeave: () => {},
   onPan: () => {},
   onKeyDown: () => {},
+  onMouseDownOutside: () => {},
+  onMouseUpOutside: () => {},
   onClickOutside: () => {},
   panOffsetX: 0,
   panOffsetY: 0
@@ -59,17 +61,35 @@ class Viewport extends Component {
     this.handleWheel = this.handleWheel.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.handleBodyClick = this.handleBodyClick.bind(this);
+    this.handleBodyMouseDown = this.handleBodyMouseDown.bind(this);
+    this.handleBodyMouseUp = this.handleBodyMouseUp.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount () {
     document.body.addEventListener('click', this.handleBodyClick);
+    document.body.addEventListener('mousedown', this.handleBodyMouseDown);
+    document.body.addEventListener('mouseup', this.handleBodyMouseUp);
     document.body.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount () {
     document.body.removeEventListener('click', this.handleBodyClick);
+    document.body.removeEventListener('mousedown', this.handleBodyMouseDown);
+    document.body.removeEventListener('mouseup', this.handleBodyMouseUp);
     document.body.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleBodyMouseDown(e) {
+    if (!this.viewportRef.contains(e.target)) {
+      this.props.onMouseDownOutside(e);
+    }
+  }
+
+  handleBodyMouseUp(e) {
+    if (!this.viewportRef.contains(e.target)) {
+      this.props.onMouseUpOutside(e);
+    }
   }
 
   handleBodyClick(e) {

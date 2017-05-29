@@ -1,7 +1,8 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import './TransitionInspectorContainer.less';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as transitionsActions from '../App/redux/reducer/transitions.js';
 import TransitionInspector from '../TransitionInspector';
 import { capitalize } from '../../utils';
 
@@ -16,9 +17,24 @@ const propTypes = {
     transitions: state.transitions,
     stateNodes: state.stateNodes
   }),
-  dispatch => ({ actions: bindActionCreators({}, dispatch) })
+  dispatch => ({ actions: bindActionCreators({ ...transitionsActions }, dispatch) })
 )
-export default class TransitionInspectorContainer extends PureComponent {
+export default class TransitionInspectorContainer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+  }
+
+  handleNameChange(e) {
+    this.props.actions.updateTransition(this.props.transitionKey, { name: e.target.value });
+  }
+
+  handleDescriptionChange(e) {
+    this.props.actions.updateTransition(this.props.transitionKey, { description: e.target.value });
+  }
+
   render() {
     const { transitionKey, transitions } = this.props;
     const transition = transitions[transitionKey];
@@ -41,8 +57,8 @@ export default class TransitionInspectorContainer extends PureComponent {
       <TransitionInspector
         name={transition.name}
         description={transition.description}
-        onNameChange={(e) => console.log(e)}
-        onDescriptionChange={(e) => console.log(e)}
+        onNameChange={this.handleNameChange}
+        onDescriptionChange={this.handleDescriptionChange}
         options={options}
       />
     );
