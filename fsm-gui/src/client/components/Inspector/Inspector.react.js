@@ -58,6 +58,7 @@ const propTypes = {
   ),
   name: PropTypes.string,
   description: PropTypes.string,
+  deleteButtonLabel: PropTypes.string,
   onNameChange: PropTypes.func,
   onDescriptionChange: PropTypes.func,
   contentElement1: PropTypes.element,
@@ -72,7 +73,8 @@ const defaultProps = {
   onNameChange: () => {},
   onDescriptionChange: () => {},
   contentElement1: null,
-  contentElement2: null
+  contentElement2: null,
+  deleteButtonLabel: ''
 };
 
 export default
@@ -99,6 +101,7 @@ class Inspector extends Component {
     const {
       name,
       description,
+      deleteButtonLabel,
       options,
       title,
       contentElement1,
@@ -144,6 +147,16 @@ class Inspector extends Component {
       ))
     ) : null;
 
+    // TODO add possibility to customize buttons
+    const deleteButton = deleteButtonLabel ? (
+      <Button
+        label={deleteButtonLabel}
+        color="#fff"
+        bgColor="#B71C1C"
+        className="fsm--inspector__action-button"
+      />
+    ) : null;
+
     return (
       <div className="fsm--inspector">
         <h4>{title}</h4>
@@ -172,12 +185,7 @@ class Inspector extends Component {
             </div>
           </div>
           <div className="fsm--inspector__action-buttons">
-            <Button
-              label="Delete transition"
-              color="#fff"
-              bgColor="#B71C1C"
-              className="fsm--inspector__action-button"
-            />
+            {deleteButton}
           </div>
           {contentElement2}
         </div>

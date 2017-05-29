@@ -5,11 +5,11 @@
 
 import React, { Component, PropTypes } from 'react';
 import { showroomScopeDecorator } from 'opuscapita-showroom-client';
-import { Provider } from 'react-redux';
+
 
 @showroomScopeDecorator
 export default
-class StateNodeInspectorContainerScope extends Component {
+class SVGLabelScope extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -17,18 +17,16 @@ class StateNodeInspectorContainerScope extends Component {
 
   render() {
     return (
-      <Provider store={window.__FSM_REDUX_STORE__} key="provider">
-        <div>
-          {this._renderChildren()}
-        </div>
-      </Provider>
+      <div>
+        {this._renderChildren()}
+      </div>
     );
   }
 }
 
-StateNodeInspectorContainerScope.contextTypes = {
+SVGLabelScope.contextTypes = {
   i18n: PropTypes.object
 };
-StateNodeInspectorContainerScope.childContextTypes = {
+SVGLabelScope.childContextTypes = {
   i18n: PropTypes.object
 };

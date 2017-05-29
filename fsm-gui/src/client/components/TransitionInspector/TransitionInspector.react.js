@@ -103,6 +103,7 @@ class TransitionInspector extends Component {
           contentElement1={statesChooserElement}
           name={name}
           description={description}
+          deleteButtonLabel="Delete transition"
           onNameChange={this.handleNameChange}
           onDescriptionChange={this.handleDescriptionChange}
           options={options}

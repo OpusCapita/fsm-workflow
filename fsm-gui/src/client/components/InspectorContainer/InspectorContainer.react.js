@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { spring, Motion } from 'react-motion';
 import TransitionInspectorContainer from '../TransitionInspectorContainer';
+import StateNodeInspectorContainer from '../StateNodeInspectorContainer';
 
 import { ITEM_TYPES } from '../App/redux/reducer/selected-item';
 import * as layoutActions from '../App/redux/reducer/layout';
@@ -31,6 +32,14 @@ export default class InspectorContainer extends PureComponent {
       return (
         <TransitionInspectorContainer
           transitionKey={this.props.selectedItemId}
+        />
+      );
+    }
+
+    if(this.props.selectedItemType === ITEM_TYPES.STATE) {
+      return (
+        <StateNodeInspectorContainer
+          stateNodeKey={this.props.selectedItemId}
         />
       );
     }

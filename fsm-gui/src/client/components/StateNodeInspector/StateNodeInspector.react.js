@@ -88,6 +88,7 @@ class StateNodeInspector extends Component {
           name={name}
           contentElement1={transitionsListElement}
           description={description}
+          deleteButtonLabel="Delete state"
           onNameChange={this.handleNameChange}
           onDesriptionChange={this.handleDescriptionChange}
           options={options}
