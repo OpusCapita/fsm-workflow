@@ -29,7 +29,7 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
-  findAvailableTransitions({ from, event, object, context } = {}) {
+  findAvailableTransitions({ from, event, object, context, auto=false } = {}) {
     // if from is not specified, then no transition is available
     if (!from) {
       // to do throw proper error
@@ -43,15 +43,20 @@ export default class MachineDefinition {
     const checkFrom = transition => {
       return transition.from === from;
     };
+
     const checkEvent = transition => {
-      // if event is not specified then event does not metter for search
+      // if event is not specified then event does not matter for search
       if (!event) {
         return true;
       }
       return transition.event === event;
     };
-    const checkGuards = transition => {
-      const { guards, from, to, event } = transition;
+
+
+    const checkGuards = ({transition, guardKey = 'guards'}) => {
+      const { from, to, event } = transition;
+      const guards = transition[guardKey];
+
       // if guards are undefined
       if (!guards) {
         return true;
@@ -76,17 +81,51 @@ export default class MachineDefinition {
 
       return true;
     };
+
     // console.log(`transitions '${JSON.stringify(transitions)}'`);
     return new Promise((resolve, reject) => {
       try {
-        const foundTransitions = transitions.filter(transition => {
-          return checkFrom(transition) && checkEvent(transition) && checkGuards(transition);
+        let foundTransitions = transitions.filter(transition => {
+          return checkFrom(transition) && checkEvent(transition) && checkGuards({transition});
         });
+
+        if(auto) {
+          foundTransitions = foundTransitions.filter(transition => {
+            return transition.auto &&
+            transition.auto.length >= 0 &&
+            checkGuards({
+                transition,
+                guardKey: 'auto'
+              });
+          })
+        }
         resolve({ transitions: foundTransitions });
       } catch (e) {
         reject(e);
       }
     });
+  }
+
+  /**
+   * Returns a list of states
+   * that are available during the workflow definition
+   *
+   * @return Array
+   */
+  getAvailableStates() {
+    if(!this.schema) {
+      return [];
+    }
+
+    let result = [];
+    result.push(this.schema.initialState);
+    result = result.concat(this.schema.finalStates);
+    for (let i = 0; i < this.schema.transitions.length; i++) {
+      result.push(this.schema.transitions[i].from);
+      result.push(this.schema.transitions[i].to);
+    }
+
+    return Array.from(new Set(result)).sort();
   }
 
   static getDefaultObjectStateFieldName() {

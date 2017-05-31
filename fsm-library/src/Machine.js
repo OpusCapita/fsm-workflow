@@ -52,6 +52,21 @@ export default class Machine {
     });
   }
 
+  /**
+   * Searches for transitions available for automatic execution from current object state
+   *
+   * @param object
+   * @return Promise that is resolved with transition list or resolved with error
+   */
+  availableAutoTransitions({object}) {
+    return this.machineDefinition.findAvailableTransitions({
+      from: this.currentState({ object }),
+      object,
+      context: this.context,
+      auto: true
+    });
+  }
+
   // send event
   // object - stateful object
   // event - name of the event to be send
@@ -148,6 +163,24 @@ export default class Machine {
         });
         // todo: call onFinishTransition handler
       });
+  }
+
+  /**
+   * Checks if workflow is launched and not finished for a specified object
+   * @param object
+   * @return {number}
+   */
+  isOn({object}) {
+    return this.availableStates().indexOf(this.currentState({object})) !== -1 &&
+        !this.isFinal({state: this.currentState({ object })})
+  }
+
+  /**
+   * Return list of available workflow states
+   * @return {Array}
+   */
+  availableStates() {
+    return this.machineDefinition.getAvailableStates();
   }
 
   // returns true iff object in specified state
