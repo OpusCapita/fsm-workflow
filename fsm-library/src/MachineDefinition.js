@@ -31,7 +31,7 @@ export default class MachineDefinition {
 
   findAvailableTransitions({ from, event, object, context, auto=false } = {}) {
     // if from is not specified, then no transition is available
-    if (!from) {
+    if (from == null || from == undefined) {
       // to do throw proper error
       return this.promise.reject(new Error("'from' is not defined"));
     }
