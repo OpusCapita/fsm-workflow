@@ -224,3 +224,13 @@ machine.onFinishTransition()  // returns promise
 Note: basic ideas on how API looks like are taken from [fsm-as-promised](https://github.com/vstirbu/fsm-as-promised)
 
 #### [Existing FSM libs review](existingFsmLibsReview.md)
+
+## Contributors
+
+| <img src="https://avatars.githubusercontent.com/u/24603787?v=3" width="100px;"/> | [**Alexey Sergeev**](https://github.com/asergeev-sc)     |
+| :---: | :---: |
+| <img src="https://avatars.githubusercontent.com/u/24652543?v=3" width="100px;"/> | [**Kirill Volkovich**](https://github.com/kvolkovich-sc) |
+| <img src="https://avatars3.githubusercontent.com/u/24650360?v=3" width="100px;"/> | [**Daniel Zhitomirsky**](https://github.com/dzhitomirsky-sc) |
+
+Contributing are welcome. We need YOU! :metal:
+
