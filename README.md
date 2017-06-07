@@ -20,11 +20,11 @@ condition/expression/function = guard)
 #### Notes
 
 The following things will be implemented later as extensions/helpers (separate sibling library) or in specific application:
+- automatic transitions
 - task list is based on domain object
 - graphical editor
 - logging
 - analysis
-- automatic (times) transitions
 
 ## How To Use
 
@@ -41,8 +41,8 @@ import {MachineDefinition, Machine} from 'fsm-workflow';
 Machine definition consist of:
 - [schema](#schema)
 - [actions](#action)
-- [guards](#guard)
-- [auto](#auto-requires-discussion)
+- [guards](#guard-conditions)
+- [automatic](#automatic-conditions)
 
 ```javascript
 const machineDefinition = new MachineDefinition({
@@ -74,7 +74,7 @@ const machineDefinition = new MachineDefinition({
               }
             }
           ],
-          auto: [                          
+          automatic: [                          
             {                                
                 "name": "lastlyUpdatedMoreThan24hAgo",
                 "arguments": {
@@ -89,10 +89,8 @@ const machineDefinition = new MachineDefinition({
   actions: {
     archive: function({argument1, argument1}) {}
   },
-  guards: {
-    validate: function({argument1, argument1}) {}
-  }
-  auto: {
+  conditions: {
+    validate: function({argument1, argument1}) {},
     lastlyUpdatedMoreThan24hAgo: function({argument1, argument1}) {}
   }
 });
@@ -104,7 +102,7 @@ Defines machine transitions and initialization options
 
 #### Transitions
 
-In schema you needs to define an array of available machine transitions. Typically a transition is triggered by an _event_ and happens between _from_ and _to_ states. Optionally each transition can have _actions_, _guards_ and _auto_ (defines conditions that if satisfied then event could be sent automatically).
+In schema you needs to define an array of available machine transitions. Typically a transition is triggered by an _event_ and happens between _from_ and _to_ states. Optionally each transition can have _actions_, _guards_ and _automatic_ (defines conditions that if satisfied then event could be sent automatically).
 
 #### Initial state
 
@@ -154,15 +152,15 @@ var machineDefinition = new MachineDefinition({
 
 Actions (action = function) are executed during transition (not during existing or entering states). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit arguments like _object_, _from_, _to_, etc. During transition machine executes each action in defined order. Each action gets _actionExecutionResutls_ argument which serves as an accumulator from perviously called actions, where each property is an action name and value is value returned by action.
 
-#### Guard
+#### Guard (conditions)
 
 Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false).
 
 Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
 
-#### Auto (requires discussion)
+#### Automatic (conditions)
 
-Transition could be marked as automatic using _auto_ property. It defines array of
+Transition could be marked as automatic using corresponding property. It defines array of
 conditions(functions, each return true or false). Check for whether object in current state has (at least one) automatic transition needs to be done by external task manager (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
 
 
@@ -204,8 +202,7 @@ var machine = new Machine(machineDefinition, context);
 // start/initialize machine/workflow
 machine.start({object})
 
-// list of available events: {event, auto}, e.g. event
-// and auto(matic) functions for checking if event should/could be sent automatically
+// list of available events: {event, from, to, ..}, e.g. event
 machine.availableTransitions({object})
 
 // send 'event' and pass addition 'request' data that is posted by user/app
