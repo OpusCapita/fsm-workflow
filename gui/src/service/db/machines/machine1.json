@@ -71,21 +71,38 @@
         "fromPoint": 0,
         "toPoint": 7,
         "options": {
-          "properties": {
-
-          },
-          "triggers": {
-
-          },
-          "conditions": {
-
-          },
-          "validators": {
-
-          },
-          "postFunctions": {
-
-          }
+          "guards": [{
+            "name": "Guard 1",
+            "arguments": {
+              "argument1": "some value 1",
+              "argument2": "some value 2"
+            }
+          }, {
+            "name": "Guard 2",
+            "arguments": {
+              "argument1": "some value 1",
+              "argument2": "some value 2"
+            }
+          }],
+          "actions": [{
+            "name": "Notify customer",
+            "arguments": {
+              "argument1": "some value 1",
+              "argument2": "some value 2"
+            }
+          }, {
+            "name": "Notify supplier",
+            "arguments": {
+              "argument1": "some value 1",
+              "argument2": "some value 2"
+            }
+          }, {
+            "name": "Request approvement",
+            "arguments": {
+              "argument1": "some value 1",
+              "argument2": "some value 2"
+            }
+          }]
         },
         "points": [20,20, 20,100, 40,100, 100,40]
       }

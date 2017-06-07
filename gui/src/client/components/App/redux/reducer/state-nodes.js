@@ -14,7 +14,8 @@ export default function reducer(state = initialState, action = {}) {
     case CREATE_STATE_NODE:
       return state;
     case UPDATE_STATE_NODE:
-      return Object.assign({}, state, { [action.key]: action.value });
+      const stateNode = Object.assign({}, state[action.key], action.value);
+      return Object.assign({}, state, { [action.key]: stateNode });
     case DELETE_STATE_NODE:
       const newState = Object.assign({}, state, { [action.key]: undefined });
       delete newState[action.key];

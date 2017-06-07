@@ -146,17 +146,21 @@ var machineDefinition = new MachineDefinition({
 });
 ```
 
-### Action
+### Code (Actions and Conditions(guards/automatic))
+
+[Ideas & thoughts](actionsAndConditions.md)
+
+#### Action
 
 Actions (action = function) are executed during transition (not during existing or entering states). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit arguments like _object_, _from_, _to_, etc. During transition machine executes each action in defined order. Each action gets _actionExecutionResutls_ argument which serves as an accumulator from perviously called actions, where each property is an action name and value is value returned by action.
 
-### Guard
+#### Guard
 
 Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false).
 
 Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
 
-### Auto (requires discussion)
+#### Auto (requires discussion)
 
 Transition could be marked as automatic using _auto_ property. It defines array of
 conditions(functions, each return true or false). Check for whether object in current state has (at least one) automatic transition needs to be done by external task manager (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
@@ -224,3 +228,12 @@ machine.onFinishTransition()  // returns promise
 Note: basic ideas on how API looks like are taken from [fsm-as-promised](https://github.com/vstirbu/fsm-as-promised)
 
 #### [Existing FSM libs review](existingFsmLibsReview.md)
+
+## Contributors
+
+| <img src="https://avatars.githubusercontent.com/u/24603787?v=3" width="100px;"/> | [**Alexey Sergeev**](https://github.com/asergeev-sc)     |
+| :---: | :---: |
+| <img src="https://avatars.githubusercontent.com/u/24652543?v=3" width="100px;"/> | [**Kirill Volkovich**](https://github.com/kvolkovich-sc) |
+| <img src="https://avatars3.githubusercontent.com/u/24650360?v=3" width="100px;"/> | [**Daniel Zhitomirsky**](https://github.com/dzhitomirsky-sc) |
+
+Contributing are welcome. We need YOU! :metal:

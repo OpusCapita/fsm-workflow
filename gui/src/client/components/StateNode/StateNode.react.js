@@ -5,6 +5,7 @@ import { getCirclePath, pathToPoints, pointsToPath } from '../../svg-utils';
 import tinycolor from 'tinycolor2';
 import isEqual from 'lodash/isEqual';
 import './StateNode.less';
+import SVGLabel from '../SVGLabel';
 
 const paddingV = 20;
 const paddingH = 60;
@@ -84,13 +85,13 @@ class StateNode extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      labelElement: null,
-      selectedPoint: null
+      selectedPoint: null,
+      labelElementBbox: null
     };
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
-    this.handleLabelElementRef = this.handleLabelElementRef.bind(this);
+    this.handleLabelUpdate = this.handleLabelUpdate.bind(this);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -118,8 +119,23 @@ class StateNode extends PureComponent {
       this.props.snap !== nextProps.snap ||
       this.props.showPoints !== nextProps.showPoints ||
       this.state.labelElement !== nextState.labelElement ||
-      this.state.selectedPoint !== nextState.selectedPoint
+      this.state.selectedPoint !== nextState.selectedPoint ||
+      this.state.labelElementBBox !== nextState.labelElementBBox
     );
+  }
+
+  handleLabelUpdate(element) {
+    const bbox = element.getBBox();
+    const elementBBox = element ? Object.assign({}, {
+      x: bbox.x,
+      y: bbox.y,
+      width: bbox.width,
+      height: bbox.height
+    }) : null;
+
+    this.setState({
+      labelElementBBox: elementBBox
+    });
   }
 
   handleStart(e, data) {
@@ -132,10 +148,6 @@ class StateNode extends PureComponent {
 
   handleDrag(e, data) {
     this.props.onDrag(e, data);
-  }
-
-  handleLabelElementRef(ref) {
-    this.setState({ labelElement: ref });
   }
 
   handleMouseDown(e) {
@@ -289,9 +301,11 @@ class StateNode extends PureComponent {
       onDrag
     } = this.props;
 
-    const labelElementBBox = this.state.labelElement && this.state.labelElement.getBBox();
-    const labelWidth = labelElementBBox && labelElementBBox.width;
-    const labelHeight = labelElementBBox && labelElementBBox.height;
+    const { labelElementBBox } = this.state;
+
+    const labelWidth = labelElementBBox ? labelElementBBox.width : 0;
+    const labelHeight = labelElementBBox ? labelElementBBox.height : 0;
+
     const labelX = x - labelWidth / 2 - paddingH / 2 - outlinePadding;
     const labelY = y - labelHeight / 2 - paddingV / 2 - outlinePadding;
 
@@ -349,8 +363,8 @@ class StateNode extends PureComponent {
               fill={bgColor}
               strokeWidth={lineWidth}
             />
-            <text
-              ref={this.handleLabelElementRef}
+            <SVGLabel
+              onUpdate={this.handleLabelUpdate}
               x={x}
               y={y}
               fontSize="16"
@@ -361,7 +375,7 @@ class StateNode extends PureComponent {
               className="fsm--state-node__label"
             >
               {label}
-            </text>
+            </SVGLabel>
           </g>
         </DraggableCore>
         {points}

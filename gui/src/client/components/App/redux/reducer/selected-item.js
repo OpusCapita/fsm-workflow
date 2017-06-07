@@ -9,8 +9,8 @@ export const ITEM_TYPES = {
 };
 
 const initialState = {
-  type: ITEM_TYPES.NON_INSPECTABLE,
-  id: '',
+  itemType: ITEM_TYPES.NON_INSPECTABLE,
+  itemId: '',
   hoveredStateNode: ''
 };
 

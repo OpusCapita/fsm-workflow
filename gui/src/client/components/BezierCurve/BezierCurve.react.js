@@ -89,6 +89,13 @@ class BezierCurve extends PureComponent {
     );
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.label !== prevProps.label) {
+      // XXX Force update after label bbox recalculated
+      this.forceUpdate();
+    }
+  }
+
   handleChange(bezier, d) {
     this.props.onChange(bezier, this.pathElement);
   }

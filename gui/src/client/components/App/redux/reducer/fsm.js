@@ -56,8 +56,9 @@ export function loadFsm(id) {
     request.get(`http://localhost:3020/machines/${id}`)
       .then((result) => {
         dispatch(loadFsmSuccess(result.body.meta));
-        dispatch(replaceStateNodes(result.body.data.states));
+
         dispatch(replaceTransitions(result.body.data.transitions));
+                dispatch(replaceStateNodes(result.body.data.states));
       })
       .catch((error) => {
         dispatch(loadFsmFail(error));

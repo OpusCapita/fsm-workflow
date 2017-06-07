@@ -5,35 +5,30 @@
 
 import React, { Component, PropTypes } from 'react';
 import { showroomScopeDecorator } from 'opuscapita-showroom-client';
-
+import { Provider } from 'react-redux';
 
 @showroomScopeDecorator
 export default
-class SelectableTableScope extends Component {
+class StateNodeInspectorContainerScope extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedItem: null
-    };
-  }
-
-  handleChange(itemKey) {
-    console.log(itemKey + ' selected');
-    this.setState({ selectedItem: itemKey });
+    this.state = {};
   }
 
   render() {
     return (
-      <div>
-        {this._renderChildren()}
-      </div>
+      <Provider store={window.__FSM_REDUX_STORE__} key="provider">
+        <div>
+          {this._renderChildren()}
+        </div>
+      </Provider>
     );
   }
 }
 
-SelectableTableScope.contextTypes = {
+StateNodeInspectorContainerScope.contextTypes = {
   i18n: PropTypes.object
 };
-SelectableTableScope.childContextTypes = {
+StateNodeInspectorContainerScope.childContextTypes = {
   i18n: PropTypes.object
 };

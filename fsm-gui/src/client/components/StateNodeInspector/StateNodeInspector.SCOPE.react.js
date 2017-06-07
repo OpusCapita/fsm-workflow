@@ -9,17 +9,10 @@ import { showroomScopeDecorator } from 'opuscapita-showroom-client';
 
 @showroomScopeDecorator
 export default
-class SelectableTableScope extends Component {
+class StateNodeInspectorScope extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedItem: null
-    };
-  }
-
-  handleChange(itemKey) {
-    console.log(itemKey + ' selected');
-    this.setState({ selectedItem: itemKey });
+    this.state = {};
   }
 
   render() {
@@ -31,9 +24,9 @@ class SelectableTableScope extends Component {
   }
 }
 
-SelectableTableScope.contextTypes = {
+StateNodeInspectorScope.contextTypes = {
   i18n: PropTypes.object
 };
-SelectableTableScope.childContextTypes = {
+StateNodeInspectorScope.childContextTypes = {
   i18n: PropTypes.object
 };
