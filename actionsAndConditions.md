@@ -1,20 +1,19 @@
 ### Actions and Conditions(guards/automatic)
+* JS code as text(expression). E.g.
+  * condition ```invoice.total > 1000```
+  * action ```sendEmail({to: 'mr.smith@dot.com'})```
 
-1. JS code as text(expression). E.g.
-  - condition ```invoice.total > 1000```
-  - action ```sendEmail({to: 'mr.smith@dot.com'})```
-
-2. Structured function call definition in JSON that refer to externally implemented/defined function and specified arguments:
-  - condition
-```
+* Structured function call definition in JSON that refer to externally implemented/defined function and specified arguments:
+  * condition 
+```javascipt
 {
   name: 'totalCostIsGreaterThan'
   arguments: {
     value: 1000
   }
 }
-```
-  - action
+```javascipt
+  * action 
 ```
 {
   name: 'sendEmail'
@@ -34,7 +33,7 @@ With structured approach it is possible to update code/implantation as soon as y
 In simple case JS expression/code is much faster to write (no one can stop you from doing this, sure you'll do it):
 ```invoice.total > 1000```
  But that does not mean that people would be smart enough to not creates complexity by writing a lot of code:
-```
+```javascipt
 if (invoice.items) {
     var foundItem = null;
     for (var i=0; i < invoice.items.legth; i++){
