@@ -1,12 +1,11 @@
-Actions and Conditions(guards/automatic)
+### Actions and Conditions(guards/automatic)
 
 1. JS code as text(expression). E.g.
   - condition ```invoice.total > 1000```
- - action ```sendEmail({to: 'mr.smith@dot.com'})```
+  - action ```sendEmail({to: 'mr.smith@dot.com'})```
 
 2. Structured function call definition in JSON that refer to externally implemented/defined function and specified arguments:
-
-    - condition
+  - condition
 ```
 {
   name: 'totalCostIsGreaterThan'
@@ -15,7 +14,7 @@ Actions and Conditions(guards/automatic)
   }
 }
 ```
-    - action
+  - action
 ```
 {
   name: 'sendEmail'
