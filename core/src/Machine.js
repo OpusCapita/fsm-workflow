@@ -23,7 +23,7 @@ export default class Machine {
   }
 
   // sets object initial state
-  start({ object, context }) {
+  start({ object }) {
     const { objectStateFieldName, initialState } = this.machineDefinition.schema;
     // eslint-disable-next-line no-param-reassign
     object[objectStateFieldName] = initialState;
@@ -49,6 +49,21 @@ export default class Machine {
       object,
       context,
       event
+    });
+  }
+
+  /**
+   * Searches for transitions available for automatic execution from current object state
+   *
+   * @param object
+   * @return Promise that is resolved with transition list or resolved with error
+   */
+  availableAutomaticTransitions({ object }) {
+    return this.machineDefinition.findAvailableTransitions({
+      from: this.currentState({ object }),
+      object,
+      context: this.context,
+      isAutomatic: true
     });
   }
 
@@ -102,7 +117,7 @@ export default class Machine {
         for (let i = 0; i < actions.length; i++) {
           result = result.then(({ actionExecutionResutls, object }) => {
             let action = actionByName(actions[i].name);
-            // guard is defined in schema, but is not really defined -> error!!!
+            // action is defined in schema, but is not really defined -> error!!!
             if (!action) {
               // throw/return proper/sepecific error
               return promise.reject({
@@ -148,6 +163,24 @@ export default class Machine {
         });
         // todo: call onFinishTransition handler
       });
+  }
+
+  /**
+   * Checks if workflow is launched and not finished for a specified object
+   * @param object
+   * @return {number}
+   */
+  isRunning({ object }) {
+    return this.availableStates().indexOf(this.currentState({ object })) !== -1 &&
+        !this.isFinal({ state: this.currentState({ object }) })
+  }
+
+  /**
+   * Return list of available workflow states
+   * @return {Array}
+   */
+  availableStates() {
+    return this.machineDefinition.getAvailableStates();
   }
 
   // returns true iff object in specified state

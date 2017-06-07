@@ -1,4 +1,9 @@
 node_modules
 npm-debug.log
 yarn.lock
+package-lock.json
 yarn-error.log
+.idea
+fsm-task-manager/node_modules
+examples/invoice/node_modules
+examples/process/node_modules

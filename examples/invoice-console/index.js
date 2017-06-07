@@ -2,8 +2,8 @@ let fs = require("fs");
 
 let { startForm, eventForm, restartForm } = require("./forms").default;
 
-let MachineDefinition = require("../../fsm-library/src/MachineDefinition").default;
-let Machine = require("../../fsm-library/src/Machine").default;
+let MachineDefinition = require("../../core/src/MachineDefinition").default;
+let Machine = require("../../core/src/Machine").default;
 
 let machineSchemaAsText = fs.readFileSync("./machine-schema.json", "utf8");
 
