@@ -202,8 +202,11 @@ var machine = new Machine(machineDefinition, context);
 // start/initialize machine/workflow
 machine.start({object})
 
-// list of available events: {event, from, to, ..}, e.g. event
+// returns a list of available transitions: {event, from, to, ..}, e.g. event
 machine.availableTransitions({object})
+// returns a list of available automatic transitions: {event, from, to, ..}, e.g. event
+// if machine schema is adequate then there should be not more than 1 such transition
+machine.availableAutomaticTransitions({})
 
 // send 'event' and pass addition 'request' data that is posted by user/app
 // returns promise, in case of successful transition then function will be called
