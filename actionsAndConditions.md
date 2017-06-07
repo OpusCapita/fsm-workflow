@@ -1,10 +1,10 @@
 ### Actions and Conditions(guards/automatic)
 * JS code as text(expression). E.g.
-  * condition ```invoice.total > 1000```
-  * action ```sendEmail({to: 'mr.smith@dot.com'})```
+ * condition ```invoice.total > 1000```
+ * action ```sendEmail({to: 'mr.smith@dot.com'})```
 
 * Structured function call definition in JSON that refer to externally implemented/defined function and specified arguments:
-  * condition 
+ * condition 
 ```javascipt
 {
   name: 'totalCostIsGreaterThan'
@@ -12,9 +12,9 @@
     value: 1000
   }
 }
-```javascipt
-  * action 
 ```
+ * action 
+```javascipt
 {
   name: 'sendEmail'
   arguments: {
