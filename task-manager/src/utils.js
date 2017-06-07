@@ -8,7 +8,7 @@
 export function doUntil(action, test, timeout = 1000) {
   let timer = setInterval(() => {
     action();
-    if(!test()) {
+    if (!test()) {
       killProcess(timer);
     }
   }, timeout);

@@ -25,21 +25,18 @@ describe('utils:', () => {
     let counter = 0;
     let counterValueAfter300millis;
 
-    let processDescriptor = doUntil(() => {counter ++}, () => (false), 100);
-
-    //we take a snapshot of counter after some period of execution
-    //and stop the process
+    // we take a snapshot of counter after some period of execution
+    // and stop the process
     setTimeout(() => {
       counterValueAfter300millis = counter;
       killProcess(counter);
     }, 300);
 
-    //after some longer period we check that the value ws not changed anymore
-    //if it is true - the process was stopped correctly and the action was no longer executed
+    // after some longer period we check that the value ws not changed anymore
+    // if it is true - the process was stopped correctly and the action was no longer executed
     setTimeout(() => {
       assert.equal(counterValueAfter300millis, counter);
       done();
     }, 500);
-
   })
 });

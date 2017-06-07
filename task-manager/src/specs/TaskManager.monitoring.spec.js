@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {Machine, MachineDefinition} from '../../../core';
+import { Machine, MachineDefinition } from '../../../core';
 import TaskManager from '../TaskManager';
 
 describe('Task manager:monitoring', function() {

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {Machine, MachineDefinition} from '../../../core';
+import { Machine, MachineDefinition } from '../../../core';
 import TaskManager from '../TaskManager';
 
 describe('Task manager:event sending', function() {
@@ -39,7 +39,7 @@ describe('Task manager:event sending', function() {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         object = { ...newValue };
-        resolve({object: newValue});
+        resolve({ object: newValue });
       }, 100);
     })
   };
@@ -47,7 +47,7 @@ describe('Task manager:event sending', function() {
 
   it('test starting & saving after it', (done) => {
     const tm = new TaskManager({ machine, search, update });
-    tm.start({object}).then((result) => {
+    tm.start({ object }).then((result) => {
       assert.equal(object.status, 'init');
       done();
     });
@@ -55,8 +55,8 @@ describe('Task manager:event sending', function() {
 
   it('test event sending & saving', (done) => {
     const tm = new TaskManager({ machine, search, update });
-    machine.start({object}).then((startedTask) => {
-      tm.sendEvent({object, event: 'finish'}).then((result) => {
+    machine.start({ object }).then((startedTask) => {
+      tm.sendEvent({ object, event: 'finish' }).then((result) => {
         assert.equal(object.status, 'finished');
         done();
       })

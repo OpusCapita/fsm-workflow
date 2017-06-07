@@ -38,27 +38,26 @@ export default class TaskManager {
     let taskProcess = doUntil(() => {
       this.search({}).then((taskList) => {
         taskList.map((task) => {
-          if(this.machine.isRunning({object: task})) {
+          if (this.machine.isRunning({ object: task })) {
             this.machine.availableAutomaticTransitions({ object: task }).then(({ transitions }) => {
               if (transitions && transitions.length > 0) {
-                const { from, to, event } = transitions[0];
+                const { from, event } = transitions[0];
                 if (transitions.length > 1) {
                   console.log(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
                 }
-                return this.machine.sendEvent({ object: task, event }).then(({object}) => {
+                return this.machine.sendEvent({ object: task, event }).then(({ object }) => {
                   return this.update(object);
                 })
               } else {
                 return this.machine.promise.resolve();
               }
             })
-          } else if (!this.machine.isFinal({ state: this.machine.currentState({ object: task}) })){
-            return this.machine.start({object: task}).then(({object}) => {
+          } else if (!this.machine.isFinal({ state: this.machine.currentState({ object: task }) })) {
+            return this.machine.start({ object: task }).then(({ object }) => {
               return this.update(object);
             })
-          } else {
-            return this.machine.promise.resolve();
           }
+          return this.machine.promise.resolve();
         })
       }).catch((err) => {
         this.stop();
@@ -79,7 +78,7 @@ export default class TaskManager {
    * @param searchParams
    * @return {Promise.<TResult>}
    */
-  list({searchParams}) {
+  list({ searchParams }) {
     return this.machine.promise.resolve(this.search(searchParams));
   }
 
@@ -89,8 +88,8 @@ export default class TaskManager {
    * @param object
    * @return {Promise.<TResult>}
    */
-  start({object}) {
-    return this.machine.start({object}).then(({object}) => {
+  start({ object }) {
+    return this.machine.start({ object }).then(({ object }) => {
       return this.update(object);
     })
   }
@@ -103,16 +102,15 @@ export default class TaskManager {
    * @param request
    */
   sendEvent({ object, event, request }) {
-    return this.machine.sendEvent({object, event, request}).then(({ object }) => {
+    return this.machine.sendEvent({ object, event, request }).then(({ object }) => {
       return this.update(object);
     })
   }
 
 
-
   stop() {
     let processDescriptor = Array.from(this.processCache.keys()).pop();
-    if(processDescriptor) {
+    if (processDescriptor) {
       killProcess(processDescriptor);
       this.processCache.get(processDescriptor).finished = new Date();
       return true;
