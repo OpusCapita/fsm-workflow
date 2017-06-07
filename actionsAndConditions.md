@@ -1,27 +1,27 @@
 ### Actions and Conditions(guards/automatic)
 * JS code as text(expression). E.g.
- * condition ```invoice.total > 1000```
- * action ```sendEmail({to: 'mr.smith@dot.com'})```
+	* condition ```invoice.total > 1000```
+	* action ```sendEmail({to: 'mr.smith@dot.com'})```
 
 * Structured function call definition in JSON that refer to externally implemented/defined function and specified arguments:
- * condition 
-```javascipt
-{
-  name: 'totalCostIsGreaterThan'
-  arguments: {
-    value: 1000
+	* condition 
+  ```javascipt
+  {
+    name: 'totalCostIsGreaterThan'
+    arguments: {
+      value: 1000
+    }
   }
-}
-```
- * action 
-```javascipt
-{
-  name: 'sendEmail'
-  arguments: {
-    to: 'mr.smith@dot.com'
+  ```	
+   * action 
+  ```javascipt
+  {
+    name: 'sendEmail'
+    arguments: {
+      to: 'mr.smith@dot.com'
+    }
   }
-}
-```
+  ```
 3. ...other options?
 
 
@@ -32,7 +32,8 @@ Pure JavaScript is easier to define at once, but hard to support. Non developer 
 With structured approach it is possible to update code/implantation as soon as you change/update application API in  non compatible way. Structural approach provides possibility to build up workflow UI designer that is more ( average) user friendly.
 In simple case JS expression/code is much faster to write (no one can stop you from doing this, sure you'll do it):
 ```invoice.total > 1000```
- But that does not mean that people would be smart enough to not creates complexity by writing a lot of code:
+
+But that does not mean that people would be smart enough to not creates complexity by writing a lot of code:
 ```javascipt
 if (invoice.items) {
     var foundItem = null;
