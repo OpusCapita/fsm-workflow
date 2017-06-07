@@ -23,7 +23,7 @@ export default class Machine {
   }
 
   // sets object initial state
-  start({ object, context }) {
+  start({ object }) {
     const { objectStateFieldName, initialState } = this.machineDefinition.schema;
     // eslint-disable-next-line no-param-reassign
     object[objectStateFieldName] = initialState;
@@ -58,12 +58,12 @@ export default class Machine {
    * @param object
    * @return Promise that is resolved with transition list or resolved with error
    */
-  availableAutoTransitions({object}) {
+  availableAutomaticTransitions({object}) {
     return this.machineDefinition.findAvailableTransitions({
       from: this.currentState({ object }),
       object,
       context: this.context,
-      auto: true
+      isAutomatic: true
     });
   }
 
@@ -170,7 +170,7 @@ export default class Machine {
    * @param object
    * @return {number}
    */
-  isOn({object}) {
+  isRunning({object}) {
     return this.availableStates().indexOf(this.currentState({object})) !== -1 &&
         !this.isFinal({state: this.currentState({ object })})
   }

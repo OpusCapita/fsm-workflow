@@ -22,12 +22,24 @@ export default class TaskManager {
     this.processCache = new Map();
   }
 
+  /**
+   * Monitors objects returned by 'search' actions.
+   * If one of found workflow of any of found objects is
+   * not started - manager will start it and call 'update'.
+   * If one of found objects has available transition marked with 'isAutomatic'
+   * and all its auto and manual guards are resolved with 'true' - manager will
+   * send corresponding event.
+   * If the workflow if finished for the objects - manage will skip it.
+   * If 'search' or 'update' throw exception - monitoring will be stopped
+   *
+   * @param timeout - optional timeout parameter (500 millis by default)
+   */
   run(timeout = 500) {
     let taskProcess = doUntil(() => {
       this.search({}).then((taskList) => {
         taskList.map((task) => {
-          if(this.machine.isOn({object: task})) {
-            this.machine.availableAutoTransitions({ object: task }).then(({ transitions }) => {
+          if(this.machine.isRunning({object: task})) {
+            this.machine.availableAutomaticTransitions({ object: task }).then(({ transitions }) => {
               if (transitions && transitions.length > 0) {
                 const { from, to, event } = transitions[0];
                 if (transitions.length > 1) {
@@ -61,9 +73,42 @@ export default class TaskManager {
     })
   }
 
+  /**
+   * Return Promise that will be rejected with 'search' execution result
+   *
+   * @param searchParams
+   * @return {Promise.<TResult>}
+   */
   list({searchParams}) {
-    return this.search(searchParams);
+    return this.machine.promise.resolve(this.search(searchParams));
   }
+
+  /**
+   * Moves object to workflow init state with further 'update' call
+   *
+   * @param object
+   * @return {Promise.<TResult>}
+   */
+  start({object}) {
+    return this.machine.start({object}).then(({object}) => {
+      return this.update(object);
+    })
+  }
+
+  /**
+   * Sends event to the object with further update operation
+   *
+   * @param object
+   * @param event
+   * @param request
+   */
+  sendEvent({ object, event, request }) {
+    return this.machine.sendEvent({object, event, request}).then(({ object }) => {
+      return this.update(object);
+    })
+  }
+
+
 
   stop() {
     let processDescriptor = Array.from(this.processCache.keys()).pop();

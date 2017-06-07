@@ -43,8 +43,8 @@ and final state) and execute _automatic_ transitions.
           "name": "logAction"
         }
       ],
-      "auto": [
-        {"name": "isTrue"}
+      "isAutomatic": [
+        {"name": "someAutoGuard"}
       ]
     },
     {
@@ -56,20 +56,18 @@ and final state) and execute _automatic_ transitions.
           "name": "logAction"
         }
       ],
-      "auto": [
-        {"name": "isTrue"}
-      ]
+      "isAutomatic": true
     }
   ]
 }
 
 ```
 
-_isTrue_ - is a 'auto' guard, function that should exist in {guards} parameter of _MachineDefinition_ 
+_someAutoGuard_ - is a 'auto' guard, function that should exist in {guards} parameter of _MachineDefinition_ 
 constructor.
 
 _Auto-guards_ execution result (should be true or false) signal whether to execute or not transition automatically.
-If you need the node to be automatic 'as is by default' configure it like "auto": []
+If you need the node to be automatic 'as is by default', use "isAutomatic": true
 
 ###Configuring process Manager
 ```
@@ -137,4 +135,39 @@ This field is an object with next signature:
 TBD: increase process cache notation usability
 TBD: add 1 by 1 event sending queue
 
+##Sending event to object with TaskManager
+You might need an ability to send event to an object with further saving.
+If you configured TaskManager properly and it knows how to save objects, next two code snippets do the same:
+```
+//passed as constructor arg to TaskManager
+const update = (object) => {
+  <some asynk object update code>
+  return Promise
+};
+machine.sendEvent({object, event, request}).then(({object}) => {
+  return update(object);
+})
+
+----equals---
+
+taskManager.sendEvent({object, event, request})
+```
+
+##Starting workflow with TaskManager
+Also you might want to start the workflow with further object saving.
+If you configured TaskManager properly and it knows how to save objects, next to code snippets do the same:
+```
+//passed as constructor arg to TaskManager
+const update = (object) => {
+  <some asynk object update code>
+  return Promise
+};
+machine.start({object}).then(({object}) => {
+  return update(object);
+})
+
+----equals---
+
+taskManager.start({object})
+```
 

@@ -29,7 +29,7 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
-  findAvailableTransitions({ from, event, object, context, auto=false } = {}) {
+  findAvailableTransitions({ from, event, object, context, isAutomatic = false } = {}) {
     // if from is not specified, then no transition is available
     if (from == null || from == undefined) {
       // to do throw proper error
@@ -53,10 +53,8 @@ export default class MachineDefinition {
     };
 
 
-    const checkGuards = ({transition, guardKey = 'guards'}) => {
-      const { from, to, event } = transition;
-      const guards = transition[guardKey];
-
+    const checkGuards = transition => {
+      const { guards, from, to, event } = transition;
       // if guards are undefined
       if (!guards) {
         return true;
@@ -82,23 +80,55 @@ export default class MachineDefinition {
       return true;
     };
 
+    /**
+     * Checks transition for automatic execution
+     * Possible automatic transition definitions:
+     * isAutomatic: true
+     * isAutomatic: [g1, g2,...,gn] //gi - guard name, from guard definition
+     *
+     * @param transition
+     * @return {boolean}
+     */
+    const checkAutomatic = transition => {
+      const { from, to, event } = transition;
+      const autoGuards = transition['isAutomatic'];
+
+      //isAutomatic: true - checking for 'boolean' definition
+      if (typeof autoGuards === 'boolean' && autoGuards) {
+        return true;
+      } else if (Array.isArray(autoGuards) && autoGuards.length > 0) { //checking for functional array def
+        for (let i = 0; i < autoGuards.length; i++) {
+          const autoGuard = this.guards[autoGuards[i].name];
+          // auto check is defined in schema, but is not really defined -> error!!!
+          if (!autoGuard) {
+            // eslint-disable-next-line max-len
+            throw new Error(
+              `Automatic guard '${autoGuards[i].name}' is specified in one the transitions but is not found/implemented!`
+            );
+          }
+          // if check return false, return false, e.g. transition is not available at the moment
+          // pass arguments specified in guard call (part of schema)
+          // additionally object and context are also passed
+          if (!autoGuard({ ...autoGuards[i].arguments, from, to, event, object, context })) {
+            return false;
+          }
+
+          return true;
+        }
+      } else {
+        return false
+      }
+    };
+
     // console.log(`transitions '${JSON.stringify(transitions)}'`);
     return new Promise((resolve, reject) => {
       try {
         let foundTransitions = transitions.filter(transition => {
-          return checkFrom(transition) && checkEvent(transition) && checkGuards({transition});
+          return checkFrom(transition) &&
+            checkEvent(transition) &&
+            checkGuards(transition) &&
+            (isAutomatic? checkAutomatic(transition) : true);
         });
-
-        if(auto) {
-          foundTransitions = foundTransitions.filter(transition => {
-            return transition.auto &&
-            transition.auto.length >= 0 &&
-            checkGuards({
-                transition,
-                guardKey: 'auto'
-              });
-          })
-        }
         resolve({ transitions: foundTransitions });
       } catch (e) {
         reject(e);
@@ -113,7 +143,7 @@ export default class MachineDefinition {
    * @return Array
    */
   getAvailableStates() {
-    if(!this.schema) {
+    if (!this.schema) {
       return [];
     }
 

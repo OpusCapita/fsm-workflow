@@ -159,7 +159,7 @@ describe('machine definition: findAvailableTransitions', function() {
                   }
                 }
               ],
-              auto: [
+              isAutomatic: [
                 {
                   name: 'a2b-auto-guard',
                   arguments: {
@@ -182,7 +182,7 @@ describe('machine definition: findAvailableTransitions', function() {
                   }
                 }
               ],
-              auto: [
+              isAutomatic: [
                 {
                   name: 'b2c-auto-guard',
                   arguments: {
@@ -197,7 +197,7 @@ describe('machine definition: findAvailableTransitions', function() {
               to: 'd',
               event: 'b2c',
               guards: [],
-              auto: []
+              isAutomatic: true
             }
           ]
         },
@@ -221,7 +221,7 @@ describe('machine definition: findAvailableTransitions', function() {
       return machineDefinition.findAvailableTransitions({
         from: 'a',
         object: {},
-        auto: true
+        isAutomatic: true
       }).then((result) => {
         return assert.equal(result.transitions.length, 1)
       });
@@ -231,7 +231,7 @@ describe('machine definition: findAvailableTransitions', function() {
       return machineDefinition.findAvailableTransitions({
         from: 'c',
         object: {},
-        auto: true
+        isAutomatic: true
       }).then((result) => {
         return assert.equal(result.transitions.length, 1)
       });
@@ -241,7 +241,7 @@ describe('machine definition: findAvailableTransitions', function() {
       return machineDefinition.findAvailableTransitions({
         from: 'b',
         object: {},
-        auto: true
+        isAutomatic: true
       }).then((result) => {
         return assert.equal(result.transitions.length, 0)
       });

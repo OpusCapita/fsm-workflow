@@ -65,7 +65,7 @@
           "name": "logAction"
         }
       ],
-      "auto": [
+      "isAutomatic": [
         {"name": "isTrue"}
       ]
     },
@@ -78,9 +78,7 @@
           "name": "logAction"
         }
       ],
-      "auto": [
-        {"name": "isTrue"}
-      ]
+      "isAutomatic": true
     }
   ]
 }

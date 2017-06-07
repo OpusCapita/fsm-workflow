@@ -3,7 +3,7 @@ import Machine from '../../fsm-library/src/Machine';
 import MachineDefinition from '../../fsm-library/src/MachineDefinition';
 import TaskManager from '../src/TaskManager';
 
-describe('Task manager:', function() {
+describe('Task manager:event sending', function() {
   const machine = new Machine({
     machineDefinition: new MachineDefinition({
       schema: {
@@ -16,9 +16,8 @@ describe('Task manager:', function() {
         "transitions": [
           {
             "from": "init",
-            "event": "autoFinish",
+            "event": "finish",
             "to": "finished",
-            "auto": []
           }
         ]
       }
@@ -41,49 +40,27 @@ describe('Task manager:', function() {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         object = { ...newValue };
-        resolve();
+        resolve({object: newValue});
       }, 100);
     })
   };
 
 
-  it('automatic execution & monitoring test', (done) => {
+  it('test starting & saving after it', (done) => {
     const tm = new TaskManager({ machine, search, update });
-    tm.run();
-
-    setTimeout(() => {
-      assert.equal(machine.isFinal({ state: machine.currentState({ object }) }), true);
-      tm.stop();
+    tm.start({object}).then((result) => {
+      assert.equal(object.status, 'init');
       done();
-    }, 1500);
+    });
   });
 
-
-  it('task list obtaining', (done) => {
+  it('test event sending & saving', (done) => {
     const tm = new TaskManager({ machine, search, update });
-    tm.list({ searchParams: { param1: 1, param2: 'string value' } }).then((tasks) => {
-      assert.equal(tasks.length, 1);
-      assert.equal(tasks[0].status, '');
-      done();
-    })
+    machine.start({object}).then((startedTask) => {
+      tm.sendEvent({object, event: 'finish'}).then((result) => {
+        assert.equal(object.status, 'finished');
+        done();
+      })
+    });
   });
-
-  it('test stop & getting the statistics', (done) => {
-    const tm = new TaskManager({ machine, search, update });
-    tm.run(200);
-
-    setTimeout(() => {
-      assert.equal(tm.stop(), true);
-      let processExecutionInfo = Array.from(tm.processCache.values())[0];
-      assert.equal(processExecutionInfo.name, machine.machineDefinition.schema.name);
-      assert.equal(
-        processExecutionInfo.started.getTime() < processExecutionInfo.finished.getTime(),
-        true
-      );
-
-      done();
-    }, 1000);
-  })
-
-
 });

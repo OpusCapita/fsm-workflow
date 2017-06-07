@@ -10,17 +10,15 @@ const TaskList = ({tasks, onSendEvent}) => (
       </tr>
     </thead>
     <tbody>
-    {tasks.map(({object, actions}) => {
-      console.log(actions);
+    {tasks.map(({object, transitions}) => {
       return(
         <tr key={object.id}>
           <td>{object.id}</td>
           <td>{object.status}</td>
-          <td>{object.assignee}</td>
           <td>
             <div className="btn-group">
-              {actions.map(({ event }) => (
-                <button key={event} className="btn btn-default" onClick={() => (onSendEvent({object, event}))}>
+              {transitions.map(({ event }) => (
+                <button key={event} className="btn btn-default" onClick={() => (onSendEvent(object, event))}>
                   {event}
                 </button>
               ))}
@@ -38,7 +36,7 @@ TaskList.propTypes = {
   onSendEvent: PropTypes.func.isRequired
 };
 
-TaskList.defaultProp = {
+TaskList.defaultProps = {
   tasks: []
 };
 

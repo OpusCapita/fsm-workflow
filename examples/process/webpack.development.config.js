@@ -81,10 +81,10 @@ module.exports = {
           path.join(__dirname, 'src'),
           path.join(__dirname, 'www'),
           path.join(__dirname, '../../fsm-library'),
-          path.join(__dirname, '../../fsm-task-manager'),
+          path.join(__dirname, '../../fsm-task-manager')
         ],
         query: {
-          presets: ['es2015', 'react', 'stage-0'],
+          presets: ['es2015', 'stage-0', 'react'],
         }
       }
     ]
