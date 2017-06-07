@@ -12,7 +12,6 @@ let machineDefinition = new MachineDefinition({
 });
 
 let invoiceMachine = new Machine({ machineDefinition });
-let taskManager = new TaskManager({machine: invoiceMachine});
 
 let invoice = {
   status: "none"
@@ -71,7 +70,6 @@ const startOrRestartForm = objectWithF => {
         }).
         then(({ object }) => {
           invoice = object;
-          taskManager.monitor({object});
           logMessage("invoice machine has been started");
           updateObjectContent({ object });
           if (invoiceMachine.isFinal({state: invoiceMachine.currentState({ object })})) {
