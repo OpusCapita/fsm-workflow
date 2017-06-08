@@ -4,7 +4,7 @@ objects (a.k.a. _tasks_) for which workflow is started (status field is in betwe
 and final state) and execute _automatic_ transitions.
 
 ## Configuration
-###Workflow schema with automatic transitions example:
+### Workflow schema with automatic transitions example:
 ```
 {
   "name": "process",
@@ -69,7 +69,7 @@ constructor.
 _Auto-guards_ execution result (should be true or false) signal whether to execute or not transition automatically.
 If you need the node to be automatic 'as is by default', use "automatic": true
 
-###Configuring process Manager
+### Configuring process Manager
 ```
       this.machine = new Machine({
         machineDefinition: new MachineDefinition({schema,actions,guards}),
@@ -100,7 +100,7 @@ If you need the node to be automatic 'as is by default', use "automatic": true
      };
 ```
 
-##Starting the process
+## Starting the process
 After configuration there is only one thing is left behind - to start task list monitoring.
 ```
   const timeout = 1000;
@@ -110,14 +110,14 @@ After configuration there is only one thing is left behind - to start task list 
 _timeout_ argument indicates the frequency of calling _search_ action and checking for 
 available automatic event / sending events (in case found auto-transitions);
 
-##Stopping the process
+## Stopping the process
 If the time has come to kill the process, you have to do the next:
 ```
   processManager.stop(); 
 ```
 This method return true/false in case of correct/incorrect process finish, correspondingly.
 
-##Getting ongoing/stopped process statistic
+## Getting ongoing/stopped process statistic
 Sometime you may need to get the process statistic (currently available values are: machine name,
 start & end timestamps)
 
@@ -135,7 +135,7 @@ This field is an object with next signature:
 TBD: increase process cache notation usability
 TBD: add 1 by 1 event sending queue
 
-##Sending event to object with TaskManager
+## Sending event to object with TaskManager
 You might need an ability to send event to an object with further saving.
 If you configured TaskManager properly and it knows how to save objects, next two code snippets do the same:
 ```
@@ -153,7 +153,7 @@ machine.sendEvent({object, event, request}).then(({object}) => {
 taskManager.sendEvent({object, event, request})
 ```
 
-##Starting workflow with TaskManager
+## Starting workflow with TaskManager
 Also you might want to start the workflow with further object saving.
 If you configured TaskManager properly and it knows how to save objects, next to code snippets do the same:
 ```
