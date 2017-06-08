@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'opuscapita-react-ui-buttons/lib/Button';
+import Button from '@opuscapita/react-buttons/lib/Button';
 import Markdown from 'react-remarkable';
 import './Help.less';
 

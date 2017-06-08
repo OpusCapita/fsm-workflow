@@ -5,7 +5,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { showroomScopeDecorator } from 'opuscapita-showroom-client';
+import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 import BezierTransition from '../BezierTransition';
 
 const viewportChildren = [

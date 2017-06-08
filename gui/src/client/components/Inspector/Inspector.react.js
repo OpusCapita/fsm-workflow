@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'opuscapita-react-ui-buttons/lib/Button';
+import Button from '@opuscapita/react-buttons/lib/Button';
 import SelectableTable from '../SelectableTable';
-import FakeInputAutocomplete from 'opuscapita-react-ui-autocompletes/lib/FakeInputAutocomplete';
+import FakeInputAutocomplete from '@opuscapita/react-autocompletes/lib/FakeInputAutocomplete';
 import './Inspector.less';
 
-import addSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/add_box.svg';
-import deleteSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/clear.svg';
+import addSVG from '!!raw-loader!@opuscapita/svg-icons/lib/add_box.svg';
+import deleteSVG from '!!raw-loader!@opuscapita/svg-icons/lib/clear.svg';
 
 const defaultOptions = {
   'guards': {

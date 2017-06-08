@@ -6,16 +6,16 @@ import { connect } from 'react-redux';
 import * as viewportActions from '../App/redux/reducer/viewport';
 import * as layoutActions from '../App/redux/reducer/layout';
 
-import addSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/add.svg';
-import backSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/arrow_back.svg';
-import forwardSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/arrow_forward.svg';
-import cutSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/content_cut.svg';
-import copySVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/content_copy.svg';
-import pasteSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/content_paste.svg';
-import selectSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/select_all.svg';
-import simulateSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/all_inclusive.svg';
-import helpSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/live_help.svg';
-import inspectorSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/tune.svg';
+import addSVG from '!!raw-loader!@opuscapita/svg-icons/lib/add.svg';
+import backSVG from '!!raw-loader!@opuscapita/svg-icons/lib/arrow_back.svg';
+import forwardSVG from '!!raw-loader!@opuscapita/svg-icons/lib/arrow_forward.svg';
+import cutSVG from '!!raw-loader!@opuscapita/svg-icons/lib/content_cut.svg';
+import copySVG from '!!raw-loader!@opuscapita/svg-icons/lib/content_copy.svg';
+import pasteSVG from '!!raw-loader!@opuscapita/svg-icons/lib/content_paste.svg';
+import selectSVG from '!!raw-loader!@opuscapita/svg-icons/lib/select_all.svg';
+import simulateSVG from '!!raw-loader!@opuscapita/svg-icons/lib/all_inclusive.svg';
+import helpSVG from '!!raw-loader!@opuscapita/svg-icons/lib/live_help.svg';
+import inspectorSVG from '!!raw-loader!@opuscapita/svg-icons/lib/tune.svg';
 
 @connect(
   state => ({

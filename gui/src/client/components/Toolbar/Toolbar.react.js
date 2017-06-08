@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Toolbar.less';
-import TitledButton from 'opuscapita-react-ui-buttons/lib/TitledButton';
+import TitledButton from '@opuscapita/react-buttons/lib/TitledButton';
 
 const propTypes = {
   controlsLeft: PropTypes.arrayOf(PropTypes.shape({

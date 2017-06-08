@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'opuscapita-react-ui-buttons/lib/Button';
+import Button from '@opuscapita/react-buttons/lib/Button';
 import './SelectableTable.less';
 
 const propTypes = {

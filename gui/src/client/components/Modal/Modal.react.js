@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'opuscapita-react-ui-buttons/lib/Button';
+import Button from '@opuscapita/react-buttons/lib/Button';
 import SimpleModal from 'opuscapita-react-ui-overlays/lib/SimpleModal';
 import './Modal.less';
 

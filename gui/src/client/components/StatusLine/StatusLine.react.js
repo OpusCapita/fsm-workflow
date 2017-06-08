@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './StatusLine.less';
-import Button from 'opuscapita-react-ui-buttons/lib/Button';
+import Button from '@opuscapita/react-buttons/lib/Button';
 
-import gridOnSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/border_inner.svg';
-import gridOffSVG from '!!raw-loader!opuscapita-ui-svg-icons/lib/border_clear.svg';
+import gridOnSVG from '!!raw-loader!@opuscapita/svg-icons/lib/border_inner.svg';
+import gridOffSVG from '!!raw-loader!@opuscapita/svg-icons/lib/border_clear.svg';
 
 const propTypes = {
   mousePositionX: PropTypes.number,
