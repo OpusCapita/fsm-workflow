@@ -63,16 +63,16 @@ and final state) and execute _automatic_ transitions.
 
 ```
 
-_someAutoGuard_ - is a 'auto' guard, function that should exist in {guards} parameter of _MachineDefinition_ 
+_someAutoGuard_ - is a 'auto' guard, function that should exist in {conditions} parameter of _MachineDefinition_ 
 constructor.
 
-_Auto-guards_ execution result (should be true or false) signal whether to execute or not transition automatically.
+_Auto-conditions_ execution result (should be true or false) signal whether to execute or not transition automatically.
 If you need the node to be automatic 'as is by default', use "automatic": true
 
 ### Configuring process Manager
 ```
       this.machine = new Machine({
-        machineDefinition: new MachineDefinition({schema,actions,guards}),
+        machineDefinition: new MachineDefinition({schema,actions,conditions}),
         context
       });
   
