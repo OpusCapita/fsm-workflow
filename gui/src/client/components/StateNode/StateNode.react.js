@@ -125,6 +125,10 @@ class StateNode extends PureComponent {
   }
 
   handleLabelUpdate(element) {
+    if(!element) {
+      return;
+    }
+
     const bbox = element.getBBox();
     const elementBBox = element ? Object.assign({}, {
       x: bbox.x,
