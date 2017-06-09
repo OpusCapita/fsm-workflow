@@ -26,7 +26,7 @@ The following things will be implemented later as extensions/helpers (separate s
 - logging
 - analysis
 
-**Note:** basic ideas on how API looks like are taken from [fsm-as-promised](https://github.com/vstirbu/fsm-as-promised)
+**P.S.** basic ideas on how FSM API looks like are taken from [fsm-as-promised](https://github.com/vstirbu/fsm-as-promised)
 
 ## How To Use
 
