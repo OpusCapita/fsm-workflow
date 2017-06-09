@@ -6,7 +6,8 @@ machine:
 ## Customize dependencies
 dependencies:
   override:
-    - cd core; npm install; cd ../task-mananger; npm install; cd ..
+    - cd core; npm install;
+    - cd task-manager; npm install;
 
 test:
   pre:
