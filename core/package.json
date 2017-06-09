@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint src",
-    "test": "mocha src/**/*.spec.js --require config/mocha-setup.js"
+    "test": "mocha src/**/*.spec.js --require config/mocha-setup.js --reporter mocha-circleci-reporter"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "eslint": "3.12.2",
     "eslint-config-opuscapita": "1.0.3",
     "eslint-plugin-react": "6.8.0",
-    "mocha": "3.3.0"
+    "mocha": "3.3.0",
+    "mocha-circleci-reporter": "0.0.2"
   }
 }

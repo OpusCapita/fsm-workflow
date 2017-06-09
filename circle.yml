@@ -1,0 +1,15 @@
+## Using LTS version of node
+machine:
+  node:
+    version: 6.9.1
+
+## Customize dependencies
+dependencies:
+  override:
+    - cd core; npm install; cd ../task-mananger; npm install; cd ..
+
+test:
+  pre:
+    - cd core; npm run lint; cd ../task-mananger; npm run lint; cd ..
+  override:
+    - cd core; npm run test; cd ../task-manager; npm run test; cd ..
