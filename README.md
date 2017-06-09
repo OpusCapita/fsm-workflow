@@ -1,3 +1,5 @@
+[![CircleCI Status](https://circleci.com/gh/OpusCapita/fsm/tree/cicrcleCI.svg?style=shield&circle-token=:circle-token)](https://github.com/OpusCapita/fsm)
+
 ## FSM workflow (for Node.js)
 
 ### Introduction
