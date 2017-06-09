@@ -16,7 +16,6 @@ describe('machine: is', function() {
     const object = {
       [MachineDefinition.getDefaultObjectStateFieldName()]: state
     };
-    assert.equal(true, false);
     assert.equal(createMachine().is({ object, state }), true);
     assert.equal(createMachine().is({ object, state: 'incorrect' }), false);
   });
