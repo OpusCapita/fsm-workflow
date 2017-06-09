@@ -26,6 +26,8 @@ The following things will be implemented later as extensions/helpers (separate s
 - logging
 - analysis
 
+**Note:** basic ideas on how API looks like are taken from [fsm-as-promised](https://github.com/vstirbu/fsm-as-promised)
+
 ## How To Use
 
 ### Installation and Setup (in Node)
@@ -225,9 +227,13 @@ machine.onStartTransition()   // returns promise
 machine.onFinishTransition()  // returns promise
 ```
 
-Note: basic ideas on how API looks like are taken from [fsm-as-promised](https://github.com/vstirbu/fsm-as-promised)
+## Task/Work management
 
-#### [Existing FSM libs review](existingFsmLibsReview.md)
+Task management is implemented s additional library. You can find more  detailed info more information [here](task-manager/README.md).
+
+#### References
+
+[Existing FSM libs review](existingFsmLibsReview.md)
 
 ## Contributors
 
