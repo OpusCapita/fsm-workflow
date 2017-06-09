@@ -1,7 +1,7 @@
 ## Intro
-Task manager is and addition to workflow machine (Machine class). It is designed to monitor 
-objects (a.k.a. _tasks_) for which workflow is started (status field is in between initial 
-and final state) and execute _automatic_ transitions.
+FSM Task(Work) manager is an extension to finite state machine. It manages
+existing tasks (stateful full objects, e.g. invoice) within the lifecycle
+specified in finite state machine (definition.
 
 ## Configuration
 ### Workflow schema with automatic transitions example:
@@ -63,7 +63,7 @@ and final state) and execute _automatic_ transitions.
 
 ```
 
-_someAutoGuard_ - is a 'auto' guard, function that should exist in {conditions} parameter of _MachineDefinition_ 
+_someAutoGuard_ - is a 'auto' guard, function that should exist in {conditions} parameter of _MachineDefinition_
 constructor.
 
 _Auto-conditions_ execution result (should be true or false) signal whether to execute or not transition automatically.
@@ -75,13 +75,13 @@ If you need the node to be automatic 'as is by default', use "automatic": true
         machineDefinition: new MachineDefinition({schema,actions,conditions}),
         context
       });
-  
+
       this.processManager = new TaskManager({
         machine: this.processMachine,
         search: search,
         update: update
       });
-      
+
       //function that return promise that is resolved with task list
       function search(searchParams) {
         return new Promise((resolve, reject) => {
@@ -90,8 +90,8 @@ If you need the node to be automatic 'as is by default', use "automatic": true
           }, 500)
         })
       };
-      
-     //function that return promise that is resolved afte object saving
+
+     //function that return promise that is resolved after object saving
      function update(object) {
        return new Promise((resolve, reject) => {
         //some hard-working persistent saving code
@@ -104,16 +104,16 @@ If you need the node to be automatic 'as is by default', use "automatic": true
 After configuration there is only one thing is left behind - to start task list monitoring.
 ```
   const timeout = 1000;
-  processManager.run(timeout); 
+  processManager.run(timeout);
 ```
 
-_timeout_ argument indicates the frequency of calling _search_ action and checking for 
+_timeout_ argument indicates the frequency of calling _search_ action and checking for
 available automatic event / sending events (in case found auto-transitions);
 
 ## Stopping the process
 If the time has come to kill the process, you have to do the next:
 ```
-  processManager.stop(); 
+  processManager.stop();
 ```
 This method return true/false in case of correct/incorrect process finish, correspondingly.
 
@@ -141,7 +141,7 @@ If you configured TaskManager properly and it knows how to save objects, next tw
 ```
 //passed as constructor arg to TaskManager
 const update = (object) => {
-  <some asynk object update code>
+  <some async object update code>
   return Promise
 };
 machine.sendEvent({object, event, request}).then(({object}) => {
@@ -159,7 +159,7 @@ If you configured TaskManager properly and it knows how to save objects, next to
 ```
 //passed as constructor arg to TaskManager
 const update = (object) => {
-  <some asynk object update code>
+  <some async object update code>
   return Promise
 };
 machine.start({object}).then(({object}) => {
@@ -170,4 +170,3 @@ machine.start({object}).then(({object}) => {
 
 taskManager.start({object})
 ```
-
