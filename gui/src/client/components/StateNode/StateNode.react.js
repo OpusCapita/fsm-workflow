@@ -376,9 +376,9 @@ class StateNode extends PureComponent {
               dominantBaseline="middle"
               textAnchor="middle"
               fill={getLabelColor(bgColor)}
-              className="fsm--state-node__label"
+              className={`fsm--state-node__label ${label ? '' : 'fsm--state-node__label--unnamed'}`}
             >
-              {label}
+              {label || 'Unnamed'}
             </SVGLabel>
           </g>
         </DraggableCore>

@@ -315,7 +315,7 @@ class BezierCurve extends PureComponent {
               textAnchor="middle"
               className={`bezier-curve__label-text ${label ? '' : 'bezier-curve__label-text--unnamed'}`}
             >
-              {label || 'Unnamed transition'}
+              {label || 'Unnamed'}
             </text>
           </g>
         </DraggableCore>
