@@ -4,7 +4,7 @@
 	* action ```sendEmail({to: 'mr.smith@dot.com'})```
 
 * Structured function call definition in JSON that refer to externally implemented/defined function and specified arguments:
-	* condition 
+	* condition
   ```javascipt
   {
     name: 'totalCostIsGreaterThan'
@@ -12,8 +12,8 @@
       value: 1000
     }
   }
-  ```	
-   * action 
+  ```
+   * action
   ```javascipt
   {
     name: 'sendEmail'
@@ -23,7 +23,6 @@
   }
   ```
 3. ...other options?
-
 
 Pure JavaScript is easier to define at once, but hard to support. Non developer will be able to write the code but its hard to believe that it would work and as javaScript untyped/dynamically typed language it is hard to constrain people from such error by checking/parsing the code. Code that is not written by developers and could be created on the fly in production is not supportable (ho to apply migration process to something that is not known).
 

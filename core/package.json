@@ -7,16 +7,13 @@
     "lint": "eslint src",
     "test": "mocha src/**/*.spec.js --require config/mocha-setup.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/asergeev-sc/fsm-workflow.git"
-  },
+  "repository": "https://github.com/OpusCapita/fsm/tree/master/core",
   "author": "Alexey Sergeev <sab@scand.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/asergeev-sc/fsm-workflow/issues"
+    "url": "https://github.com/OpusCapita/fsm/issues"
   },
-  "homepage": "https://github.com/asergeev-sc/fsm-workflow#readme",
+  "homepage": "https://github.com/OpusCapita/fsm/tree/master/core#readme",
   "dependencies": {
     "bluebird": "3.5.0"
   },

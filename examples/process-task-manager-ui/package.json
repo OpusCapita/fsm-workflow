@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "DEBUG=express:* node src/server/index"
+    "start": "node src/server/index"
   },
   "author": "Daniel Zhitomirsky <dzhitomirsky@scand.com>",
   "license": "Apache-2.0",
