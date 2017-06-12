@@ -1,0 +1,23 @@
+## Using LTS version of node
+machine:
+  node:
+    version: 6.9.1
+
+## Customize dependencies
+dependencies:
+  override:
+    - cd core; npm install
+    - cd task-manager; npm install
+
+test:
+  pre:
+    - cd core; npm run lint
+    - cd task-manager; npm run lint
+  override:
+    - cd core; npm run test -- --reporter mocha-junit-reporter:
+        environment:
+          MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/core-test-results.xml
+
+    - cd task-manager; npm run test -- --reporter mocha-junit-reporter:
+        environment:
+          MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/task-manager-test-results.xml

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Machine from '../machine';
+import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
 const createMachineCorrectly = ({ promise } = {}) => {

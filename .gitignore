@@ -3,6 +3,7 @@ npm-debug.log
 yarn.lock
 package-lock.json
 yarn-error.log
+test-results.xml
 .idea
 fsm-task-manager/node_modules
 examples/invoice/node_modules
