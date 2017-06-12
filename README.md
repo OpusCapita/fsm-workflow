@@ -5,26 +5,22 @@
 ### Introduction
 Workflow is based on Finite State Machine implemented in JS using promises.
 
-- state is stored in the business object related to workflow, not in an extra
-workflow object. Multiple workflows could be defined for one business object,
-it means that for each workflow owns state field should be use
+- state is stored in the business object related to workflow, not in an extra workflow object. Multiple workflows could be defined for one business object, it means that for each workflow owns state field should be use
 - one state per workflow execution (no parallelism)
 - actions are executed in the transition, not in the node/state
 - no event sending inside the workflow itself (in action)
-- no variables in state workflow: all variables/data need to be stored in
-the business objects (e.g. invoice)
+- no variables in state workflow: all variables/data need to be stored in the business objects (e.g. invoice)
 - events: visible/available in UI as action buttons for the user
 - workflow definition stored as JSON
-- guard support (transition/event availability is defined via
-condition/expression/function = guard)
+- guard support (transition/event availability is defined via condition/expression/function = guard)
 - hierarchical states machines are not supported
 
 #### Notes
 
 The following things will be implemented later as extensions/helpers (separate sibling library) or in specific application:
-- automatic transitions
-- task list is based on domain object
-- graphical editor
+- automatic transitions (done)
+- task list is based on domain object (done)
+- graphical editor (in process...)
 - logging
 - analysis
 
@@ -34,7 +30,7 @@ The following things will be implemented later as extensions/helpers (separate s
 
 ### Installation and Setup (in Node)
 
-Run ```npm install fsm-workflow``` to get uo and running. Then:
+Run ```npm install @opuscapita/fsm-core``` to get uo and running. Then:
 
 ```javascript
 import {MachineDefinition, Machine} from 'fsm-workflow';
@@ -45,8 +41,7 @@ import {MachineDefinition, Machine} from 'fsm-workflow';
 Machine definition consist of:
 - [schema](#schema)
 - [actions](#action)
-- [guards](#guard-conditions)
-- [automatic](#automatic-conditions)
+- conditions: [guards](#guard-conditions) & [automatic](#automatic-conditions)
 
 ```javascript
 const machineDefinition = new MachineDefinition({
