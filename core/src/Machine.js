@@ -172,7 +172,7 @@ export default class Machine {
    */
   isRunning({ object }) {
     return this.availableStates().indexOf(this.currentState({ object })) !== -1 &&
-        !this.isFinal({ state: this.currentState({ object }) })
+        !this.isInFinalState({ object })
   }
 
   /**
@@ -189,10 +189,15 @@ export default class Machine {
   }
 
   // returns true iff object in once of filal state specified in machine definition
-  isFinal({ state }) {
-    // console.log(`finalStates: '${this.machineDefinition.schema.finalStates}'`);
-    // console.log(`state: '${state}'`);
-    return this.machineDefinition.schema.finalStates.indexOf(state) >= 0;
+  // isFinal({ state }) {
+  //   // console.log(`finalStates: '${this.machineDefinition.schema.finalStates}'`);
+  //   // console.log(`state: '${state}'`);
+  //   return this.machineDefinition.schema.finalStates.indexOf(state) >= 0;
+  // }
+
+  // returns true iff object in one of final states specified in machine definition schema
+  isInFinalState({ object }) {
+    return this.machineDefinition.schema.finalStates.indexOf(this.currentState({ object })) >= 0;
   }
 
   // retuns promise, where then gets single argument with boolean value

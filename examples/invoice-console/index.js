@@ -72,7 +72,7 @@ const startOrRestartForm = objectWithF => {
           invoice = object;
           logMessage("invoice machine has been started");
           updateObjectContent({ object });
-          if (invoiceMachine.isFinal({state: invoiceMachine.currentState({ object })})) {
+          if (invoiceMachine.isInFinalState({ object })) {
             logMessage("current state is final, machine is stopped!");
             formBox = startOrRestartForm({ f: restartForm });
             return;
@@ -105,7 +105,7 @@ const handleFormSubmit = ({ event }) => {
       invoice = object;
       logMessage("transition just finished");
       updateObjectContent({ object });
-      if (invoiceMachine.isFinal({state: invoiceMachine.currentState({ object })})) {
+      if (invoiceMachine.isInFinalState({ object })) {
         logMessage("current state is final, machine is stopped!");
         formBox = startOrRestartForm({ f: restartForm });
         return;
