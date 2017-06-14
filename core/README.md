@@ -139,8 +139,10 @@ Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-stat
 
 #### Automatic (conditions)
 
-Transition could be marked as automatic using corresponding property. It defines array of
-conditions(functions, each return true or false). Check for whether object in current state has (at least one) automatic transition needs to be done by external task manager (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
+Transition could be marked as automatic using corresponding property. It could be:
+- true (boolean value) - e.g. this transition is always automatic
+- array of conditions(functions, each return true or false) 
+Check for whether object in current state has (at least one) automatic transition needs to be done by external **[task manager](../task-manager)** (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
 
 
 ## Stateful object as a process
