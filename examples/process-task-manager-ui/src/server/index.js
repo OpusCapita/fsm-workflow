@@ -22,6 +22,8 @@ let serverOptions = {
 
 app.use(require('webpack-dev-middleware')(compiler, serverOptions));
 
+app.use(require('serve-favicon')(path.join(__dirname, '../client/static/favicon.ico')));
+
 app.use(express.static(path.join(__dirname, '../client/static')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/../client/index.html'));

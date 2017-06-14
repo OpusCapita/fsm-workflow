@@ -12,9 +12,9 @@ const createMachine = () => {
   });
 };
 
-describe("machine: isFinal", function() {
+describe("machine: isInFinalState", function() {
   it("returns correct value", function() {
-    assert.equal(createMachine().isFinal({ state: "x" }), true);
-    assert.equal(createMachine().isFinal({ state: "a" }), false);
+    assert.equal(createMachine().isInFinalState({ object: { status: "x" } }), true);
+    assert.equal(createMachine().isInFinalState({ object: { status: "a" } }), false);
   });
 });

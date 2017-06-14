@@ -52,7 +52,7 @@ export default class TaskManager {
                 return this.machine.promise.resolve();
               }
             })
-          } else if (!this.machine.isFinal({ state: this.machine.currentState({ object: task }) })) {
+          } else if (!this.machine.isInFinalState({ object: task })) {
             return this.machine.start({ object: task }).then(({ object }) => {
               return this.update(object);
             })

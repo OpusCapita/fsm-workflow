@@ -195,7 +195,7 @@ machine.sendEvent({object, event, request})
 
 machine.currentState({ object })     // gets current state
 machine.is({ object, state})         // is object in state
-machine.isFinal({ state })           // state is final or not
+machine.isInFinalState({ object })   // returns true iff object is in one of final states
 machine.can({ object, event })       // whether event is available
 machine.cannot({ object, event })    // whether event is not available
 

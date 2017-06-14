@@ -151,7 +151,7 @@ export default class MachineDefinition {
     const result = this.schema.transitions.reduce(
       // gather all states from transitions
       (accumulator, t) => {
-        return accumulator.concat(t.from,t.to)
+        return accumulator.concat(t.from, t.to)
       },
       // initial and final states
       [this.schema.initialState, ...this.schema.finalStates]

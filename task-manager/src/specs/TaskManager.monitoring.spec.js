@@ -51,7 +51,7 @@ describe('Task manager:monitoring', function() {
     tm.run();
 
     setTimeout(() => {
-      assert.equal(machine.isFinal({ state: machine.currentState({ object }) }), true);
+      assert.equal(machine.isInFinalState({ object }), true);
       tm.stop();
       done();
     }, 1500);
