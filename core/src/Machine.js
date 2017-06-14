@@ -1,5 +1,5 @@
 export default class Machine {
-  constructor({ machineDefinition, promise = Machine.defaultPromise(), context = {} }) {
+  constructor({ machineDefinition, promise = Machine.defaultPromise(), context = {} } = {}) {
     if (!machineDefinition) {
       throw new Error("machineDefinition is undefined");
     }
@@ -105,8 +105,11 @@ export default class Machine {
             message: `Transition for 'from': '${from}' and 'event': '${event}' is not found`
           });
         }
+        /* istanbul ignore if */
         if (transitions.length > 1) {
-          console.log(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
+          if (console) {
+            console.log(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
+          }
         }
         // select first found transition and read its information
         const { to, actions = [] } = transitions[0];

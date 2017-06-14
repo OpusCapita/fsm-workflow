@@ -33,10 +33,9 @@ describe('machine: constructor', function() {
             }
           },
           name: 'testmachine'
-        },
-        Error
+        }
       );
-    });
+    }, Error);
   });
 
   it('should not throw Error as Worklfow should be correctly created', function() {
@@ -52,5 +51,27 @@ describe('machine: constructor', function() {
     const promise = 'MegaPromise';
     const w = createMachineCorrectly({ promise });
     assert.equal(w.promise, promise);
+  });
+
+  [null].forEach(promise => {
+    it(`promise = '${promise}' in constructor is no acceptable`, () => {
+      assert.throws(() => {
+        createMachineCorrectly({ promise });
+      }, Error);
+    });
+  });
+
+  // eslint-disable-next-line max-len
+  it("if library is used outside node (e.g. browser) then 'bluebird' should be used as default Promise implementation", () => {
+    // store Promise
+    const { Promise } = global;
+    try {
+      global.Promise = undefined;
+
+      assert.equal(createMachineCorrectly().promise, require("bluebird").Promise);
+    } finally {
+      // restore promise
+      global.Promise = Promise;
+    }
   });
 });

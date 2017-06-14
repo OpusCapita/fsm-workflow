@@ -143,11 +143,6 @@ export default class MachineDefinition {
    * @return Array
    */
   getAvailableStates() {
-    if (!this.schema) {
-      return [];
-    }
-
-    // let result = [schema.initialState, ...schema.finalStates];
     const result = this.schema.transitions.reduce(
       // gather all states from transitions
       (accumulator, t) => {

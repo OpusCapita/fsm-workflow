@@ -107,6 +107,15 @@ describe('machine definition: findAvailableTransitions', function() {
                   }
                 }
               ]
+            }, {
+              from: 'b',
+              to: 'c',
+              event: 'b->c',
+              guards: [
+                {
+                  name: 'unavailable'
+                }
+              ]
             }
           ]
         },
@@ -137,6 +146,15 @@ describe('machine definition: findAvailableTransitions', function() {
         }
       }).then((result) => {
         return assert.equal(result.transitions.length, 1)
+      });
+    });
+
+    it("transition has reference to non declared guard(condition)", function() {
+      return machineDefinition.findAvailableTransitions({
+        from: 'b',
+        object: {}
+      }).catch((e) => {
+        assert(e, 'Error is thrown as expected')
       });
     });
   });
@@ -196,8 +214,22 @@ describe('machine definition: findAvailableTransitions', function() {
               from: 'c',
               to: 'd',
               event: 'b2c',
-              guards: [],
               automatic: true
+            },
+            {
+              from: 'd',
+              to: 'f',
+              event: 'd2f'
+            },
+            {
+              from: 'f',
+              to: 'g',
+              event: 'f2g',
+              automatic: [
+                {
+                  name: 'unavailable'
+                }
+              ]
             }
           ]
         },
@@ -244,6 +276,26 @@ describe('machine definition: findAvailableTransitions', function() {
         isAutomatic: true
       }).then((result) => {
         return assert.equal(result.transitions.length, 0)
+      });
+    });
+
+    it("no transition is defined as automatic", function() {
+      return machineDefinition.findAvailableTransitions({
+        from: 'd',
+        object: {},
+        isAutomatic: true
+      }).then((result) => {
+        return assert.equal(result.transitions.length, 0)
+      });
+    });
+
+    it("transition has reference to non declared automatic conditions", function() {
+      return machineDefinition.findAvailableTransitions({
+        from: 'f',
+        object: {},
+        isAutomatic: true
+      }).catch((e) => {
+        assert(e, 'Error is thrown as expected')
       });
     });
   });

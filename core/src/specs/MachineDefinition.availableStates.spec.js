@@ -1,7 +1,7 @@
 import assert from "assert";
 import MachineDefinition from "../MachineDefinition";
 
-const machineDef = new MachineDefinition({
+const machineDefinition = new MachineDefinition({
   schema: {
     initialState: "a",
     finalStates: ["x", "y", "z"],
@@ -18,8 +18,8 @@ const machineDef = new MachineDefinition({
   }
 });
 
-describe("machine: available states", function() {
-  it("returns correct value", function() {
-    assert.deepEqual(machineDef.getAvailableStates(), ['a', 'b', 'x', 'y', 'z']);
-  });
+describe("machine: getAvailableStates", function() {
+  it("returns decalred states", () =>
+    assert.deepEqual(machineDefinition.getAvailableStates(), ['a', 'b', 'x', 'y', 'z'])
+  );
 });

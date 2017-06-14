@@ -2,8 +2,8 @@ import assert from 'assert';
 import Machine from '../Machine';
 
 // maybe it worth to write integration test
-describe('machine: availableTransitions', function() {
-  it('arguments are correctly pased to machineDefinition.getAvailableStates', function() {
+describe('machine: availableAutomaticTransitions', function() {
+  it('arguments are correctly pased to machineDefinition.findAvailableTransitions', function() {
     // create object
     const object = {
       status: 'none'
@@ -25,6 +25,7 @@ describe('machine: availableTransitions', function() {
               assert(passsedArgument)
               assert.equal(passsedArgument.object, object);
               assert.equal(passsedArgument.context, context);
+              assert.equal(passsedArgument.isAutomatic, true);
             }
           },
           context: context
@@ -34,6 +35,6 @@ describe('machine: availableTransitions', function() {
 
     const machine = createMachine({ context });
 
-    return machine.availableTransitions({ object });
+    return machine.availableAutomaticTransitions({ object });
   });
 });
