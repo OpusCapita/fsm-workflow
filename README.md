@@ -3,21 +3,21 @@
 ## FSM workflow (for Node.js)
 
 ### Introduction
-Workflow is based on Finite State Machine implemented in JS using promises.
+[Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) is implemented in JS using [Promise](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise)s.
 
-- state is stored in the business object related to workflow, not in an extra
-workflow object. Multiple workflows could be defined for one business object,
-it means that for each workflow owns state field should be use
+- state is stored in the business object related to workflow(machine), not in an extra
+workflow generic object. Multiple workflows could be defined for one business object,
+it means that for each workflow own state field should be used
 - one state per workflow execution (no parallelism)
 - actions are executed in the transition, not in the node/state
 - no event sending inside the workflow itself (in action)
 - no variables in state workflow: all variables/data need to be stored in
-the business objects (e.g. invoice)
+the business objects
 - events: visible/available in UI as action buttons for the user
 - workflow definition stored as JSON
 - guard support (transition/event availability is defined via
 condition/expression/function = guard)
-- hierarchical states machines are not supported
+- hierarchical states are not supported
 
 #### Notes
 
