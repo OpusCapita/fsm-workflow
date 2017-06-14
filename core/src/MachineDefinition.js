@@ -1,3 +1,6 @@
+// return new array that contains unique values from original array
+const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
+
 export default class MachineDefinition {
   constructor({ schema, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
     // todo validate schema
@@ -135,8 +138,7 @@ export default class MachineDefinition {
   }
 
   /**
-   * Returns a list of states
-   * that are available during the workflow definition
+   * Returns a list of all states that are defined in schema
    *
    * @return Array
    */
@@ -145,15 +147,17 @@ export default class MachineDefinition {
       return [];
     }
 
-    let result = [];
-    result.push(this.schema.initialState);
-    result = result.concat(this.schema.finalStates);
-    for (let i = 0; i < this.schema.transitions.length; i++) {
-      result.push(this.schema.transitions[i].from);
-      result.push(this.schema.transitions[i].to);
-    }
+    // let result = [schema.initialState, ...schema.finalStates];
+    const result = this.schema.transitions.reduce(
+      // gather all states from transitions
+      (accumulator, t) => {
+        return accumulator.concat(t.from,t.to)
+      },
+      // initial and final states
+      [this.schema.initialState, ...this.schema.finalStates]
+    );
 
-    return Array.from(new Set(result)).sort();
+    return toUnique(result).sort();
   }
 
   static getDefaultObjectStateFieldName() {
