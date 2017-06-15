@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const packageVersion = require('./package.json').version;
+const fs = require('fs');
 
 module.exports = {
   entry: path.resolve(__dirname, './src/client/index.js'),
@@ -37,8 +38,8 @@ module.exports = {
         include: [
           path.join(__dirname, 'src'),
           path.join(__dirname, 'www'),
-          path.join(__dirname, './node_modules/@opuscapita/fsm-core'),
-          path.join(__dirname, './node_modules/@opuscapita/fsm-task-manager')
+          fs.realpathSync(path.join(__dirname, './node_modules/@opuscapita/fsm-core')),
+          fs.realpathSync(path.join(__dirname, './node_modules/@opuscapita/fsm-task-manager'))
         ],
         query: {
           presets: ['es2015', 'stage-0', 'react']

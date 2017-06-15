@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node --presets es2015,stage-0,react src/server/index"
+    "start": "babel-node --presets es2015,stage-0 src/server/index"
   },
   "author": "Daniel Zhitomirsky <dzhitomirsky@scand.com>",
   "license": "Apache-2.0",
