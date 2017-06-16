@@ -3,7 +3,7 @@
 ## FSM workflow (for Node.js)
 
 ### Introduction
-[Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) is implemented in JS using [Promise](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise)s.
+[Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) is implemented in JS using [Promise](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise)-s.
 
 - state is stored in the business object related to workflow(machine), not in an extra
 workflow generic object. Multiple workflows could be defined for one business object,
