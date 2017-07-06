@@ -11,7 +11,7 @@ Run ```npm install @opuscapita/fsm-core``` to get up and running.
 ### Use in code
 
 ```javascript
-import {MachineDefinition, Machine} from '@opuscapita/fsm-core';
+import { MachineDefinition, Machine } from '@opuscapita/fsm-core';
 ```
 
 ## Machine definition

@@ -7,3 +7,7 @@ test-results.xml
 .idea
 .nyc_output
 coverage
+
+core/lib
+gui/lib
+task-manager/lib
