@@ -1,2 +1,7 @@
-export Machine from './src/Machine';
-export MachineDefinition from './src/MachineDefinition';
+import Machine from './src/Machine';
+import MachineDefinition from './src/MachineDefinition';
+
+export {
+  Machine,
+  MachineDefinition
+}

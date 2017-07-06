@@ -1,1 +1,5 @@
-export TaskManager from './src/TaskManager';
+import TaskManager from './src/TaskManager';
+
+export {
+  TaskManager
+}

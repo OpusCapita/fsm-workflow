@@ -1,5 +1,5 @@
 #### http://machina-js.org
- It looks strange
+It looks strange
  - states are dynamic, calculated inside function
  - is able to set up timer and timeout based automatic event sending via "on enter  " for specific state
 
