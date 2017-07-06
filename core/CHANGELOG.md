@@ -1,3 +1,9 @@
+## [v0.0.1-beta.1](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.0...v0.0.1-beta.1) (Thu, 06 Jul 2017 14:01:12 GMT)
+ - Merge pull request #12 from OpusCapita/feature/build-process
+    
+     #10 Add missing "files" section in package.json (7461f81 7640f83, 54c2709)
+ - #10 Add missing "files" section in package.json (Kirill Volkovich <volkovich@scand.com>, 7640f83)
+
 ## [v0.0.1-beta.0](https://github.com/OpusCapita/fsm/compare/null...v0.0.1-beta.0) (Thu, 06 Jul 2017 11:15:15 GMT)
  - Add release .scripts (Kirill Volkovich <volkovich@scand.com>, a1d05bb)
  - Revert babel-* dependencies to 6.x.x (Kirill Volkovich <volkovich@scand.com>, 660f5f6)
