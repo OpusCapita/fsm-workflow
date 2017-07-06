@@ -10,6 +10,10 @@
     "test": "mocha src/**/*.spec.js --require config/mocha-setup.js"
   },
   "repository": "https://github.com/OpusCapita/fsm/tree/master/task-manager",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "author": "Daniel Zhitomirsky <dzhitomirsky@scand.com>",
   "license": "Apache-2.0",
   "bugs": {

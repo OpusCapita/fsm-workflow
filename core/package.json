@@ -11,6 +11,10 @@
     "test": "rimraf ./.nyc_output ./coverage && cross-env nyc --reporter=lcov --reporter=text mocha --require config/mocha-setup.js --recursive 'src/**/*.spec.js'"
   },
   "repository": "https://github.com/OpusCapita/fsm/tree/master/core",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "author": "Alexey Sergeev <sab@scand.com>",
   "license": "Apache-2.0",
   "bugs": {
