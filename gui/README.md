@@ -6,9 +6,36 @@ As an example of not bad implemented workflow editor we suggest JIRA's workflow 
 
 ![jira-workflow](./img/jira-workflow-editor.png)
 
-See **wokflow designer** chapter at official JIRA [documentation](https://confluence.atlassian.com/jira064/configuring-workflow-720412524.html)
+See **wokflow designer** chapter at official JIRA [documentation](https://confluence.atlassian.com/jira064/configuring-workflow-720412524.html) for more details
 
 ### Existing react libraries
+
+#### [The Graph Editor](https://github.com/flowhub/the-graph)
+
+* 503 stars on github; Sep 2013 - Jul 2017; MIT License; more-less actively maintained
+* Focus on graphs used for dataflow and Flow-based programming
+* Pure documentation (Some docs can be found at maintainer-company [product docs](https://noflojs.org/documentation/graphs/))
+* Has tests written in CoffeeScript
+
+```
+           ――――――――――――――――――
+           |                |
+In port 1  *                *  Out port 1
+           |                | 
+           |                | 
+In port 2  *   Node icon    *  Out port 2
+           |                | 
+           |                | 
+In port 3  *                *  Out port 3
+           |                |
+           ――――――――――――――――――
+           |   Node title   | 
+           ――――――――――――――――――
+```
+
+**There is no sense to consider this library because :**
+
+* Nodes can be connected in only `Out port => In port` ports relations - it's not what we need
 
 #### [STORM React Diagrams](https://github.com/projectstorm/react-diagrams)
 
