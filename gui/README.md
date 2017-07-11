@@ -94,6 +94,7 @@
 * Well readable source code
 * Pure documentation
 * Has no tests
+* 
 
 #### [The Graph Editor](https://github.com/flowhub/the-graph)
 
@@ -103,24 +104,26 @@
 * Has tests written in CoffeeScript
 
 ```
-            ――――――――――――――――――
-            |                |
-In port 1   *                * Out port 1
-            |                |
-            |                |
-In port 2   *   Node icon    * Out port 2
-            |                |
-            |                |
-In port 3   *                * Out port 3
-            |                |
-            ――――――――――――――――――
-            |   Node title   | 
-            ――――――――――――――――――
+/* Node */
+
+           ――――――――――――――――――
+           |                |
+In port 1  *                *  Out port 1
+           |                | 
+           |                | 
+In port 2  *   Node icon    *  Out port 2
+           |                | 
+           |                | 
+In port 3  *                *  Out port 3
+           |                |
+           ――――――――――――――――――
+           |   Node title   | 
+           ――――――――――――――――――
 ```
 
-* Nodes
-
 **There is no sense to consider this library because :**
+
+* Nodes can be connected in only `Out port => In port` ports relations - it's not what we need
 
 ### Non-React based
   * http://modeling-languages.com/javascript-drawing-libraries-diagrams/
