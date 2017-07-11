@@ -2,7 +2,7 @@
 
 **TBD**
 
-## Existing libraries that allows to create flow diagram editor
+## Existing libraries for creating flow diagram editors
 
 * React based
   * [STORM React Diagrams](https://github.com/projectstorm/react-diagrams)
