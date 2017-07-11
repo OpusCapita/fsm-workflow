@@ -4,7 +4,7 @@
 
 As an example of not bad implemented workflow editor we suggest JIRA's workflow designer.
 
-[jira-workflow](./img/jira-workflow-editor.png)
+![jira-workflow](./img/jira-workflow-editor.png)
 
 See **wokflow designer** chapter at official JIRA [documentation](https://confluence.atlassian.com/jira064/configuring-workflow-720412524.html)
 
