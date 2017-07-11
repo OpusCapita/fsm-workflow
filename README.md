@@ -50,3 +50,4 @@ Task management is implemented as additional library. You can find more  detaile
 | <img src="https://avatars3.githubusercontent.com/u/24650360?v=3" width="100px;"/> | [**Daniel Zhitomirsky**](https://github.com/dzhitomirsky-sc) |
 
 Contributing are welcome. We need YOU! :metal:
+
