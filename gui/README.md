@@ -120,6 +120,7 @@ In port 3  *                *  Out port 3
 
 > Because it can transpile into any level of ECMA Script, and the library got really complicated, so I ported it to Typescript to accommodate the heavy architectural changes I was starting to make. <3 Type Script
 
+* Has a [fork](https://github.com/woodenconsulting/react-js-diagrams) in JavaScript
 * Well readable source code
 * Pure documentation
 * Has no tests
