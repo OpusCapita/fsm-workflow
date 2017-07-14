@@ -78,7 +78,7 @@ export default class TaskManager {
    * @param searchParams
    * @return {Promise.<TResult>}
    */
-  list({ searchParams }) {
+  list({ searchParams = {} }) {
     return this.machine.promise.resolve(this.search(searchParams));
   }
 
