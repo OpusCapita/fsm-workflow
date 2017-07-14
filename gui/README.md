@@ -54,3 +54,13 @@ In port 3  *                *  Out port 3
 
   * http://modeling-languages.com/javascript-drawing-libraries-diagrams/
   * [d3](https://d3js.org/) - [isn't a good choice for our task](https://stackoverflow.com/questions/22226849/can-i-create-a-flow-chart-no-tree-chart-using-d3-js)
+
+### Self-made library (proof of concept)
+
+**Editor view**
+
+![workflow](./img/Workflow-editor-1.png)
+
+**Transition creation**
+
+![transition-creation](./img/Workflow-transition-creation.gif)
