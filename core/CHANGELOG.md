@@ -1,3 +1,6 @@
+## [v0.0.1-beta.4](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.3...v0.0.1-beta.4) (Fri, 14 Jul 2017 08:01:23 GMT)
+ - Increment version after release (Kirill Volkovich <volkovich@scand.com>, 4b5225e)
+
 ## [v0.0.1-beta.1](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.0...v0.0.1-beta.1) (Thu, 06 Jul 2017 14:01:12 GMT)
  - Merge pull request #12 from OpusCapita/feature/build-process
     
