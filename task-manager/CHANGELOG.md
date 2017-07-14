@@ -1,3 +1,6 @@
+## [v0.0.1-beta.4](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.3...v0.0.1-beta.4) (Fri, 14 Jul 2017 08:01:49 GMT)
+ - Increment version after release (Kirill Volkovich <volkovich@scand.com>, 4b5225e)
+
 ## [v0.0.1-beta.0](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.0...v0.0.1-beta.0) (Thu, 06 Jul 2017 13:37:31 GMT)
 
 ## [v0.0.1-beta.0](https://github.com/OpusCapita/fsm/compare/undefined...v0.0.1-beta.0) (Thu, 06 Jul 2017 13:37:31 GMT)
