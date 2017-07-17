@@ -1,5 +1,37 @@
-## [v0.0.1-beta.4](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.3...v0.0.1-beta.4) (Fri, 14 Jul 2017 08:01:23 GMT)
+## [v0.0.1-beta.5](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.4...v0.0.1-beta.5) (Mon, 17 Jul 2017 15:23:52 GMT)
+ - Added request passing to findAvailable transitions in event sending check. (dzhitomirsky-sc <dzhitomirsky@scand.com>, 7a315b7)
+ - Remove unused release .scripts directory (Kirill Volkovich <kirill.volkovich@jcatalog.com>, e051ba8)
+
+## [v0.0.1-beta.4](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.3...v0.0.1-beta.4) (Mon, 17 Jul 2017 11:51:19 GMT)
+ - #14 Implementation. (#15)
+    
+    * #14 Implementation.
+    
+    * Update README.md (Daniel Zhitomirsky <dzhitomirsky-sc@users.noreply.github.com>, 4b10bed)
  - Increment version after release (Kirill Volkovich <volkovich@scand.com>, 4b5225e)
+
+## [v0.0.1-beta.3](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.1...v0.0.1-beta.3) (Fri, 14 Jul 2017 07:32:11 GMT)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/fsm (fbcf92d 9e1c7b9, 9f41b55)
+ - Increment "task-manager" and "core" beta version (Kirill Volkovich <volkovich@scand.com>, fbcf92d)
+ - Added default value for searchParams arg (#13) (Daniel Zhitomirsky <dzhitomirsky-sc@users.noreply.github.com>, 9e1c7b9)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 910c566)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/fsm (bb6d2f7 5038db6, 3ffdf98)
+ - Add two image files to "gui" package (Kirill Volkovich <volkovich@scand.com>, bb6d2f7)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 5038db6)
+ - Update README.md (Kirill Volkovich <kvolkovich-sc@users.noreply.github.com>, 7fd6ef9)
+ - Update gui/README.md (Kirill Volkovich <volkovich@scand.com>, 6408330)
+ - Update gui/README.md (Kirill Volkovich <volkovich@scand.com>, 46cfbbe)
+ - Update gui/README.md (Kirill Volkovich <volkovich@scand.com>, 2105d99)
+ - Update gui/README.md (Kirill Volkovich <volkovich@scand.com>, 97ad2ec)
+ - Update gui/README.md (Kirill Volkovich <volkovich@scand.com>, 44ab9f5)
+ - Update gui/README.md (Kirill Volkovich <volkovich@scand.com>, 06df87c)
+ - Increment "task-manager" beta version (Kirill Volkovich <volkovich@scand.com>, c13f196)
+ - Merge branch 'master' of opuscapita.github.com:OpusCapita/fsm (7770f70 a619140, 5f77ef1)
+ - Update gui/README.md (Kirill Volkovich <volkovich@scand.com>, 7770f70)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, a619140)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, c5fe02b)
+ - Update README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, a1dc4ab)
+ - Increment "task-manager" beta version (Kirill Volkovich <volkovich@scand.com>, 59caeb5)
 
 ## [v0.0.1-beta.1](https://github.com/OpusCapita/fsm/compare/v0.0.1-beta.0...v0.0.1-beta.1) (Thu, 06 Jul 2017 14:01:12 GMT)
  - Merge pull request #12 from OpusCapita/feature/build-process
@@ -7,7 +39,11 @@
      #10 Add missing "files" section in package.json (7461f81 7640f83, 54c2709)
  - #10 Add missing "files" section in package.json (Kirill Volkovich <volkovich@scand.com>, 7640f83)
 
-## [v0.0.1-beta.0](https://github.com/OpusCapita/fsm/compare/null...v0.0.1-beta.0) (Thu, 06 Jul 2017 11:15:15 GMT)
+## [v0.0.1-beta.0](https://github.com/OpusCapita/fsm/compare/undefined...v0.0.1-beta.0) (Thu, 06 Jul 2017 13:37:31 GMT)
+ - Merge pull request #11 from OpusCapita/feature/build-process
+    
+    Feature/build process (ac3c10a df9baa2, 03fd6bd)
+ - Add "publishConfig" sections configured to "npmjs.org" (Kirill Volkovich <volkovich@scand.com>, df9baa2)
  - Add release .scripts (Kirill Volkovich <volkovich@scand.com>, a1d05bb)
  - Revert babel-* dependencies to 6.x.x (Kirill Volkovich <volkovich@scand.com>, 660f5f6)
  - #10 Implement build process for "task-manager"
