@@ -183,7 +183,9 @@ var machine = new Machine(machineDefinition, context);
 // start/initialize machine/workflow
 machine.start({object})
 
-// returns a list of available transitions: {event, from, to, ..}, e.g. event
+// returns a list of available transitions: {event, from, to, request..}, e.g. event
+// request is used to pass parameters to guards for some dynamic calculation, e.g. when event availability depends 
+// on current user information as roles and etc. 
 machine.availableTransitions({object})
 // returns a list of available automatic transitions: {event, from, to, ..}, e.g. event
 // if machine schema is adequate then there should be not more than 1 such transition
