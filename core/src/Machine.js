@@ -94,6 +94,7 @@ export default class Machine {
         from,
         event,
         object,
+        request,
         context
       }).
       then(({ transitions }) => {
