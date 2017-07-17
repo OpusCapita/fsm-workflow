@@ -38,7 +38,7 @@ export default class Machine {
 
   // returns a lits of events (names) that are available at current object state
   // event is optional, it is required only if you search for transitions with the event
-  availableTransitions({ object, event }) {
+  availableTransitions({ object, event, request }) {
     // calculate from state
     const from = this.currentState({ object });
     // get context
@@ -47,6 +47,7 @@ export default class Machine {
     return this.machineDefinition.findAvailableTransitions({
       from,
       object,
+      request,
       context,
       event
     });

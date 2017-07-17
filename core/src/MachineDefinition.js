@@ -32,7 +32,7 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
-  findAvailableTransitions({ from, event, object, context, isAutomatic = false } = {}) {
+  findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
     // if from is not specified, then no transition is available
     if (from === null || from === undefined) {
       // to do throw proper error
@@ -74,8 +74,9 @@ export default class MachineDefinition {
         }
         // if guard return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
-        // additionally object and context are also passed
-        if (!condition({ ...guards[i].arguments, from, to, event, object, context })) {
+        // additionally object, request and context are also passed
+        // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
+        if (!condition({ ...guards[i].arguments, from, to, event, object, request, context })) {
           return false;
         }
       }

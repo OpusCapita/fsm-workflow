@@ -107,7 +107,8 @@ describe('machine definition: findAvailableTransitions', function() {
                   }
                 }
               ]
-            }, {
+            },
+            {
               from: 'b',
               to: 'c',
               event: 'b->c',
@@ -116,12 +117,29 @@ describe('machine definition: findAvailableTransitions', function() {
                   name: 'unavailable'
                 }
               ]
+            },
+            {
+              from: 'c',
+              to: 'd',
+              event: 'c->d',
+              guards: [
+                {
+                  name: 'less-than-max',
+                  arguments: {
+                    max: 10
+                  }
+                }
+              ]
             }
           ]
         },
         conditions: {
           'a-to-b': ({ object }) => {
             return object.enabled;
+          },
+          'less-than-max': ({ max, request }) => {
+            const { value } = request;
+            return value < max;
           }
         }
       });
@@ -156,6 +174,35 @@ describe('machine definition: findAvailableTransitions', function() {
       }).catch((e) => {
         assert(e, 'Error is thrown as expected')
       });
+    });
+
+    it('check passing guard with passing request', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'c',
+        object: {},
+        request: {
+          value: 1
+        }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
+        assert.equal(transitions[0].event, 'c->d');
+        assert.equal(transitions[0].from, 'c');
+        assert.equal(transitions[0].to, 'd');
+        done();
+      })
+    });
+
+    it('check rejecting guard with passing request', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'c',
+        object: {},
+        request: {
+          value: 11
+        }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 0);
+        done();
+      })
     });
   });
 
