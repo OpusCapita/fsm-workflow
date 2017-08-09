@@ -55,25 +55,6 @@ export default class MachineDefinition {
       return transition.event === event;
     };
 
-    const checkRule = ({ ruleType, rule, from, to, event, object, request, context }) => {
-      const condition = this.conditions[rule.name];
-      const negate = rule.negate ? rule.negate : false;
-      // condition is referenced is defined in schema, but is not really defined -> error!!!
-      if (!condition) {
-        throw new Error(
-          ruleType === 'guard' ?
-          // eslint-disable-next-line max-len
-          `Guard '${rule.name}' is specified in one the transitions but corresponding condition is not found/implemented!` :
-          `Automatic condition '${rule.name}' is specified in one the transitions but is not found/implemented!`
-        );
-      }
-      // if check return false, return false, e.g. transition is not available at the moment
-      // pass arguments specified in guard call (part of schema)
-      // additionally object and context are also passed
-      // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
-      let conditionValue = condition({ ...rule.arguments, from, to, event, object, request, context });
-      return negate ? !conditionValue : conditionValue;
-    };
 
     const checkGuards = transition => {
       const { guards, from, to, event } = transition;
@@ -83,9 +64,22 @@ export default class MachineDefinition {
       }
       // "ask" each guard
       for (let i = 0; i < guards.length; i++) {
-        const rule = guards[i];
-
-        if (!checkRule({ ruleType: 'guard', rule, from, to, event, object, request, context })) {
+        const condition = this.conditions[guards[i].name];
+        const negate = guards[i].negate ? guards[i].negate : false;
+        // guard is defined in schema, but corresponding condition is not really defined -> error!!!
+        if (!condition) {
+          throw new Error(
+            // eslint-disable-next-line max-len
+            `Guard '${guards[i].name}' is specified in one the transitions but corresponding condition is not found/implemented!`
+          );
+        }
+        // if guard return false, return false, e.g. transition is not available at the moment
+        // pass arguments specified in guard call (part of schema)
+        // additionally object, request and context are also passed
+        // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
+        let conditionValue = condition({ ...guards[i].arguments, from, to, event, object, request, context });
+        conditionValue = negate ? !conditionValue : conditionValue;
+        if (!conditionValue) {
           return false;
         }
       }
@@ -113,9 +107,22 @@ export default class MachineDefinition {
         return false
       }
       for (let i = 0; i < automatic.length; i++) {
-        const rule = automatic[i];
+        const condition = this.conditions[automatic[i].name];
+        const negate = automatic[i].negate ? automatic[i].negate : false;
 
-        if (!checkRule({ ruleType: 'automatic', rule, from, to, event, object, request, context })) {
+        // condition is referenced is defined in schema, but is not really defined -> error!!!
+        if (!condition) {
+          throw new Error(
+            // eslint-disable-next-line max-len
+            `Automatic condition '${automatic[i].name}' is specified in one the transitions but is not found/implemented!`
+          );
+        }
+        // if check return false, return false, e.g. transition is not available at the moment
+        // pass arguments specified in guard call (part of schema)
+        // additionally object and context are also passed
+        let conditionValue = condition({ ...automatic[i].arguments, from, to, event, object, context });
+        conditionValue = negate ? !conditionValue : conditionValue;
+        if (!conditionValue) {
           return false;
         }
       }
