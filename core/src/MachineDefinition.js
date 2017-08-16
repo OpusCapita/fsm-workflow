@@ -65,7 +65,6 @@ export default class MachineDefinition {
       // "ask" each guard
       for (let i = 0; i < guards.length; i++) {
         const condition = this.conditions[guards[i].name];
-        const negate = guards[i].negate ? guards[i].negate : false;
         // guard is defined in schema, but corresponding condition is not really defined -> error!!!
         if (!condition) {
           throw new Error(
@@ -77,9 +76,11 @@ export default class MachineDefinition {
         // pass arguments specified in guard call (part of schema)
         // additionally object, request and context are also passed
         // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
-        let conditionValue = condition({ ...guards[i].arguments, from, to, event, object, request, context });
-        conditionValue = negate ? !conditionValue : conditionValue;
-        if (!conditionValue) {
+        let conditionResult = condition({ ...guards[i].arguments, from, to, event, object, request, context });
+        if (guards[i].negate === true) {
+          conditionResult = !conditionResult;
+        }
+        if (!conditionResult) {
           return false;
         }
       }
@@ -108,8 +109,6 @@ export default class MachineDefinition {
       }
       for (let i = 0; i < automatic.length; i++) {
         const condition = this.conditions[automatic[i].name];
-        const negate = automatic[i].negate ? automatic[i].negate : false;
-
         // condition is referenced is defined in schema, but is not really defined -> error!!!
         if (!condition) {
           throw new Error(
@@ -120,9 +119,11 @@ export default class MachineDefinition {
         // if check return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
         // additionally object and context are also passed
-        let conditionValue = condition({ ...automatic[i].arguments, from, to, event, object, context });
-        conditionValue = negate ? !conditionValue : conditionValue;
-        if (!conditionValue) {
+        let conditionResult = condition({ ...automatic[i].arguments, from, to, event, object, context });
+        if (automatic[i].negate === true) {
+          conditionResult = !conditionResult;
+        }
+        if (!conditionResult) {
           return false;
         }
       }
