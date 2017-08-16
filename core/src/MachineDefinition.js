@@ -76,7 +76,11 @@ export default class MachineDefinition {
         // pass arguments specified in guard call (part of schema)
         // additionally object, request and context are also passed
         // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
-        if (!condition({ ...guards[i].arguments, from, to, event, object, request, context })) {
+        let conditionResult = condition({ ...guards[i].arguments, from, to, event, object, request, context });
+        if (guards[i].negate === true) {
+          conditionResult = !conditionResult;
+        }
+        if (!conditionResult) {
           return false;
         }
       }
@@ -115,7 +119,11 @@ export default class MachineDefinition {
         // if check return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
         // additionally object and context are also passed
-        if (!condition({ ...automatic[i].arguments, from, to, event, object, context })) {
+        let conditionResult = condition({ ...automatic[i].arguments, from, to, event, object, context });
+        if (automatic[i].negate === true) {
+          conditionResult = !conditionResult;
+        }
+        if (!conditionResult) {
           return false;
         }
       }

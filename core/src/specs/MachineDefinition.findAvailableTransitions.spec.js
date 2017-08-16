@@ -130,6 +130,20 @@ describe('machine definition: findAvailableTransitions', function() {
                   }
                 }
               ]
+            },
+            {
+              from: 'd',
+              to: 'e',
+              event: 'd->e',
+              guards: [
+                {
+                  name: 'less-than-max',
+                  arguments: {
+                    max: 10
+                  },
+                  negate: true
+                }
+              ]
             }
           ]
         },
@@ -201,6 +215,19 @@ describe('machine definition: findAvailableTransitions', function() {
         }
       }).then(({ transitions }) => {
         assert.equal(transitions.length, 0);
+        done();
+      })
+    });
+
+    it('negate guard permits transition', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'd',
+        object: {},
+        request: {
+          value: 11
+        }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
         done();
       })
     });
@@ -277,6 +304,21 @@ describe('machine definition: findAvailableTransitions', function() {
                   name: 'unavailable'
                 }
               ]
+            },
+            {
+              from: 'g',
+              to: 'h',
+              event: 'g2h',
+              automatic: [
+                {
+                  name: 'g2h-auto-guard',
+                  arguments: {
+                    'one': 1,
+                    'two': 2
+                  },
+                  negate: true
+                }
+              ]
             }
           ]
         },
@@ -291,6 +333,9 @@ describe('machine definition: findAvailableTransitions', function() {
             return true;
           },
           'b2c-auto-guard': ({ object }) => {
+            return false
+          },
+          'g2h-auto-guard': ({ object }) => {
             return false
           }
         }
@@ -343,6 +388,16 @@ describe('machine definition: findAvailableTransitions', function() {
         isAutomatic: true
       }).catch((e) => {
         assert(e, 'Error is thrown as expected')
+      });
+    });
+
+    it("negate auto-guard permits transition", function() {
+      return machineDefinition.findAvailableTransitions({
+        from: 'g',
+        object: {},
+        isAutomatic: true
+      }).then((result) => {
+        return assert.equal(result.transitions.length, 1)
       });
     });
   });
