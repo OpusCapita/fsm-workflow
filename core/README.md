@@ -59,7 +59,8 @@ const machineDefinition = new MachineDefinition({
                 "arguments": {
                   "argument1": "value1",
                   "argument2": "value2"
-                }
+                },
+                "negate": true
             }
           ]
       }
@@ -133,7 +134,7 @@ Actions (action = function) are executed during transition (not during existing 
 
 #### Guard (conditions)
 
-Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false).
+Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false). Condition(function) result could be inverted if its property _negate_ is set to true.
 
 Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
 
@@ -141,8 +142,9 @@ Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-stat
 
 Transition could be marked as automatic using corresponding property. It could be:
 - true (boolean value) - e.g. this transition is always automatic
-- array of conditions(functions, each return true or false) 
-Check for whether object in current state has (at least one) automatic transition needs to be done by external **[task manager](../task-manager)** (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
+- array of conditions(functions, each return true or false), condition(function) result could be inverted if its property _negate_ is set to true
+
+Check for whether object in current state has (at least one) automatic transition could be done via **[task manager](../task-manager)** (inside the application). Basing on evaluated results task manager will be able to take a decision to send event without user interaction.
 
 
 ## Stateful object as a process
