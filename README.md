@@ -1,4 +1,6 @@
 [![CircleCI Status](https://circleci.com/gh/OpusCapita/fsm/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/fsm)
+![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-core.svg) 
+![badge-license](https://img.shields.io/github/license/OpusCapita/fsm-workflow.svg)
 
 ## FSM workflow (for Node.js)
 
