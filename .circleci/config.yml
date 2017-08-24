@@ -1,9 +1,6 @@
 version: 2
 jobs:
   build-core:
-    branches:
-      ignore:
-        - gh-pages
     docker:
       - image: circleci/node:6
     working_directory: ~/repo/core
@@ -41,9 +38,6 @@ jobs:
       - store_artifacts:
           path: junit
   build-task-manager:
-    branches:
-      ignore:
-        - gh-pages
     docker:
       - image: circleci/node:6
     working_directory: ~/repo/core
@@ -84,5 +78,13 @@ workflows:
   version: 2
   build-all:
     jobs:
-      - build-core
-      - build-task-manager
+      - build-core:
+        filters:
+          branches:
+            ignore:
+              - gh-pages
+      - build-task-manager:
+        filters:
+          branches:
+            ignore:
+              - gh-pages
