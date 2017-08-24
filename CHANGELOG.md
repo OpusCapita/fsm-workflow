@@ -1,18 +1,12 @@
+## [v0.0.3](Thu, 24 Aug 2017 08:33:48 GMT)
+ - Redeveloping build process using CircleCI workflow
+
 ## [v0.0.2](Thu, 24 Aug 2017 05:54:52 GMT)
  - Renaming 'fsm' to 'fsm-workflow' (Alexey Sergeev <sab@scand.com>, 45059fd)
- - Enhancement/#9 (#16)
-    
-    * Add support for "negate" option to guards and automatic(s) (Aleksandr Baliunov <abaliunov-sc@users.noreply.github.com>, 937daf2)
- - Path "core" version after release (Kirill Volkovich <kirill.volkovich@jcatalog.com>, d51d348)
  - Added request passing to findAvailable transitions in event sending check. (dzhitomirsky-sc <dzhitomirsky@scand.com>, 7a315b7)
- - Remove unused release .scripts directory (Kirill Volkovich <kirill.volkovich@jcatalog.com>, e051ba8)
 
 ## [v0.0.1-beta.4](Mon, 17 Jul 2017 11:51:19 GMT)
  - #14 Implementation. (#15)
-    
-    * #14 Implementation.
-    
-    * Update README.md (Daniel Zhitomirsky <dzhitomirsky-sc@users.noreply.github.com>, 4b10bed)
  - Increment version after release (Kirill Volkovich <volkovich@scand.com>, 4b5225e)
 
 ## [v0.0.1-beta.3](Fri, 14 Jul 2017 07:32:11 GMT)
@@ -40,24 +34,24 @@
 
 ## [v0.0.1-beta.1](Thu, 06 Jul 2017 14:01:12 GMT)
  - Merge pull request #12 from OpusCapita/feature/build-process
-    
+
      #10 Add missing "files" section in package.json (7461f81 7640f83, 54c2709)
  - #10 Add missing "files" section in package.json (Kirill Volkovich <volkovich@scand.com>, 7640f83)
 
 ## [v0.0.1-beta.0](Thu, 06 Jul 2017 13:37:31 GMT)
  - Merge pull request #11 from OpusCapita/feature/build-process
-    
+
     Feature/build process (ac3c10a df9baa2, 03fd6bd)
  - Add "publishConfig" sections configured to "npmjs.org" (Kirill Volkovich <volkovich@scand.com>, df9baa2)
  - Add release .scripts (Kirill Volkovich <volkovich@scand.com>, a1d05bb)
  - Revert babel-* dependencies to 6.x.x (Kirill Volkovich <volkovich@scand.com>, 660f5f6)
  - #10 Implement build process for "task-manager"
-    
+
     Add [npm-scripts](https://www.npmjs.com/package/@opuscapita/npm-scripts)
     Add changelog generation
     Build sources to bundles (Kirill Volkovich <volkovich@scand.com>, d735124)
  - #10 Implement build process for "core"
-    
+
     Add [npm-scripts](https://www.npmjs.com/package/@opuscapita/npm-scripts)
     Add changelog generation
     Build sources to bundles (Kirill Volkovich <volkovich@scand.com>, 10924b3)
@@ -70,36 +64,36 @@
  - Create README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, c360311)
  - Changing node version for build. (Daniel Zhitomirsky <dzhitomirsky-sc@users.noreply.github.com>, 7672d6a)
  - Enhancement/4 (#8)
-    
+
     Replacing isFinal({ state }) with isInFinalState({ object }) in Machine (#4) (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, 8d56d8c)
  - Refactoring code. Removing usage of Set that can't be trabsformed by Babel to ES5 whithout additional transformers (Alexey Sergeev <sab@scand.com>, ce774f5)
  - Returning link to CircleCI (Alexey Sergeev <sab@scand.com>, 87a0a2d)
  - Restructuring docuemtnation. Set up correct module names, repository url. Adding LICENSE (Alexey Sergeev <sab@scand.com>, 1a7ac2d)
  - Create README.md (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, ba2ecf8)
  - Cicrcle ci
-    
+
     * Added circle file and mocha junit test format reporter.
-    
+
     * Added missing file.
-    
+
     * Fixed import for case-sencitive OS.
-    
+
     * Changed circle file.
-    
+
     * Changed circle file.
-    
+
     * Changed circle file.
-    
+
     * Added circleCi badge to readme.md.
-    
+
     * Failed test.
-    
+
     * Ok test.
-    
+
     * Prepare for PR.
-    
+
     * Update package.json
-    
+
     Adding base build process config for CircleCI #7 (Daniel Zhitomirsky <dzhitomirsky-sc@users.noreply.github.com>, 53b5214)
  - Updating documentation (Alexey Sergeev <sab@scand.com>, 41beade)
  - Updating docuemntation (Alexey Sergeev <sab@scand.com>, 7e42ac9)
@@ -178,4 +172,3 @@
  - Adding first structures/classes and tests (Alexey Sergeev <sab@scand.com>, 96d81a2)
  - Adding introduction and existing FSM libs analysis (Alexey Sergeev <sab@scand.com>, 907f008)
  - Initial commit (Alexey Sergeev <asergeev-sc@users.noreply.github.com>, 1293ec6)
-
