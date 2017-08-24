@@ -3,7 +3,6 @@ jobs:
   build-core:
     docker:
       - image: circleci/node:6
-    working_directory: ~/repo/core
     steps:
       - checkout:
           path: ~/repo
@@ -40,7 +39,6 @@ jobs:
   build-task-manager:
     docker:
       - image: circleci/node:6
-    working_directory: ~/repo/core
     steps:
       - checkout:
           path: ~/repo
