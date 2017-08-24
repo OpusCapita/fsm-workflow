@@ -131,7 +131,8 @@ export default class MachineDefinition {
     };
 
     // console.log(`transitions '${JSON.stringify(transitions)}'`);
-    return new Promise((resolve, reject) => {
+    // eslint-disable-next-line new-cap
+    return new this.promise((resolve, reject) => {
       try {
         let foundTransitions = transitions.filter(transition => {
           return checkFrom(transition) &&

@@ -1,5 +1,6 @@
 import assert from 'assert';
 import MachineDefinition from '../MachineDefinition';
+import bluebird from "bluebird"
 
 describe('machine definition: constructor', function() {
   it('uses correct default object state field name if not specified', () => {
@@ -22,7 +23,7 @@ describe('machine definition: constructor', function() {
     try {
       global.Promise = undefined;
 
-      assert.equal(new MachineDefinition().promise, require("bluebird").Promise);
+      assert.equal(new MachineDefinition().promise, bluebird.Promise);
     } finally {
       // restore promise
       global.Promise = Promise;

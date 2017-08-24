@@ -1,8 +1,8 @@
 import React, { PropTypes, PureComponent } from 'react';
 import TaskList from './TaskList.react';
 import NotificationSystem from 'react-notification-system';
-import { TaskManager } from '@opuscapita/fsm-task-manager';
-import { Machine, MachineDefinition } from '@opuscapita/fsm-core';
+import { TaskManager } from '@opuscapita/fsm-workflow-task-manager';
+import { Machine, MachineDefinition } from '@opuscapita/fsm-workflow-core';
 
 //emulates external collection of tasks, f.e. stored in DB
 let tasks = [

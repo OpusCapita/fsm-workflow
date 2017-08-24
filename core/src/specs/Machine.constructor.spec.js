@@ -1,6 +1,7 @@
 import assert from 'assert';
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
+import bluebird from "bluebird"
 
 const createMachineCorrectly = ({ promise } = {}) => {
   return new Machine(
@@ -68,7 +69,7 @@ describe('machine: constructor', function() {
     try {
       global.Promise = undefined;
 
-      assert.equal(createMachineCorrectly().promise, require("bluebird").Promise);
+      assert.equal(createMachineCorrectly().promise, bluebird.Promise);
     } finally {
       // restore promise
       global.Promise = Promise;

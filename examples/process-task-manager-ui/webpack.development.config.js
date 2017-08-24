@@ -38,8 +38,8 @@ module.exports = {
         include: [
           path.join(__dirname, 'src'),
           path.join(__dirname, 'www'),
-          fs.realpathSync(path.join(__dirname, './node_modules/@opuscapita/fsm-core')),
-          fs.realpathSync(path.join(__dirname, './node_modules/@opuscapita/fsm-task-manager'))
+          fs.realpathSync(path.join(__dirname, './node_modules/@opuscapita/fsm-workflow-core')),
+          fs.realpathSync(path.join(__dirname, './node_modules/@opuscapita/fsm-workflow-task-manager'))
         ],
         query: {
           presets: ['es2015', 'stage-0', 'react']

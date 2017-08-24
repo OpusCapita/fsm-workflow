@@ -1,5 +1,5 @@
 {
-  "name": "@opuscapita/fsm-gui",
+  "name": "@opuscapita/fsm-workflow-gui",
   "version": "0.0.1",
   "description": "Start write new project with no effort.",
   "scripts": {

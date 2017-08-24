@@ -1,5 +1,6 @@
 import assert from 'assert';
 import MachineDefinition from '../MachineDefinition';
+import bluebird from 'bluebird';
 
 describe('machine definition: findAvailableTransitions', function() {
   it("throws an error if 'from' is not specified", function() {
@@ -42,7 +43,7 @@ describe('machine definition: findAvailableTransitions', function() {
         }
       }
     );
-    return Promise.all([
+    return bluebird.Promise.all([
       machineDefinition.findAvailableTransitions({ from: 'a' }).then(({ transitions }) => {
         assert(transitions);
         assert.equal(transitions.length, 2);

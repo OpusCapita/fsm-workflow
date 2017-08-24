@@ -9,8 +9,8 @@
   "author": "Daniel Zhitomirsky <dzhitomirsky@scand.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@opuscapita/fsm-core": "file:../../core",
-    "@opuscapita/fsm-task-manager": "file:../../task-manager",
+    "@opuscapita/fsm-workflow-core": "file:../../core",
+    "@opuscapita/fsm-workflow-task-manager": "file:../../task-manager",
     "babel-cli": "7.0.0-alpha.12",
     "babel-core": "7.0.0-alpha.12",
     "babel-loader": "7.0.0",

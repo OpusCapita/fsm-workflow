@@ -1,4 +1,13 @@
 /**
+ * Enforces process started with @DoUntil to stop
+ *
+ * @param processDecriptor - timer object
+ */
+export function killProcess(processDecriptor) {
+  clearInterval(processDecriptor);
+}
+
+/**
  * Executes @action avery @timeout until @test function returns 'false'
  *
  * @param action - function to call per iteration
@@ -14,13 +23,4 @@ export function doUntil(action, test, timeout = 1000) {
   }, timeout);
 
   return timer;
-}
-
-/**
- * Enforces process started with @DoUntil to stop
- *
- * @param processDecriptor - timer object
- */
-export function killProcess(processDecriptor) {
-  clearInterval(processDecriptor);
 }
