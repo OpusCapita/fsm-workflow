@@ -7,7 +7,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.config.js",
     "lint": "eslint src",
-    "publish-release": "update-changelog -- --all && npm run build && npm-publish --release",
+    "publish-release--dont-use": "update-changelog -- --all && npm run build && npm-publish --release",
     "test": "mocha src/**/*.spec.js --require config/mocha-setup.js"
   },
   "repository": "https://github.com/OpusCapita/fsm/tree/master/task-manager",
