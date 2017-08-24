@@ -41,7 +41,7 @@ jobs:
   build-task-manager:
     docker:
       - image: circleci/node:6
-    working_directory: ~/repo/core
+    working_directory: ~/repo/task-manager
     steps:
       - checkout:
           path: ~/repo
