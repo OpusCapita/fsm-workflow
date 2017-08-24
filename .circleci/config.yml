@@ -37,6 +37,7 @@ jobs:
 
       - store_artifacts:
           path: junit
+
   "build-task-manager":
     docker:
       - image: circleci/node:6
