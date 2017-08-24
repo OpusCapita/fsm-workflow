@@ -43,12 +43,12 @@ jobs:
       - image: circleci/node:6
     working_directory: ~/repo/task-manager
     steps:
+      - checkout:
+          path: ~/repo
       - run:
           name: install-linux-packages
           command: |
             sudo apt-get install tree
-      - checkout:
-          path: ~/repo
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
