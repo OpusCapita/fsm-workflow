@@ -43,6 +43,10 @@ jobs:
       - image: circleci/node:6
     working_directory: ~/repo/task-manager
     steps:
+      - run:
+          name: install-linux-packages
+          command: |
+            apt-get install tree
       - checkout:
           path: ~/repo
       - restore_cache:
