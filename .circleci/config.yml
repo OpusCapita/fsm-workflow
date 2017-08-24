@@ -46,7 +46,7 @@ jobs:
       - run:
           name: install-linux-packages
           command: |
-            apt-get install tree
+            sudo apt-get install tree
       - checkout:
           path: ~/repo
       - restore_cache:
