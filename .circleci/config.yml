@@ -65,6 +65,7 @@ jobs:
           name: test
           command: |
             mkdir junit
+            npm list
             npm test -- --reporter mocha-junit-reporter
 
           environment:
