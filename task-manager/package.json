@@ -25,6 +25,7 @@
     "bluebird": "3.5.0"
   },
   "devDependencies": {
+    "@opuscapita/fsm-workflow-core": "0.0.2",
     "@opuscapita/npm-scripts": "2.0.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",

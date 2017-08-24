@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Machine, MachineDefinition } from '../../../core';
+import { Machine, MachineDefinition } from '@opuscapita/fsm-workflow-core';
 import TaskManager from '../TaskManager';
 
 describe('Task manager:event sending', function() {
