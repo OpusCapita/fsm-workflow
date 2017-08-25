@@ -1,4 +1,8 @@
-## Intro
+# FSM core
+
+![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-task-manager.svg) 
+![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-task-manager.svg)
+
 FSM Task(Work) manager is an extension to finite state machine. It manages
 existing tasks (stateful full objects, e.g. invoice) within the lifecycle
 specified in finite state machine (definition.
