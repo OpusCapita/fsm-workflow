@@ -1,5 +1,8 @@
 # FSM core
 
+![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-core.svg) 
+![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-core.svg)
+
 Machine and its definition.
 
 ## How To Use
