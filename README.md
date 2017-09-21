@@ -33,7 +33,7 @@ The following things will be implemented later as extensions/helpers (separate s
 
 ### FSM (Core)
 
-FSM core could be found here [here](core/README.md).
+FSM core could be found here [here](core/README.md)
 
 ### Task/Work management
 
