@@ -25,6 +25,7 @@ export default class TransitionInspectorContainer extends Component {
 
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleNameChange(e) {
@@ -33,6 +34,10 @@ export default class TransitionInspectorContainer extends Component {
 
   handleDescriptionChange(e) {
     this.props.actions.updateTransition(this.props.transitionKey, { description: e.target.value });
+  }
+
+  handleDelete(e, transitionKey) {
+    this.props.actions.deleteTransition(transitionKey);
   }
 
   render() {
@@ -60,6 +65,7 @@ export default class TransitionInspectorContainer extends Component {
         onNameChange={this.handleNameChange}
         onDescriptionChange={this.handleDescriptionChange}
         options={options}
+        onDelete={(e) => this.handleDelete(e, transitionKey)}
       />
     );
   }

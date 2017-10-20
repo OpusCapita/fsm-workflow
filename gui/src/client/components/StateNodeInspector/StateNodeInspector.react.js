@@ -60,6 +60,7 @@ class StateNodeInspector extends Component {
 
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleNameChange(e) {
@@ -70,11 +71,16 @@ class StateNodeInspector extends Component {
     this.props.onDescriptionChange(e);
   }
 
+  handleDelete(e) {
+    this.props.onDelete(e);
+  }
+
   render() {
     const {
       name,
       description,
-      options
+      options,
+      onDelete
     } = this.props;
 
     const transitionsListElement = (
@@ -91,6 +97,7 @@ class StateNodeInspector extends Component {
           deleteButtonLabel="Delete state"
           onNameChange={this.handleNameChange}
           onDesriptionChange={this.handleDescriptionChange}
+          onDelete={this.handleDelete}
           options={options}
         />
       </div>

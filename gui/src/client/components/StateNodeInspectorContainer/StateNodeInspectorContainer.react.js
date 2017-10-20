@@ -25,6 +25,7 @@ export default class StateNodeInspectorContainer extends Component {
 
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleNameChange(e) {
@@ -33,6 +34,10 @@ export default class StateNodeInspectorContainer extends Component {
 
   handleDescriptionChange(e) {
     this.props.actions.updateStateNode(this.props.stateNodeKey, { description: e.target.value });
+  }
+
+  handleDelete(e, stateNodeKey) {
+    this.props.actions.deleteStateNode(stateNodeKey);
   }
 
   render() {
@@ -60,6 +65,7 @@ export default class StateNodeInspectorContainer extends Component {
         onNameChange={this.handleNameChange}
         onDescriptionChange={this.handleDescriptionChange}
         options={options}
+        onDelete={(e) => this.handleDelete(e, stateNodeKey)}
       />
     );
   }
