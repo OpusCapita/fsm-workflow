@@ -87,6 +87,7 @@ class Inspector extends Component {
 
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleNameChange(e) {
@@ -95,6 +96,10 @@ class Inspector extends Component {
 
   handleDescriptionChange(e) {
     this.props.onDescriptionChange(e);
+  }
+
+  handleDelete(e) {
+    this.props.onDelete(e);
   }
 
   render() {
@@ -154,6 +159,7 @@ class Inspector extends Component {
         color="#fff"
         bgColor="#B71C1C"
         className="fsm--inspector__action-button"
+        onClick={this.handleDelete}
       />
     ) : null;
 

@@ -75,6 +75,7 @@ class TransitionInspector extends Component {
 
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleNameChange(e) {
@@ -83,6 +84,10 @@ class TransitionInspector extends Component {
 
   handleDescriptionChange(e) {
     this.props.onDescriptionChange(e);
+  }
+
+  handleDelete(e) {
+    this.props.onDelete(e);
   }
 
   render() {
@@ -106,6 +111,7 @@ class TransitionInspector extends Component {
           deleteButtonLabel="Delete transition"
           onNameChange={this.handleNameChange}
           onDescriptionChange={this.handleDescriptionChange}
+          onDelete={this.handleDelete}
           options={options}
         />
       </div>
