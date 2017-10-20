@@ -125,6 +125,10 @@ class StateNode extends PureComponent {
   }
 
   handleLabelUpdate(element) {
+    if(!element) {
+      return;
+    }
+
     const bbox = element.getBBox();
     const elementBBox = element ? Object.assign({}, {
       x: bbox.x,
@@ -372,9 +376,9 @@ class StateNode extends PureComponent {
               dominantBaseline="middle"
               textAnchor="middle"
               fill={getLabelColor(bgColor)}
-              className="fsm--state-node__label"
+              className={`fsm--state-node__label ${label ? '' : 'fsm--state-node__label--unnamed'}`}
             >
-              {label}
+              {label || 'Unnamed'}
             </SVGLabel>
           </g>
         </DraggableCore>

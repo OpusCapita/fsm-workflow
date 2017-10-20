@@ -158,14 +158,14 @@ class BezierTransition extends PureComponent {
           stroke={color}
           strokeWidth={lineWidth}
           showControls={selected}
-      onPoint1DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 1)}
-      onPoint2DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 2)}
-      onPoint3DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 3)}
-      onPoint4DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 4)}
-      onPoint1DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 1)}
-      onPoint2DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 2)}
-      onPoint3DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 3)}
-      onPoint4DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 4)}
+          onPoint1DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 1)}
+          onPoint2DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 2)}
+          onPoint3DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 3)}
+          onPoint4DragStart={(e, draggableData) => this.handlePointDragStart(e, draggableData, 4)}
+          onPoint1DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 1)}
+          onPoint2DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 2)}
+          onPoint3DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 3)}
+          onPoint4DragStop={(e, draggableData) => this.handlePointDragStop(e, draggableData, 4)}
         />
       </g>
     );

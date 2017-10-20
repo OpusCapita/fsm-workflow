@@ -72,15 +72,15 @@
     "write-file-webpack-plugin": "^3.4.2"
   },
   "dependencies": {
-    "@opuscapita/react-autocompletes": "1.0.5",
-    "@opuscapita/react-buttons": "1.0.13",
+    "@opuscapita/react-autocompletes": "1.0.8",
+    "@opuscapita/react-buttons": "1.0.14",
+    "@opuscapita/react-overlays": "1.0.14",
     "@opuscapita/svg-icons": "1.0.6",
     "bezier-js": "2.2.3",
     "d3": "^4.8.0",
     "deep-diff": "0.3.8",
     "lodash": "^4.17.4",
     "normalizr": "^3.2.3",
-    "opuscapita-react-ui-overlays": "^.0.11",
     "radium": "^0.18.2",
     "react-click-outside": "tj/react-click-outside",
     "react-digraph": "^1.0.12",

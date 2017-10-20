@@ -184,6 +184,7 @@ class Viewport extends Component {
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onMouseMove={this.handleMouseMove}
+        onClick={onClick}
       >
         <DraggableCore
           onDrag={this.handleDrag}
@@ -204,7 +205,6 @@ class Viewport extends Component {
                 fill={showGrid ? 'url(#grid)' : 'none'}
                 stroke="#aaa"
                 onMouseDown={onMouseDown}
-                onClick={onClick}
               />
               {children}
             </g>

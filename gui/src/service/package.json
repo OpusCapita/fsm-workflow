@@ -21,6 +21,7 @@
   "homepage": "https://github.com/kvolkovich-sc/fsm-gui#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "compression": "1.7.1",
     "express": "^4.15.3",
     "fs-extra": "^3.0.1"
   },
