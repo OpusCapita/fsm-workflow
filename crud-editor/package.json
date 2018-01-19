@@ -1,0 +1,49 @@
+{
+  "name": "@opuscapita/fsm-workflow-crud-editor",
+  "version": "0.0.1",
+  "description": "Fsm workflow crud editor",
+  "main": "index.js",
+  "author": "Egor Stambakio",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start-showroom": "cross-env NODE_ENV=development showroom-scan ./src && webpack-dev-server --config config/webpack.config.showroom.js"
+  },
+  "dependencies": {
+    "@opuscapita/react-reference-select": "2.0.4",
+    "@opuscapita/react-select": "1.0.0-oc.0",
+    "react-bootstrap": "0.32.0"
+  },
+  "devDependencies": {
+    "@opuscapita/i18n": "^1.1.0",
+    "@opuscapita/react-showroom-client": "1.3.0-beta.4",
+    "@opuscapita/react-showroom-server": "1.3.0",
+    "autoprefixer": "7.2.5",
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-decorators-legacy": "1.3.4",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
+    "cross-env": "5.1.3",
+    "css-loader": "^0.28.9",
+    "html-webpack-plugin": "2.30.1",
+    "json-loader": "0.5.7",
+    "less": "^2.7.3",
+    "less-loader": "4.0.5",
+    "postcss-loader": "2.0.10",
+    "precss": "3.0.0",
+    "prop-types": "15.6.0",
+    "raw-loader": "0.5.1",
+    "react": "15.6.2",
+    "react-dom": "15.6.2",
+    "style-loader": "0.19.1",
+    "webpack": "3.4.1",
+    "webpack-dev-server": "2.9.2",
+    "webpack-merge": "4.1.1"
+  },
+  "peerDependencies": {
+    "react": "^15.6.2 || ^16.2.0",
+    "react-dom": "^15.6.2 || ^16.2.0"
+  }
+}
