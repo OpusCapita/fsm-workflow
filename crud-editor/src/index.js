@@ -1,1 +1,1 @@
-module.exports = require('./components/SchemaEditor'); //
+module.exports = require('./components/SchemaEditor');

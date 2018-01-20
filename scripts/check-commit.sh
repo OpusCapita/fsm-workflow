@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+# set -ex
 
 # latest commit
 LATEST_COMMIT=$(git rev-parse HEAD)
@@ -36,7 +36,8 @@ if [ $CRUD_EDITOR_COMMIT = $LATEST_COMMIT ]
     echo "files in crud-editor has changed"
     curl -s -X POST -d build_parameters[CIRCLE_JOB]=build-crud-editor \
       https://circleci.com/api/v1.1/project/github/opuscapita/${REPO}/tree/${SAFE_GIT_BRANCH}?circle-token=${CIRCLE_CI_TOKEN} \
-      | grep build_url | perl -pe 's/^.*(?=https)//g' | perl -pe 's/".*$//g'
+      | grep build_url | perl -pe 's/^.*(?=https)//g' | perl -pe 's/".*$//g' \
+      > /dev/null
 fi
 
 if [ $TASK_MANAGER_COMMIT = $LATEST_COMMIT ]

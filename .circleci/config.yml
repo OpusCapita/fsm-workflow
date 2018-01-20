@@ -112,11 +112,11 @@ jobs:
 
       - run:
           name: build-gh-pages
-          command: ./scripts/gh-pages/build.sh
+          command: bash ./scripts/gh-pages/build.sh
 
       - run:
           name: deploy-gh-pages
-          command: ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+          command: bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 workflows:
   version: 2
   build-all:
