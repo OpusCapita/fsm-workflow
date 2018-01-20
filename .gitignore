@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+yarn.lock
+package-lock.json
+yarn-error.log
+test-results.xml
+.idea
+.nyc_output
+coverage
+
+core/lib
+gui/lib
+task-manager/lib

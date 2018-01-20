@@ -1,0 +1,65 @@
+.fsm--selectable-table {
+  margin-bottom: 0px;
+}
+
+.fsm--selectable-table td,
+.fsm--selectable-table th {
+// XXX
+  border-top: 1px solid #eee !important;
+}
+
+.fsm--selectable-table__item {
+  max-width: 100px;
+  padding: 4px 8px !important;
+}
+
+.fsm--selectable-table__item:first-child {
+  padding-left: 12px !important;
+}
+
+.fsm--selectable-table__item:last-child:not(.fsm--selectable-table__item--actions) {
+  padding-right: 12px !important;
+}
+
+.fsm--selectable-table__cell-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fsm--selectable-table__item-tr:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.fsm--selectable-table__item--selected {
+  background-color: #0277bd;
+  color: #fff;
+}
+
+.fsm--selectable-table__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.fsm--selectable-table__actions-th {
+  text-align: right;
+}
+
+.fsm--selectable-table__action {
+  margin-right: 4px;
+}
+
+.fsm--selectable-table__item--actions {
+  width: 1%;
+  max-width: auto;
+}
+
+.fsm--selectable-table__action:last-child {
+  margin-right: 0;
+}
+
+.fsm--selectable-table__actions button:before {
+  // XXX should be fixed in opuscapita-react-ui-button package
+  box-shadow: none !important;
+}
