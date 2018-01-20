@@ -9,8 +9,7 @@ jobs:
           path: ~/repo
       - run:
           name: check-commit
-          command:
-            - bash ./scripts/check-commit.sh
+          command: bash ./scripts/check-commit.sh
 
   build-core:
     docker:
