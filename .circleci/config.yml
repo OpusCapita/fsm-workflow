@@ -10,7 +10,7 @@ jobs:
       - run:
           name: check-commit
           command: |
-            .circleci/check-commit.sh
+            scripts/check-commit.sh
 
   build-core:
     docker:
