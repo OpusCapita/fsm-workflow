@@ -8,11 +8,24 @@ import {
   ControlLabel
 } from 'react-bootstrap';
 import Select from '@opuscapita/react-select';
-import { state2rs, rs2state, existingStates } from './utils';
+import { state2rs, rs2state, getExistingStates } from './utils';
 
 export default class TopForm extends PureComponent {
-
-  handleNameChange = this.props.onNameChange;
+  static propTypes = {
+    schema: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      initialState: PropTypes.string,
+      finalStates: PropTypes.arrayOf(PropTypes.string),
+      transitions: PropTypes.arrayOf(PropTypes.shape({
+        from: PropTypes.string,
+        to: PropTypes.string,
+        event: PropTypes.string
+      }))
+    }),
+    onNameChange: PropTypes.func.isRequired,
+    onInitialStateChange: PropTypes.func.isRequired,
+    onFinalStatesChange: PropTypes.func.isRequired
+  }
 
   handleInitialStateChange = initialState => this.props.onInitialStateChange(initialState && rs2state(initialState));
 
@@ -21,29 +34,29 @@ export default class TopForm extends PureComponent {
   render() {
     const { schema } = this.props;
 
-    const states = existingStates(schema.transitions);
+    const states = getExistingStates(schema.transitions);
 
     return (
       <div>
         <h1>FSM Workflow Editor</h1>
-        <Form horizontal>
+        <Form horizontal={true}>
           <FormGroup controlId="fsmName">
             <Col componentClass={ControlLabel} sm={2}>
               FSM name
-          </Col>
+            </Col>
             <Col sm={10}>
               <FormControl
                 type="text"
                 placeholder="Name of your FSM schema"
                 value={schema.name}
-                onChange={this.handleNameChange}
+                onChange={this.props.onNameChange}
               />
             </Col>
           </FormGroup>
           <FormGroup controlId="initialState">
             <Col componentClass={ControlLabel} sm={2}>
               Initial state
-          </Col>
+            </Col>
             <Col sm={10}>
               <Select
                 options={states.map(state2rs)}
@@ -57,7 +70,7 @@ export default class TopForm extends PureComponent {
           <FormGroup controlId="finalStates">
             <Col componentClass={ControlLabel} sm={2}>
               Final states
-          </Col>
+            </Col>
             <Col sm={10}>
               <Select
                 options={states.map(state2rs)}
