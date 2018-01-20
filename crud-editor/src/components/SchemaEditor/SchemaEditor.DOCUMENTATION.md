@@ -13,7 +13,9 @@
 ## Code Example
 
 ```js
-<SchemaEditor/>;
+<SchemaEditor
+  onChange={console.log}
+/>
 ```
 
 ## Contributors

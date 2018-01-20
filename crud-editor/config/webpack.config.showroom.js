@@ -1,3 +1,4 @@
+const { resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
@@ -13,6 +14,10 @@ module.exports = merge(common, {
   entry: [
     '../www/index-page.js'
   ],
+  output: {
+    path: resolve(__dirname, '../.gh-pages-tmp'),
+    filename: 'bundle.js'
+  },
   devServer: {
     historyApiFallback: true,
     inline: false

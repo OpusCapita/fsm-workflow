@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-bootstrap';
 import initialSchema from './initialSchema';
 import TopForm from './TopForm.react';
@@ -6,32 +7,51 @@ import TransitionsTable from './TransitionsTable.react';
 import { getExistingStates } from './utils';
 
 export default class SchemaEditor extends PureComponent {
+  static propTypes = {
+    onChange: PropTypes.func
+  }
+
+  static defaultProps = {
+    onChange: _ => {}
+  }
+
   state = {
     schema: initialSchema
   }
 
-  handleNameChange = ({ target: { value: name } }) => this.setState(prevState => ({
+  emitIfValid = schema => {
+    const isValid = schema.name &&
+      !schema.transitions.some(({ from, to, event }) => !(from && to && event));
+
+    if (isValid) {
+      this.props.onChange(schema);
+    }
+  }
+
+  setNewState = setFunc => this.setState(setFunc, _ => this.emitIfValid(this.state.schema))
+
+  handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
     schema: {
       ...prevState.schema,
       name
     }
   }))
 
-  handleInitialStateChange = initialState => this.setState(prevState => ({
+  handleInitialStateChange = initialState => this.setNewState(prevState => ({
     schema: {
       ...prevState.schema,
       initialState
     }
   }))
 
-  handleFinalStatesChange = finalStates => this.setState(prevState => ({
+  handleFinalStatesChange = finalStates => this.setNewState(prevState => ({
     schema: {
       ...prevState.schema,
       finalStates
     }
   }))
 
-  handleCreate = _ => this.setState(prevState => ({
+  handleCreate = _ => this.setNewState(prevState => ({
     schema: {
       ...prevState.schema,
       transitions: [
@@ -56,7 +76,7 @@ export default class SchemaEditor extends PureComponent {
 
     const { resetInitialState, adjustedFinalStates } = this.adjustAvailableStates(newTransitions);
 
-    this.setState(prevState => ({
+    this.setNewState(prevState => ({
       schema: {
         ...prevState.schema,
         transitions: newTransitions,
@@ -76,7 +96,7 @@ export default class SchemaEditor extends PureComponent {
 
     const { resetInitialState, adjustedFinalStates } = this.adjustAvailableStates(newTransitions);
 
-    this.setState(prevState => ({
+    this.setNewState(prevState => ({
       schema: {
         ...prevState.schema,
         transitions: newTransitions,
