@@ -45,11 +45,11 @@ else
 fi
 
 # delete any old site as we are going to replace it
-rm -rf "./branches/${SAFE_GIT_BRANCH}/crud-editor"
-mkdir -p "./branches/${SAFE_GIT_BRANCH}/crud-editor"
+rm -rf "../branches/${SAFE_GIT_BRANCH}/crud-editor"
+mkdir -p "../branches/${SAFE_GIT_BRANCH}/crud-editor"
 
 # copy over or recompile the new site
-cp -r ./$SITE_SOURCE/* "./branches/${SAFE_GIT_BRANCH}/crud-editor"
+cp -r ./$SITE_SOURCE/* "../branches/${SAFE_GIT_BRANCH}/crud-editor"
 
 # stage any changes and new files
 git add -A
