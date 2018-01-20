@@ -1,5 +1,5 @@
 {
-  "name": "@opuscapita/fsm-workflow-crud-editor",
+  "name": "@opuscapita/fsm-workflow",
   "version": "0.0.1",
   "description": "Fsm workflow crud editor",
   "main": "index.js",
