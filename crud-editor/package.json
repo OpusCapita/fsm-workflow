@@ -12,7 +12,11 @@
   },
   "dependencies": {
     "@opuscapita/react-select": "1.0.0-oc.0",
-    "react-bootstrap": "0.32.0"
+    "codemirror": "^5.33.0",
+    "kvolkovich-sc-react-codemirror": "^1.0.1",
+    "lodash": "^4.17.4",
+    "react-bootstrap": "0.32.0",
+    "react-codemirror2": "^3.0.7"
   },
   "devDependencies": {
     "@opuscapita/i18n": "1.1.0",
@@ -36,7 +40,7 @@
     "json-loader": "0.5.7",
     "less": "2.7.3",
     "less-loader": "4.0.5",
-    "postcss-loader": "2.0.10",
+    "postcss-loader": "2.0.6",
     "precss": "3.0.0",
     "prop-types": "15.6.0",
     "raw-loader": "0.5.1",

@@ -4,10 +4,12 @@ import {
   Table,
   Button,
   Glyphicon,
-  FormControl
+  FormControl,
+  ButtonGroup
 } from 'react-bootstrap';
 import Select from '@opuscapita/react-select';
-import { getExistingStates, state2rs, rs2state } from './utils';
+import { getExistingStates, state2rs, rs2state } from '../utils';
+import Guards from '../Guards';
 
 export default class TransitionsTable extends PureComponent {
   static propTypes = {
@@ -18,7 +20,14 @@ export default class TransitionsTable extends PureComponent {
     })),
     onCreate: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
-    onDeleteTransition: PropTypes.func.isRequired
+    onDeleteTransition: PropTypes.func.isRequired,
+    onSaveGuards: PropTypes.func.isRequired,
+    exampleObject: PropTypes.object
+  }
+
+  state = {
+    showModal: false,
+    currentTransition: null
   }
 
   handleChangeSelect = ({ field, index }) => value => this.props.onEditTransition({
@@ -35,6 +44,21 @@ export default class TransitionsTable extends PureComponent {
 
   handleDelete = index => _ => this.props.onDeleteTransition(index)
 
+  handleModal = index => _ => this.setState({
+    showModal: true,
+    currentTransition: index
+  })
+
+  handleCloseModal = _ => this.setState({
+    showModal: false,
+    currentTransition: null
+  })
+
+  handleSaveGuards = index => guards => {
+    this.handleCloseModal();
+    this.props.onSaveGuards(index)(guards);
+  }
+
   render() {
     const { transitions } = this.props;
 
@@ -42,14 +66,12 @@ export default class TransitionsTable extends PureComponent {
 
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr key={index}>
-        <td>{index}</td>
         <td>
           <FormControl
             type="text"
             placeholder="Name of event"
             value={event || ''}
             onChange={this.handleChangeEvent(index)}
-            style={{ position: 'relative', top: '2px' }}
           />
         </td>
         <td>
@@ -71,14 +93,42 @@ export default class TransitionsTable extends PureComponent {
           />
         </td>
         <td className='text-right'>
-          <Glyphicon
-            glyph='remove'
-            style={{ cursor: 'pointer' }}
-            onClick={this.handleDelete(index)}
-          />
+          <ButtonGroup bsSize="sm">
+            <Button
+              onClick={this.handleModal(index)}
+            >
+              <Glyphicon glyph='check'/>
+              {'\u2000'}
+              Guards
+            </Button>
+            <Button
+              onClick={this.handleDelete(index)}
+            >
+              <Glyphicon glyph='trash'/>
+              {'\u2000'}
+              Delete
+            </Button>
+          </ButtonGroup>
         </td>
       </tr>
     ))
+
+    const { showModal, currentTransition } = this.state;
+
+    let modal;
+
+    if (showModal) {
+      const transition = transitions[currentTransition];
+
+      modal = (
+        <Guards
+          transition={transition}
+          onClose={this.handleCloseModal}
+          onSaveGuards={this.handleSaveGuards(currentTransition)}
+          exampleObject={this.props.exampleObject}
+        />
+      )
+    }
 
     return (
       <div>
@@ -86,27 +136,28 @@ export default class TransitionsTable extends PureComponent {
           Transitions
           <Button
             bsSize='sm'
-            bsStyle="primary"
             style={{ float: 'right', marginTop: '8px' }}
             onClick={this.props.onCreate}
           >
-            Create
+            Add
           </Button>
         </h2>
-        <Table style={{ tableLayout: 'fixed' }}>
+
+        <Table className="oc-fsm-workflow-crud-editor-table">
           <thead>
             <tr>
-              <th style={{ width: '5%' }}>#</th>
               <th>Event</th>
               <th>From</th>
               <th>To</th>
-              <th style={{ width: '5%' }}></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {rows}
           </tbody>
         </Table>
+
+        {modal}
       </div>
     )
   }

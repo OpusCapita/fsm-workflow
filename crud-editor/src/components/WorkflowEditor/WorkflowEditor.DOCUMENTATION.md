@@ -1,4 +1,4 @@
-# SchemaEditor
+# WorkflowEditor
 
 ## Synopsis
 
@@ -13,18 +13,29 @@
 ## Code Example
 
 ```js
-<SchemaEditor
-  onChange={console.log}
+<WorkflowEditor
+  title="Contract"
+  exampleObject={{
+    "invoiceNo": "1111",
+    "customerId": "22222",
+    "supplierId": "33333",
+    "netAmount": 1000,
+    "grossAmount": 1200,
+    "vatAmount": 200,
+    "currencyId": "EUR",
+    "status": "reviewRequired"
+  }}
+  onSave={console.log}
 />
 ```
 
 ## Contributors
 
-Egor Stambakio
+Egor Stambakio <stambakio@scand.com>
 
 ## Component Name
 
-SchemaEditor
+WorkflowEditor
 
 ## License
 

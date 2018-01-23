@@ -1,34 +1,29 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, Button } from 'react-bootstrap';
 import initialSchema from './initialSchema';
-import TopForm from './TopForm.react';
-import TransitionsTable from './TransitionsTable.react';
-import { getExistingStates } from './utils';
+import TopForm from '../TopForm.react';
+import TransitionsTable from '../TransitionsTable';
+import { getExistingStates } from '../utils';
+import './styles.less';
 
-export default class SchemaEditor extends PureComponent {
+export default class WorkflowEditor extends PureComponent {
   static propTypes = {
-    onChange: PropTypes.func
+    onSave: PropTypes.func,
+    title: PropTypes.string,
+    exampleObject: PropTypes.object
   }
 
   static defaultProps = {
-    onChange: _ => {}
+    onSave: _ => {}
   }
 
   state = {
-    schema: initialSchema
+    schema: initialSchema,
+    conditions: {}
   }
 
-  emitIfValid = schema => {
-    const isValid = schema.name &&
-      !schema.transitions.some(({ from, to, event }) => !(from && to && event));
-
-    if (isValid) {
-      this.props.onChange(schema);
-    }
-  }
-
-  setNewState = setFunc => this.setState(setFunc, _ => this.emitIfValid(this.state.schema))
+  setNewState = setFunc => this.setState(setFunc)
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
     schema: {
@@ -51,7 +46,7 @@ export default class SchemaEditor extends PureComponent {
     }
   }))
 
-  handleCreate = _ => this.setNewState(prevState => ({
+  handleCreateTransition = _ => this.setNewState(prevState => ({
     schema: {
       ...prevState.schema,
       transitions: [
@@ -62,6 +57,13 @@ export default class SchemaEditor extends PureComponent {
           to: null
         }
       ]
+    }
+  }))
+
+  handleCreateCondition = _ => this.setNewState(prevState => ({
+    conditions: {
+      ...prevState.conditions,
+
     }
   }))
 
@@ -120,13 +122,41 @@ export default class SchemaEditor extends PureComponent {
     }
   }
 
+  handleSaveTransitionGuards = index => guards => this.setNewState(prevState => ({
+    schema: {
+      ...prevState.schema,
+      transitions: prevState.schema.transitions.map(
+        (transition, i) => i === index ?
+          { ...transition, guards } :
+          transition
+      )
+    }
+  }))
+
+  handleSave = _ => this.props.onSave(this.state.schema)
+
   render() {
     const { schema } = this.state;
+
+    const { title } = this.props;
 
     return (
       <Grid>
         <Row>
-          <Col md={8} mdOffset={2} sm={12}>
+          <Col sm={12}>
+            <h1>
+              Workflow Editor{title && `:\u00A0${title}`}
+              <Button
+                bsStyle="primary"
+                style={{ float: 'right', marginTop: '16px' }}
+                disabled={!schema.name ||
+                  schema.transitions.some(({ from, to, event }) => !(from && to && event))
+                }
+                onClick={this.handleSave}
+              >
+                Save
+              </Button>
+            </h1>
             <TopForm
               schema={schema}
               onNameChange={this.handleNameChange}
@@ -136,9 +166,11 @@ export default class SchemaEditor extends PureComponent {
 
             <TransitionsTable
               transitions={schema.transitions}
-              onCreate={this.handleCreate}
+              onCreate={this.handleCreateTransition}
               onEditTransition={this.handleEditTransition}
               onDeleteTransition={this.handleDeleteTransition}
+              onSaveGuards={this.handleSaveTransitionGuards}
+              exampleObject={this.props.exampleObject}
             />
 
             <h2>Updated schema</h2>

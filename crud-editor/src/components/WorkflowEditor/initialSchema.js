@@ -5,8 +5,10 @@ export default {
   objectStateFieldName: "status",
   transitions: [
     {
-      from: "open",
       event: "approve",
+      from: "open",
+      to: "approved",
+
       // guards: [
       //   {
       //     "name": "validate",
@@ -16,7 +18,6 @@ export default {
       //     }
       //   }
       // ],
-      to: "approved",
       // actions: [
       //   {
       //     "name": "archive",

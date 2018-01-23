@@ -38,7 +38,6 @@ export default class TopForm extends PureComponent {
 
     return (
       <div>
-        <h1>FSM Workflow Editor</h1>
         <Form horizontal={true}>
           <FormGroup controlId="fsmName">
             <Col componentClass={ControlLabel} sm={2}>

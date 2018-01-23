@@ -4,7 +4,7 @@ import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 // This @showroomScopeDecorator modify React.Component prototype by adding _renderChildren() method.
 export default
 @showroomScopeDecorator
-class SchemaEditorScope extends Component {
+class WorkflowEditorScope extends Component {
   render() {
     return (
       <div>
