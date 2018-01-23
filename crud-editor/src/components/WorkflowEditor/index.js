@@ -1,3 +1,3 @@
-import SchemaEditor from './SchemaEditor.react';
+import SchemaEditor from './SchemaEditor.react'; //
 
 export default SchemaEditor;
