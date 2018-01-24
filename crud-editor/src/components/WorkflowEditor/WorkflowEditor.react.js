@@ -175,16 +175,16 @@ export default class WorkflowEditor extends PureComponent {
             />
 
             <Tabs
-				      activeKey={this.state.key}
-				      onSelect={this.handleSelect}
+              activeKey={this.state.key}
+              onSelect={this.handleSelect}
               animation={false}
-				      id="fsm-workflow-editor"
-	          >
+              id="fsm-workflow-editor"
+            >
               <Tab eventKey={1} title="Graph">
                 <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
                   <WorkflowGraph schema={schema} />
-                  </div>
-				      </Tab>
+                </div>
+              </Tab>
               <Tab eventKey={2} title="Schema">
                 <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
                   <pre style={{ border: 'none' }}>{JSON.stringify(schema, null, 1)}</pre>
