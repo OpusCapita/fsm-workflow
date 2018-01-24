@@ -201,8 +201,11 @@ export default class Guards extends PureComponent {
             </thead>
             <tbody>
               {
-                (guards.length > 0 ? guards : [{}]).map((guard, guardIndex) => (
-                  <tr key={`${guardIndex}-${guard.name}`}>
+                (guards.length > 0 ? guards : [{}]).map((guard, guardIndex, arr) => (
+                  <tr
+                    key={`${guardIndex}-${guard.name}`}
+                    {...(guardIndex < (arr.length - 1) && { style: { height: '110px' } })}
+                  >
                     <td>
                       {
                         guard.func !== undefined && (
