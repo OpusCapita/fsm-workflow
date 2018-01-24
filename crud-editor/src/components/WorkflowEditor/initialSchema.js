@@ -1,7 +1,7 @@
 export default {
   name: "invoice approval",
   initialState: "open",
-  finalStates: ["approved"],
+  finalStates: ["approved", "state-3"],
   objectStateFieldName: "status",
   transitions: [
     {
