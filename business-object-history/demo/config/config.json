@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "1111",
+    "database": "fsm",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "1111",
+    "database": "fsm",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "1111",
+    "database": "fsm",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}

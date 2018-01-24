@@ -7,7 +7,7 @@ export function getCirclePath(cx, cy, r) {
 export function pathToPoints(path, samples) {
   let points = [];
   for (let i = 1; i <= samples; i += 1) {
-	  const point = path.getPointAtLength(i / samples * path.getTotalLength());
+    const point = path.getPointAtLength(i / samples * path.getTotalLength());
     points.push(point);
   }
   return points;
