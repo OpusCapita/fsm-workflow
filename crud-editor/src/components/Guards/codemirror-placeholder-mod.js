@@ -8,10 +8,11 @@ import CodeMirror from 'codemirror';
   mod(CodeMirror);
 }(function(CodeMirror) {
   CodeMirror.defineOption("placeholder", "", function(cm, val, old) {
-    var prev = old && old != CodeMirror.Init;
+    const prev = old && old != CodeMirror.Init;
     if (val && !prev) {
       cm.on("blur", onBlur);
       cm.on("change", onChange);
+      cm.on("focus", onFocus);
       cm.on("swapDoc", onChange);
       onChange(cm);
     } else if (!val && prev) {
@@ -19,7 +20,7 @@ import CodeMirror from 'codemirror';
       cm.off("change", onChange);
       cm.off("swapDoc", onChange);
       clearPlaceholder(cm);
-      var wrapper = cm.getWrapperElement();
+      const wrapper = cm.getWrapperElement();
       wrapper.className = wrapper.className.replace(" CodeMirror-empty", "");
     }
 
@@ -34,7 +35,7 @@ import CodeMirror from 'codemirror';
   }
   function setPlaceholder(cm) {
     clearPlaceholder(cm);
-    var elt = cm.state.placeholder = document.createElement("pre");
+    const elt = cm.state.placeholder = document.createElement("pre");
     elt.style.cssText = "height: 0; overflow: visible";
     elt.style.direction = cm.getOption("direction");
     elt.className = "CodeMirror-placeholder";
@@ -47,12 +48,14 @@ import CodeMirror from 'codemirror';
   function onBlur(cm) {
     if (isEmpty(cm)) setPlaceholder(cm);
   }
-  function onChange(cm) {
-    var wrapper = cm.getWrapperElement(), empty = isEmpty(cm);
-    wrapper.className = wrapper.className.replace(" CodeMirror-empty", "") + (empty ? " CodeMirror-empty" : "");
 
-    if (empty) setPlaceholder(cm);
-    else clearPlaceholder(cm);
+  function onFocus(cm) {
+    clearPlaceholder(cm);
+  }
+
+  function onChange(cm) {
+    const wrapper = cm.getWrapperElement(), empty = isEmpty(cm);
+    wrapper.className = wrapper.className.replace(" CodeMirror-empty", "") + (empty ? " CodeMirror-empty" : "");
   }
 
   function isEmpty(cm) {
