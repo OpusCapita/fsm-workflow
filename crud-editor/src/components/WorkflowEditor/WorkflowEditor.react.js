@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col, Button } from 'react-bootstrap';
+import { Grid, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
 import initialSchema from './initialSchema';
 import TopForm from '../TopForm.react';
 import TransitionsTable from '../TransitionsTable';
-import Graph from 'react-graph-vis';
-import uniqBy from 'lodash/uniqBy';
+import WorkflowGraph from '../WorkflowGraph';
 import { getExistingStates } from '../utils';
 import './styles.less';
 
@@ -26,22 +25,6 @@ export default class WorkflowEditor extends PureComponent {
   }
 
   setNewState = setFunc => this.setState(setFunc)
-
-  generateGraphBySchema = (schema) => {
-    let nodes = uniqBy(schema.transitions.reduce((result, { from, to }) => {
-      if (from === null || to === null) {
-        return result;
-      }
-
-      return result
-        .concat([ { id: from, label: from } ])
-        .concat([ { id: to, label: to } ]);
-    }, []), 'id');
-
-    let edges = schema.transitions.map(({ from, to }) => ({ from, to }));
-
-    return ({ nodes, edges });
-  }
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
     schema: {
@@ -132,7 +115,7 @@ export default class WorkflowEditor extends PureComponent {
     const states = getExistingStates(newTransitions);
 
     const resetInitialState = states.indexOf(initialState) === -1;
-    const adjustedFinalStates = finalStates.filter(fs => states.indexOf(fs) > -1)
+    const adjustedFinalStates = finalStates.filter(fs => states.indexOf(fs) > -1);
 
     return {
       resetInitialState,
@@ -157,8 +140,6 @@ export default class WorkflowEditor extends PureComponent {
     const { schema } = this.state;
 
     const { title } = this.props;
-
-    const graph = this.generateGraphBySchema(schema);
 
     return (
       <Grid>
@@ -193,21 +174,23 @@ export default class WorkflowEditor extends PureComponent {
               exampleObject={this.props.exampleObject}
             />
 
-            <h2>Updated schema</h2>
-            <pre>{JSON.stringify(schema, null, 1)}</pre>
-            <div className="oc-fsm-crud-editor--workflow-editor__graph">
-              <Graph
-                graph={graph}
-                options={{
-                  layout: {
-                    hierarchical: false
-                  },
-                  edges: {
-                    color: "#000000"
-                  }
-                }}
-              />
-            </div>
+            <Tabs
+				      activeKey={this.state.key}
+				      onSelect={this.handleSelect}
+              animation={false}
+				      id="fsm-workflow-editor"
+	          >
+              <Tab eventKey={1} title="Graph">
+                <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
+                  <WorkflowGraph schema={schema} />
+                  </div>
+				      </Tab>
+              <Tab eventKey={2} title="Schema">
+                <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
+                  <pre style={{ border: 'none' }}>{JSON.stringify(schema, null, 1)}</pre>
+                </div>
+              </Tab>
+            </Tabs>
           </Col>
         </Row>
       </Grid>
