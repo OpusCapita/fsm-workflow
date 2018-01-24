@@ -148,6 +148,13 @@ export default class WorkflowEditor extends PureComponent {
       )
     },
     guards: prevState.guards.
+      // delete unused (not present in transitions except current one, nor in new guards)
+      filter(
+        ({ name }) => prevState.schema.transitions.
+          reduce((names, t, i) => i === index ? names : names.concat((t.guards || []).map(({ name }) => name)), []).
+          concat(guards.map(({ name }) => name)).
+          indexOf(name) > -1
+      ).
       // modify intersections
       map(guard => find(guards, ({ name }) => name === guard.name) || guard).
       // add newly created guards
