@@ -23,33 +23,32 @@ REPO="fsm-workflow"
 GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 SAFE_GIT_BRANCH=`urlencode $GIT_BRANCH`
 
+requestJob() {
+  echo "requesting job ${1}"
+  curl -s -X POST -d build_parameters[CIRCLE_JOB]=${1} \
+      https://circleci.com/api/v1.1/project/github/opuscapita/${REPO}/tree/${SAFE_GIT_BRANCH}?circle-token=${CIRCLE_CI_TOKEN} \
+      | grep build_url | perl -pe 's/^.*(?=https)//g' | perl -pe 's/".*$//g' \
+      > /dev/null
+}
+
 echo "Current branch is $SAFE_GIT_BRANCH"
 
 if [ $CORE_COMMIT = $LATEST_COMMIT ]
   then
     echo "files in core has changed"
-    curl -s -X POST -d build_parameters[CIRCLE_JOB]=build-core \
-      https://circleci.com/api/v1.1/project/github/opuscapita/${REPO}/tree/${SAFE_GIT_BRANCH}?circle-token=${CIRCLE_CI_TOKEN} \
-      | grep build_url | perl -pe 's/^.*(?=https)//g' | perl -pe 's/".*$//g' \
-      > /dev/null
+    requestJob build-core
 fi
 
 if [ $CRUD_EDITOR_COMMIT = $LATEST_COMMIT ]
   then
     echo "files in crud-editor has changed"
-    curl -s -X POST -d build_parameters[CIRCLE_JOB]=build-crud-editor \
-      https://circleci.com/api/v1.1/project/github/opuscapita/${REPO}/tree/${SAFE_GIT_BRANCH}?circle-token=${CIRCLE_CI_TOKEN} \
-      | grep build_url | perl -pe 's/^.*(?=https)//g' | perl -pe 's/".*$//g' \
-      > /dev/null
+    requestJob build-crud-editor
 fi
 
 if [ $TASK_MANAGER_COMMIT = $LATEST_COMMIT ]
   then
     echo "files in task-manager has changed"
-    curl -s -X POST -d build_parameters[CIRCLE_JOB]=build-task-manager \
-      https://circleci.com/api/v1.1/project/github/opuscapita/${REPO}/tree/${SAFE_GIT_BRANCH}?circle-token=${CIRCLE_CI_TOKEN} \
-      | grep build_url | perl -pe 's/^.*(?=https)//g' | perl -pe 's/".*$//g' \
-      > /dev/null
+    requestJob build-task-manager
 fi
 
 echo "check-commit is done."
