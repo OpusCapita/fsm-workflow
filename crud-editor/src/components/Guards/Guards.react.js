@@ -38,7 +38,7 @@ export default class Guards extends PureComponent {
       event: PropTypes.string,
       guards: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string,
-        func: PropTypes.string // to be eval'd
+        body: PropTypes.string // to be eval'd
       }))
     }).isRequired,
     onClose: PropTypes.func.isRequired,
@@ -71,7 +71,7 @@ export default class Guards extends PureComponent {
       (guard, i) => i === index ?
         {
           ...guard,
-          func: value
+          body: value
         } :
         guard
     )
@@ -89,7 +89,7 @@ export default class Guards extends PureComponent {
       ...prevState.guards,
       {
         name: `condition_${String(Math.random() * Math.random()).slice(2)}`,
-        func: ''
+        body: ''
       }
     ]
   }))
@@ -104,7 +104,7 @@ export default class Guards extends PureComponent {
     const object = JSON.parse(this.state.exampleObject);
 
     const result = evaluateCode({
-      code: guard.func,
+      code: guard.body,
       arg: { object }
     })
 
@@ -139,7 +139,7 @@ export default class Guards extends PureComponent {
   }
 
   handleSave = _ => this.props.onSaveGuards(this.state.guards.map(
-    ({ name, func }) => ({ name, func: func.trim() })
+    ({ name, body }) => ({ name, body: body.trim() })
   ))
 
   render() {
@@ -215,17 +215,15 @@ export default class Guards extends PureComponent {
                   >
                     <td>
                       {
-                        guard.func !== undefined && (
+                        guard.body !== undefined && (
                           <CodeMirror
                             className="guard-code"
-                            value={guard.func}
+                            value={guard.body}
                             options={{
                               mode: "javascript",
                               lineNumbers: true,
                               theme: "eclipse",
-                              placeholder: `Enter JavaScript expression here.\n` +
-                                `E.g. 'object.enabled === true'.\n` +
-                                `'object' refers to example object.`
+                              placeholder: `Enter JavaScript code here`
                             }}
                             onChange={this.handleChange(guardIndex)}
                           />
@@ -234,7 +232,7 @@ export default class Guards extends PureComponent {
                     </td>
                     <td>
                       {
-                        guard.func !== undefined && (
+                        guard.body !== undefined && (
                           <Glyphicon
                             glyph="play"
                             style={{
@@ -250,7 +248,7 @@ export default class Guards extends PureComponent {
                     </td>
                     <td>
                       {
-                        guard.func !== undefined && (
+                        guard.body !== undefined && (
                           <CodeMirror
                             className="output-code"
                             value={guard.result || ''}
@@ -266,7 +264,7 @@ export default class Guards extends PureComponent {
                     </td>
                     <td className="text-right">
                       {
-                        guard.func !== undefined && (
+                        guard.body !== undefined && (
                           <Button
                             bsSize='sm'
                             onClick={this.handleDeleteGuard(guardIndex)}
@@ -309,7 +307,7 @@ export default class Guards extends PureComponent {
           <Button
             bsStyle='primary'
             disabled={
-              guards.some(({ isError, func }) => isError || !func)
+              guards.some(({ isError, body }) => isError || !body)
             }
             onClick={this.handleSave}
           >
