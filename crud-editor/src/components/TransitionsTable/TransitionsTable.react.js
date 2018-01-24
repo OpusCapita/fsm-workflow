@@ -132,7 +132,7 @@ export default class TransitionsTable extends PureComponent {
       <div>
         <h2>Transitions</h2>
 
-        <Table className="oc-fsm-workflow-crud-editor-table">
+        <Table className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
               <th>Event</th>
