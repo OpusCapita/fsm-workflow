@@ -7,12 +7,13 @@ import {
   Modal,
   Checkbox
 } from 'react-bootstrap';
+
 import CodeMirror from 'kvolkovich-sc-react-codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/eclipse.css';
 import 'codemirror/mode/javascript/javascript'
 import './Guards.less';
-
+import _ from './codemirror-placeholder-mod'; // eslint-disable-line no-unused-vars
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -20,9 +21,9 @@ const evaluateCode = ({ code, arg }) => {
     return typeof result === 'boolean' ?
       result :
       new Error(
-        `Error: type mismatch. Function returned:
+        `Function returned:
         ${String(result)} of type '${typeof result}',
-        expecting a boolean value.`
+        but expected a boolean value.`
       )
   } catch (err) {
     return err
@@ -57,6 +58,12 @@ export default class Guards extends PureComponent {
     guards: this.props.transition.guards || [],
     exampleObject: JSON.stringify(this.props.exampleObject, null, 2),
     autoplay: true
+  }
+
+  componentDidMount() {
+    if (this.state.guards.length === 0) {
+      this.handleAddNewGuard()
+    }
   }
 
   handleChange = index => value => this.setState(prevState => ({
@@ -180,7 +187,7 @@ export default class Guards extends PureComponent {
                     borderBottomWidth: '1px'
                   }}
                 >
-                  Results
+                  Output
                   <Checkbox
                     onChange={this.handleToggleAutoplay}
                     checked={!!autoplay}
@@ -215,7 +222,10 @@ export default class Guards extends PureComponent {
                             options={{
                               mode: "javascript",
                               lineNumbers: true,
-                              theme: "eclipse"
+                              theme: "eclipse",
+                              placeholder: `Enter JavaScript expression here.\n` +
+                                `E.g. 'object.enabled === true'.\n` +
+                                `'object' refers to example object.`
                             }}
                             onChange={this.handleChange(guardIndex)}
                           />
@@ -242,7 +252,7 @@ export default class Guards extends PureComponent {
                       {
                         guard.func !== undefined && (
                           <CodeMirror
-                            className="guard-code"
+                            className="output-code"
                             value={guard.result || ''}
                             options={{
                               theme: "eclipse",
@@ -294,103 +304,6 @@ export default class Guards extends PureComponent {
               }
             </tbody>
           </Table>
-          {/* <Row>
-            <Col sm={8}>
-              {
-                guards.map((guard, guardIndex) => (
-                  <Table
-                    style={{ verticalAlign: 'top' }}
-                    key={`${guardIndex}-${guard.name}`}
-                  >
-                    <thead>
-                      <tr>
-                        <th style={{ width: '65%' }}>JavaScript Expression</th>
-                        <th
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            borderBottomWidth: '1px'
-                          }}
-                        >
-                          <Glyphicon
-                            glyph="play"
-                            style={{ cursor: 'pointer', color: 'darkgreen' }}
-                            onClick={this.handleEvalCode(guardIndex)}
-                          />
-                          <Checkbox
-                            onChange={this.toggleAutoplay(guardIndex)}
-                            checked={!!guard.autoplay}
-                          >
-                            Autoplay
-                          </Checkbox>
-                        </th>
-                        <th style={{ width: '30px' }}></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <CodeMirror
-                            className="guard-code"
-                            value={guard.func}
-                            options={{
-                              mode: "javascript",
-                              lineNumbers: true,
-                              theme: "eclipse"
-                            }}
-                            onChange={this.handleChange(guardIndex)}
-                          />
-                        </td>
-                        <td>
-                          <span {...(guard.isError && { style: { color: 'red' } })}>{guard.result}</span>
-                        </td>
-                        <td className="text-right">
-                          <Glyphicon
-                            glyph="remove"
-                            style={{ cursor: 'pointer' }}
-                            onClick={this.handleDeleteGuard(guardIndex)}
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                ))
-              }
-
-            </Col>
-            <Col sm={4}>
-              <Table style={{ verticalAlign: 'top' }}>
-                <thead>
-                  <tr>
-                    <th>Example object</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <CodeMirror
-                        className="example-object"
-                        value={exampleObject}
-                        options={{
-                          mode: {
-                            name: 'javascript',
-                            json: true
-                          },
-                          theme: "eclipse",
-                          lineNumbers: true,
-                          lineWrapping: true
-                        }}
-                        onChange={this.handleChangeObject}
-                      />
-                      <span style={{ color: 'red' }}>{exampleObjectError}{`\u00A0`}</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Col>
-          </Row> */}
-
         </Modal.Body>
         <Modal.Footer>
           <Button

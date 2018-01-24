@@ -1,9 +1,21 @@
+@editor-height: 100px;
+@editor-border: 1px solid #ddd;
+
 .guard-code .CodeMirror {
-  height: 100px;
-  border: 1px solid #ddd;
+  height: @editor-height;
+  border: @editor-border;
+}
+.guard-code .CodeMirror-empty {
+  color: #777
+}
+
+.output-code .CodeMirror {
+  height: @editor-height;
+  border: @editor-border;
+  background: #eee;
 }
 
 .example-object .CodeMirror {
   height: 400px;
-  border: 1px solid #ddd;
+  border: @editor-border;
 }
