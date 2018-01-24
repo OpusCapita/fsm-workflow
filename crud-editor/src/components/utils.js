@@ -7,4 +7,4 @@ export const getExistingStates = transitions => transitions.reduce(
     ...states,
     ...[from, to].filter(name => states.indexOf(name) === -1)
   ], []
-).filter(Boolean)
+).filter(Boolean) //
