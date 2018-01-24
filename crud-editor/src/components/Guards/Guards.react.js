@@ -174,26 +174,21 @@ export default class Guards extends PureComponent {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Table style={{ verticalAlign: 'top', tableLayout: 'fixed' }}>
+          <Table className="guards-table">
             <thead>
               <tr>
                 <th>Expression</th>
                 <th style={{ width: '0px' }}></th>
-                <th
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    borderBottomWidth: '1px'
-                  }}
-                >
-                  Output
-                  <Checkbox
-                    onChange={this.handleToggleAutoplay}
-                    checked={!!autoplay}
-                  >
-                    Autoplay
-                  </Checkbox>
+                <th>
+                  <div className="output-heading">
+                    Output
+                    <Checkbox
+                      onChange={this.handleToggleAutoplay}
+                      checked={!!autoplay}
+                    >
+                      Autoplay
+                    </Checkbox>
+                  </div>
                 </th>
                 <th className="text-right" style={{ width: '120px' }}>
                   <Button
