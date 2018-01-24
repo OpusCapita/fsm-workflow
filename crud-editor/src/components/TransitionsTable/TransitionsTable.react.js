@@ -97,8 +97,6 @@ export default class TransitionsTable extends PureComponent {
             <Button
               onClick={this.handleModal(index)}
             >
-              <Glyphicon glyph='check'/>
-              {'\u2000'}
               Guards
             </Button>
             <Button
@@ -132,16 +130,7 @@ export default class TransitionsTable extends PureComponent {
 
     return (
       <div>
-        <h2>
-          Transitions
-          <Button
-            bsSize='sm'
-            style={{ float: 'right', marginTop: '8px' }}
-            onClick={this.props.onCreate}
-          >
-            Add
-          </Button>
-        </h2>
+        <h2>Transitions</h2>
 
         <Table className="oc-fsm-workflow-crud-editor-table">
           <thead>
@@ -149,7 +138,14 @@ export default class TransitionsTable extends PureComponent {
               <th>Event</th>
               <th>From</th>
               <th>To</th>
-              <th></th>
+              <th className="text-right">
+                <Button
+                  bsSize='sm'
+                  onClick={this.props.onCreate}
+                >
+                  Add
+                </Button>
+              </th>
             </tr>
           </thead>
           <tbody>

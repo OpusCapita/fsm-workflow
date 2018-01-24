@@ -56,12 +56,9 @@ export default class Guards extends PureComponent {
   }
 
   state = {
-    // TODO check if we need to sync guards on componentWillReceiveProps
-    guards: (this.props.transition.guards || []).map(guard => ({
-      ...guard,
-      autoplay: true
-    })),
-    exampleObject: JSON.stringify(this.props.exampleObject, null, 2)
+    guards: this.props.transition.guards || [],
+    exampleObject: JSON.stringify(this.props.exampleObject, null, 2),
+    autoplay: true
   }
 
   handleChange = index => value => this.setState(prevState => ({
@@ -73,7 +70,7 @@ export default class Guards extends PureComponent {
         } :
         guard
     )
-  }), (this.state.guards[index].autoplay && this.handleEvalCode(index)))
+  }), (this.state.autoplay && this.handleEvalCode(index)))
 
   handleDeleteGuard = index => _ => this.setState(prevState => ({
     guards: [
@@ -86,23 +83,14 @@ export default class Guards extends PureComponent {
     guards: [
       ...prevState.guards,
       {
-        // TODO auto-generate name
         name: `condition_${String(Math.random() * Math.random()).slice(2)}`,
-        func: '',
-        autoplay: true
+        func: ''
       }
     ]
   }))
 
-  toggleAutoplay = index => _ => this.setState(prevState => ({
-    guards: prevState.guards.map(
-      (guard, i) => i === index ?
-        {
-          ...guard,
-          autoplay: !guard.autoplay
-        } :
-        guard
-    )
+  handleToggleAutoplay = _ => this.setState(prevState => ({
+    autoplay: !prevState.autoplay
   }))
 
   handleEvalCode = index => _ => {
@@ -137,7 +125,7 @@ export default class Guards extends PureComponent {
       this.setState(prevState => ({
         exampleObject: value,
         exampleObjectError: null
-      }), _ => this.state.guards.map((_, i) => this.handleEvalCode(i)()))
+      }), _ => this.state.autoplay && this.state.guards.forEach((_, i) => this.handleEvalCode(i)()))
     } catch (err) {
       this.setState({
         exampleObjectError: err.message
@@ -162,7 +150,8 @@ export default class Guards extends PureComponent {
     const {
       guards,
       exampleObject,
-      exampleObjectError
+      exampleObjectError,
+      autoplay
     } = this.state;
 
     return (
@@ -174,23 +163,137 @@ export default class Guards extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            Transition: <code>{`
-                event: ${event}, from: ${from}, to: ${to}
+            Guards for Transition <code>{`
+                { event: ${event}, from: ${from}, to: ${to} }
               `}</code>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h2>
-            Guards
-            <Button
-              bsSize='sm'
-              style={{ float: 'right', marginTop: '8px' }}
-              onClick={this.handleAddNewGuard}
-            >
-              Add
-            </Button>
-          </h2>
-          <Row>
+          <Table style={{ verticalAlign: 'top', tableLayout: 'fixed' }}>
+            <thead>
+              <tr>
+                <th>Expression</th>
+                <th style={{ width: '0px' }}></th>
+                <th
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    borderBottomWidth: '1px'
+                  }}
+                >
+                  Results
+                  <Checkbox
+                    onChange={this.handleToggleAutoplay}
+                    checked={!!autoplay}
+                  >
+                    Autoplay
+                  </Checkbox>
+                </th>
+                <th className="text-right" style={{ width: '120px' }}>
+                  <Button
+                    bsSize='sm'
+                    onClick={this.handleAddNewGuard}
+                  >
+                    Add
+                  </Button>
+                </th>
+                <th>Example object</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                (guards.length > 0 ? guards : [{}]).map((guard, guardIndex) => (
+                  <tr key={`${guardIndex}-${guard.name}`}>
+                    <td>
+                      {
+                        guard.func !== undefined && (
+                          <CodeMirror
+                            className="guard-code"
+                            value={guard.func}
+                            options={{
+                              mode: "javascript",
+                              lineNumbers: true,
+                              theme: "eclipse"
+                            }}
+                            onChange={this.handleChange(guardIndex)}
+                          />
+                        )
+                      }
+                    </td>
+                    <td>
+                      {
+                        guard.func !== undefined && (
+                          <Glyphicon
+                            glyph="play"
+                            style={{
+                              cursor: 'pointer',
+                              position: 'relative',
+                              left: '-40px',
+                              zIndex: 2
+                            }}
+                            onClick={this.handleEvalCode(guardIndex)}
+                          />
+                        )
+                      }
+                    </td>
+                    <td>
+                      {
+                        guard.func !== undefined && (
+                          <CodeMirror
+                            className="guard-code"
+                            value={guard.result || ''}
+                            options={{
+                              theme: "eclipse",
+                              lineWrapping: true,
+                              readOnly: 'nocursor'
+                            }}
+                          />
+                        )
+                      }
+
+                    </td>
+                    <td className="text-right">
+                      {
+                        guard.func !== undefined && (
+                          <Button
+                            bsSize='sm'
+                            onClick={this.handleDeleteGuard(guardIndex)}
+                          >
+                            <Glyphicon glyph="trash"/>
+                            {'\u2003'}
+                            Delete
+                          </Button>
+                        )
+                      }
+                    </td>
+                    {
+                      guardIndex === 0 && (
+                        <td rowSpan={guards.length}>
+                          <CodeMirror
+                            className="example-object"
+                            value={exampleObject}
+                            options={{
+                              mode: {
+                                name: 'javascript',
+                                json: true
+                              },
+                              theme: "eclipse",
+                              lineNumbers: true,
+                              lineWrapping: true
+                            }}
+                            onChange={this.handleChangeObject}
+                          />
+                          <span style={{ color: 'red' }}>{exampleObjectError}{`\u00A0`}</span>
+                        </td>
+                      )
+                    }
+                  </tr>
+                ))
+              }
+            </tbody>
+          </Table>
+          {/* <Row>
             <Col sm={8}>
               {
                 guards.map((guard, guardIndex) => (
@@ -285,14 +388,14 @@ export default class Guards extends PureComponent {
                 </tbody>
               </Table>
             </Col>
-          </Row>
+          </Row> */}
 
         </Modal.Body>
         <Modal.Footer>
           <Button
             bsStyle='primary'
             disabled={
-              guards.some(({ isError, func }) => isError === undefined || isError || !func)
+              guards.some(({ isError, func }) => isError || !func)
             }
             onClick={this.handleSave}
           >
