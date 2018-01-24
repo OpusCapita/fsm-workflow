@@ -5,8 +5,6 @@ import {
   Button,
   Glyphicon,
   Modal,
-  Col,
-  Row,
   Checkbox
 } from 'react-bootstrap';
 import CodeMirror from 'kvolkovich-sc-react-codemirror';
