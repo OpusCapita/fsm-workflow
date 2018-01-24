@@ -4,7 +4,7 @@
   "description": "Business-object history for FSM workflow",
   "main": "index.js",
   "scripts": {
-    "start": "node -e \"require('./server').run()\"",
+    "start": "node -e \"require('./demo/server').run()\"",
     "lint": "eslint ."
   },
   "publishConfig": {
@@ -13,13 +13,15 @@
   },
   "author": "",
   "license": "Apache-2.0",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-eslint": "7.1.1",
+    "body-parser": "^1.18.2",
     "eslint": "3.17.0",
     "eslint-config-opuscapita": "1.0.7",
     "eslint-plugin-react": "6.10.0",
+    "express": "^4.16.2",
+    "helmet": "^3.10.0",
     "mysql2": "1.5.1",
     "sequelize": "4.32.1",
     "sequelize-cli": "3.2.0"

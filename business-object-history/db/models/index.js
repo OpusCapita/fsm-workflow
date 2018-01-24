@@ -14,7 +14,7 @@ module.exports = sequelize => {
     filter(file => file.indexOf('.') !== 0 && (file !== basename) && (file.slice(-3) === '.js')).
     reduce(
       (rez, file) => {
-        const model = sequelize['import'](path.join(__dirname, file));
+        const model = sequelize.import(path.join(__dirname, file));
 
         return Object.assign(rez, {
           [model.name]: model

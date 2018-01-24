@@ -15,26 +15,15 @@ const addHistory = ({
     initiator,
     description
   }
-}) => {
-  console.log('===FIELDS', {
-    from,
-    to,
-    event,
-    businessObjectType,
-    businessObjectId,
-    initiator,
-    description
-  });
-  return sequelize.model(TABLE_NAME).create({
-    from,
-    to,
-    event,
-    businessObjectType,
-    businessObjectId,
-    initiator,
-    description
-  });
-};
+}) => sequelize.model(TABLE_NAME).create({
+  from,
+  to,
+  event,
+  businessObjectType,
+  businessObjectId,
+  initiator,
+  description
+});
 
 /*
  * The function returns Model.findAll(...) promise

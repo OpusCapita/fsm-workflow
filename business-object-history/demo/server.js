@@ -35,13 +35,24 @@ app.post('/history', (req, res) => addHistory({
   then(entry => res.json(entry))
 );
 
-app.get('/history', (req, res) => searchHistory({
-  sequelize,
-  where: req.query.where,
-  order: req.query.order
-}).
-  then(entries => res.json(entries))
-);
+app.get('/history', (req, res) => {
+  let order;
+
+  if (order) {
+    try {
+      order = JSON.parse(req.query.order);
+    } catch (err) {
+      order = req.query.order;
+    }
+  }
+
+  searchHistory({
+    sequelize,
+    where: req.query.where && JSON.parse(req.query.where),
+    order
+  }).
+    then(entries => res.json(entries))
+});
 
 exports.run = ({ host, port } = require('./config/server')) => {
   app.listen(port, host, err => {
@@ -49,8 +60,8 @@ exports.run = ({ host, port } = require('./config/server')) => {
       console.error(err);
     }
 
-    console.info(`Server listening at http://${host}:${port}`);
+    console.info(`\n■■■ Server listening at http://${host}:${port} ■■■\n`);
   });
 
-  process.on('exit', _ => console.warn('Server has been stopped'));
+  process.on('exit', _ => console.warn('■■■ Server has been stopped ■■■'));
 };
