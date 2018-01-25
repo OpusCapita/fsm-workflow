@@ -61,7 +61,7 @@ businessObjectHistory(sequelize).then(handlers => {
       initiator: obj.initiator,
       description: obj.description,
       executedOn: obj.executedOn
-	})))).
+    })))).
     catch(err => console.log('Error extracting objects from history:', err));
 })
 ```
