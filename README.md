@@ -1,4 +1,4 @@
-## FSM workflow (for Node.js)
+## FSM Workflow (for Node.js)
 
 [![CircleCI Status](https://circleci.com/gh/OpusCapita/fsm-workflow/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/fsm-workflow)
 ![badge-license](https://img.shields.io/github/license/OpusCapita/fsm-workflow.svg)
@@ -35,9 +35,13 @@ The following things will be implemented later as extensions/helpers (separate s
 
 FSM core could be found here [here](core/README.md)
 
-### Task/Work management
+### Task/Work Management
 
-Task management is implemented as additional library. You can find more  detailed info more information [here](task-manager/README.md).
+Task management is implemented as additional library. You can find more detailed info [here](task-manager/README.md).
+
+### Business Object History
+
+Business Object History is implemented as separate library. You can find more information [here](business-object-history/README.md).
 
 ### References
 
