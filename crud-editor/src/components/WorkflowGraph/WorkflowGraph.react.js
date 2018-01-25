@@ -21,14 +21,14 @@ class WorkflowGraph extends Component {
     };
   }
 
+  componentDidMount() {
+    this.renderGraph(this.props.schema);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.schema, nextProps.schema)) {
       this.renderGraph(nextProps.schema);
     }
-  }
-
-  componentDidMount() {
-    this.renderGraph(this.props.schema);
   }
 
   convertSchemaToDotLang(schema) {
@@ -45,9 +45,9 @@ class WorkflowGraph extends Component {
     src += `\tnode [fillcolor="#14892c"];\n`;
     src += `\t"${initialState}"\n`;
     src += `\tnode [fillcolor="#0277bd"];\n`;
-    src += transitions
-      .filter(({ from, to, event }) => (from !== null && to !== null && event))
-      .map(({ from, to, event }) => (`\t"${from}" -> "${to}" [label = "${event}"];`)).join(`\n`);
+    src += transitions.
+      filter(({ from, to, event }) => (from !== null && to !== null && event)).
+      map(({ from, to, event }) => (`\t"${from}" -> "${to}" [label = "${event}"];`)).join(`\n`);
     src += `}`;
 
     return src;
