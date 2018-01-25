@@ -16,7 +16,6 @@
     "kvolkovich-sc-react-codemirror": "^1.0.1",
     "lodash": "^4.17.4",
     "react-bootstrap": "0.32.0",
-    "react-codemirror2": "^3.0.7",
     "viz.js": "1.8.0"
   },
   "devDependencies": {
