@@ -100,6 +100,7 @@ export default class TransitionsTable extends PureComponent {
           <ButtonGroup bsSize="sm">
             <Button
               onClick={this.handleModal(index)}
+              disabled={!(from && to && event)}
             >
               Guards
             </Button>
