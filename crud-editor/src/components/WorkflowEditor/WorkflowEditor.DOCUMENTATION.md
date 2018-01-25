@@ -26,19 +26,22 @@
         {
           event: "approve",
           from: "open",
-          to: "approved",
-          guards: [
-            {
-              name: 'condition_awesome-guard'
-            }
-          ]
+          to: "approved"
         }
       ]
     },
-    guards: [
+    transitionGuards: [
       {
-        name: 'condition_awesome-guard',
-        body: 'object.netAmount > 100'
+        transition: {
+          event: "approve",
+          from: "open",
+          to: "approved"
+        },
+        guards: [
+          {
+            body: 'object.netAmount > 100'
+          }
+        ]
       }
     ]
   }}
@@ -54,7 +57,7 @@
     "status": "reviewRequired"
   }}
 
-  onSave={console.log}
+  onSave={v => console.log(JSON.stringify(v, null, 2))}
 />
 ```
 

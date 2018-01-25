@@ -7,13 +7,8 @@ import {
   Modal,
   Checkbox
 } from 'react-bootstrap';
-
-import CodeMirror from 'kvolkovich-sc-react-codemirror';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/eclipse.css';
-import 'codemirror/mode/javascript/javascript'
+import CodeEditor from '../CodeEditor';
 import './Guards.less';
-import _ from './codemirror-placeholder-mod'; // eslint-disable-line no-unused-vars
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -64,6 +59,10 @@ export default class Guards extends PureComponent {
     if (this.state.guards.length === 0) {
       this.handleAddNewGuard()
     }
+
+    if (this.state.autoplay) {
+      this.state.guards.forEach((_, i) => this.handleEvalCode(i)())
+    }
   }
 
   handleChange = index => value => this.setState(prevState => ({
@@ -88,7 +87,6 @@ export default class Guards extends PureComponent {
     guards: [
       ...prevState.guards,
       {
-        name: `condition_${String(Math.random() * Math.random()).slice(2)}`,
         body: ''
       }
     ]
@@ -99,13 +97,15 @@ export default class Guards extends PureComponent {
   }))
 
   handleEvalCode = index => _ => {
-    const guard = this.state.guards[index];
+    const { body: code } = this.state.guards[index];
 
     const object = JSON.parse(this.state.exampleObject);
 
     const result = evaluateCode({
-      code: guard.body,
-      arg: { object }
+      code,
+      arg: {
+        object
+      }
     })
 
     const isError = result instanceof Error;
@@ -139,7 +139,7 @@ export default class Guards extends PureComponent {
   }
 
   handleSave = _ => this.props.onSaveGuards(this.state.guards.map(
-    ({ name, body }) => ({ name, body: body.trim() })
+    ({ body }) => ({ body: body.trim() })
   ))
 
   render() {
@@ -205,13 +205,13 @@ export default class Guards extends PureComponent {
               {
                 (guards.length > 0 ? guards : [{}]).map((guard, guardIndex, arr) => (
                   <tr
-                    key={`${guardIndex}-${guard.name}`}
+                    key={guardIndex}
                     {...(guardIndex < (arr.length - 1) && { style: { height: '110px' } })}
                   >
                     <td>
                       {
                         guard.body !== undefined && (
-                          <CodeMirror
+                          <CodeEditor
                             className="guard-code"
                             value={guard.body}
                             options={{
@@ -244,7 +244,7 @@ export default class Guards extends PureComponent {
                     <td>
                       {
                         guard.body !== undefined && (
-                          <CodeMirror
+                          <CodeEditor
                             className="output-code"
                             value={guard.result || ''}
                             options={{
@@ -274,7 +274,7 @@ export default class Guards extends PureComponent {
                     {
                       guardIndex === 0 && (
                         <td rowSpan={guards.length}>
-                          <CodeMirror
+                          <CodeEditor
                             className="example-object"
                             value={exampleObject}
                             options={{

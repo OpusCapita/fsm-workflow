@@ -6,6 +6,7 @@ import { Grid, Row, Col, Button } from 'react-bootstrap';
 import TopForm from '../TopForm.react';
 import TransitionsTable from '../TransitionsTable';
 import { getExistingStates } from '../utils';
+import CodeEditor from '../CodeEditor';
 import './styles.less';
 
 export default class WorkflowEditor extends PureComponent {
@@ -14,8 +15,27 @@ export default class WorkflowEditor extends PureComponent {
     title: PropTypes.string,
     exampleObject: PropTypes.object,
     workflow: PropTypes.shape({
-      schema: PropTypes.object,
-      guards: PropTypes.arrayOf(PropTypes.object)
+      schema: PropTypes.shape({
+        name: PropTypes.string,
+        initialState: PropTypes.string,
+        finalStates: PropTypes.arrayOf(PropTypes.string),
+        objectStateFieldName: PropTypes.string,
+        transition: PropTypes.shape({
+          from: PropTypes.string,
+          to: PropTypes.string,
+          event: PropTypes.string
+        })
+      }),
+      transitionGuards: PropTypes.arrayOf(PropTypes.shape({
+        transition: PropTypes.shape({
+          from: PropTypes.string,
+          to: PropTypes.string,
+          event: PropTypes.string
+        }),
+        guards: PropTypes.arrayOf(PropTypes.shape({
+          body: PropTypes.string
+        }))
+      }))
     })
   }
 
@@ -35,10 +55,25 @@ export default class WorkflowEditor extends PureComponent {
     }
   }
 
-  stateFromProps = props => ({
-    schema: (props.workflow || {}).schema || {},
-    guards: (props.workflow || {}).guards || []
-  })
+  stateFromProps = props => {
+    const schema = (props.workflow || {}).schema || {};
+
+    const transitionGuards = (props.workflow || {}).transitionGuards || [];
+
+    const transitions = (schema.transitions || []).map(schemaTransition => ({
+      ...schemaTransition,
+      guards: (find(transitionGuards, ({ transition }) => isEqual(transition, schemaTransition)) || {}).guards || []
+    }))
+
+    const newState = {
+      schema: {
+        ...schema,
+        transitions
+      }
+    }
+
+    return newState
+  }
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
   setNewState = setFunc => this.setState(setFunc)
@@ -125,7 +160,7 @@ export default class WorkflowEditor extends PureComponent {
     const states = getExistingStates(newTransitions);
 
     const resetInitialState = states.indexOf(initialState) === -1;
-    const adjustedFinalStates = finalStates.filter(fs => states.indexOf(fs) > -1)
+    const adjustedFinalStates = finalStates.filter(fs => states.indexOf(fs) > -1);
 
     return {
       resetInitialState,
@@ -133,38 +168,31 @@ export default class WorkflowEditor extends PureComponent {
     }
   }
 
-  handleSaveTransitionGuards = index => guards => this.setNewState(prevState => ({
-    schema: {
-      ...prevState.schema,
-      transitions: prevState.schema.transitions.map(
-        (transition, i) => i === index ?
-          (
-            ({ guards: _, ...rest }) => ({
-              ...rest,
-              ...(guards.length > 0 && { guards: guards.map(({ name }) => ({ name })) })
-            })
-          )(transition) :
-          transition
-      )
-    },
-    guards: prevState.guards.
-      // delete unused (not present in transitions except current one, nor in new guards)
-      filter(
-        ({ name }) => prevState.schema.transitions.
-          reduce((names, t, i) => i === index ? names : names.concat((t.guards || []).map(({ name }) => name)), []).
-          concat(guards.map(({ name }) => name)).
-          indexOf(name) > -1
-      ).
-      // modify intersections
-      map(guard => find(guards, ({ name }) => name === guard.name) || guard).
-      // add newly created guards
-      concat(guards.filter(({ name }) => !find(prevState.guards, ({ name: guardName }) => guardName === name)))
-  }))
+  handleSaveTransitionGuards = index => guards => this.handleEditTransition({
+    field: 'guards',
+    value: guards,
+    index
+  })
 
-  handleSave = _ => this.props.onSave(this.state)
+  handleSave = _ => {
+    const { schema } = this.state;
+
+    const result = {
+      schema: {
+        ...schema,
+        transitions: schema.transitions.map(({ from, to, event }) => ({ from, to, event }))
+      },
+      transitionGuards: schema.transitions.map(({ from, to, event, guards }) => ({
+        transition: { from, to, event },
+        guards
+      }))
+    }
+
+    return this.props.onSave(result)
+  }
 
   render() {
-    const { schema, guards } = this.state;
+    const { schema } = this.state;
 
     const { title } = this.props;
 
@@ -193,10 +221,7 @@ export default class WorkflowEditor extends PureComponent {
             />
 
             <TransitionsTable
-              transitions={schema.transitions.map(t => ({
-                ...t,
-                guards: (t.guards || []).map(({ name }) => find(guards, ({ name: guardName }) => guardName === name))
-              }))}
+              transitions={schema.transitions}
               onCreate={this.handleCreateTransition}
               onEditTransition={this.handleEditTransition}
               onDeleteTransition={this.handleDeleteTransition}
@@ -204,8 +229,22 @@ export default class WorkflowEditor extends PureComponent {
               exampleObject={this.props.exampleObject}
             />
 
-            <h2>Updated schema</h2>
-            <pre>{JSON.stringify(this.state.schema, null, 1)}</pre>
+            <h2>Schema</h2>
+            <CodeEditor
+              value={JSON.stringify({
+                ...schema,
+                transitions: schema.transitions.map(({ from, to, event }) => ({ from, to, event }))
+              }, null, 2)}
+              options={{
+                theme: "eclipse",
+                lineWrapping: true,
+                readOnly: true,
+                mode: {
+                  name: 'javascript',
+                  json: true
+                }
+              }}
+            />
           </Col>
         </Row>
       </Grid>
