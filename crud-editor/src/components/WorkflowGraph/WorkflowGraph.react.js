@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Viz from 'viz.js';
+import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
 
 let propTypes = {
@@ -20,12 +21,18 @@ class WorkflowGraph extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.schema, nextProps.schema)) {
+      this.renderGraph(nextProps.schema);
+    }
+  }
+
   componentDidMount() {
     this.renderGraph(this.props.schema);
   }
 
   convertSchemaToDotLang(schema) {
-    // DOT language use by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
+    // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
     let { transitions, initialState, finalStates } = schema;
 
     let src = '';
@@ -38,7 +45,9 @@ class WorkflowGraph extends Component {
     src += `\tnode [fillcolor="#14892c"];\n`;
     src += `\t"${initialState}"\n`;
     src += `\tnode [fillcolor="#0277bd"];\n`;
-    src += transitions.map(({ from, to, event }) => (`\t"${from}" -> "${to}" [label = "${event}"];`)).join(`\n`);
+    src += transitions
+      .filter(({ from, to, event }) => (from !== null && to !== null && event))
+      .map(({ from, to, event }) => (`\t"${from}" -> "${to}" [label = "${event}"];`)).join(`\n`);
     src += `}`;
 
     return src;
