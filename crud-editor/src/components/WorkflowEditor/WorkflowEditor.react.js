@@ -253,7 +253,7 @@ export default class WorkflowEditor extends PureComponent {
                       theme: "eclipse",
                       lineWrapping: true,
                       lineNumbers: true,
-                      readOnly: true,
+                      readOnly: "nocursor",
                       mode: {
                         name: 'javascript',
                         json: true
