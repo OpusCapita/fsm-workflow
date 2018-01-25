@@ -234,6 +234,7 @@ export default class WorkflowEditor extends PureComponent {
               exampleObject={this.props.exampleObject}
             />
 
+            <h2>Schema</h2>
             <Tabs
               animation={false}
               id="fsm-workflow-editor"
@@ -245,7 +246,7 @@ export default class WorkflowEditor extends PureComponent {
                   <WorkflowGraph schema={schema} />
                 </div>
               </Tab>
-              <Tab eventKey={2} title="Schema">
+              <Tab eventKey={2} title="JSON">
                 <div className="oc-fsm-crud-editor--workflow-editor__tab">
                   <CodeEditor
                     value={jsonSchema}
