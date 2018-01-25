@@ -11,3 +11,4 @@ coverage
 core/lib
 gui/lib
 task-manager/lib
+business-object-history/.sequelizerc
