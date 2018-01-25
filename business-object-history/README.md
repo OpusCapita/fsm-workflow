@@ -17,7 +17,7 @@ npm install --save @opuscapita/fsm-workflow-business-object-history
 
 ```javascript
 const Sequelize = require('sequelize');
-const businessObjectHistory = require('@opuscapita/filemanager-server');
+const businessObjectHistory = require('@opuscapita/fsm-workflow-business-object-history');
 const dbConfig = require('./config/db.js');
 
 const sequelize = new Sequelize(dbConfig);
@@ -34,8 +34,8 @@ businessObjectHistory(sequelize).then(handlers => {
     initiator: 'user-id-46270e',
     description: 'Optional business object transition description text'
   }).
-    then(obj => console.log('The following obj has been added to history', obj)).
-    catch(err => console.log('Error adding obj to histofy', err));
+    then(obj => console.log('The following obj has been added to history:', obj)).
+    catch(err => console.log('Error adding obj to histofy:', err));
 
   search({
 
@@ -51,8 +51,18 @@ businessObjectHistory(sequelize).then(handlers => {
     order: ['executedOn', 'DESC']
 
   }).
-    then(objList => console.log('The following objects array has been extracted from history', objList)).
-    catch(err => console.log('Error extracting objects from history', err));
+    then(objList => console.log(objList.map(obj => JSON.stringify({
+      id: obj.id,
+      from: obj.from,
+      to: obj.to,
+      event: obj.event,
+      businessObjectType: obj.businessObjectType,
+      businessObjectId: obj.businessObjectId,
+      initiator: obj.initiator,
+      description: obj.description,
+      executedOn: obj.executedOn
+	})))).
+    catch(err => console.log('Error extracting objects from history:', err));
 })
 ```
 
