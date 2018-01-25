@@ -19,23 +19,33 @@
   workflow={{
     schema: {
       name: "invoice approval",
-      initialState: "open",
-      finalStates: ["approved"],
+      initialState: "start",
+      finalStates: ["finish"],
       objectStateFieldName: "status",
       transitions: [
         {
-          event: "approve",
-          from: "open",
-          to: "approved"
+          event: "event 1",
+          from: "start",
+          to: "step 1"
+        },
+        {
+          event: "event 2",
+          from: "start",
+          to: "finish"
+        },
+        {
+          event: "event 3",
+          from: "step 1",
+          to: "finish"
         }
       ]
     },
     transitionGuards: [
       {
         transition: {
-          event: "approve",
-          from: "open",
-          to: "approved"
+          event: "event 1",
+          from: "start",
+          to: "step 1"
         },
         guards: [
           {
