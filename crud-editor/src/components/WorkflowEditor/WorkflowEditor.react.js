@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { Grid, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find'; // IE11 lacks Array.prototype.find
-import { Grid, Row, Col, Button } from 'react-bootstrap';
 import TopForm from '../TopForm.react';
 import TransitionsTable from '../TransitionsTable';
+import WorkflowGraph from '../WorkflowGraph';
 import { getExistingStates } from '../utils';
 import CodeEditor from '../CodeEditor';
 import './styles.less';
@@ -195,7 +196,12 @@ export default class WorkflowEditor extends PureComponent {
     const { schema } = this.state;
 
     const { title } = this.props;
+    const jsonSchema = JSON.stringify({
+      ...schema,
+      transitions: schema.transitions.map(({ from, to, event }) => ({ from, to, event }))
+    }, null, 2);
 
+    console.log('schema', jsonSchema)
     return (
       <Grid>
         <Row>
@@ -229,22 +235,34 @@ export default class WorkflowEditor extends PureComponent {
               exampleObject={this.props.exampleObject}
             />
 
-            <h2>Schema</h2>
-            <CodeEditor
-              value={JSON.stringify({
-                ...schema,
-                transitions: schema.transitions.map(({ from, to, event }) => ({ from, to, event }))
-              }, null, 2)}
-              options={{
-                theme: "eclipse",
-                lineWrapping: true,
-                readOnly: true,
-                mode: {
-                  name: 'javascript',
-                  json: true
-                }
-              }}
-            />
+            <Tabs
+              animation={false}
+              id="fsm-workflow-editor"
+              mountOnEnter={true}
+            >
+              <Tab eventKey={1} title="Schema">
+                <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
+                  <CodeEditor
+                    value={jsonSchema}
+                    options={{
+                      theme: "eclipse",
+                      lineWrapping: true,
+                      lineNumbers: true,
+                      readOnly: true,
+                      mode: {
+                        name: 'javascript',
+                        json: true
+                      }
+                    }}
+                  />
+                </div>
+              </Tab>
+              <Tab eventKey={2} title="Graph">
+                <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
+                  <WorkflowGraph schema={schema} />
+                </div>
+              </Tab>
+            </Tabs>
           </Col>
         </Row>
       </Grid>
