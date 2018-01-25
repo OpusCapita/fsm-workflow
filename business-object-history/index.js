@@ -1,3 +1,5 @@
+'use strict';
+
 const Umzug = require('umzug');
 const path = require('path');
 

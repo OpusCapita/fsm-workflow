@@ -1,7 +1,7 @@
 # Business Object History
 
-![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-task-manager.svg)
-![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-task-manager.svg)
+![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-business-object-history.svg)
+![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-business-object-history.svg)
 
 Business Object History is an extension to FSM Core.  It provies server-side API for storing and extracting Business Object lifecycle history.
 
@@ -10,7 +10,7 @@ Business Object History is an extension to FSM Core.  It provies server-side API
 Install package
 
 ```
-npm install --save @opuscapita/filemanager-server
+npm install --save @opuscapita/fsm-workflow-business-object-history
 ```
 
 ## Basic Usage

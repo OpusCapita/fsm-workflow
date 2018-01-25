@@ -3,9 +3,15 @@
   "version": "0.0.1",
   "description": "Business-object history for FSM workflow",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "start": "node -e \"require('./demo/server').run()\"",
-    "lint": "eslint ."
+    "lint": "node ./node_modules/.bin/eslint .",
+    "lint-tab": "node ./node_modules/.bin/eslint . --rule '\"indent\": [2, \"tab\", { \"SwitchCase\": 1, \"VariableDeclarator\": 1 }]' --rule '\"react/jsx-indent-props\": [2, \"tab\"]'",
+    "npm-publish": "update-changelog -- --all && npm-publish",
+    "publish-release": "npm run npm-publish -- --release"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -14,16 +20,15 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "umzug": "^2.1.0"
+    "umzug": "2.1.0"
   },
   "devDependencies": {
-    "babel-eslint": "7.1.1",
-    "body-parser": "^1.18.2",
+    "@opuscapita/npm-scripts": "2.0.0",
+    "body-parser": "1.18.2",
     "eslint": "3.17.0",
     "eslint-config-opuscapita": "1.0.7",
-    "eslint-plugin-react": "6.10.0",
-    "express": "^4.16.2",
-    "helmet": "^3.10.0",
+    "express": "4.16.2",
+    "helmet": "3.10.0",
     "mysql2": "1.5.1",
     "sequelize": "4.32.1",
     "sequelize-cli": "3.2.0"
