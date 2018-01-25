@@ -201,7 +201,6 @@ export default class WorkflowEditor extends PureComponent {
       transitions: schema.transitions.map(({ from, to, event }) => ({ from, to, event }))
     }, null, 2);
 
-    console.log('schema', jsonSchema)
     return (
       <Grid>
         <Row>
