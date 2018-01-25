@@ -78,8 +78,41 @@ class WorkflowGraph extends Component {
     return (
       <div
         className="oc-fsm-crud-editor--workflow-graph"
-        dangerouslySetInnerHTML={{ __html: svg }}
       >
+        <div
+          dangerouslySetInnerHTML={{ __html: svg }}
+        >
+        </div>
+        <div className="oc-fsm-crud-editor--workflow-graph__legend">
+          <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
+            <div
+              className={`
+                oc-fsm-crud-editor--workflow-graph__legend-item-badge
+                oc-fsm-crud-editor--workflow-graph__legend-item-badge--regular-state
+              `}
+            ></div>
+            <div>— regular state nodes</div>
+          </div>
+          <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
+            <div
+              className={`
+                oc-fsm-crud-editor--workflow-graph__legend-item-badge
+                oc-fsm-crud-editor--workflow-graph__legend-item-badge--initial-state
+              `}
+            ></div>
+            <div>— initial state nodes</div>
+          </div>
+          <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
+            <div
+              className={`
+                oc-fsm-crud-editor--workflow-graph__legend-item-badge
+                oc-fsm-crud-editor--workflow-graph__legend-item-badge--final-state
+              `}
+            ></div>
+            <div>— final state nodes</div>
+          </div>
+
+        </div>
       </div>
     );
   }
