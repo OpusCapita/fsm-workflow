@@ -43,7 +43,7 @@ class WorkflowGraph extends Component {
     src += `\tnode [shape = rect fillcolor="#b71c1c" margin="0.2,0.1" color="transparent" fontname="Helvetica" style="rounded,filled"];\n`;
     src += `\t${finalStates.map(state => `"${state}"`).join(' ')}\n`;
     src += `\tnode [fillcolor="#14892c"];\n`;
-    src += `\t"${initialState}"\n`;
+    src = initialState ? src + `\t"${initialState}"\n` : src;
     src += `\tnode [fillcolor="#0277bd"];\n`;
     src += transitions.
       filter(({ from, to, event }) => (from && to && event)).
