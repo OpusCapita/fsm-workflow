@@ -1,15 +1,15 @@
 'use strict';
 
-const TABLE_NAME = 'BusinessObjFlowHistory';
+const { TABLE_NAME, MODEL_NAME } = require('../../constants');
 
-module.exports = (sequelize, DataTypes) => sequelize.define(TABLE_NAME, {
+module.exports = (sequelize, DataTypes) => sequelize.define(MODEL_NAME, {
   id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
   from: { type: DataTypes.STRING, allowNull: false },
   to: { type: DataTypes.STRING, allowNull: false },
   event: { type: DataTypes.STRING, allowNull: false },
-  businessObjectType: { type: DataTypes.STRING, allowNull: false },
-  businessObjectId: { type: DataTypes.STRING, allowNull: false },
-  initiator: { type: DataTypes.STRING, allowNull: false },
+  businessObjType: { type: DataTypes.STRING, allowNull: false },
+  businessObjId: { type: DataTypes.STRING, allowNull: false },
+  user: { type: DataTypes.STRING, allowNull: false },
   description: { type: DataTypes.TEXT }
 }, {
   // enable timestamps
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define(TABLE_NAME, {
   updatedAt: false,
 
   // rename "createdAt" timestamp attribute
-  createdAt: 'executedOn',
+  createdAt: 'createdOn',
 
   // disable the modification of table names; By default, sequelize will automatically
   // transform all passed model names (first parameter of define) into plural.

@@ -1,5 +1,5 @@
 {
-  "name": "@opuscapita/fsm-workflow-business-object-history",
+  "name": "@opuscapita/fsm-workflow-transition-history",
   "version": "0.0.1",
   "description": "Business-object history for FSM workflow",
   "main": "index.js",

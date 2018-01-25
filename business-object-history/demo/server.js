@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 
-const businessObjectHistory = require('..');
+const workflowTransitionHistory = require('..');
 const dbConfig = require('./config/db')[process.env.NODE_ENV || 'development'];
 
 const sequelize = new Sequelize(
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 app.use(helmet.noCache());
 app.use(bodyParser.json());
 
-exports.run = ({ host, port } = require('./config/server')) => businessObjectHistory(sequelize).
+exports.run = ({ host, port } = require('./config/server')) => workflowTransitionHistory(sequelize).
   then(handlers => {
     let { add, search } = handlers;
 

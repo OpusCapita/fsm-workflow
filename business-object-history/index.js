@@ -4,23 +4,22 @@ const Umzug = require('umzug');
 const path = require('path');
 
 const importModels = require('./db/models');
-
-const TABLE_NAME = 'BusinessObjFlowHistory';
+const { MODEL_NAME } = require('./constants');
 
 /*
  * The function return Model.create(...) promise
  * which resolved value is a row instance.
  */
-const add = sequelize => fields => sequelize.model(TABLE_NAME).create(fields);
+const add = sequelize => fields => sequelize.model(MODEL_NAME).create(fields);
 
 /*
  * The function returns Model.findAll(...) promise
  * which resolved value is an array of objects.
  */
 const search = sequelize => ({
-  where, // searchable fields are "from", "to", "event", "businessObjectType", "businessObjectId".
-  order = ['executedOn']
-}) => sequelize.model(TABLE_NAME).findAll({
+  where, // searchable fields are "from", "to", "event", "businessObjType", "businessObjId".
+  order = ['createdOn']
+}) => sequelize.model(MODEL_NAME).findAll({
   where,
   order
 });
