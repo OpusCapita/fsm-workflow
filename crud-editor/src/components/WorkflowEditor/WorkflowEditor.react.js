@@ -205,7 +205,6 @@ export default class WorkflowEditor extends PureComponent {
               exampleObject={this.props.exampleObject}
             />
 
-<<<<<<< HEAD
             <Tabs
               activeKey={this.state.key}
               onSelect={this.handleSelect}
@@ -223,10 +222,6 @@ export default class WorkflowEditor extends PureComponent {
                 </div>
               </Tab>
             </Tabs>
-=======
-            <h2>Updated schema</h2>
-            <pre>{JSON.stringify(this.state.schema, null, 1)}</pre>
->>>>>>> issue-23/workflow-editor
           </Col>
         </Row>
       </Grid>
