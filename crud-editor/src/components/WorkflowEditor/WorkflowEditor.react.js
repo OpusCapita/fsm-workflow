@@ -238,9 +238,15 @@ export default class WorkflowEditor extends PureComponent {
               animation={false}
               id="fsm-workflow-editor"
               mountOnEnter={true}
+              unmountOnExit={true}
             >
-              <Tab eventKey={1} title="Schema">
-                <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
+              <Tab eventKey={1} title="Graph">
+                <div className="oc-fsm-crud-editor--workflow-editor__tab">
+                  <WorkflowGraph schema={schema} />
+                </div>
+              </Tab>
+              <Tab eventKey={2} title="Schema">
+                <div className="oc-fsm-crud-editor--workflow-editor__tab">
                   <CodeEditor
                     value={jsonSchema}
                     options={{
@@ -254,11 +260,6 @@ export default class WorkflowEditor extends PureComponent {
                       }
                     }}
                   />
-                </div>
-              </Tab>
-              <Tab eventKey={2} title="Graph">
-                <div style={{ height: '480px', overflow: 'auto', border: '1px solid #ddd', borderTop: 'none' }}>
-                  <WorkflowGraph schema={schema} />
                 </div>
               </Tab>
             </Tabs>
