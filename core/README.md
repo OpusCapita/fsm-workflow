@@ -181,7 +181,7 @@ machine.start(object).then(({object}) => {
 ### API
 
 ```javascript
-var machineDefinition = new MachineDefinition({schema, guards, actions})
+var machineDefinition = new MachineDefinition({schema, conditions, actions})
 // register workflow
 var machine = new Machine(machineDefinition, context);
 
