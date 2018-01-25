@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
-import initialSchema from './initialSchema';
+import isEqual from 'lodash/isEqual';
+import find from 'lodash/find'; // IE11 lacks Array.prototype.find
 import TopForm from '../TopForm.react';
 import TransitionsTable from '../TransitionsTable';
 import WorkflowGraph from '../WorkflowGraph';
@@ -12,18 +13,35 @@ export default class WorkflowEditor extends PureComponent {
   static propTypes = {
     onSave: PropTypes.func,
     title: PropTypes.string,
-    exampleObject: PropTypes.object
+    exampleObject: PropTypes.object,
+    workflow: PropTypes.shape({
+      schema: PropTypes.object,
+      guards: PropTypes.arrayOf(PropTypes.object)
+    })
   }
 
   static defaultProps = {
     onSave: _ => {}
   }
 
-  state = {
-    schema: initialSchema,
-    conditions: {}
+  constructor(...args) {
+    super(...args);
+
+    this.state = this.stateFromProps(this.props)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(nextProps, this.props)) {
+      this.setState(this.stateFromProps(nextProps))
+    }
+  }
+
+  stateFromProps = props => ({
+    schema: (props.workflow || {}).schema || {},
+    guards: (props.workflow || {}).guards || []
+  })
+
+  // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
   setNewState = setFunc => this.setState(setFunc)
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
@@ -58,13 +76,6 @@ export default class WorkflowEditor extends PureComponent {
           to: null
         }
       ]
-    }
-  }))
-
-  handleCreateCondition = _ => this.setNewState(prevState => ({
-    conditions: {
-      ...prevState.conditions,
-
     }
   }))
 
@@ -128,16 +139,33 @@ export default class WorkflowEditor extends PureComponent {
       ...prevState.schema,
       transitions: prevState.schema.transitions.map(
         (transition, i) => i === index ?
-          { ...transition, guards } :
+          (
+            ({ guards: _, ...rest }) => ({
+              ...rest,
+              ...(guards.length > 0 && { guards: guards.map(({ name }) => ({ name })) })
+            })
+          )(transition) :
           transition
       )
-    }
+    },
+    guards: prevState.guards.
+      // delete unused (not present in transitions except current one, nor in new guards)
+      filter(
+        ({ name }) => prevState.schema.transitions.
+          reduce((names, t, i) => i === index ? names : names.concat((t.guards || []).map(({ name }) => name)), []).
+          concat(guards.map(({ name }) => name)).
+          indexOf(name) > -1
+      ).
+      // modify intersections
+      map(guard => find(guards, ({ name }) => name === guard.name) || guard).
+      // add newly created guards
+      concat(guards.filter(({ name }) => !find(prevState.guards, ({ name: guardName }) => guardName === name)))
   }))
 
-  handleSave = _ => this.props.onSave(this.state.schema)
+  handleSave = _ => this.props.onSave(this.state)
 
   render() {
-    const { schema } = this.state;
+    const { schema, guards } = this.state;
 
     const { title } = this.props;
 
@@ -166,7 +194,10 @@ export default class WorkflowEditor extends PureComponent {
             />
 
             <TransitionsTable
-              transitions={schema.transitions}
+              transitions={schema.transitions.map(t => ({
+                ...t,
+                guards: (t.guards || []).map(({ name }) => find(guards, ({ name: guardName }) => guardName === name))
+              }))}
               onCreate={this.handleCreateTransition}
               onEditTransition={this.handleEditTransition}
               onDeleteTransition={this.handleDeleteTransition}
@@ -174,6 +205,7 @@ export default class WorkflowEditor extends PureComponent {
               exampleObject={this.props.exampleObject}
             />
 
+<<<<<<< HEAD
             <Tabs
               activeKey={this.state.key}
               onSelect={this.handleSelect}
@@ -191,6 +223,10 @@ export default class WorkflowEditor extends PureComponent {
                 </div>
               </Tab>
             </Tabs>
+=======
+            <h2>Updated schema</h2>
+            <pre>{JSON.stringify(this.state.schema, null, 1)}</pre>
+>>>>>>> issue-23/workflow-editor
           </Col>
         </Row>
       </Grid>

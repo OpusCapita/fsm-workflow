@@ -37,6 +37,36 @@ export default {
       //     "negate": true
       //   }
       // ]
+    },
+    {
+      event: "event-1",
+      from: "approved",
+      to: "state-1"
+    },
+    {
+      event: "event-2",
+      from: "state-1",
+      to: "state-2"
+    },
+    {
+      event: "event-3",
+      from: "state-1",
+      to: "state-3"
+    },
+    {
+      event: "event-4",
+      from: "state-3",
+      to: "approved"
+    },
+    {
+      event: "event-5",
+      from: "open-2",
+      to: "open"
+    },
+    {
+      event: "event-6",
+      from: "open-3",
+      to: "open-2"
     }
   ]
 };

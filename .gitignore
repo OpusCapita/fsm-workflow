@@ -12,3 +12,4 @@ core/lib
 gui/lib
 task-manager/lib
 .gh-pages-tmp
+.gh-pages-tmp-crud-editor

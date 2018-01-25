@@ -16,7 +16,11 @@ export default class TransitionsTable extends PureComponent {
     transitions: PropTypes.arrayOf(PropTypes.shape({
       from: PropTypes.string,
       to: PropTypes.string,
-      event: PropTypes.string
+      event: PropTypes.string,
+      guards: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string,
+        body: PropTypes.string
+      }))
     })),
     onCreate: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,

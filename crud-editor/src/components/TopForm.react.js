@@ -37,51 +37,49 @@ export default class TopForm extends PureComponent {
     const states = getExistingStates(schema.transitions);
 
     return (
-      <div>
-        <Form horizontal={true}>
-          <FormGroup controlId="fsmName">
-            <Col componentClass={ControlLabel} sm={2}>
-              FSM name
-            </Col>
-            <Col sm={10}>
-              <FormControl
-                type="text"
-                placeholder="Name of your FSM schema"
-                value={schema.name}
-                onChange={this.props.onNameChange}
-              />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="initialState">
-            <Col componentClass={ControlLabel} sm={2}>
-              Initial state
-            </Col>
-            <Col sm={10}>
-              <Select
-                options={states.map(state2rs)}
-                multi={false}
-                onChange={this.handleInitialStateChange}
-                value={schema.initialState && state2rs(schema.initialState)}
-                placeholder="FSM initial state"
-              />
-            </Col>
-          </FormGroup>
-          <FormGroup controlId="finalStates">
-            <Col componentClass={ControlLabel} sm={2}>
-              Final states
-            </Col>
-            <Col sm={10}>
-              <Select
-                options={states.map(state2rs)}
-                multi={true}
-                onChange={this.handleFinalStatesChange}
-                value={schema.finalStates.map(state2rs)}
-                placeholder="FSM final states"
-              />
-            </Col>
-          </FormGroup>
-        </Form>
-      </div>
+      <Form horizontal={true}>
+        <FormGroup controlId="fsmName">
+          <Col componentClass={ControlLabel} sm={2}>
+            FSM name
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              placeholder="Name of your FSM schema"
+              value={schema.name}
+              onChange={this.props.onNameChange}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup controlId="initialState">
+          <Col componentClass={ControlLabel} sm={2}>
+            Initial state
+          </Col>
+          <Col sm={10}>
+            <Select
+              options={states.map(state2rs)}
+              multi={false}
+              onChange={this.handleInitialStateChange}
+              value={schema.initialState && state2rs(schema.initialState)}
+              placeholder="FSM initial state"
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup controlId="finalStates">
+          <Col componentClass={ControlLabel} sm={2}>
+            Final states
+          </Col>
+          <Col sm={10}>
+            <Select
+              options={states.map(state2rs)}
+              multi={true}
+              onChange={this.handleFinalStatesChange}
+              value={schema.finalStates.map(state2rs)}
+              placeholder="FSM final states"
+            />
+          </Col>
+        </FormGroup>
+      </Form>
     )
   }
 }
