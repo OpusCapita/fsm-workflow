@@ -1,9 +1,9 @@
-# Business Object History
+# Workflow Transition History
 
 ![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-transition-history.svg)
 ![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-transition-history.svg)
 
-Business Object History is an extension to FSM Core.  It provies server-side API for storing and extracting Business Object lifecycle history.
+Workflow Transition History is an extension to FSM Core.  It provies server-side API for storing and extracting Business Object lifecycle history.
 
 ## Installation
 

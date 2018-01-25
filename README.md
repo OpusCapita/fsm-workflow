@@ -39,9 +39,9 @@ FSM core could be found here [here](core/README.md)
 
 Task management is implemented as additional library. You can find more detailed info [here](task-manager/README.md).
 
-### Business Object History
+### Workflow Transition History
 
-Business Object History is implemented as separate library. You can find more information [here](business-object-history/README.md).
+Workflow Transition History is implemented as separate library. You can find more information [here](workflow-transition-history/README.md).
 
 ### References
 
