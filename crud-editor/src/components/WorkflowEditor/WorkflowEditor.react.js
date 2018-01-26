@@ -6,7 +6,7 @@ import TopForm from '../TopForm.react';
 import StatesEditor from '../StatesEditor';
 import TransitionsTable from '../TransitionsTable';
 import EditorOutput from '../EditorOutput.react';
-import { getExistingStates, uidFor } from '../utils';
+import { getExistingStates, uidFor, isDef } from '../utils';
 import './styles.less';
 import statesPropTypes from '../StatesEditor/statesPropTypes';
 
@@ -99,26 +99,39 @@ export default class WorkflowEditor extends PureComponent {
     }
   }))
 
-  handleEditTransition = ({ field, value, index }) => {
-    const { finalStates, transitions } = this.state.schema;
+  // handleEditTransition = ({ field, value, index }) => {
+  //   const { finalStates, transitions } = this.state.schema;
 
-    const newTransitions = transitions.map(
-      (t, i) => i === index ?
-        { ...t, [field]: value } :
-        t
-    );
+  //   const newTransitions = transitions.map(
+  //     (t, i) => i === index ?
+  //       { ...t, [field]: value } :
+  //       t
+  //   );
 
-    const { resetInitialState, adjustedFinalStates } = this.adjustAvailableStates(newTransitions);
+  //   const { resetInitialState, adjustedFinalStates } = this.adjustAvailableStates(newTransitions);
 
-    this.setNewState(prevState => ({
-      schema: {
-        ...prevState.schema,
-        transitions: newTransitions,
-        ...(resetInitialState && { initialState: null }),
-        ...(adjustedFinalStates.length < finalStates.length && { finalStates: adjustedFinalStates })
-      }
-    }))
-  }
+  //   this.setNewState(prevState => ({
+  //     schema: {
+  //       ...prevState.schema,
+  //       transitions: newTransitions,
+  //       ...(resetInitialState && { initialState: null }),
+  //       ...(adjustedFinalStates.length < finalStates.length && { finalStates: adjustedFinalStates })
+  //     }
+  //   }))
+  // }
+
+  handleEditTransition = ({ index, ...rest }) => this.setNewState(prevState => ({
+    schema: {
+      ...prevState.schema,
+      transitions: [
+        ...(
+          isDef(index) ?
+            prevState.schema.transitions.map((t, i) => i === index ? { ...t, ...rest } : t) :
+            prevState.schema.transitions.concat({ ...rest })
+        )
+      ]
+    }
+  }))
 
   handleDeleteTransition = index => {
     const { finalStates, transitions } = this.state.schema;
@@ -154,11 +167,7 @@ export default class WorkflowEditor extends PureComponent {
     }
   }
 
-  handleSaveTransitionGuards = index => guards => this.handleEditTransition({
-    field: 'guards',
-    value: guards,
-    index
-  })
+  handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards })
 
   handleSave = _ => {
     const { schema } = this.state;

@@ -20,10 +20,10 @@ export default class TopForm extends PureComponent {
     return (
       <Form horizontal={true}>
         <FormGroup controlId="fsmName">
-          <Col componentClass={ControlLabel} sm={2}>
+          <Col componentClass={ControlLabel} sm={1}>
             Name
           </Col>
-          <Col sm={10}>
+          <Col sm={11}>
             <FormControl
               type="text"
               placeholder="Name of your schema"

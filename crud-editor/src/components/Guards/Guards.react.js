@@ -38,7 +38,7 @@ export default class Guards extends PureComponent {
     }).isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
-    onSaveGuards: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -139,7 +139,7 @@ export default class Guards extends PureComponent {
     }
   }
 
-  handleSave = _ => this.props.onSaveGuards(this.state.guards.map(
+  handleSave = _ => this.props.onSave(this.state.guards.map(
     ({ body }) => ({ body: body.trim() })
   ))
 

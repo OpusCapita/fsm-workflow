@@ -8,8 +8,9 @@ import {
   ButtonGroup
 } from 'react-bootstrap';
 import Select from '@opuscapita/react-select';
-import { getExistingStates, state2rs, rs2state } from '../utils';
+import { isDef } from '../utils';
 import Guards from '../Guards';
+import EditTransition from './EditTransition.react';
 
 export default class TransitionsTable extends PureComponent {
   static propTypes = {
@@ -32,30 +33,21 @@ export default class TransitionsTable extends PureComponent {
 
   state = {
     showModal: false,
+    modalType: null,
     currentTransition: null
   }
 
-  handleChangeSelect = ({ field, index }) => value => this.props.onEditTransition({
-    field,
-    value: value && rs2state(value),
-    index
-  })
-
-  handleChangeEvent = index => ({ target: { value } }) => this.props.onEditTransition({
-    field: 'event',
-    value,
-    index
-  })
-
   handleDelete = index => _ => this.props.onDeleteTransition(index)
 
-  handleModal = index => _ => this.setState({
+  handleModal = index => type => _ => this.setState({
     showModal: true,
+    modalType: type,
     currentTransition: index
   })
 
   handleCloseModal = _ => this.setState({
     showModal: false,
+    modalType: null,
     currentTransition: null
   })
 
@@ -64,41 +56,34 @@ export default class TransitionsTable extends PureComponent {
     this.props.onSaveGuards(index)(guards);
   }
 
+  handleSaveTransition = (...args) => {
+    this.handleCloseModal();
+    this.props.onEditTransition(...args)
+  }
+
   render() {
     const { transitions, states } = this.props;
 
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr key={index}>
         <td>
-          <FormControl
-            type="text"
-            placeholder="Name of event"
-            value={event || ''}
-            onChange={this.handleChangeEvent(index)}
-          />
+          {event}
         </td>
         <td>
-          <Select
-            options={states.map(state2rs)}
-            multi={false}
-            onChange={this.handleChangeSelect({ field: 'from', index })}
-            value={from && state2rs(from)}
-            placeholder="Specify 'from' state"
-          />
+          {from}
         </td>
         <td>
-          <Select
-            options={states.filter(state => state !== from).map(state2rs)}
-            multi={false}
-            onChange={this.handleChangeSelect({ field: 'to', index })}
-            value={to && to !== from && state2rs(to)}
-            placeholder="Specify 'to' state"
-          />
+          {to}
         </td>
         <td className='text-right'>
           <ButtonGroup bsSize="sm">
             <Button
-              onClick={this.handleModal(index)}
+              onClick={this.handleModal(index)('edit')}
+            >
+              Edit
+            </Button>
+            <Button
+              onClick={this.handleModal(index)('guard')}
               disabled={!(from && to && event)}
             >
               Guard
@@ -120,27 +105,40 @@ export default class TransitionsTable extends PureComponent {
       </tr>
     ))
 
-    const { showModal, currentTransition } = this.state;
+    const { showModal, currentTransition, modalType } = this.state;
 
     let modal;
 
     if (showModal) {
-      const transition = transitions[currentTransition];
+      let transition;
 
-      modal = (
-        <Guards
-          transition={transition}
-          onClose={this.handleCloseModal}
-          onSaveGuards={this.handleSaveGuards(currentTransition)}
-          exampleObject={this.props.exampleObject}
-        />
-      )
+      if (isDef(currentTransition)) {
+        transition = transitions[currentTransition];
+      }
+
+      modal = modalType === 'guard' ?
+        (
+          <Guards
+            transition={transition}
+            onClose={this.handleCloseModal}
+            onSave={this.handleSaveGuards(currentTransition)}
+            exampleObject={this.props.exampleObject}
+          />
+        ) :
+        (
+          <EditTransition
+            transition={transition}
+            states={states}
+            onSave={this.handleSaveTransition}
+            onClose={this.handleCloseModal}
+            index={currentTransition}
+          />
+        )
+
     }
 
     return (
       <div>
-        <h2>Transitions</h2>
-
         <Table className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
@@ -150,7 +148,7 @@ export default class TransitionsTable extends PureComponent {
               <th className="text-right">
                 <Button
                   bsSize='sm'
-                  onClick={this.props.onCreate}
+                  onClick={this.handleModal()('edit')}
                 >
                   Add
                 </Button>
