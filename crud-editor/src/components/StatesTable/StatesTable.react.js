@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import find from 'lodash/find';
 import {
   Table,
   ButtonGroup,
@@ -6,30 +8,66 @@ import {
   Label,
   Glyphicon
 } from 'react-bootstrap';
-import statesPropTypes from './statesPropTypes';
+import statePropTypes from './statePropTypes';
+import StatesEditor from './StatesEditor.react';
 import './StatesTable.less';
+import { isDef } from '../utils';
 
-export default class StatesEditor extends PureComponent {
+export default class StatesTable extends PureComponent {
   static propTypes = {
-    states: statesPropTypes
+    states: PropTypes.arrayOf(statePropTypes),
+    onDelete: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired
   }
 
   state = {
-    states: this.props.states
+    states: this.props.states,
+    currentState: null,
+    showModal: false
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.states.length < this.props.states.length) {
-      this.setState({
-        states: nextProps.states
-      })
-    }
-  }
+  componentWillReceiveProps = ({ states }) => this.setState({ states })
 
-  handleDelete = name => _ => this.props.onDelete(name);
+  handleDelete = name => _ => this.props.onDelete(name)
+
+  handleEdit = name => _ => this.setState({
+    currentState: name,
+    showModal: true
+  })
+
+  handleAdd = this.handleEdit()
+
+  handleClose = _ => this.setState({
+    currentState: null,
+    showModal: false
+  })
+
+  handleSave = (...args) => {
+    this.handleClose();
+    this.props.onEdit(...args);
+  }
 
   render() {
-    const { states } = this.state;
+    const { states, currentState, showModal } = this.state;
+
+    let modal;
+
+    if (showModal) {
+      let state;
+
+      if (isDef(currentState)) {
+        state = find(states, ({ name }) => name === currentState)
+      }
+
+      modal = (
+        <StatesEditor
+          state={state}
+          existingStates={states.map(({ name }) => name)}
+          onClose={this.handleClose}
+          onSave={this.handleSave}
+        />
+      )
+    }
 
     return (
       <div className="oc-fsm-crud-editor--states-editor">
@@ -42,6 +80,7 @@ export default class StatesEditor extends PureComponent {
               <th className='text-right'>
                 <Button
                   bsSize='sm'
+                  onClick={this.handleAdd}
                 >
                   Add
                 </Button>
@@ -56,16 +95,17 @@ export default class StatesEditor extends PureComponent {
                   <td>{description}</td>
                   <td>
                     {
-                      isInitial ?
-                        (<Label bsStyle="success">Initial</Label>) :
-                        isFinal ?
-                          (<Label bsStyle="danger">Final</Label>) :
-                          null
+                      isInitial && (<Label bsStyle="primary" style={{ marginLeft: '5px' }}>Initial</Label>)
+                    }
+                    {
+                      isFinal && (<Label bsStyle="success" style={{ marginLeft: '5px' }}>Final</Label>)
                     }
                   </td>
                   <td className='text-right'>
                     <ButtonGroup bsStyle='sm'>
-                      <Button>
+                      <Button
+                        onClick={this.handleEdit(name)}
+                      >
                         <Glyphicon glyph='edit'/>
                         {'\u2000'}
                         Edit
@@ -84,6 +124,8 @@ export default class StatesEditor extends PureComponent {
             }
           </tbody>
         </Table>
+
+        {modal}
       </div>
     )
   }

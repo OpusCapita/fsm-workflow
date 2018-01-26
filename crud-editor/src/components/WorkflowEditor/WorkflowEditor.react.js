@@ -6,9 +6,9 @@ import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
 import EditorOutput from '../EditorOutput.react';
-import { getExistingStates, isDef } from '../utils';
+import { isDef } from '../utils';
 import './styles.less';
-import statesPropTypes from '../StatesEditor/statesPropTypes';
+import statePropTypes from '../StatesTable/statePropTypes';
 
 export default class WorkflowEditor extends PureComponent {
   static propTypes = {
@@ -30,7 +30,7 @@ export default class WorkflowEditor extends PureComponent {
           }))
         })
       }),
-      states: statesPropTypes
+      states: PropTypes.arrayOf(statePropTypes)
     })
   }
 
@@ -42,8 +42,7 @@ export default class WorkflowEditor extends PureComponent {
     super(...args);
 
     this.state = {
-      ...this.stateFromProps(this.props),
-      showModal: false
+      ...this.stateFromProps(this.props)
     }
   }
 
@@ -112,14 +111,10 @@ export default class WorkflowEditor extends PureComponent {
   handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards })
 
   handleSave = _ => {
-    const { schema } = this.state;
+    const { schema, states } = this.state;
 
-    return this.props.onSave(schema)
+    return this.props.onSave({ schema, states })
   }
-
-  handleToggleModal = show => _ => this.setState({
-    showModal: show
-  })
 
   handleDeleteState = stateName => this.setNewState(prevState => ({
     states: prevState.states.filter(({ name }) => name !== stateName),
@@ -135,8 +130,29 @@ export default class WorkflowEditor extends PureComponent {
     }
   }))
 
+  handleEditState = ({ initialName, ...rest }) => this.setNewState(prevState => initialName ?
+    // user edited previously existed state
+    ({
+      states: prevState.states.map(state => state.name === initialName ? rest : state),
+      schema: {
+        ...prevState.schema,
+        initialState: prevState.schema.initialState === initialName ? rest.name : prevState.schema.initialState,
+        finalStates: prevState.schema.finalStates.map(state => state === initialName ? rest.name : state),
+        transitions: prevState.schema.transitions.map(({ from, to, ...other }) => ({
+          ...other,
+          from: from === initialName ? rest.name : from,
+          to: to === initialName ? rest.name : to
+        }))
+      }
+    }) :
+    // add new state
+    ({
+      states: prevState.states.concat(rest)
+    })
+  )
+
   render() {
-    const { schema, states, showModal } = this.state;
+    const { schema, states } = this.state;
 
     const { title } = this.props;
 
@@ -173,6 +189,7 @@ export default class WorkflowEditor extends PureComponent {
                 <StatesTable
                   states={states}
                   onDelete={this.handleDeleteState}
+                  onEdit={this.handleEditState}
                 />
               </Tab>
               <Tab eventKey={2} title={(<h4>Transitions</h4>)}>
@@ -180,12 +197,9 @@ export default class WorkflowEditor extends PureComponent {
                   transitions={schema.transitions}
                   states={states.map(({ name }) => name)}
                   exampleObject={this.props.exampleObject}
-                  showModal={showModal}
                   onEditTransition={this.handleEditTransition}
                   onDeleteTransition={this.handleDeleteTransition}
                   onSaveGuards={this.handleSaveTransitionGuards}
-                  onCloseModal={this.handleToggleModal(false)}
-                  onShowModal={this.handleToggleModal(true)}
                 />
               </Tab>
             </Tabs>
