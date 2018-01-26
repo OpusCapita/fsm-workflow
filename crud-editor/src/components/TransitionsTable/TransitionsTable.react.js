@@ -4,8 +4,7 @@ import {
   Table,
   Button,
   Glyphicon,
-  ButtonGroup,
-  Alert
+  ButtonGroup
 } from 'react-bootstrap';
 import { isDef } from '../utils';
 import Guards from '../Guards';

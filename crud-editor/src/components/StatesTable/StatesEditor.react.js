@@ -103,6 +103,7 @@ export default class StatesEditor extends PureComponent {
             bsStyle='primary'
             onClick={this.handleSave}
             disabled={
+              !name ||
               !!find(existingStates, existingName => existingName === name && initialName !== existingName)
             }
           >

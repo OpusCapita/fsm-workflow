@@ -9,13 +9,18 @@ import './ModalDialog.less';
 export default function ModalDialog({
   body,
   title,
-  ok,
-  close
+  ok: {
+    disabled: disableOk,
+    onClick: handleOk
+  },
+  close: {
+    onClick: handleClose
+  }
 }) {
   return (
     <Modal
       show={true}
-      onHide={close.onClick}
+      onHide={handleClose}
       dialogClassName="oc-fsm-crud-editor--modal"
       backdrop='static'
     >
@@ -30,12 +35,12 @@ export default function ModalDialog({
       <Modal.Footer>
         <Button
           bsStyle='primary'
-          disabled={ok.disabled}
-          onClick={ok.onClick}
+          disabled={disableOk}
+          onClick={handleOk}
         >
           Ok
         </Button>
-        <Button onClick={close.onClick}>Close</Button>
+        <Button onClick={handleClose}>Close</Button>
       </Modal.Footer>
     </Modal>
   )
