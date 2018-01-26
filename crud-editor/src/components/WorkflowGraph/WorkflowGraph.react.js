@@ -4,11 +4,11 @@ import Viz from 'viz.js';
 import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
 
-let propTypes = {
+const propTypes = {
   schema: PropTypes.object
 };
 
-let defaultProps = {
+const defaultProps = {
   schema: null
 };
 
@@ -33,7 +33,7 @@ class WorkflowGraph extends Component {
 
   convertSchemaToDotLang(schema) {
     // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
-    let { transitions, initialState, finalStates } = schema;
+    const { transitions, initialState, finalStates } = schema;
 
     let src = '';
     src += `digraph finite_state_machine {\n`;
@@ -54,14 +54,14 @@ class WorkflowGraph extends Component {
   }
 
   renderGraph = (schema) => {
-    let vizSrc = this.convertSchemaToDotLang(schema);
+    const vizSrc = this.convertSchemaToDotLang(schema);
     this.setState({
       svg: Viz(vizSrc, { format: "svg", engine: "dot", totalMemory: 16777216 })
     });
   }
 
   render() {
-    let { schema } = this.props;
+    const { schema } = this.props;
 
     if (!schema) {
       return (
@@ -73,7 +73,7 @@ class WorkflowGraph extends Component {
       );
     }
 
-    let { svg } = this.state;
+    const { svg } = this.state;
 
     return (
       <div

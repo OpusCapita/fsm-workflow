@@ -47,7 +47,6 @@
     },
     states: [
       {
-        id: 'initial_state_open_id',
         name: 'open',
         description: 'Description for open state.',
         isInitial: true

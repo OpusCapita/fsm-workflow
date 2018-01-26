@@ -4,13 +4,12 @@ import {
   Table,
   Button,
   Glyphicon,
-  FormControl,
-  ButtonGroup
+  ButtonGroup,
+  Alert
 } from 'react-bootstrap';
-import Select from '@opuscapita/react-select';
 import { isDef } from '../utils';
 import Guards from '../Guards';
-import EditTransition from './EditTransition.react';
+import TransitionEditor from './TransitionEditor.react';
 
 export default class TransitionsTable extends PureComponent {
   static propTypes = {
@@ -24,7 +23,6 @@ export default class TransitionsTable extends PureComponent {
       }))
     })),
     states: PropTypes.arrayOf(PropTypes.string),
-    onCreate: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
@@ -70,16 +68,22 @@ export default class TransitionsTable extends PureComponent {
           {event}
         </td>
         <td>
-          {from}
+          {
+            from || (<span style={{ color: 'red' }}>Specify 'from' state</span>)
+          }
         </td>
         <td>
-          {to}
+          {
+            to || (<span style={{ color: 'red' }}>Specify 'to' state</span>)
+          }
         </td>
         <td className='text-right'>
           <ButtonGroup bsSize="sm">
             <Button
               onClick={this.handleModal(index)('edit')}
             >
+              <Glyphicon glyph='edit'/>
+              {'\u2000'}
               Edit
             </Button>
             <Button
@@ -126,7 +130,7 @@ export default class TransitionsTable extends PureComponent {
           />
         ) :
         (
-          <EditTransition
+          <TransitionEditor
             transition={transition}
             states={states}
             onSave={this.handleSaveTransition}
@@ -134,7 +138,6 @@ export default class TransitionsTable extends PureComponent {
             index={currentTransition}
           />
         )
-
     }
 
     return (

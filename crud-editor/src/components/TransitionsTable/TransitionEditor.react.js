@@ -17,7 +17,8 @@ export default class Guards extends PureComponent {
     }),
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    index: PropTypes.number
+    index: PropTypes.number,
+    states: PropTypes.arrayOf(PropTypes.string)
   }
 
   state = {
@@ -92,7 +93,7 @@ export default class Guards extends PureComponent {
               onChange={this.handleChangeField('from')}
             >
               {
-                states.map((state, i) => (
+                (from ? [] : ['']).concat(states).map((state, i) => (
                   <option value={state} key={`${state}-${i}`}>{state}</option>
                 ))
               }
@@ -107,7 +108,7 @@ export default class Guards extends PureComponent {
               onChange={this.handleChangeField('to')}
             >
               {
-                states.map((state, i) => (
+                (to ? [] : ['']).concat(states).map((state, i) => (
                   <option value={state} key={`${state}-${i}`}>{state}</option>
                 ))
               }
@@ -118,6 +119,7 @@ export default class Guards extends PureComponent {
           <Button
             bsStyle='primary'
             onClick={this.handleSave}
+            disabled={!(from && to && event)}
           >
             Ok
           </Button>
