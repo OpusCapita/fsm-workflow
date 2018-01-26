@@ -1,4 +1,4 @@
-@editor-height: 100px;
+@editor-height: 200px;
 @editor-border: 1px solid #ddd;
 
 .guard-code .CodeMirror {
@@ -16,7 +16,7 @@
 }
 
 .example-object .CodeMirror {
-  height: 400px;
+  height: 440px;
   border: @editor-border;
 }
 
@@ -33,5 +33,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom-width: 1px;
+}
+
+.oc-fsm-crud-editor--modal-heading.with-padding {
+  padding: 10px 0 10px
+}
+
+.oc-fsm-crud-editor--modal-heading .output-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

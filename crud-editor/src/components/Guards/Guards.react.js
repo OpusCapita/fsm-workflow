@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Table,
   Button,
-  Glyphicon,
   Modal,
-  Checkbox
+  Checkbox,
+  Row,
+  Col
 } from 'react-bootstrap';
 import CodeEditor from '../CodeEditor';
 import './Guards.less';
@@ -133,6 +133,7 @@ export default class Guards extends PureComponent {
       }), _ => this.state.autoplay && this.state.guards.forEach((_, i) => this.handleEvalCode(i)()))
     } catch (err) {
       this.setState({
+        exampleObject: value,
         exampleObjectError: err.message
       })
     }
@@ -168,135 +169,82 @@ export default class Guards extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            Guards for Transition <code>{`
-                { event: ${event}, from: ${from}, to: ${to} }
-              `}</code>
+            {`Guards for transition on "${event}" from "${from}" to "${to}"`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Table className="guards-table">
-            <thead>
-              <tr>
-                <th>Expression</th>
-                <th style={{ width: '0px' }}></th>
-                <th>
-                  <div className="output-heading">
-                    Output
-                    <Checkbox
-                      onChange={this.handleToggleAutoplay}
-                      checked={!!autoplay}
-                    >
-                      Autoplay
-                    </Checkbox>
-                  </div>
-                </th>
-                <th className="text-right" style={{ width: '120px' }}>
-                  <Button
-                    bsSize='sm'
-                    onClick={this.handleAddNewGuard}
-                  >
-                    Add
-                  </Button>
-                </th>
-                <th>Example object</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                (guards.length > 0 ? guards : [{}]).map((guard, guardIndex, arr) => (
-                  <tr
-                    key={guardIndex}
-                    {...(guardIndex < (arr.length - 1) && { style: { height: '110px' } })}
-                  >
-                    <td>
-                      {
-                        guard.body !== undefined && (
-                          <CodeEditor
-                            className="guard-code"
-                            value={guard.body}
-                            options={{
-                              mode: "javascript",
-                              lineNumbers: true,
-                              theme: "eclipse",
-                              placeholder: `Enter JavaScript code here`
-                            }}
-                            onChange={this.handleChange(guardIndex)}
-                          />
-                        )
-                      }
-                    </td>
-                    <td>
-                      {
-                        guard.body !== undefined && (
-                          <Glyphicon
-                            glyph="play"
-                            style={{
-                              cursor: 'pointer',
-                              position: 'relative',
-                              left: '-40px',
-                              zIndex: 2
-                            }}
-                            onClick={this.handleEvalCode(guardIndex)}
-                          />
-                        )
-                      }
-                    </td>
-                    <td>
-                      {
-                        guard.body !== undefined && (
-                          <CodeEditor
-                            className="output-code"
-                            value={guard.result || ''}
-                            options={{
-                              theme: "eclipse",
-                              lineWrapping: true,
-                              readOnly: 'nocursor'
-                            }}
-                          />
-                        )
-                      }
-
-                    </td>
-                    <td className="text-right">
-                      {
-                        guard.body !== undefined && (
-                          <Button
-                            bsSize='sm'
-                            onClick={this.handleDeleteGuard(guardIndex)}
-                          >
-                            <Glyphicon glyph="trash"/>
-                            {'\u2003'}
-                            Delete
-                          </Button>
-                        )
-                      }
-                    </td>
-                    {
-                      guardIndex === 0 && (
-                        <td rowSpan={guards.length}>
-                          <CodeEditor
-                            className="example-object"
-                            value={exampleObject}
-                            options={{
-                              mode: {
-                                name: 'javascript',
-                                json: true
-                              },
-                              theme: "eclipse",
-                              lineNumbers: true,
-                              lineWrapping: true
-                            }}
-                            onChange={this.handleChangeObject}
-                          />
-                          <span style={{ color: 'red' }}>{exampleObjectError}{`\u00A0`}</span>
-                        </td>
-                      )
-                    }
-                  </tr>
-                ))
-              }
-            </tbody>
-          </Table>
+          {
+            (guards.length > 0 ? guards : [{}]).map((guard, guardIndex, arr) => (
+              <div key={guardIndex}>
+                <Row>
+                  <Col sm={8}>
+                    <Row>
+                      <Col style={{ margin: '0 10px 0' }}>
+                        <div className="oc-fsm-crud-editor--modal-heading with-padding">
+                          <b>JavaScript Expression</b>
+                        </div>
+                        <CodeEditor
+                          className="guard-code"
+                          value={guard.body}
+                          options={{
+                            mode: "javascript",
+                            lineNumbers: true,
+                            theme: "eclipse",
+                            placeholder: `Enter JavaScript code here`
+                          }}
+                          onChange={this.handleChange(guardIndex)}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col style={{ margin: '0 10px 0' }}>
+                        <div className="oc-fsm-crud-editor--modal-heading">
+                          <div className="output-heading">
+                            <b>Output</b>
+                            <Checkbox
+                              onChange={this.handleToggleAutoplay}
+                              checked={!!autoplay}
+                            >
+                              Autoplay
+                            </Checkbox>
+                          </div>
+                        </div>
+                        <CodeEditor
+                          className="output-code"
+                          value={guard.result || ''}
+                          options={{
+                            theme: "eclipse",
+                            lineWrapping: true,
+                            readOnly: 'nocursor'
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col sm={4} >
+                    <div className="oc-fsm-crud-editor--modal-heading with-padding">
+                      <b>Example object</b>
+                    </div>
+                    <CodeEditor
+                      className="example-object"
+                      value={exampleObject}
+                      options={{
+                        mode: {
+                          name: 'javascript',
+                          json: true
+                        },
+                        theme: "eclipse",
+                        lineNumbers: true,
+                        lineWrapping: true
+                      }}
+                      onChange={this.handleChangeObject}
+                    />
+                    <span style={{ color: 'red' }}>{exampleObjectError}{`\u00A0`}</span>
+                  </Col>
+                </Row>
+              </div>
+            ))
+          }
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -306,7 +254,7 @@ export default class Guards extends PureComponent {
             }
             onClick={this.handleSave}
           >
-            Save
+            Ok
           </Button>
           <Button onClick={onClose}>Close</Button>
         </Modal.Footer>

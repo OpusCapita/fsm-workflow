@@ -14,44 +14,52 @@
 
 ```js
 <WorkflowEditor
-  title="Contract"
+  title="Invoice"
 
   workflow={{
     schema: {
       name: "invoice approval",
-      initialState: "start",
-      finalStates: ["finish"],
+      initialState: "open",
+      finalStates: ["approved"],
       objectStateFieldName: "status",
       transitions: [
         {
-          event: "event 1",
-          from: "start",
-          to: "step 1"
+          event: "validate",
+          from: "open",
+          to: "validated"
         },
         {
-          event: "event 2",
-          from: "start",
-          to: "finish"
+          event: "auto-approve",
+          from: "open",
+          to: "approved",
+          guards: [
+            {
+              body: 'object.netAmount < 100'
+            }
+          ]
         },
         {
-          event: "event 3",
-          from: "step 1",
-          to: "finish"
+          event: "approve",
+          from: "validated",
+          to: "approved"
         }
       ]
     },
-    transitionGuards: [
+    states: [
       {
-        transition: {
-          event: "event 1",
-          from: "start",
-          to: "step 1"
-        },
-        guards: [
-          {
-            body: 'object.netAmount > 100'
-          }
-        ]
+        id: 'initial_state_open_id',
+        name: 'open',
+        description: 'Description for open state.',
+        isInitial: true
+      },
+      {
+        name: 'validated',
+        description: 'Description for validated state.'
+      },
+      {
+        name: 'approved',
+        description: 'Description for approved state.',
+        isFinal: true
       }
     ]
   }}

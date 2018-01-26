@@ -22,6 +22,7 @@ export default class TransitionsTable extends PureComponent {
         body: PropTypes.string
       }))
     })),
+    states: PropTypes.arrayOf(PropTypes.string),
     onCreate: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
@@ -64,9 +65,7 @@ export default class TransitionsTable extends PureComponent {
   }
 
   render() {
-    const { transitions } = this.props;
-
-    const states = getExistingStates(transitions);
+    const { transitions, states } = this.props;
 
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr key={index}>
@@ -79,7 +78,7 @@ export default class TransitionsTable extends PureComponent {
           />
         </td>
         <td>
-          <Select.Creatable
+          <Select
             options={states.map(state2rs)}
             multi={false}
             onChange={this.handleChangeSelect({ field: 'from', index })}
@@ -88,7 +87,7 @@ export default class TransitionsTable extends PureComponent {
           />
         </td>
         <td>
-          <Select.Creatable
+          <Select
             options={states.filter(state => state !== from).map(state2rs)}
             multi={false}
             onChange={this.handleChangeSelect({ field: 'to', index })}
@@ -102,7 +101,12 @@ export default class TransitionsTable extends PureComponent {
               onClick={this.handleModal(index)}
               disabled={!(from && to && event)}
             >
-              Guards
+              Guard
+            </Button>
+            <Button
+              disabled={true}
+            >
+              Actions
             </Button>
             <Button
               onClick={this.handleDelete(index)}

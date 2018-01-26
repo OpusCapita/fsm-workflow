@@ -8,3 +8,6 @@ export const getExistingStates = transitions => transitions.reduce(
     ...[from, to].filter(name => states.indexOf(name) === -1)
   ], []
 ).filter(Boolean)
+
+// prefixed (semi)UUID
+export const uidFor = prefix => `${prefix}_${String(Math.random() * Math.random()).slice(2)}`;

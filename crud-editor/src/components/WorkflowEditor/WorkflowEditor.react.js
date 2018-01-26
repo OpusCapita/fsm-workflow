@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
 import isEqual from 'lodash/isEqual';
-import find from 'lodash/find'; // IE11 lacks Array.prototype.find
 import TopForm from '../TopForm.react';
+import StatesEditor from '../StatesEditor';
 import TransitionsTable from '../TransitionsTable';
-import WorkflowGraph from '../WorkflowGraph';
-import { getExistingStates } from '../utils';
-import CodeEditor from '../CodeEditor';
+import EditorOutput from '../EditorOutput.react';
+import { getExistingStates, uidFor } from '../utils';
 import './styles.less';
+import statesPropTypes from '../StatesEditor/statesPropTypes';
 
 export default class WorkflowEditor extends PureComponent {
   static propTypes = {
@@ -24,19 +24,13 @@ export default class WorkflowEditor extends PureComponent {
         transition: PropTypes.shape({
           from: PropTypes.string,
           to: PropTypes.string,
-          event: PropTypes.string
+          event: PropTypes.string,
+          guards: PropTypes.arrayOf(PropTypes.shape({
+            body: PropTypes.string
+          }))
         })
       }),
-      transitionGuards: PropTypes.arrayOf(PropTypes.shape({
-        transition: PropTypes.shape({
-          from: PropTypes.string,
-          to: PropTypes.string,
-          event: PropTypes.string
-        }),
-        guards: PropTypes.arrayOf(PropTypes.shape({
-          body: PropTypes.string
-        }))
-      }))
+      states: statesPropTypes
     })
   }
 
@@ -47,7 +41,10 @@ export default class WorkflowEditor extends PureComponent {
   constructor(...args) {
     super(...args);
 
-    this.state = this.stateFromProps(this.props)
+    this.state = {
+      ...this.stateFromProps(this.props),
+      showModal: false
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,25 +53,13 @@ export default class WorkflowEditor extends PureComponent {
     }
   }
 
-  stateFromProps = props => {
-    const schema = (props.workflow || {}).schema || {};
-
-    const transitionGuards = (props.workflow || {}).transitionGuards || [];
-
-    const transitions = (schema.transitions || []).map(schemaTransition => ({
-      ...schemaTransition,
-      guards: (find(transitionGuards, ({ transition }) => isEqual(transition, schemaTransition)) || {}).guards || []
+  stateFromProps = props => ({
+    schema: (props.workflow || {}).schema || {},
+    states: ((props.workflow || {}).states || []).map(({ id, ...rest }) => ({
+      id: id || uidFor('state'),
+      ...rest
     }))
-
-    const newState = {
-      schema: {
-        ...schema,
-        transitions
-      }
-    }
-
-    return newState
-  }
+  })
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
   setNewState = setFunc => this.setState(setFunc)
@@ -178,28 +163,17 @@ export default class WorkflowEditor extends PureComponent {
   handleSave = _ => {
     const { schema } = this.state;
 
-    const result = {
-      schema: {
-        ...schema,
-        transitions: schema.transitions.map(({ from, to, event }) => ({ from, to, event }))
-      },
-      transitionGuards: schema.transitions.map(({ from, to, event, guards }) => ({
-        transition: { from, to, event },
-        guards
-      }))
-    }
-
-    return this.props.onSave(result)
+    return this.props.onSave(schema)
   }
 
+  handleToggleModal = show => _ => this.setState({
+    showModal: show
+  })
+
   render() {
-    const { schema } = this.state;
+    const { schema, states, showModal } = this.state;
 
     const { title } = this.props;
-    const jsonSchema = JSON.stringify({
-      ...schema,
-      transitions: schema.transitions.map(({ from, to, event }) => ({ from, to, event }))
-    }, null, 2);
 
     return (
       <Grid>
@@ -218,52 +192,40 @@ export default class WorkflowEditor extends PureComponent {
                 Save
               </Button>
             </h1>
+
             <TopForm
-              schema={schema}
+              name={schema.name}
               onNameChange={this.handleNameChange}
-              onInitialStateChange={this.handleInitialStateChange}
-              onFinalStatesChange={this.handleFinalStatesChange}
             />
 
-            <TransitionsTable
-              transitions={schema.transitions}
-              onCreate={this.handleCreateTransition}
-              onEditTransition={this.handleEditTransition}
-              onDeleteTransition={this.handleDeleteTransition}
-              onSaveGuards={this.handleSaveTransitionGuards}
-              exampleObject={this.props.exampleObject}
-            />
-
-            <h2>Schema</h2>
             <Tabs
               animation={false}
-              id="fsm-workflow-editor"
+              id="fsm-workflow-editor-elements"
               mountOnEnter={true}
               unmountOnExit={true}
             >
-              <Tab eventKey={1} title="Graph">
-                <div className="oc-fsm-crud-editor--workflow-editor__tab">
-                  <WorkflowGraph schema={schema} />
-                </div>
+              <Tab eventKey={1} title={(<h4>Transitions</h4>)}>
+                <TransitionsTable
+                  transitions={schema.transitions}
+                  states={states.map(({ name }) => name)}
+                  exampleObject={this.props.exampleObject}
+                  showModal={showModal}
+                  onCreate={this.handleCreateTransition}
+                  onEditTransition={this.handleEditTransition}
+                  onDeleteTransition={this.handleDeleteTransition}
+                  onSaveGuards={this.handleSaveTransitionGuards}
+                  onCloseModal={this.handleToggleModal(false)}
+                  onShowModal={this.handleToggleModal(true)}
+                />
               </Tab>
-              <Tab eventKey={2} title="JSON">
-                <div className="oc-fsm-crud-editor--workflow-editor__tab">
-                  <CodeEditor
-                    value={jsonSchema}
-                    options={{
-                      theme: "eclipse",
-                      lineWrapping: true,
-                      lineNumbers: true,
-                      readOnly: "nocursor",
-                      mode: {
-                        name: 'javascript',
-                        json: true
-                      }
-                    }}
-                  />
-                </div>
+              <Tab eventKey={2} title={(<h4>States</h4>)}>
+                <StatesEditor
+                  states={states}
+                />
               </Tab>
             </Tabs>
+
+            <EditorOutput schema={schema}/>
           </Col>
         </Row>
       </Grid>
