@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node -e \"require('./demo/server').run()\"",
     "lint": "node ./node_modules/.bin/eslint .",
-    "lint-tab": "node ./node_modules/.bin/eslint . --rule '\"indent\": [2, \"tab\", { \"SwitchCase\": 1, \"VariableDeclarator\": 1 }]' --rule '\"react/jsx-indent-props\": [2, \"tab\"]'",
+    "lint-tab": "node ./node_modules/.bin/eslint . --rule '\"indent\": [2, \"tab\", { \"SwitchCase\": 1, \"VariableDeclarator\": 1 }]'",
     "npm-publish": "update-changelog -- --all && npm-publish",
     "publish-release": "npm run npm-publish -- --release"
   },
@@ -24,9 +24,11 @@
   },
   "devDependencies": {
     "@opuscapita/npm-scripts": "2.0.0",
+    "babel-eslint": "7.2.3",
     "body-parser": "1.18.2",
-    "eslint": "3.17.0",
+    "eslint": "3.19.0",
     "eslint-config-opuscapita": "1.0.7",
+    "eslint-plugin-react": "6.10.3",
     "express": "4.16.2",
     "helmet": "3.10.0",
     "mysql2": "1.5.1",

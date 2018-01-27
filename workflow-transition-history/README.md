@@ -22,47 +22,49 @@ const dbConfig = require('./config/db.js');
 
 const sequelize = new Sequelize(dbConfig);
 
-workflowTransitionHistory(sequelize).then(handlers => {
-  const { add, search } = handlers;
+workflowTransitionHistory.runMigrations(sequelize).
+  then(_ => workflowTransitionHistory.createModel(sequelize)).
+  then(handlers => {
+    const { add, search } = handlers;
 
-  add({
-    from: 'from-state',
-    to: 'to-state',
-    event: 'transition-event',
-    businessObjType: 'invoice',
-    businessObjId: 'ew153-7210',
-    user: 'user-id-46270e',
-    description: 'Optional business object transition description text'
-  }).
-    then(obj => console.log('The following obj has been added to history:', obj)).
-    catch(err => console.log('Error adding obj to histofy:', err));
-
-  search({
-
-    // Optional.
-    // Its format is the same as "where" in sequelize.model().findAll
-    where: {
+    add({
       from: 'from-state',
-      to: 'to-state'
-    },
+      to: 'to-state',
+      event: 'transition-event',
+      businessObjType: 'invoice',
+      businessObjId: 'ew153-7210',
+      user: 'user-id-46270e',
+      description: 'Optional business object transition description text'
+    }).
+      then(obj => console.log('The following obj has been added to history:', obj)).
+      catch(err => console.error('Error adding obj to histofy:', err));
 
-    // Optional.
-    // Its format is the same as "order" in sequelize.model().findAll
-    order: ['createdOn', 'DESC']
+    search({
 
-  }).
-    then(objList => console.log(objList.map(obj => JSON.stringify({
-      id: obj.id,
-      from: obj.from,
-      to: obj.to,
-      event: obj.event,
-      businessObjType: obj.businessObjType,
-      businessObjId: obj.businessObjId,
-      user: obj.user,
-      description: obj.description,
-      createdOn: obj.createdOn
-    })))).
-    catch(err => console.log('Error extracting objects from history:', err));
-})
+      // Optional.
+      // Its format is the same as "where" in sequelize.model().findAll
+      where: {
+        from: 'from-state',
+        to: 'to-state'
+      },
+
+      // Optional.
+      // Its format is the same as "order" in sequelize.model().findAll
+      order: [["createdOn","ASC"]]
+
+    }).
+      then(objList => console.log(objList.map(obj => JSON.stringify({
+        id: obj.id,
+        from: obj.from,
+        to: obj.to,
+        event: obj.event,
+        businessObjType: obj.businessObjType,
+        businessObjId: obj.businessObjId,
+        user: obj.user,
+        description: obj.description,
+        createdOn: obj.createdOn
+      })))).
+      catch(err => console.error('Error extracting objects from history:', err));
+  });
 ```
-
+See [Express Server Demo](demo/server.js) for an example of using Workflow Transition History.

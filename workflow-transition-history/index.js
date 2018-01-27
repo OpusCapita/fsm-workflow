@@ -5,6 +5,7 @@ const path = require('path');
 
 const importModels = require('./db/models');
 const { MODEL_NAME } = require('./constants');
+const MIGRATIONS_DIR = path.join(__dirname, 'db/migrations');
 
 /*
  * The function return Model.create(...) promise
@@ -24,10 +25,13 @@ const search = sequelize => ({
   order
 });
 
-module.exports = sequelize => {
-  importModels(sequelize);
-
-  const umzug = new Umzug({
+/*
+ * The function runs pending migrations from MIGRATIONS_DIR and returns a promise.
+ * It is resolved with an array of executed migrations' names.
+ * It is rejected with an error.
+ */
+exports.runMigrations = sequelize => {
+  return new Umzug({
     storage: 'sequelize',
     storageOptions: { sequelize },
     migrations: {
@@ -35,18 +39,24 @@ module.exports = sequelize => {
         sequelize.getQueryInterface(), // queryInterface
         sequelize.constructor // DataTypes
       ],
-      path: path.join(__dirname, 'db/migrations'),
+      path: MIGRATIONS_DIR,
       pattern: /\.js$/
     }
-  });
+  }).
+    up();
+};
 
-  return umzug.up().
-    then(_ => ({
-      add: add(sequelize),
-      search: search(sequelize)
-    })).
-    catch(err => umzug.down().
-      then(_ => { throw err; }).
-      catch(_ => { throw err; })
-    );
-}
+/*
+ * The function (re)imports the package's models into sequelize and returns a promise.
+ * It is resolved with { add, search } object.
+ * It is rejected with an error
+ *
+ * The function calls "associate()" for the models with these models array as an argument =>
+ * the models may ONLY have associations with each other BUT NOT with other models from outside the package
+ * AND models from outside the package must not have associations with the package's models.
+ */
+exports.createModel = sequelize => importModels(sequelize).
+  then(sequelize => ({
+    add: add(sequelize),
+    search: search(sequelize)
+  }));

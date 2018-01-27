@@ -15,8 +15,7 @@ const sequelize = new Sequelize(
   dbConfig
 );
 
-// const importModels = require('../db/models');
-// importModels(sequelize).sync();
+workflowTransitionHistory.runMigrations(sequelize);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET,POST,HEAD,OPTIONS,PUT,PATCH,DELETE');
@@ -28,7 +27,12 @@ app.use((req, res, next) => {
 app.use(helmet.noCache());
 app.use(bodyParser.json());
 
-exports.run = ({ host, port } = require('./config/server')) => workflowTransitionHistory(sequelize).
+exports.run = (
+  {
+    host,
+    port
+  } = require('./config/server')
+) => workflowTransitionHistory.createModel(sequelize).
   then(handlers => {
     let { add, search } = handlers;
 
@@ -36,23 +40,13 @@ exports.run = ({ host, port } = require('./config/server')) => workflowTransitio
       then(entry => res.json(entry))
     );
 
-    app.get('/history', (req, res) => {
-      let order;
-
-      if (order) {
-        try {
-          order = JSON.parse(req.query.order);
-        } catch (err) {
-          order = req.query.order;
-        }
-      }
-
+    app.get('/history', (req, res) =>
       search({
         where: req.query.where && JSON.parse(req.query.where),
-        order
+        order: req.query.order && JSON.parse(req.query.order)
       }).
         then(entries => res.json(entries))
-    });
+    );
 
 
     app.listen(port, host, err => {
@@ -65,4 +59,4 @@ exports.run = ({ host, port } = require('./config/server')) => workflowTransitio
       process.on('exit', _ => console.warn('■■■ Server has been stopped ■■■'));
     });
   }).
-  catch(err => console.log('■■■ Business-object-history library error:', err, '■■■'));
+  catch(err => console.error('■■■ Business-object-history library error:', err, '■■■'));

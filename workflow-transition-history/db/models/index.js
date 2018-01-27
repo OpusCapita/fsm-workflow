@@ -2,27 +2,29 @@
 
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
+
 const basename = path.basename(__filename);
+const readdir = promisify(fs.readdir);
 
 /*
  * The function import models into sequelize
  * and returns updated sequelize.
  */
-module.exports = sequelize => {
-  const db = fs.
-    readdirSync(__dirname).
+module.exports = async function(sequelize) {
+  const models = (await readdir(__dirname)).
     filter(file => file.indexOf('.') !== 0 && (file !== basename) && (file.slice(-3) === '.js')).
     reduce(
-      (rez, file) => {
+      (models, file) => {
         const model = sequelize.import(path.join(__dirname, file));
 
-        return Object.assign(rez, {
+        return Object.assign(models, {
           [model.name]: model
         });
       },
       {}
     );
 
-  Object.keys(db).forEach(modelName => db[modelName].associate && db[modelName].associate(db));
+  Object.values(models).forEach(model => model.associate && model.associate(models));
   return sequelize;
 };
