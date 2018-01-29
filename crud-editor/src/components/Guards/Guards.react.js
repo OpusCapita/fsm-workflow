@@ -8,6 +8,7 @@ import {
   Col
 } from 'react-bootstrap';
 import CodeEditor from '../CodeEditor';
+import { uidFor } from '../utils';
 import './Guards.less';
 
 const evaluateCode = ({ code, arg }) => {
@@ -88,6 +89,7 @@ export default class Guards extends PureComponent {
     guards: [
       ...prevState.guards,
       {
+        name: uidFor('guard'),
         body: ''
       }
     ]
@@ -117,7 +119,9 @@ export default class Guards extends PureComponent {
           {
             ...guard,
             isError,
-            result: isError ? result.message : String(result)
+            result: code ? // guard body not empty?
+              isError ? result.message : String(result) :
+              ''
           } :
           guard
       )
@@ -140,9 +144,11 @@ export default class Guards extends PureComponent {
     }
   }
 
-  handleSave = _ => this.props.onSave(this.state.guards.map(
-    ({ body }) => ({ body: body.trim() })
-  ))
+  handleSave = _ => this.props.onSave(
+    this.state.guards.
+      map(({ name, body }) => ({ name, body: body.trim() })).
+      filter(({ body }) => body)
+  )
 
   render() {
     const {
@@ -252,7 +258,7 @@ export default class Guards extends PureComponent {
           <Button
             bsStyle='primary'
             disabled={
-              guards.some(({ isError, body }) => isError || !body)
+              guards.some(({ isError, body }) => isError && body)
             }
             onClick={this.handleSave}
           >

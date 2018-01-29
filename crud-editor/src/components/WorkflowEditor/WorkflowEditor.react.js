@@ -27,11 +27,15 @@ export default class WorkflowEditor extends PureComponent {
           to: PropTypes.string,
           event: PropTypes.string,
           guards: PropTypes.arrayOf(PropTypes.shape({
-            body: PropTypes.string
+            name: PropTypes.string.isRequired
           }))
         }),
         states: PropTypes.arrayOf(statePropTypes)
-      })
+      }),
+      guards: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        body: PropTypes.string.isRequired
+      }))
     })
   }
 
@@ -53,12 +57,31 @@ export default class WorkflowEditor extends PureComponent {
     }
   }
 
-  stateFromProps = props => ({
-    schema: (props.workflow || {}).schema || {}
-  })
+  stateFromProps = props => {
+    const schema = (props.workflow || {}).schema || {};
+
+    const transitions = (schema.transitions || []);
+
+    const guardDefinitions = (this.props.workflow || {}).guards || [];
+
+    return ({
+      schema: {
+        ...schema,
+        transitions: transitions.map(({ guards, ...rest }) => ({
+          ...rest,
+          ...(guards && {
+            guards: guards.map(({ name }) => ({
+              name,
+              body: find(guardDefinitions, ({ name: guardName }) => name === guardName).body
+            }))
+          })
+        }))
+      }
+    })
+  }
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
-  setNewState = setFunc => this.setState(setFunc, _ => console.log({ state: this.state }))
+  setNewState = setFunc => this.setState(setFunc)
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
     schema: {
@@ -110,11 +133,28 @@ export default class WorkflowEditor extends PureComponent {
 
   handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards })
 
-  handleSave = _ => {
-    const { schema, states } = this.state;
+  createJsonOutput = _ => {
+    const { schema } = this.state;
 
-    return this.props.onSave({ schema, states })
+    const guards = schema.transitions.reduce((acc, { guards }) => acc.concat(guards || []), []);
+
+    const transitions = schema.transitions.map(({ guards, ...rest }) => ({
+      ...rest,
+      ...(guards && guards.length > 0 && {
+        guards: guards.map(({ name }) => ({ name }))
+      })
+    }))
+
+    return {
+      schema: {
+        ...schema,
+        transitions
+      },
+      guards
+    }
   }
+
+  handleSave = _ => this.props.onSave(this.createJsonOutput())
 
   handleDeleteState = stateName => this.setNewState(prevState => ({
     schema: {
@@ -239,6 +279,7 @@ export default class WorkflowEditor extends PureComponent {
             <EditorOutput
               schema={schema}
               getStateLabel={this.getStateLabel}
+              createJsonOutput={this.createJsonOutput}
             />
           </Col>
         </Row>

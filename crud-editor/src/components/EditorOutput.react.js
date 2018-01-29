@@ -4,8 +4,8 @@ import { Tabs, Tab } from 'react-bootstrap';
 import WorkflowGraph from './WorkflowGraph';
 import CodeEditor from './CodeEditor';
 
-export default function EditorOutput({ schema, getStateLabel }) {
-  const jsonSchema = JSON.stringify(schema, null, 2);
+export default function EditorOutput({ schema, getStateLabel, createJsonOutput }) {
+  const jsonSchema = JSON.stringify(createJsonOutput(), null, 2);
 
   return (
     <div>
@@ -45,5 +45,6 @@ export default function EditorOutput({ schema, getStateLabel }) {
 
 EditorOutput.propTypes = {
   schema: PropTypes.object.isRequired,
-  getStateLabel: PropTypes.func.isRequired
+  getStateLabel: PropTypes.func.isRequired,
+  createJsonOutput: PropTypes.func.isRequired
 }

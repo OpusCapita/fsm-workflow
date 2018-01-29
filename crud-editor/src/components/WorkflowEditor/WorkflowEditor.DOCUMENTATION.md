@@ -40,7 +40,12 @@
         {
           event: "validate",
           from: "open",
-          to: "validated"
+          to: "validated",
+          guards: [
+            {
+              name: 'EUR-only'
+            }
+          ]
         },
         {
           event: "auto-approve",
@@ -48,7 +53,7 @@
           to: "approved",
           guards: [
             {
-              body: 'object.netAmount < 100'
+              name: 'netAmount-constraint'
             }
           ]
         },
@@ -58,7 +63,17 @@
           to: "approved"
         }
       ]
-    }
+    },
+    guards: [
+      {
+        name: 'netAmount-constraint',
+        body: 'object.netAmount < 100'
+      },
+      {
+        name: 'EUR-only',
+        body: "object.currencyId === 'EUR'"
+      }
+    ]
   }}
 
   exampleObject={{
