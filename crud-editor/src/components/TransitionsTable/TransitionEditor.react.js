@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import pick from 'lodash/pick';
 import {
   Button,
   Modal,
@@ -48,6 +49,16 @@ export default class Guards extends PureComponent {
 
     this.props.onSave(result)
   }
+
+  // hasUnsavedChanges = _ => {
+  //   const { transition } = this.props;
+
+  //   const initialTransition = pick(transition, ['event', 'from', 'to']);
+
+  //   const { event, from, to } = this.state;
+
+
+  // }
 
   render() {
     const { onClose, states, getStateLabel } = this.props;

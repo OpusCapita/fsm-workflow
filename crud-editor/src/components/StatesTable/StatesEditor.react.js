@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
+import isEqual from 'lodash/isEqual';
 import {
   Button,
   Modal,
@@ -10,13 +11,16 @@ import {
   Checkbox
 } from 'react-bootstrap';
 import statePropTypes from './statePropTypes';
+import withConfirmDialog from '../ConfirmDialog';
 
+@withConfirmDialog
 export default class StatesEditor extends PureComponent {
   static propTypes = {
     state: statePropTypes,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired
+    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired,
+    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
   }
 
   state = {
@@ -39,8 +43,24 @@ export default class StatesEditor extends PureComponent {
     this.props.onSave({ name, description, isInitial, isFinal, initialName })
   }
 
+  hasUnsavedChanges = _ => {
+    const { state: propState } = this.props;
+
+    const { name, description, isInitial, isFinal } = this.state;
+
+    return propState ?
+      !isEqual(propState, { name, description, isInitial, isFinal }) : // compare initial and current states
+      name || description || isInitial || isFinal // look for any input for newely created object
+  }
+
+  handleClose = this.props.triggerDialog({
+    showDialog: this.hasUnsavedChanges,
+    confirmHandler: this.props.onClose
+  })
+
+
   render() {
-    const { onClose, existingStates } = this.props;
+    const { existingStates } = this.props;
 
     const {
       name,
@@ -53,7 +73,7 @@ export default class StatesEditor extends PureComponent {
     return (
       <Modal
         show={true}
-        onHide={onClose}
+        onHide={this.handleClose}
         dialogClassName="oc-fsm-crud-editor--modal"
         backdrop='static'
       >
@@ -109,7 +129,7 @@ export default class StatesEditor extends PureComponent {
           >
             Ok
           </Button>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={this.handleClose}>Close</Button>
         </Modal.Footer>
       </Modal>
     )
