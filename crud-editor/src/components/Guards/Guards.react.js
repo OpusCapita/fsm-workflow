@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 import {
   Button,
   Modal,
@@ -11,6 +12,7 @@ import {
 import CodeEditor from '../CodeEditor';
 import { uidFor } from '../utils';
 import './Guards.less';
+import withConfirmDialog from '../ConfirmDialog';
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -27,6 +29,7 @@ const evaluateCode = ({ code, arg }) => {
   }
 }
 
+@withConfirmDialog
 export default class Guards extends PureComponent {
   static propTypes = {
     transition: PropTypes.shape({
@@ -41,7 +44,8 @@ export default class Guards extends PureComponent {
     getStateLabel: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
-    onSave: PropTypes.func.isRequired
+    onSave: PropTypes.func.isRequired,
+    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
   }
 
   static defaultProps = {
@@ -157,6 +161,26 @@ export default class Guards extends PureComponent {
     )
   }), (this.state.autoplay && this.handleEvalCode(guardIndex)))
 
+  hasUnsavedChanges = _ => {
+    console.log({
+      props: this.props.transition.guards,
+      state: this.state.guards
+    })
+
+    const initialGuards = this.props.transition.guards;
+
+    const currentGuards = this.state.guards.map(({ name, body }) => ({ name, body }));
+
+    return initialGuards && initialGuards.length > 0 ?
+      !isEqual(initialGuards, currentGuards) :
+      currentGuards[0].body
+  }
+
+  handleClose = this.props.triggerDialog({
+    showDialog: this.hasUnsavedChanges,
+    confirmHandler: this.props.onClose
+  })
+
   render() {
     const {
       transition: {
@@ -164,7 +188,6 @@ export default class Guards extends PureComponent {
         to,
         event
       },
-      onClose,
       getStateLabel
     } = this.props;
 
@@ -178,7 +201,7 @@ export default class Guards extends PureComponent {
     return (
       <Modal
         show={true}
-        onHide={onClose}
+        onHide={this.handleClose}
         dialogClassName="oc-fsm-crud-editor--modal"
         backdrop='static'
       >
@@ -282,7 +305,7 @@ export default class Guards extends PureComponent {
           >
             Ok
           </Button>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={this.handleClose}>Close</Button>
         </Modal.Footer>
       </Modal>
     )

@@ -83,7 +83,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     )
   }
 
-  handleInjectedFunc = ({ showDialog, confirmHandler, title, message }) => event => showDialog() ?
+  triggerDialog = ({ showDialog, confirmHandler, title, message }) => event => showDialog() ?
     this.setState({
       show: true,
       confirmHandler: _ => confirmHandler(event),
@@ -101,7 +101,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
 
     const newProps = {
       ...props,
-      triggerDialog: this.handleInjectedFunc
+      triggerDialog: this.triggerDialog
     }
 
     return (
