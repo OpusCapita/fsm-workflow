@@ -5,7 +5,8 @@ import {
   Modal,
   Checkbox,
   Row,
-  Col
+  Col,
+  Glyphicon
 } from 'react-bootstrap';
 import CodeEditor from '../CodeEditor';
 import { uidFor } from '../utils';
@@ -150,6 +151,12 @@ export default class Guards extends PureComponent {
       filter(({ body }) => body)
   )
 
+  handleCleanGuardBody = guardIndex => _ => this.setState(prevState => ({
+    guards: prevState.guards.map(
+      ({ body, ...rest }, i) => ({ ...rest, body: i === guardIndex ? '' : body })
+    )
+  }))
+
   render() {
     const {
       transition: {
@@ -201,6 +208,17 @@ export default class Guards extends PureComponent {
                             placeholder: `Enter JavaScript code here`
                           }}
                           onChange={this.handleChange(guardIndex)}
+                        />
+                        <Glyphicon
+                          glyph='remove'
+                          style={{
+                            position: 'absolute',
+                            right: '22px',
+                            top: '50px',
+                            cursor: 'pointer',
+                            zIndex: '2'
+                          }}
+                          onClick={this.handleCleanGuardBody(guardIndex)}
                         />
                       </Col>
                     </Row>
