@@ -18,7 +18,8 @@ export default class Guards extends PureComponent {
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     index: PropTypes.number,
-    states: PropTypes.arrayOf(PropTypes.string)
+    states: PropTypes.arrayOf(PropTypes.string),
+    getStateLabel: PropTypes.func.isRequired
   }
 
   state = {
@@ -49,7 +50,7 @@ export default class Guards extends PureComponent {
   }
 
   render() {
-    const { onClose, states } = this.props;
+    const { onClose, states, getStateLabel } = this.props;
 
     const {
       from,
@@ -94,7 +95,7 @@ export default class Guards extends PureComponent {
             >
               {
                 (from ? [] : ['']).concat(states).map((state, i) => (
-                  <option value={state} key={`${state}-${i}`}>{state}</option>
+                  <option value={state} key={`${state}-${i}`}>{getStateLabel(state)}</option>
                 ))
               }
             </FormControl>
@@ -109,7 +110,7 @@ export default class Guards extends PureComponent {
             >
               {
                 (to ? [] : ['']).concat(states).map((state, i) => (
-                  <option value={state} key={`${state}-${i}`}>{state}</option>
+                  <option value={state} key={`${state}-${i}`}>{getStateLabel(state)}</option>
                 ))
               }
             </FormControl>

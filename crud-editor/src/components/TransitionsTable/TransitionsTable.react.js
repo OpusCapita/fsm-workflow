@@ -22,6 +22,7 @@ export default class TransitionsTable extends PureComponent {
       }))
     })),
     states: PropTypes.arrayOf(PropTypes.string),
+    getStateLabel: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
@@ -59,7 +60,7 @@ export default class TransitionsTable extends PureComponent {
   }
 
   render() {
-    const { transitions, states } = this.props;
+    const { transitions, states, getStateLabel } = this.props;
 
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr key={index}>
@@ -68,12 +69,12 @@ export default class TransitionsTable extends PureComponent {
         </td>
         <td>
           {
-            from || (<span style={{ color: 'red' }}>Specify 'from' state</span>)
+            getStateLabel(from) || (<span style={{ color: 'red' }}>Specify 'from' state</span>)
           }
         </td>
         <td>
           {
-            to || (<span style={{ color: 'red' }}>Specify 'to' state</span>)
+            getStateLabel(to) || (<span style={{ color: 'red' }}>Specify 'to' state</span>)
           }
         </td>
         <td className='text-right'>
@@ -123,6 +124,7 @@ export default class TransitionsTable extends PureComponent {
         (
           <Guards
             transition={transition}
+            getStateLabel={getStateLabel}
             onClose={this.handleCloseModal}
             onSave={this.handleSaveGuards(currentTransition)}
             exampleObject={this.props.exampleObject}
@@ -132,6 +134,7 @@ export default class TransitionsTable extends PureComponent {
           <TransitionEditor
             transition={transition}
             states={states}
+            getStateLabel={getStateLabel}
             onSave={this.handleSaveTransition}
             onClose={this.handleCloseModal}
             index={currentTransition}

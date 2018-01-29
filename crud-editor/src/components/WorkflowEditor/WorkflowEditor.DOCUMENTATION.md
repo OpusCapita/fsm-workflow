@@ -18,10 +18,24 @@
 
   workflow={{
     schema: {
-      name: "invoice approval",
+      name: "Approval",
       initialState: "open",
       finalStates: ["approved"],
       objectStateFieldName: "status",
+      states: [
+        {
+          name: 'open',
+          description: 'Open'
+        },
+        {
+          name: 'validated',
+          description: 'Validated'
+        },
+        {
+          name: 'approved',
+          description: 'Approved'
+        }
+      ],
       transitions: [
         {
           event: "validate",
@@ -44,23 +58,7 @@
           to: "approved"
         }
       ]
-    },
-    states: [
-      {
-        name: 'open',
-        description: 'Description for open state.',
-        isInitial: true
-      },
-      {
-        name: 'validated',
-        description: 'Description for validated state.'
-      },
-      {
-        name: 'approved',
-        description: 'Description for approved state.',
-        isFinal: true
-      }
-    ]
+    }
   }}
 
   exampleObject={{

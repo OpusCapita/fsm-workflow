@@ -16,17 +16,29 @@ import { isDef } from '../utils';
 export default class StatesTable extends PureComponent {
   static propTypes = {
     states: PropTypes.arrayOf(statePropTypes),
+    initialState: PropTypes.string.isRequired,
+    finalStates: PropTypes.arrayOf(PropTypes.string).isRequired,
     onDelete: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired
   }
 
-  state = {
-    states: this.props.states,
-    currentState: null,
-    showModal: false
+  constructor(...args) {
+    super(...args);
+
+    this.state = {
+      states: this.statesFromProps(this.props),
+      currentState: null,
+      showModal: false
+    }
   }
 
-  componentWillReceiveProps = ({ states }) => this.setState({ states })
+  componentWillReceiveProps = props => this.setState({ states: this.statesFromProps(props) })
+
+  statesFromProps = ({ states, initialState, finalStates }) => states.map(state => ({
+    ...state,
+    isInitial: state.name === initialState,
+    isFinal: finalStates.indexOf(state.name) > -1
+  }))
 
   handleDelete = name => _ => this.props.onDelete(name)
 

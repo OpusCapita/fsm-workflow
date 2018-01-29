@@ -36,6 +36,7 @@ export default class Guards extends PureComponent {
         body: PropTypes.string // to be eval'd
       }))
     }).isRequired,
+    getStateLabel: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
     onSave: PropTypes.func.isRequired
@@ -150,7 +151,8 @@ export default class Guards extends PureComponent {
         to,
         event
       },
-      onClose
+      onClose,
+      getStateLabel
     } = this.props;
 
     const {
@@ -169,7 +171,7 @@ export default class Guards extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            {`Guards for transition on "${event}" from "${from}" to "${to}"`}
+            {`Guards for transition on "${event}" from "${getStateLabel(from)}" to "${getStateLabel(to)}"`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

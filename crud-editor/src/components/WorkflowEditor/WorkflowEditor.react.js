@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
 import isEqual from 'lodash/isEqual';
+import find from 'lodash/find';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
@@ -28,9 +29,9 @@ export default class WorkflowEditor extends PureComponent {
           guards: PropTypes.arrayOf(PropTypes.shape({
             body: PropTypes.string
           }))
-        })
-      }),
-      states: PropTypes.arrayOf(statePropTypes)
+        }),
+        states: PropTypes.arrayOf(statePropTypes)
+      })
     })
   }
 
@@ -53,12 +54,11 @@ export default class WorkflowEditor extends PureComponent {
   }
 
   stateFromProps = props => ({
-    schema: (props.workflow || {}).schema || {},
-    states: (props.workflow || {}).states || []
+    schema: (props.workflow || {}).schema || {}
   })
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
-  setNewState = setFunc => this.setState(setFunc)
+  setNewState = setFunc => this.setState(setFunc, _ => console.log({ state: this.state }))
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
     schema: {
@@ -117,9 +117,9 @@ export default class WorkflowEditor extends PureComponent {
   }
 
   handleDeleteState = stateName => this.setNewState(prevState => ({
-    states: prevState.states.filter(({ name }) => name !== stateName),
     schema: {
       ...prevState.schema,
+      states: prevState.schema.states.filter(({ name }) => name !== stateName),
       transitions: prevState.schema.transitions.map(({ from, to, ...rest }) => ({
         ...rest,
         from: from === stateName ? '' : from,
@@ -130,29 +130,58 @@ export default class WorkflowEditor extends PureComponent {
     }
   }))
 
-  handleEditState = ({ initialName, ...rest }) => this.setNewState(prevState => initialName ?
-    // user edited previously existed state
+  handleEditState = ({
+    initialName,
+    name,
+    description,
+    isInitial,
+    isFinal
+  }) => this.setNewState(prevState => initialName ?
+    // edited previously existed state
     ({
-      states: prevState.states.map(state => state.name === initialName ? rest : state),
       schema: {
         ...prevState.schema,
-        initialState: prevState.schema.initialState === initialName ? rest.name : prevState.schema.initialState,
-        finalStates: prevState.schema.finalStates.map(state => state === initialName ? rest.name : state),
+        states: prevState.schema.states.map(state => state.name === initialName ? { name, description } : state),
+        initialState: (initialState => isInitial ?
+          name :
+          initialState === initialName ?
+            '' :
+            initialState
+        )(prevState.schema.initialState),
+        finalStates: (fs => fs.indexOf(initialName) > -1 && isFinal === false ?
+          fs.filter(state => state !== initialName) :
+          fs.indexOf(initialName) > -1 && isFinal ? // should rename
+            fs.map(state => state === initialName ? name : state) :
+            isFinal ?
+              fs.concat(name) : // state was not already final -> should add state to finalStates
+              fs // nothing to do
+        )(prevState.schema.finalStates),
         transitions: prevState.schema.transitions.map(({ from, to, ...other }) => ({
           ...other,
-          from: from === initialName ? rest.name : from,
-          to: to === initialName ? rest.name : to
+          from: from === initialName ? name : from,
+          to: to === initialName ? name : to
         }))
       }
     }) :
     // add new state
     ({
-      states: prevState.states.concat(rest)
+      schema: {
+        ...prevState.schema,
+        states: prevState.schema.states.concat({ name, description }),
+        ...(isInitial && { initialState: name }),
+        ...(isFinal && {
+          finalStates: prevState.schema.finalStates.concat(name)
+        })
+      }
     })
   )
 
+  getStateLabel = name => (({ name, description } = {}) => description || name)(
+    find(this.state.schema.states, ({ name: stateName }) => name === stateName)
+  )
+
   render() {
-    const { schema, states } = this.state;
+    const { schema } = this.state;
 
     const { title } = this.props;
 
@@ -187,7 +216,9 @@ export default class WorkflowEditor extends PureComponent {
             >
               <Tab eventKey={1} title={(<h4>States</h4>)}>
                 <StatesTable
-                  states={states}
+                  states={schema.states}
+                  initialState={schema.initialState}
+                  finalStates={schema.finalStates}
                   onDelete={this.handleDeleteState}
                   onEdit={this.handleEditState}
                 />
@@ -195,7 +226,8 @@ export default class WorkflowEditor extends PureComponent {
               <Tab eventKey={2} title={(<h4>Transitions</h4>)}>
                 <TransitionsTable
                   transitions={schema.transitions}
-                  states={states.map(({ name }) => name)}
+                  states={schema.states.map(({ name }) => name)}
+                  getStateLabel={this.getStateLabel}
                   exampleObject={this.props.exampleObject}
                   onEditTransition={this.handleEditTransition}
                   onDeleteTransition={this.handleDeleteTransition}
@@ -204,7 +236,10 @@ export default class WorkflowEditor extends PureComponent {
               </Tab>
             </Tabs>
 
-            <EditorOutput schema={schema}/>
+            <EditorOutput
+              schema={schema}
+              getStateLabel={this.getStateLabel}
+            />
           </Col>
         </Row>
       </Grid>

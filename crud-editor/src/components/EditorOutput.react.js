@@ -4,7 +4,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 import WorkflowGraph from './WorkflowGraph';
 import CodeEditor from './CodeEditor';
 
-export default function EditorOutput({ schema }) {
+export default function EditorOutput({ schema, getStateLabel }) {
   const jsonSchema = JSON.stringify(schema, null, 2);
 
   return (
@@ -18,7 +18,7 @@ export default function EditorOutput({ schema }) {
       >
         <Tab eventKey={1} title="Graph">
           <div className="oc-fsm-crud-editor--workflow-editor__tab">
-            <WorkflowGraph schema={schema} />
+            <WorkflowGraph schema={schema} getStateLabel={getStateLabel}/>
           </div>
         </Tab>
         <Tab eventKey={2} title="JSON">
@@ -44,5 +44,6 @@ export default function EditorOutput({ schema }) {
 }
 
 EditorOutput.propTypes = {
-  schema: PropTypes.object.isRequired
+  schema: PropTypes.object.isRequired,
+  getStateLabel: PropTypes.func.isRequired
 }

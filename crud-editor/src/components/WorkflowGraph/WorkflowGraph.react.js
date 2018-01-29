@@ -5,7 +5,8 @@ import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
 
 const propTypes = {
-  schema: PropTypes.object
+  schema: PropTypes.object,
+  getStateLabel: PropTypes.func.isRequired
 };
 
 const defaultProps = {
@@ -35,19 +36,22 @@ class WorkflowGraph extends Component {
     // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
     const { transitions, initialState, finalStates } = schema;
 
+    const { getStateLabel } = this.props;
+
     let src = '';
     src += `digraph finite_state_machine {\n`;
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     // eslint-disable-next-line max-len
     src += `\tnode [shape = rect fillcolor="#b71c1c" margin="0.2,0.1" color="transparent" fontname="Helvetica" style="rounded,filled"];\n`;
-    src += `\t${finalStates.map(state => `"${state}"`).join(' ')}\n`;
+    src += `\t${finalStates.map(state => `"${getStateLabel(state)}"`).join(' ')}\n`;
     src += `\tnode [fillcolor="#14892c"];\n`;
-    src = initialState ? src + `\t"${initialState}"\n` : src;
+    src = initialState ? src + `\t"${getStateLabel(initialState)}"\n` : src;
     src += `\tnode [fillcolor="#0277bd"];\n`;
     src += transitions.
       filter(({ from, to, event }) => (from && to && event)).
-      map(({ from, to, event }) => (`\t"${from}" -> "${to}" [label = "${event}"];`)).join(`\n`);
+      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
+      join(`\n`);
     src += `}`;
 
     return src;
