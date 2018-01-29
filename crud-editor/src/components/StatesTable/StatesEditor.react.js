@@ -58,7 +58,6 @@ export default class StatesEditor extends PureComponent {
     confirmHandler: this.props.onClose
   })
 
-
   render() {
     const { existingStates } = this.props;
 

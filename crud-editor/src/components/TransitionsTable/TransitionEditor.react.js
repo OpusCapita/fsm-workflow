@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import pick from 'lodash/pick';
+import isEqual from 'lodash/isEqual';
 import {
   Button,
   Modal,
@@ -8,7 +9,9 @@ import {
   FormGroup,
   ControlLabel
 } from 'react-bootstrap';
+import withConfirmDialog from '../ConfirmDialog';
 
+@withConfirmDialog
 export default class Guards extends PureComponent {
   static propTypes = {
     transition: PropTypes.shape({
@@ -20,7 +23,8 @@ export default class Guards extends PureComponent {
     onSave: PropTypes.func.isRequired,
     index: PropTypes.number,
     states: PropTypes.arrayOf(PropTypes.string),
-    getStateLabel: PropTypes.func.isRequired
+    getStateLabel: PropTypes.func.isRequired,
+    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
   }
 
   state = {
@@ -50,18 +54,25 @@ export default class Guards extends PureComponent {
     this.props.onSave(result)
   }
 
-  // hasUnsavedChanges = _ => {
-  //   const { transition } = this.props;
+  hasUnsavedChanges = _ => {
+    const { transition } = this.props;
 
-  //   const initialTransition = pick(transition, ['event', 'from', 'to']);
+    const initialTransition = pick(transition, ['event', 'from', 'to']);
 
-  //   const { event, from, to } = this.state;
+    const { event, from, to } = this.state;
 
+    return transition ?
+      !isEqual(initialTransition, { event, from, to }) :
+      event || from || to
+  }
 
-  // }
+  handleClose = this.props.triggerDialog({
+    showDialog: this.hasUnsavedChanges,
+    confirmHandler: this.props.onClose
+  })
 
   render() {
-    const { onClose, states, getStateLabel } = this.props;
+    const { states, getStateLabel } = this.props;
 
     const {
       from,
@@ -73,7 +84,7 @@ export default class Guards extends PureComponent {
     return (
       <Modal
         show={true}
-        onHide={onClose}
+        onHide={this.handleClose}
         dialogClassName="oc-fsm-crud-editor--modal"
         backdrop='static'
       >
@@ -135,7 +146,7 @@ export default class Guards extends PureComponent {
           >
             Ok
           </Button>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={this.handleClose}>Close</Button>
         </Modal.Footer>
       </Modal>
     )
