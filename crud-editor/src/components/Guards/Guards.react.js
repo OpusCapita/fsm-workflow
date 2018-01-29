@@ -16,7 +16,7 @@ const evaluateCode = ({ code, arg }) => {
   try {
     const result = (({ object }) => eval(code))(arg); // eslint-disable-line no-eval
     return typeof result === 'boolean' ?
-      result :
+      String(result) :
       new Error(
         `Function returned:
         ${String(result)} of type '${typeof result}',
@@ -105,12 +105,14 @@ export default class Guards extends PureComponent {
 
     const object = JSON.parse(this.state.exampleObject);
 
-    const result = evaluateCode({
-      code,
-      arg: {
-        object
-      }
-    })
+    const result = code ?
+      evaluateCode({
+        code,
+        arg: {
+          object
+        }
+      }) :
+      null;
 
     const isError = result instanceof Error;
 
@@ -120,9 +122,7 @@ export default class Guards extends PureComponent {
           {
             ...guard,
             isError,
-            result: code ? // guard body not empty?
-              isError ? result.message : String(result) :
-              ''
+            result: isError ? result.message : result
           } :
           guard
       )
@@ -155,7 +155,7 @@ export default class Guards extends PureComponent {
     guards: prevState.guards.map(
       ({ body, ...rest }, i) => ({ ...rest, body: i === guardIndex ? '' : body })
     )
-  }))
+  }), (this.state.autoplay && this.handleEvalCode(guardIndex)))
 
   render() {
     const {
