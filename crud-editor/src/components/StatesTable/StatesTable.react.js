@@ -57,21 +57,29 @@ export default class StatesTable extends PureComponent {
     const { states } = this.state;
 
     return this.props.triggerDialog({
-      showDialog: _ => statesInTransitions.indexOf(name) > -1,
-      confirmHandler: _ => this.props.onDelete({ name, sideEffect: this._deleteStateSideEffect }),
-      BodyComponent: _ => (
-        <DeleteStateDialogBody
-          states={states}
-          stateName={name}
-          onSelect={
-            ({ index, alternative }) => {
-              this._deleteStateSideEffect = {
-                name: index === 0 ? DELETE_STATE_TRANSITIONS : SWAP_STATE_IN_TRANSITIONS,
-                alternative
+      confirmHandler: _ => this.props.onDelete({
+        name,
+        ...(statesInTransitions.indexOf(name) > -1 && { sideEffect: this._deleteStateSideEffect })
+      }),
+      ...(
+        statesInTransitions.indexOf(name) > -1 ? {
+          BodyComponent: _ => (
+            <DeleteStateDialogBody
+              states={states}
+              stateName={name}
+              onSelect={
+                ({ index, alternative }) => {
+                  this._deleteStateSideEffect = {
+                    name: index === 0 ? DELETE_STATE_TRANSITIONS : SWAP_STATE_IN_TRANSITIONS,
+                    alternative
+                  }
+                }
               }
-            }
-          }
-        />
+            />
+          )
+        } : {
+          message: `Do you really want to delete this state?`
+        }
       )
     })
   }

@@ -9,7 +9,9 @@ import {
 import { isDef } from '../utils';
 import Guards from '../Guards';
 import TransitionEditor from './TransitionEditor.react';
+import withConfirmDialog from '../ConfirmDialog';
 
+@withConfirmDialog
 export default class TransitionsTable extends PureComponent {
   static propTypes = {
     transitions: PropTypes.arrayOf(PropTypes.shape({
@@ -26,7 +28,8 @@ export default class TransitionsTable extends PureComponent {
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
-    exampleObject: PropTypes.object
+    exampleObject: PropTypes.object,
+    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
   }
 
   state = {
@@ -35,7 +38,10 @@ export default class TransitionsTable extends PureComponent {
     currentTransition: null
   }
 
-  handleDelete = index => _ => this.props.onDeleteTransition(index)
+  handleDelete = index => this.props.triggerDialog({
+    confirmHandler: _ => this.props.onDeleteTransition(index),
+    message: `Do you really want to delete this transition?`
+  })
 
   handleModal = index => type => _ => this.setState({
     showModal: true,
@@ -79,9 +85,7 @@ export default class TransitionsTable extends PureComponent {
         </td>
         <td className='text-right'>
           <ButtonGroup bsSize="sm">
-            <Button
-              onClick={this.handleModal(index)('edit')}
-            >
+            <Button onClick={this.handleModal(index)('edit')}>
               <Glyphicon glyph='edit'/>
               {'\u2000'}
               Edit
@@ -92,14 +96,10 @@ export default class TransitionsTable extends PureComponent {
             >
               Guard
             </Button>
-            <Button
-              disabled={true}
-            >
+            <Button disabled={true}>
               Actions
             </Button>
-            <Button
-              onClick={this.handleDelete(index)}
-            >
+            <Button onClick={this.handleDelete(index)}>
               <Glyphicon glyph='trash'/>
               {'\u2000'}
               Delete

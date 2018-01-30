@@ -160,7 +160,7 @@ export default class WorkflowEditor extends PureComponent {
 
   handleSave = _ => this.props.onSave(this.createJsonOutput())
 
-  handleDeleteState = ({ name: stateName, sideEffect }) => {
+  handleDeleteState = ({ name: stateName, sideEffect = {} }) => {
     const { name: sideEffectName, alternative } = sideEffect;
 
     return this.setNewState(prevState => ({
