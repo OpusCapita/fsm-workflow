@@ -17,64 +17,86 @@
   title="Invoice"
 
   workflow={{
-    schema: {
-      name: "Approval",
-      initialState: "open",
-      finalStates: ["approved"],
-      objectStateFieldName: "status",
-      states: [
-        {
-          name: 'open',
-          description: 'Open'
-        },
-        {
-          name: 'validated',
-          description: 'Validated'
-        },
-        {
-          name: 'approved',
-          description: 'Approved'
-        }
-      ],
-      transitions: [
-        {
-          event: "validate",
-          from: "open",
-          to: "validated",
-          guards: [
-            {
-              name: 'EUR-only'
-            }
-          ]
-        },
-        {
-          event: "auto-approve",
-          from: "open",
-          to: "approved",
-          guards: [
-            {
-              name: 'netAmount-constraint'
-            }
-          ]
-        },
-        {
-          event: "approve",
-          from: "validated",
-          to: "approved"
-        }
-      ]
-    },
-    guards: [
+  "schema": {
+    "name": "Approval",
+    "initialState": "created",
+    "finalStates": [
+      "waitingForPayment",
+      "requiresReview",
+      "closed"
+    ],
+    "objectStateFieldName": "status",
+    "states": [
       {
-        name: 'netAmount-constraint',
-        body: 'object.netAmount < 100'
+        "name": "created",
+        "description": "Created"
       },
       {
-        name: 'EUR-only',
-        body: "object.currencyId === 'EUR'"
+        "name": "valid",
+        "description": "Valid"
+      },
+      {
+        "name": "requiresReview",
+        "description": "Requires Review"
+      },
+      {
+        "name": "closed",
+        "description": "Closed"
+      },
+      {
+        "name": "ready",
+        "description": "Ready to be paid"
+      },
+      {
+        "name": "waitingForPayment",
+        "description": "WaitingForPayment"
+      }
+    ],
+    "transitions": [
+      {
+        "event": "valid",
+        "from": "created",
+        "to": "valid"
+      },
+      {
+        "event": "not valid",
+        "from": "created",
+        "to": "requiresReview"
+      },
+      {
+        "event": "is internal or prepaid",
+        "from": "valid",
+        "to": "closed"
+      },
+      {
+        "event": "approve",
+        "from": "valid",
+        "to": "ready",
+        "guards": [
+          {
+            "name": "guard_04403761948612651"
+          }
+        ]
+      },
+      {
+        "event": "ERP approved",
+        "from": "ready",
+        "to": "waitingForPayment"
+      },
+      {
+        "event": "ERP declined",
+        "from": "ready",
+        "to": "closed"
       }
     ]
-  }}
+  },
+  "guards": [
+    {
+      "name": "guard_04403761948612651",
+      "body": "object.netAmount < 1000000"
+    }
+  ]
+}}
 
   exampleObject={{
     "invoiceNo": "1111",
