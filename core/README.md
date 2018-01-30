@@ -181,29 +181,29 @@ machine.start(object).then(({object}) => {
 ### API
 
 ```javascript
-var machineDefinition = new MachineDefinition({schema, guards, actions})
+var machineDefinition = new MachineDefinition({ schema, guards, actions })
 // register workflow
 var machine = new Machine(machineDefinition, context);
 
 // start/initialize machine/workflow
-machine.start({object})
+machine.start({ objec t})
 
 // returns a list of available transitions: {event, from, to, request..}, e.g. event
 // request is used to pass parameters to guards for some dynamic calculation, e.g. when event availability depends 
 // on current user information as roles and etc. 
-machine.availableTransitions({object})
+machine.availableTransitions({ object })
 // returns a list of available automatic transitions: {event, from, to, ..}, e.g. event
 // if machine schema is adequate then there should be not more than 1 such transition
-machine.availableAutomaticTransitions({})
+machine.availableAutomaticTransitions({ object })
 
-// send 'event' and pass addition 'request' data that is posted by user/app
+// sends 'event' and pass addition 'request' parameter that is posted by user/app
 // returns promise, in case of successful transition then function will be called
-// with one parameter that is an JSON with the following structure:
+// with one parameter { object }, where
 // - object - object in new state (the same reference that is passed as parameter)
 machine.sendEvent({object, event, request})
 
 machine.currentState({ object })     // gets current state
-machine.is({ object, state})         // is object in state
+machine.is({ object, state })         // is object in state
 machine.isInFinalState({ object })   // returns true iff object is in one of final states
 machine.can({ object, event })       // whether event is available
 machine.cannot({ object, event })    // whether event is not available
