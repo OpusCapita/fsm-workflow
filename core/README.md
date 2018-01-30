@@ -188,7 +188,7 @@ var machineDefinition = new MachineDefinition({ schema, guards, actions })
 var machine = new Machine(machineDefinition, context);
 
 // start/initialize process inside the workflow/machine
-machine.start({ objec t})
+machine.start({ object })
 
 // figure out which transitions are available
 // methid returns an array of available transitions where each of them is an object of the following structure: 
