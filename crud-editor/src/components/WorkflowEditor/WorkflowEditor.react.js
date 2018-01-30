@@ -10,6 +10,10 @@ import EditorOutput from '../EditorOutput.react';
 import { isDef } from '../utils';
 import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
+import {
+  DELETE_STATE_TRANSITIONS,
+  SWAP_STATE_IN_TRANSITIONS
+} from '../StatesTable/StatesTable.react';
 
 export default class WorkflowEditor extends PureComponent {
   static propTypes = {
@@ -156,19 +160,29 @@ export default class WorkflowEditor extends PureComponent {
 
   handleSave = _ => this.props.onSave(this.createJsonOutput())
 
-  handleDeleteState = stateName => this.setNewState(prevState => ({
-    schema: {
-      ...prevState.schema,
-      states: prevState.schema.states.filter(({ name }) => name !== stateName),
-      transitions: prevState.schema.transitions.map(({ from, to, ...rest }) => ({
-        ...rest,
-        from: from === stateName ? '' : from,
-        to: to === stateName ? '' : to
-      })),
-      initialState: prevState.schema.initialState === stateName ? '' : prevState.schema.initialState,
-      finalStates: prevState.schema.finalStates.filter(state => state !== stateName)
-    }
-  }))
+  handleDeleteState = ({ name: stateName, sideEffect }) => {
+    const { name: sideEffectName, alternative } = sideEffect;
+
+    return this.setNewState(prevState => ({
+      schema: {
+        ...prevState.schema,
+        states: prevState.schema.states.filter(({ name }) => name !== stateName),
+        ...(sideEffectName && {
+          transitions: sideEffectName === DELETE_STATE_TRANSITIONS ?
+            prevState.schema.transitions.filter(({ from, to }) => !(from === stateName || to === stateName)) :
+            sideEffectName === SWAP_STATE_IN_TRANSITIONS ?
+              prevState.schema.transitions.map(({ from, to, ...rest }) => ({
+                ...rest,
+                from: from === stateName ? alternative : from,
+                to: to === stateName ? alternative : to
+              })) :
+              prevState.schema.transitions
+        }),
+        initialState: prevState.schema.initialState === stateName ? '' : prevState.schema.initialState,
+        finalStates: prevState.schema.finalStates.filter(state => state !== stateName)
+      }
+    }))
+  }
 
   handleEditState = ({
     initialName,
@@ -257,6 +271,16 @@ export default class WorkflowEditor extends PureComponent {
               <Tab eventKey={1} title={(<h4>States</h4>)}>
                 <StatesTable
                   states={schema.states}
+                  statesInTransitions={
+                    schema.transitions.reduce(
+                      (involvedStates, transition) => ['from', 'to'].reduce(
+                        (acc, key) => involvedStates.indexOf(transition[key]) === -1 ?
+                          acc.concat(transition[key]) :
+                          acc
+                        , involvedStates
+                      ), []
+                    )
+                  }
                   initialState={schema.initialState}
                   finalStates={schema.finalStates}
                   onDelete={this.handleDeleteState}

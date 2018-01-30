@@ -3,13 +3,15 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
 const common = require('./webpack.config.common');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(common, {
   plugins: [
     new HtmlWebpackPlugin({
       template: '../www/index.html',
     }),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
+    // new BundleAnalyzerPlugin()
   ],
   entry: [
     '../www/index-page.js'

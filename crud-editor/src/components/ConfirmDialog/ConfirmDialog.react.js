@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
 
+const returnTrue = _ => true;
+
 export default WrappedComponent => class ConfirmDialog extends PureComponent {
   static propTypes = {
     textCancel: PropTypes.string,
@@ -10,7 +12,6 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
   }
 
   static defaultProps = {
-    showDialog: _ => true,
     textCancel: 'Cancel',
     textConfirm: 'Ok'
   }
@@ -54,7 +55,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
       textCancel
     } = this.props;
 
-    const { show, title, message } = this.state;
+    const { show, title, message, BodyComponent } = this.state;
 
     return (
       <Modal show={show} onHide={this.handleClose}>
@@ -62,7 +63,11 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {message}
+          {
+            BodyComponent ?
+              <BodyComponent/> :
+              message
+          }
         </Modal.Body>
         <Modal.Footer>
           <div className="text-right">
@@ -83,12 +88,19 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     )
   }
 
-  triggerDialog = ({ showDialog, confirmHandler, title, message }) => event => showDialog() ?
+  triggerDialog = ({
+    showDialog = returnTrue,
+    confirmHandler,
+    title,
+    message,
+    BodyComponent
+  }) => event => showDialog() ?
     this.setState({
       show: true,
       confirmHandler: _ => confirmHandler(event),
       ...(title && { title }),
       ...(message && { message }),
+      ...(BodyComponent && { BodyComponent }),
     }) :
     confirmHandler(event)
 

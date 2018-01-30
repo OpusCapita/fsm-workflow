@@ -10,16 +10,23 @@ import {
 } from 'react-bootstrap';
 import statePropTypes from './statePropTypes';
 import StatesEditor from './StatesEditor.react';
-import './StatesTable.less';
 import { isDef } from '../utils';
+import withConfirmDialog from '../ConfirmDialog';
+import DeleteStateDialogBody from './DeleteStateDialogBody.react';
 
+export const DELETE_STATE_TRANSITIONS = 'deleteStateTransitions';
+export const SWAP_STATE_IN_TRANSITIONS = 'swapStateInTransitions';
+
+@withConfirmDialog
 export default class StatesTable extends PureComponent {
   static propTypes = {
     states: PropTypes.arrayOf(statePropTypes),
     initialState: PropTypes.string.isRequired,
     finalStates: PropTypes.arrayOf(PropTypes.string).isRequired,
     onDelete: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired
+    onEdit: PropTypes.func.isRequired,
+    statesInTransitions: PropTypes.arrayOf(PropTypes.string),
+    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
   }
 
   constructor(...args) {
@@ -40,7 +47,34 @@ export default class StatesTable extends PureComponent {
     isFinal: finalStates.indexOf(state.name) > -1
   }))
 
-  handleDelete = name => _ => this.props.onDelete(name)
+  _deleteStateSideEffect = {
+    name: DELETE_STATE_TRANSITIONS
+  }
+
+  handleDelete = name => {
+    const { statesInTransitions } = this.props;
+
+    const { states } = this.state;
+
+    return this.props.triggerDialog({
+      showDialog: _ => statesInTransitions.indexOf(name) > -1,
+      confirmHandler: _ => this.props.onDelete({ name, sideEffect: this._deleteStateSideEffect }),
+      BodyComponent: _ => (
+        <DeleteStateDialogBody
+          states={states}
+          stateName={name}
+          onSelect={
+            ({ index, alternative }) => {
+              this._deleteStateSideEffect = {
+                name: index === 0 ? DELETE_STATE_TRANSITIONS : SWAP_STATE_IN_TRANSITIONS,
+                alternative
+              }
+            }
+          }
+        />
+      )
+    })
+  }
 
   handleEdit = name => _ => this.setState({
     currentState: name,
