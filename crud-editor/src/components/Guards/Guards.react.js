@@ -13,6 +13,7 @@ import CodeEditor from '../CodeEditor';
 import { uidFor } from '../utils';
 import './Guards.less';
 import withConfirmDialog from '../ConfirmDialog';
+import ErrorLabel from '../ErrorLabel.react';
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -162,11 +163,6 @@ export default class Guards extends PureComponent {
   }), (this.state.autoplay && this.handleEvalCode(guardIndex)))
 
   hasUnsavedChanges = _ => {
-    console.log({
-      props: this.props.transition.guards,
-      state: this.state.guards
-    })
-
     const initialGuards = this.props.transition.guards;
 
     const currentGuards = this.state.guards.map(({ name, body }) => ({ name, body }));
@@ -243,6 +239,7 @@ export default class Guards extends PureComponent {
                           }}
                           onClick={this.handleCleanGuardBody(guardIndex)}
                         />
+                        <ErrorLabel {...(guard.isError && { error: guard.result })}/>
                       </Col>
                     </Row>
                     <Row>
@@ -260,7 +257,7 @@ export default class Guards extends PureComponent {
                         </div>
                         <CodeEditor
                           className="output-code"
-                          value={guard.result || ''}
+                          value={(!guard.isError && guard.result) || ''}
                           options={{
                             theme: "eclipse",
                             lineWrapping: true,

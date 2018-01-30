@@ -16,12 +16,12 @@ export default function EditorOutput({ schema, getStateLabel, createJsonOutput }
         mountOnEnter={true}
         unmountOnExit={true}
       >
-        <Tab eventKey={1} title="Graph">
+        <Tab eventKey={1} title={(<h4>Graph</h4>)}>
           <div className="oc-fsm-crud-editor--workflow-editor__tab">
             <WorkflowGraph schema={schema} getStateLabel={getStateLabel}/>
           </div>
         </Tab>
-        <Tab eventKey={2} title="JSON">
+        <Tab eventKey={2} title={(<h4>JSON</h4>)}>
           <div className="oc-fsm-crud-editor--workflow-editor__tab">
             <CodeEditor
               value={jsonSchema}

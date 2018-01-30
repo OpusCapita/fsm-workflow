@@ -12,6 +12,7 @@ import {
 } from 'react-bootstrap';
 import statePropTypes from './statePropTypes';
 import withConfirmDialog from '../ConfirmDialog';
+import ErrorLabel from '../ErrorLabel.react';
 
 @withConfirmDialog
 export default class StatesEditor extends PureComponent {
@@ -69,6 +70,8 @@ export default class StatesEditor extends PureComponent {
       initialName
     } = this.state;
 
+    const duplicateName = !!find(existingStates, existingName => existingName === name && initialName !== existingName);
+
     return (
       <Modal
         show={true}
@@ -86,7 +89,7 @@ export default class StatesEditor extends PureComponent {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FormGroup controlId='stateName'>
+          <FormGroup controlId='stateName' style={{ marginBottom: 0 }}>
             <ControlLabel>Name</ControlLabel>
             <FormControl
               placeholder='Enter state name'
@@ -94,6 +97,7 @@ export default class StatesEditor extends PureComponent {
               value={name}
               onChange={this.handleChangeField('name')}
             />
+            <ErrorLabel {...(duplicateName && { error: `This state already exists` })}/>
           </FormGroup>
           <FormGroup controlId="stateDescription">
             <ControlLabel>Description</ControlLabel>
@@ -121,10 +125,7 @@ export default class StatesEditor extends PureComponent {
           <Button
             bsStyle='primary'
             onClick={this.handleSave}
-            disabled={
-              !name ||
-              !!find(existingStates, existingName => existingName === name && initialName !== existingName)
-            }
+            disabled={!name || duplicateName}
           >
             Ok
           </Button>
