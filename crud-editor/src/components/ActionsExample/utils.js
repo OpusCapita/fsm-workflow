@@ -6,7 +6,7 @@ const evaluateArgs = (actionArgs, commonArgs) => ({
   ...actionArgs.reduce((customArgsObject, { name, type, value }) => ({
     ...customArgsObject,
     [name]: type === 'pathExpression' ?
-      get(commonArgs[value.varName], value.path) :
+      get(commonArgs[value.variable], value.path) :
       value
   }), {})
 })

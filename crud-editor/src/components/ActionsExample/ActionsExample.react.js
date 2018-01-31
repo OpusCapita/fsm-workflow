@@ -34,8 +34,8 @@ available params: \${Object.keys(args).join(', ')}
           {
             name: 'subjectArg',
             value: {
-              varName: 'object',
-              path: 'supplierName'
+              variable: 'object',
+              path: 'supplier.name'
             },
             type: 'pathExpression'
           }
@@ -44,7 +44,9 @@ available params: \${Object.keys(args).join(', ')}
     ],
     commonArgs: {
       object: {
-        supplierName: 'Phillips'
+        supplier: {
+          name: 'Chuck'
+        }
       },
       from: 'validated',
       to: 'approved'
