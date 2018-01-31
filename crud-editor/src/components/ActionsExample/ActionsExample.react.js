@@ -10,8 +10,6 @@ export default class ActionsExample extends PureComponent {
     actions: {
       'sendMail': {
         body: `
-          const { object, from, to, sendTo, subjectArg } = args;
-
           return (\`
               Received args:\n
               sendTo: \${sendTo}\n
@@ -19,7 +17,8 @@ export default class ActionsExample extends PureComponent {
               object: \${JSON.stringify(object)}\n
               from: \${from}\n
               to: \${to}\n\n
-              Subject will be: "Hello from \${subjectArg}"
+              Subject will be: "Hello from \${subjectArg}"\n
+              available params: \${Object.keys(args).join(', ')}
           \`)
         `
       }
@@ -65,7 +64,7 @@ export default class ActionsExample extends PureComponent {
       const result = invokeAction(actions, currentAction, actionCalls, commonArgs);
       this.setState({ result: String(result) })
     } catch (err) {
-      console.log(err.message)
+      console.log(err)
     }
   }
 
