@@ -10,16 +10,16 @@ export default class ActionsExample extends PureComponent {
     actions: {
       'sendMail': {
         body: `
-          return (\`
-              Received args:\n
-              sendTo: \${sendTo}\n
-              subjectArg: \${subjectArg}\n
-              object: \${JSON.stringify(object)}\n
-              from: \${from}\n
-              to: \${to}\n\n
-              Subject will be: "Hello from \${subjectArg}"\n
-              available params: \${Object.keys(args).join(', ')}
-          \`)
+return (\`
+Received args:\n
+sendTo: \${sendTo}\n
+subjectArg: \${subjectArg}\n
+object: \${JSON.stringify(object)}\n
+from: \${from}\n
+to: \${to}\n
+Subject will be: "Hello from \${subjectArg}"\n
+available params: \${Object.keys(args).join(', ')}
+\`)
         `
       }
     },
@@ -112,7 +112,7 @@ export default class ActionsExample extends PureComponent {
     return (
       <div>
         <Col sm={6}>
-          <h5>Action body</h5>
+          <h5>Action function body</h5>
           <CodeEditor
             value={actions[currentAction].body}
             className="action-code"
@@ -136,7 +136,7 @@ export default class ActionsExample extends PureComponent {
           />
         </Col>
         <Col sm={6}>
-          <h5>Action call</h5>
+          <h5>Action invocation definition</h5>
           <CodeEditor
             value={
               JSON.stringify(find(actionCalls, ({ name }) => name === currentAction), null, 2)
@@ -150,7 +150,7 @@ export default class ActionsExample extends PureComponent {
             }}
             onChange={this.handleChangeActionCall}
           />
-          <h5>Common args</h5>
+          <h5>Workflow implicit arguments</h5>
           <CodeEditor
             value={
               JSON.stringify(commonArgs, null, 2)
