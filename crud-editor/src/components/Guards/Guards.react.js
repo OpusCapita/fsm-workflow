@@ -33,16 +33,11 @@ const evaluateCode = ({ code, arg }) => {
 @withConfirmDialog
 export default class Guards extends PureComponent {
   static propTypes = {
-    transition: PropTypes.shape({
-      from: PropTypes.string,
-      to: PropTypes.string,
-      event: PropTypes.string,
-      guards: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string,
-        body: PropTypes.string // to be eval'd
-      }))
-    }).isRequired,
-    getStateLabel: PropTypes.func.isRequired,
+    guards: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      body: PropTypes.string // to be eval'd
+    })).isRequired,
+    title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
     onSave: PropTypes.func.isRequired,
@@ -58,7 +53,7 @@ export default class Guards extends PureComponent {
   }
 
   state = {
-    guards: this.props.transition.guards || [],
+    guards: this.props.guards || [],
     exampleObject: JSON.stringify(this.props.exampleObject, null, 2),
     autoplay: true
   }
@@ -163,7 +158,7 @@ export default class Guards extends PureComponent {
   }), (this.state.autoplay && this.handleEvalCode(guardIndex)))
 
   hasUnsavedChanges = _ => {
-    const initialGuards = this.props.transition.guards;
+    const initialGuards = this.props.guards;
 
     const currentGuards = this.state.guards.map(({ name, body }) => ({ name, body }));
 
@@ -178,14 +173,7 @@ export default class Guards extends PureComponent {
   })
 
   render() {
-    const {
-      transition: {
-        from,
-        to,
-        event
-      },
-      getStateLabel
-    } = this.props;
+    const { title } = this.props;
 
     const {
       guards,
@@ -203,7 +191,7 @@ export default class Guards extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            {`Guards for transition on "${event}" from "${getStateLabel(from)}" to "${getStateLabel(to)}"`}
+            {title}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

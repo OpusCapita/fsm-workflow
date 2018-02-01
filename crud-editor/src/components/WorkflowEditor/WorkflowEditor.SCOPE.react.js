@@ -5,6 +5,8 @@ import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 export default
 @showroomScopeDecorator
 class WorkflowEditorScope extends Component {
+  sendMailFunctionBody = `console.log('Hellooooooo')`
+
   render() {
     return (
       <div>

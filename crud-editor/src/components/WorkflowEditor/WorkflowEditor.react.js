@@ -40,6 +40,11 @@ export default class WorkflowEditor extends PureComponent {
       guards: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string.isRequired,
         body: PropTypes.string.isRequired
+      })),
+      actions: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        body: PropTypes.string.isRequired,
+        argumentsSchema: PropTypes.object
       }))
     })
   }
@@ -137,6 +142,8 @@ export default class WorkflowEditor extends PureComponent {
   }
 
   handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards })
+
+  handleSaveTransitionActions = index => actions => this.handleEditTransition({ index, actions })
 
   createJsonOutput = _ => {
     const { schema } = this.state;
@@ -238,7 +245,7 @@ export default class WorkflowEditor extends PureComponent {
   render() {
     const { schema } = this.state;
 
-    const { title } = this.props;
+    const { title, workflow: { actions } } = this.props;
 
     return (
       <Grid>
@@ -292,14 +299,16 @@ export default class WorkflowEditor extends PureComponent {
                 <TransitionsTable
                   transitions={schema.transitions}
                   states={schema.states.map(({ name }) => name)}
+                  actions={actions}
                   getStateLabel={this.getStateLabel}
                   exampleObject={this.props.exampleObject}
                   onEditTransition={this.handleEditTransition}
                   onDeleteTransition={this.handleDeleteTransition}
                   onSaveGuards={this.handleSaveTransitionGuards}
+                  onSaveActions={this.handleSaveTransitionActions}
                 />
               </Tab>
-              <Tab eventKey={3} title={(<h4>Actions Example</h4>)}>
+              <Tab eventKey={3} title={(<h4>Actions Dev Playground</h4>)}>
                 <ActionsExample/>
               </Tab>
             </Tabs>

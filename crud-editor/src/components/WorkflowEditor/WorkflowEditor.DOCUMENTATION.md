@@ -33,6 +33,21 @@
           {
             "name": "guard_15486021085119572"
           }
+        ],
+        actions: [
+          {
+            name: 'sendMail',
+            arguments: [
+              {
+                name: 'fromAddress',
+                value: 'support@client.com'
+              },
+              {
+                name: 'greeting',
+                value: 'Buon jorno'
+              }
+            ]
+          }
         ]
       },
       {
@@ -162,6 +177,26 @@
       "name": "guard_15486021085119572",
       "body": "object.netAmount > 0"
     }
+  ],
+  actions: [
+    {
+      name: 'sendMail',
+      body: _scope.sendMailFunctionBody,
+      argumentsSchema: {
+        "title": "sendMail arguments schema",
+        "type": "object",
+        "properties": {
+          "fromAddress": {
+            "type": "string"
+          },
+          "greeting": {
+            "type": "string"
+          }
+        },
+        "required": ["fromAddress'", "greeting"]
+      }
+    }
+
   ]
 }}
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Tabs, Tab } from 'react-bootstrap'; //
+// import { Tabs, Tab } from 'react-bootstrap';
 import WorkflowGraph from './WorkflowGraph';
 // import CodeEditor from './CodeEditor';
 

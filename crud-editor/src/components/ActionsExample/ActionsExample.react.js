@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import find from 'lodash/find';
-import { Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import CodeEditor from '../CodeEditor';
 import './ActionsExample.less';
 import { invokeAction } from './utils';
@@ -111,60 +111,68 @@ available params: \${Object.keys(args).join(', ')}
 
     return (
       <div>
-        <Col sm={6}>
-          <h5>Action function body</h5>
-          <CodeEditor
-            value={actions[currentAction].body}
-            className="action-code"
-            options={{
-              mode: "javascript",
-              lineNumbers: true,
-              theme: "eclipse",
-              placeholder: `Action body`
-            }}
-            onChange={this.handleChangeActionBody}
-          />
-          <h5>Result</h5>
-          <CodeEditor
-            value={result || ''}
-            className="action-results"
-            options={{
-              mode: "javascript",
-              theme: "eclipse",
-              readOnly: 'nocursor'
-            }}
-          />
-        </Col>
-        <Col sm={6}>
-          <h5>Action invocation definition</h5>
-          <CodeEditor
-            value={
-              JSON.stringify(find(actionCalls, ({ name }) => name === currentAction), null, 2)
-            }
-            className="action-code"
-            options={{
-              mode: "javascript",
-              lineNumbers: true,
-              theme: "eclipse",
-              placeholder: `Action body`
-            }}
-            onChange={this.handleChangeActionCall}
-          />
-          <h5>Implicit action arguments (passed via sendEvent)</h5>
-          <CodeEditor
-            value={
-              JSON.stringify(commonArgs, null, 2)
-            }
-            className="action-code"
-            options={{
-              mode: "javascript",
-              lineNumbers: true,
-              theme: "eclipse",
-              placeholder: `Action body`
-            }}
-            onChange={this.handleChangeCommonArgs}
-          />
-        </Col>
+        <Row>
+          <Col sm={6}>
+            <h5>Action function body</h5>
+            <CodeEditor
+              value={actions[currentAction].body}
+              className="action-code"
+              options={{
+                mode: "javascript",
+                lineNumbers: true,
+                theme: "eclipse",
+                placeholder: `Action body`
+              }}
+              onChange={this.handleChangeActionBody}
+            />
+          </Col>
+          <Col sm={6}>
+            <h5>Action invocation definition</h5>
+            <CodeEditor
+              value={
+                JSON.stringify(find(actionCalls, ({ name }) => name === currentAction), null, 2)
+              }
+              className="action-code"
+              options={{
+                mode: "javascript",
+                lineNumbers: true,
+                theme: "eclipse",
+                placeholder: `Action body`
+              }}
+              onChange={this.handleChangeActionCall}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={6}>
+            <h5>Result</h5>
+            <CodeEditor
+              value={result || ''}
+              className="action-results"
+              options={{
+                mode: "javascript",
+                theme: "eclipse",
+                readOnly: 'nocursor'
+              }}
+            />
+          </Col>
+          <Col sm={6}>
+            <h5>Implicit action arguments (passed via sendEvent)</h5>
+            <CodeEditor
+              value={
+                JSON.stringify(commonArgs, null, 2)
+              }
+              className="action-code"
+              options={{
+                mode: "javascript",
+                lineNumbers: true,
+                theme: "eclipse",
+                placeholder: `Action body`
+              }}
+              onChange={this.handleChangeCommonArgs}
+            />
+          </Col>
+        </Row>
       </div>
     )
   }

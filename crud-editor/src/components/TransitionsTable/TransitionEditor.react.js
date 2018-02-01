@@ -12,7 +12,7 @@ import {
 import withConfirmDialog from '../ConfirmDialog';
 
 @withConfirmDialog
-export default class Guards extends PureComponent {
+export default class TransitionEditor extends PureComponent {
   static propTypes = {
     transition: PropTypes.shape({
       from: PropTypes.string,

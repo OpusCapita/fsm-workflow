@@ -8,6 +8,7 @@ import {
 } from 'react-bootstrap';
 import { isDef } from '../utils';
 import Guards from '../Guards';
+import Actions from '../Actions';
 import TransitionEditor from './TransitionEditor.react';
 import withConfirmDialog from '../ConfirmDialog';
 
@@ -21,15 +22,24 @@ export default class TransitionsTable extends PureComponent {
       guards: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string,
         body: PropTypes.string
+      })),
+      actions: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        arguments: PropTypes.arrayOf(PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          value: PropTypes.any
+        }))
       }))
     })),
     states: PropTypes.arrayOf(PropTypes.string),
+    actions: PropTypes.arrayOf(PropTypes.object),
     getStateLabel: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
+    onSaveActions: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
-    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
+    triggerDialog: PropTypes.func.isRequired, // injected by withConfirmDialog
   }
 
   state = {
@@ -60,13 +70,19 @@ export default class TransitionsTable extends PureComponent {
     this.props.onSaveGuards(index)(guards);
   }
 
+  handleSaveActions = index => actions => {
+    console.log('tt handleSaveActions', { index, actions })
+    this.handleCloseModal();
+    this.props.onSaveActions(index)(actions);
+  }
+
   handleSaveTransition = (...args) => {
     this.handleCloseModal();
     this.props.onEditTransition(...args)
   }
 
   render() {
-    const { transitions, states, getStateLabel } = this.props;
+    const { transitions, states, getStateLabel, actions } = this.props;
 
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr key={index}>
@@ -96,7 +112,10 @@ export default class TransitionsTable extends PureComponent {
             >
               Guard
             </Button>
-            <Button disabled={true}>
+            <Button
+              onClick={this.handleModal(index)('action')}
+              disabled={!(from && to && event)}
+            >
               Actions
             </Button>
             <Button onClick={this.handleDelete(index)}>
@@ -120,26 +139,55 @@ export default class TransitionsTable extends PureComponent {
         transition = transitions[currentTransition];
       }
 
-      modal = modalType === 'guard' ?
-        (
-          <Guards
-            transition={transition}
-            getStateLabel={getStateLabel}
-            onClose={this.handleCloseModal}
-            onSave={this.handleSaveGuards(currentTransition)}
-            exampleObject={this.props.exampleObject}
-          />
-        ) :
-        (
-          <TransitionEditor
-            transition={transition}
-            states={states}
-            getStateLabel={getStateLabel}
-            onSave={this.handleSaveTransition}
-            onClose={this.handleCloseModal}
-            index={currentTransition}
-          />
-        )
+      switch (modalType) {
+        case 'guard':
+          modal = (
+            <Guards
+              guards={transition.guards}
+              title={`Guards for transition on "${
+                transition.event
+              }" from "${
+                getStateLabel(transition.from)
+              }" to "${
+                getStateLabel(transition.to)
+              }"`}
+              onClose={this.handleCloseModal}
+              onSave={this.handleSaveGuards(currentTransition)}
+              exampleObject={this.props.exampleObject}
+            />
+          );
+          break;
+        case 'action':
+          modal = (
+            <Actions
+              transition={transition}
+              title={`Actions for transition on "${
+                transition.event
+              }" from "${
+                getStateLabel(transition.from)
+              }" to "${
+                getStateLabel(transition.to)
+              }"`}
+              actions={actions}
+              getStateLabel={getStateLabel}
+              onClose={this.handleCloseModal}
+              onSave={this.handleSaveActions(currentTransition)}
+              exampleObject={this.props.exampleObject}
+            />
+          );
+          break;
+        default:
+          modal = (
+            <TransitionEditor
+              transition={transition}
+              states={states}
+              getStateLabel={getStateLabel}
+              onSave={this.handleSaveTransition}
+              onClose={this.handleCloseModal}
+              index={currentTransition}
+            />
+          )
+      }
     }
 
     return (
