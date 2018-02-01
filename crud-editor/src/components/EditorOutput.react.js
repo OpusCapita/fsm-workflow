@@ -1,16 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Tab } from 'react-bootstrap';
+// import { Tabs, Tab } from 'react-bootstrap';
 import WorkflowGraph from './WorkflowGraph';
-import CodeEditor from './CodeEditor';
+// import CodeEditor from './CodeEditor';
 
 export default function EditorOutput({ schema, getStateLabel, createJsonOutput }) {
-  const jsonSchema = JSON.stringify(createJsonOutput(), null, 2);
+  // const jsonSchema = JSON.stringify(createJsonOutput(), null, 2);
 
   return (
     <div>
       <h2>Schema</h2>
-      <Tabs
+      <p>This is a temporary solution for FSM visualization.</p>
+      <div className="oc-fsm-crud-editor--workflow-editor__tab">
+        <WorkflowGraph schema={schema} getStateLabel={getStateLabel}/>
+      </div>
+      {/* <Tabs
         animation={false}
         id="fsm-workflow-editor-output"
         mountOnEnter={true}
@@ -38,7 +42,7 @@ export default function EditorOutput({ schema, getStateLabel, createJsonOutput }
             />
           </div>
         </Tab>
-      </Tabs>
+      </Tabs> */}
     </div>
   )
 }
