@@ -18,82 +18,149 @@
 
   workflow={{
   "schema": {
-    "name": "Approval",
-    "initialState": "created",
+    "name": "InvoiceApproval",
+    "initialState": "inspectionRequired",
     "finalStates": [
-      "waitingForPayment",
-      "requiresReview",
-      "closed"
+      "approved"
     ],
     "objectStateFieldName": "status",
-    "states": [
-      {
-        "name": "created",
-        "description": "Created"
-      },
-      {
-        "name": "valid",
-        "description": "Valid"
-      },
-      {
-        "name": "requiresReview",
-        "description": "Requires Review"
-      },
-      {
-        "name": "closed",
-        "description": "Closed"
-      },
-      {
-        "name": "ready",
-        "description": "Ready to be paid"
-      },
-      {
-        "name": "waitingForPayment",
-        "description": "WaitingForPayment"
-      }
-    ],
     "transitions": [
       {
-        "event": "valid",
-        "from": "created",
-        "to": "valid"
-      },
-      {
-        "event": "not valid",
-        "from": "created",
-        "to": "requiresReview"
-      },
-      {
-        "event": "is internal or prepaid",
-        "from": "valid",
-        "to": "closed"
-      },
-      {
-        "event": "approve",
-        "from": "valid",
-        "to": "ready",
+        "from": "inspectionRequired",
+        "to": "approvalRequired",
+        "event": "inspect",
         "guards": [
           {
-            "name": "guard_04403761948612651"
+            "name": "guard_15486021085119572"
           }
         ]
       },
       {
-        "event": "ERP approved",
-        "from": "ready",
-        "to": "waitingForPayment"
+        "from": "inspectionRequired",
+        "to": "approvalRequired",
+        "event": "automatic-inspect"
       },
       {
-        "event": "ERP declined",
-        "from": "ready",
-        "to": "closed"
+        "from": "inspectionRequired",
+        "to": "inspClrRequired",
+        "event": "sendToClarification"
+      },
+      {
+        "from": "inspClrRequired",
+        "to": "inspectionRequired",
+        "event": "clarifyForInspection"
+      },
+      {
+        "from": "inspectionRequired",
+        "to": "inspectionRejected",
+        "event": "rejectInspection"
+      },
+      {
+        "from": "inspClrRequired",
+        "to": "inspectionRejected",
+        "event": "rejectInspection"
+      },
+      {
+        "from": "inspectionRejected",
+        "to": "inspectionRequired",
+        "event": "cancelRejection"
+      },
+      {
+        "from": "approvalRequired",
+        "to": "inspectionRequired",
+        "event": "cancelInspection"
+      },
+      {
+        "from": "approvalRequired",
+        "to": "inspectionRejected",
+        "event": "rejectInspection"
+      },
+      {
+        "from": "approvalRequired",
+        "to": "approved",
+        "event": "approve"
+      },
+      {
+        "from": "approvalRequired",
+        "to": "appClrRequired",
+        "event": "sendToClarification"
+      },
+      {
+        "from": "approvalRequired",
+        "to": "inspClrRequired",
+        "event": "sendToClarification"
+      },
+      {
+        "from": "approvalRequired",
+        "to": "approvalRejected",
+        "event": "rejectApproval"
+      },
+      {
+        "from": "appClrRequired",
+        "to": "approvalRequired",
+        "event": "clarifyForApproval"
+      },
+      {
+        "from": "appClrRequired",
+        "to": "approvalRejected",
+        "event": "rejectApproval"
+      },
+      {
+        "from": "approved",
+        "to": "approvalRequired",
+        "event": "cancelApproval"
+      },
+      {
+        "from": "approved",
+        "to": "approvalRejected",
+        "event": "rejectApproval"
+      },
+      {
+        "from": "approved",
+        "to": "appClrRequired",
+        "event": "sendToClarification"
+      },
+      {
+        "from": "approvalRejected",
+        "to": "approvalRequired",
+        "event": "cancelRejection"
+      }
+    ],
+    "states": [
+      {
+        "name": "inspectionRequired",
+        "description": "Inspection Required"
+      },
+      {
+        "name": "approvalRequired",
+        "description": "Approval Required"
+      },
+      {
+        "name": "inspClrRequired",
+        "description": "Insp Clr Required"
+      },
+      {
+        "name": "inspectionRejected",
+        "description": "Inspection Rejected"
+      },
+      {
+        "name": "approved",
+        "description": "Approved"
+      },
+      {
+        "name": "appClrRequired",
+        "description": "App Clr Required"
+      },
+      {
+        "name": "approvalRejected",
+        "description": "Approval Rejected"
       }
     ]
   },
   "guards": [
     {
-      "name": "guard_04403761948612651",
-      "body": "object.netAmount < 1000000"
+      "name": "guard_15486021085119572",
+      "body": "object.netAmount > 0"
     }
   ]
 }}
