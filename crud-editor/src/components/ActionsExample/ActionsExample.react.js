@@ -17,7 +17,7 @@ greeting: \${greeting}\n
 object: \${JSON.stringify(object)}\n
 from: \${from}\n
 to: \${to}\n
-Subject will be: "Hello from \${subjectArg}"\n
+Subject will be: "Hello from \${greeting}"\n
 available params: \${Object.keys(args).join(', ')}
 \`)
         `
