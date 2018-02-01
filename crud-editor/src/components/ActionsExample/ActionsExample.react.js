@@ -12,8 +12,8 @@ export default class ActionsExample extends PureComponent {
         body: `
 return (\`
 Received args:\n
-sendTo: \${sendTo}\n
-subjectArg: \${subjectArg}\n
+fromAddress: \${fromAddress}\n
+greeting: \${greeting}\n
 object: \${JSON.stringify(object)}\n
 from: \${from}\n
 to: \${to}\n
@@ -28,14 +28,14 @@ available params: \${Object.keys(args).join(', ')}
         name: 'sendMail',
         arguments: [
           {
-            name: 'sendTo',
+            name: 'fromAddress',
             value: 'support@client.com'
           },
           {
-            name: 'subjectArg',
+            name: 'greeting',
             value: {
               variable: 'object',
-              path: 'supplier.name'
+              path: 'supplierName'
             },
             type: 'pathExpression'
           }
@@ -44,9 +44,7 @@ available params: \${Object.keys(args).join(', ')}
     ],
     commonArgs: {
       object: {
-        supplier: {
-          name: 'Chuck'
-        }
+        supplierName: 'Bosch'
       },
       from: 'validated',
       to: 'approved'
@@ -152,7 +150,7 @@ available params: \${Object.keys(args).join(', ')}
             }}
             onChange={this.handleChangeActionCall}
           />
-          <h5>Workflow implicit arguments</h5>
+          <h5>Implicit action arguments (passed via sendEvent)</h5>
           <CodeEditor
             value={
               JSON.stringify(commonArgs, null, 2)
