@@ -27,7 +27,6 @@ export default class TransitionActionEditor extends PureComponent {
       to: PropTypes.string,
       event: PropTypes.string,
     }),
-    triggerDialog: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
     onSave: PropTypes.func.isRequired
@@ -53,7 +52,7 @@ export default class TransitionActionEditor extends PureComponent {
     return result
   }
 
-  handleClose = this.props.triggerDialog({
+  handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
     confirmHandler: this.props.onClose
   })

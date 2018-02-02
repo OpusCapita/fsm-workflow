@@ -40,8 +40,7 @@ export default class Guards extends PureComponent {
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
-    onSave: PropTypes.func.isRequired,
-    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
+    onSave: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -167,7 +166,7 @@ export default class Guards extends PureComponent {
       currentGuards[0].body
   }
 
-  handleClose = this.props.triggerDialog({
+  handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
     confirmHandler: this.props.onClose
   })

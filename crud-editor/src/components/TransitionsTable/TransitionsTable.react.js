@@ -38,8 +38,7 @@ export default class TransitionsTable extends PureComponent {
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
     onSaveActions: PropTypes.func.isRequired,
-    exampleObject: PropTypes.object,
-    triggerDialog: PropTypes.func.isRequired, // injected by withConfirmDialog
+    exampleObject: PropTypes.object
   }
 
   state = {
@@ -48,7 +47,7 @@ export default class TransitionsTable extends PureComponent {
     currentTransition: null
   }
 
-  handleDelete = index => this.props.triggerDialog({
+  handleDelete = index => this._triggerDialog({
     confirmHandler: _ => this.props.onDeleteTransition(index),
     message: `Do you really want to delete this transition?`
   })

@@ -5,6 +5,7 @@ import { Modal, Button } from 'react-bootstrap';
 
 const returnTrue = _ => true;
 
+// Higher order component ConfirmDialog injects `_triggerDialog` function into wrapped component
 export default WrappedComponent => class ConfirmDialog extends PureComponent {
   static propTypes = {
     textCancel: PropTypes.string,
@@ -111,13 +112,10 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
   render() {
     const { children, ...props } = this.props;
 
-    const newProps = {
-      ...props,
-      triggerDialog: this.triggerDialog
-    }
+    WrappedComponent.prototype._triggerDialog = this.triggerDialog; // eslint-disable-line no-param-reassign
 
     return (
-      <WrappedComponent {...newProps}>
+      <WrappedComponent {...props}>
         {children}
       </WrappedComponent>
     )

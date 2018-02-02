@@ -25,8 +25,7 @@ export default class StatesTable extends PureComponent {
     finalStates: PropTypes.arrayOf(PropTypes.string).isRequired,
     onDelete: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
-    statesInTransitions: PropTypes.arrayOf(PropTypes.string),
-    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
+    statesInTransitions: PropTypes.arrayOf(PropTypes.string)
   }
 
   constructor(...args) {
@@ -56,7 +55,7 @@ export default class StatesTable extends PureComponent {
 
     const { states } = this.state;
 
-    return this.props.triggerDialog({
+    return this._triggerDialog({
       confirmHandler: _ => this.props.onDelete({
         name,
         ...(statesInTransitions.indexOf(name) > -1 && { sideEffect: this._deleteStateSideEffect })

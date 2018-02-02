@@ -20,8 +20,7 @@ export default class StatesEditor extends PureComponent {
     state: statePropTypes,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired,
-    triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
+    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired
   }
 
   state = {
@@ -54,7 +53,7 @@ export default class StatesEditor extends PureComponent {
       name || description || isInitial || isFinal // look for any input for newely created object
   }
 
-  handleClose = this.props.triggerDialog({
+  handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
     confirmHandler: this.props.onClose
   })

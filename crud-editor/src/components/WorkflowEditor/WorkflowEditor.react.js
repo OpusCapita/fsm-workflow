@@ -150,11 +150,12 @@ export default class WorkflowEditor extends PureComponent {
 
     const guards = schema.transitions.reduce((acc, { guards }) => acc.concat(guards || []), []);
 
-    const transitions = schema.transitions.map(({ guards, ...rest }) => ({
+    const transitions = schema.transitions.map(({ guards, actions, ...rest }) => ({
       ...rest,
       ...(guards && guards.length > 0 && {
         guards: guards.map(({ name }) => ({ name }))
-      })
+      }),
+      ...(actions && actions.length > 0 && { actions })
     }))
 
     return {
