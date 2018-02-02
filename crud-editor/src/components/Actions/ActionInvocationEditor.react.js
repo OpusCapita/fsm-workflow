@@ -17,6 +17,15 @@ import CodeEditor from '../CodeEditor';
 import { invokeAction } from './utils';
 import { isDef } from '../utils';
 
+// const components = {
+//   string: props => (
+//     <FormControl {...props}/>
+//   )
+// }
+
+// const getActionArgType = ({ actions, action, argument }) =>
+// find(actions, ({ name }) => name === action).argumentsJsonSchema
+
 @withConfirmDialog
 export default class TransitionActionEditor extends PureComponent {
   static propTypes = {
@@ -63,7 +72,7 @@ export default class TransitionActionEditor extends PureComponent {
       value === (this.props.action || {}).name ?
         ((this.props.action || {}).arguments || []) :
         Object.keys(
-          (find(this.props.actions, ({ name }) => name === value).argumentsSchema || {}).properties || {}
+          (find(this.props.actions, ({ name }) => name === value).argumentsJsonSchema || {}).properties || {}
         ).map(name => ({ name })) :
       []
   }), this.state.autoplay && this.handleInvoke)

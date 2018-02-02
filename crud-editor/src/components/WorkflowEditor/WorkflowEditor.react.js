@@ -44,7 +44,7 @@ export default class WorkflowEditor extends PureComponent {
       actions: PropTypes.arrayOf(PropTypes.shape({
         name: PropTypes.string.isRequired,
         body: PropTypes.string.isRequired,
-        argumentsSchema: PropTypes.object
+        argumentsJsonSchema: PropTypes.object
       }))
     })
   }
