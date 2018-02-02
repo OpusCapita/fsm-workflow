@@ -36,7 +36,7 @@ export default class Guards extends PureComponent {
     guards: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string,
       body: PropTypes.string // to be eval'd
-    })).isRequired,
+    })),
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
@@ -235,15 +235,7 @@ export default class Guards extends PureComponent {
                         <div className="oc-fsm-crud-editor--modal-heading">
                           <div className="output-heading">
                             <b>Output</b>
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                width: '100px',
-                                justifyContent: 'space-between'
-                              }}
-                            >
+                            <div className='right-block'>
                               <Glyphicon
                                 glyph='play'
                                 style={{

@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 import {
   Button,
   Modal,
@@ -45,8 +46,16 @@ export default class ActionsTable extends PureComponent {
     transitionActions: prevState.transitionActions.filter((_, i) => i !== index)
   }))
 
+  hasUnsavedChanges = _ => {
+    const { transitionActions } = this.state;
+
+    const { transition: { actions } } = this.props;
+
+    return !isEqual(transitionActions, actions)
+  }
+
   handleClose = this.props.triggerDialog({
-    showDialog: _ => false,
+    showDialog: this.hasUnsavedChanges,
     confirmHandler: this.props.onClose
   })
 

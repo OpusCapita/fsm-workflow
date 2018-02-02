@@ -44,7 +44,7 @@
               },
               {
                 name: 'greeting',
-                value: 'Hello Mr. Twister'
+                value: 'Mr. Twister'
               }
             ]
           }
@@ -181,7 +181,13 @@
   actions: [
     {
       name: 'sendMail',
-      body: _scope.sendMailFunctionBody,
+      body: `return \`
+Successfully sent a message\n
+from "\${fromAddress}"\n
+with body:\n
+"\${greeting}, you have a new invoice #\${object.invoiceNo}\u00A0
+from customer \${object.customerId} to supplier \${object.supplierId}\u00A0
+with gross amount of \${object.grossAmount} \${object.currencyId}."\``,
       argumentsSchema: {
         "title": "sendMail arguments schema",
         "type": "object",

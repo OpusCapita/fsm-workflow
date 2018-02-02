@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
+import isEqual from 'lodash/isEqual';
 import {
   Button,
   Modal,
@@ -8,11 +9,13 @@ import {
   FormControl,
   FormGroup,
   ControlLabel,
-  Glyphicon
+  Glyphicon,
+  Checkbox
 } from 'react-bootstrap';
 import withConfirmDialog from '../ConfirmDialog';
 import CodeEditor from '../CodeEditor';
 import { invokeAction } from './utils';
+import { isDef } from '../utils';
 
 @withConfirmDialog
 export default class TransitionActionEditor extends PureComponent {
@@ -36,7 +39,18 @@ export default class TransitionActionEditor extends PureComponent {
     ...(this.props.action || {}),
     isCreating: !this.props.action,
     exampleObject: JSON.stringify(this.props.exampleObject, null, 2),
-    invocationResults: null
+    invocationResults: null,
+    autoplay: false
+  }
+
+  hasUnsavedChanges = _ => {
+    const { name: pName = '', arguments: pArgs = [] } = this.props.action || {};
+
+    const { name: sName, arguments: sArgs } = this.state;
+
+    const result = !isEqual({ name: pName, arguments: pArgs }, { name: sName, arguments: sArgs });
+
+    return result
   }
 
   handleClose = this.props.triggerDialog({
@@ -53,7 +67,7 @@ export default class TransitionActionEditor extends PureComponent {
           (find(this.props.actions, ({ name }) => name === value).argumentsSchema || {}).properties || {}
         ).map(name => ({ name })) :
       []
-  }))
+  }), this.state.autoplay && this.handleInvoke)
 
   handleChangeArg = argName => ({ target: { value } }) => this.setState(prevState => ({
     arguments: prevState.arguments.map(
@@ -63,7 +77,7 @@ export default class TransitionActionEditor extends PureComponent {
         ...(argName === name && { value })
       })
     )
-  }))
+  }), this.state.autoplay && this.handleInvoke)
 
   handleSave = _ => this.props.onSave({
     name: this.state.name,
@@ -77,7 +91,7 @@ export default class TransitionActionEditor extends PureComponent {
       this.setState(prevState => ({
         exampleObject: value,
         exampleObjectError: null
-      }))
+      }), this.state.autoplay && this.handleInvoke)
     } catch (err) {
       this.setState({
         exampleObject: value,
@@ -92,6 +106,10 @@ export default class TransitionActionEditor extends PureComponent {
       name,
       arguments: actionArgs
     } = this.state;
+
+    if (!name) {
+      return;
+    }
 
     const {
       actions,
@@ -114,6 +132,15 @@ export default class TransitionActionEditor extends PureComponent {
     })
   }
 
+  handleToggleAutoplay = _ => this.setState(prevState => ({
+    autoplay: !prevState.autoplay
+  }), _ => {
+    const { autoplay } = this.state;
+    if (autoplay) {
+      this.handleInvoke()
+    }
+  })
+
   render() {
     const { actions } = this.props;
 
@@ -122,7 +149,8 @@ export default class TransitionActionEditor extends PureComponent {
       arguments: actionArgs,
       exampleObject,
       exampleObjectError,
-      invocationResults
+      invocationResults,
+      autoplay
     } = this.state;
 
     return (
@@ -142,7 +170,6 @@ export default class TransitionActionEditor extends PureComponent {
             <thead>
               <tr>
                 <th>Current action</th>
-                <th style={{ width: '30px' }}></th>
                 <th>Arguments</th>
                 <th>Example Object</th>
               </tr>
@@ -165,24 +192,36 @@ export default class TransitionActionEditor extends PureComponent {
                       }
                     </FormControl>
                   </FormGroup>
-                  <div style={{ marginBottom: '5px', fontWeight: 'bold' }}>Results</div>
+                  <div className="oc-fsm-crud-editor--modal-heading">
+                    <div className="output-heading">
+                      <b>Results</b>
+                      <div className='right-block'>
+                        <Glyphicon
+                          glyph='play'
+                          style={{
+                            ...(name && autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
+                          }}
+                          {...(name && !autoplay && { onClick: this.handleInvoke })}
+                        />
+                        <Checkbox
+                          onChange={this.handleToggleAutoplay}
+                          checked={!!autoplay}
+                        >
+                          Autoplay
+                        </Checkbox>
+                      </div>
+                    </div>
+                  </div>
                   <CodeEditor
                     className="output-code"
-                    value={String(invocationResults).trim()}
+                    value={isDef(invocationResults) ? String(invocationResults).trim() : ''}
                     options={{
                       theme: "eclipse",
                       lineWrapping: true,
                       readOnly: 'nocursor'
                     }}
                   />
-                </td>
-                <td>
-                  <Glyphicon
-                    glyph='play'
-                    style={{ position: 'relative', top: '32px', cursor: 'pointer' }}
-                    onClick={this.handleInvoke}
-                    disabled={!this.state.name}
-                  />
+                  <p>Not sure this is needed.</p>
                 </td>
                 <td>
                   {
@@ -217,6 +256,7 @@ export default class TransitionActionEditor extends PureComponent {
                     onChange={this.handleChangeObject}
                   />
                   <span style={{ color: 'red' }}>{exampleObjectError}{`\u00A0`}</span>
+                  <p>Not sure this is needed.</p>
                 </td>
               </tr>
             </tbody>
