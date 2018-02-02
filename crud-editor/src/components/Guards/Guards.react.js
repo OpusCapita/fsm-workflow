@@ -235,12 +235,29 @@ export default class Guards extends PureComponent {
                         <div className="oc-fsm-crud-editor--modal-heading">
                           <div className="output-heading">
                             <b>Output</b>
-                            <Checkbox
-                              onChange={this.handleToggleAutoplay}
-                              checked={!!autoplay}
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                width: '100px',
+                                justifyContent: 'space-between'
+                              }}
                             >
-                              Autoplay
-                            </Checkbox>
+                              <Glyphicon
+                                glyph='play'
+                                style={{
+                                  ...(autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
+                                }}
+                                {...(!autoplay && { onClick: this.handleEvalCode(guardIndex) })}
+                              />
+                              <Checkbox
+                                onChange={this.handleToggleAutoplay}
+                                checked={!!autoplay}
+                              >
+                                Autoplay
+                              </Checkbox>
+                            </div>
                           </div>
                         </div>
                         <CodeEditor

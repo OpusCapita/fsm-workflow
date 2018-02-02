@@ -44,7 +44,7 @@
               },
               {
                 name: 'greeting',
-                value: 'Buon jorno'
+                value: 'Hello Mr. Twister'
               }
             ]
           }

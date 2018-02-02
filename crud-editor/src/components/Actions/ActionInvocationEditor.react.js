@@ -7,21 +7,36 @@ import {
   Table,
   FormControl,
   FormGroup,
-  ControlLabel
+  ControlLabel,
+  Glyphicon
 } from 'react-bootstrap';
 import withConfirmDialog from '../ConfirmDialog';
 import CodeEditor from '../CodeEditor';
+import { invokeAction } from './utils';
 
 @withConfirmDialog
 export default class TransitionActionEditor extends PureComponent {
   static propTypes = {
-
+    action: PropTypes.object,
+    actions: PropTypes.arrayOf(PropTypes.object),
+    transition: PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+      event: PropTypes.string,
+    }),
+    triggerDialog: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+    exampleObject: PropTypes.object,
+    onSave: PropTypes.func.isRequired
   }
 
   state = {
     name: '',
     arguments: [],
-    ...(this.props.action || {})
+    ...(this.props.action || {}),
+    isCreating: !this.props.action,
+    exampleObject: JSON.stringify(this.props.exampleObject, null, 2),
+    invocationResults: null
   }
 
   handleClose = this.props.triggerDialog({
@@ -50,12 +65,65 @@ export default class TransitionActionEditor extends PureComponent {
     )
   }))
 
+  handleSave = _ => this.props.onSave({
+    name: this.state.name,
+    arguments: this.state.arguments
+  })
+
+  handleChangeObject = value => {
+    try {
+      JSON.parse(value);
+
+      this.setState(prevState => ({
+        exampleObject: value,
+        exampleObjectError: null
+      }))
+    } catch (err) {
+      this.setState({
+        exampleObject: value,
+        exampleObjectError: err.message
+      })
+    }
+  }
+
+  handleInvoke = _ => {
+    const {
+      exampleObject,
+      name,
+      arguments: actionArgs
+    } = this.state;
+
+    const {
+      actions,
+      transition: {
+        from,
+        to,
+        event
+      }
+    } = this.props;
+
+    const commonArgs = {
+      object: JSON.parse(exampleObject),
+      from,
+      to,
+      event
+    }
+
+    this.setState({
+      invocationResults: invokeAction(actions, name, actionArgs, commonArgs)
+    })
+  }
+
   render() {
-    const { actions, exampleObject } = this.props;
+    const { actions } = this.props;
 
-    const { name, arguments: actionArgs } = this.state;
-
-    console.log(this.props)
+    const {
+      name,
+      arguments: actionArgs,
+      exampleObject,
+      exampleObjectError,
+      invocationResults
+    } = this.state;
 
     return (
       <Modal
@@ -74,6 +142,7 @@ export default class TransitionActionEditor extends PureComponent {
             <thead>
               <tr>
                 <th>Current action</th>
+                <th style={{ width: '30px' }}></th>
                 <th>Arguments</th>
                 <th>Example Object</th>
               </tr>
@@ -96,6 +165,24 @@ export default class TransitionActionEditor extends PureComponent {
                       }
                     </FormControl>
                   </FormGroup>
+                  <div style={{ marginBottom: '5px', fontWeight: 'bold' }}>Results</div>
+                  <CodeEditor
+                    className="output-code"
+                    value={String(invocationResults).trim()}
+                    options={{
+                      theme: "eclipse",
+                      lineWrapping: true,
+                      readOnly: 'nocursor'
+                    }}
+                  />
+                </td>
+                <td>
+                  <Glyphicon
+                    glyph='play'
+                    style={{ position: 'relative', top: '32px', cursor: 'pointer' }}
+                    onClick={this.handleInvoke}
+                    disabled={!this.state.name}
+                  />
                 </td>
                 <td>
                   {
@@ -117,7 +204,7 @@ export default class TransitionActionEditor extends PureComponent {
                 <td>
                   <CodeEditor
                     className="example-object"
-                    value={JSON.stringify(exampleObject, null, 2)}
+                    value={exampleObject}
                     options={{
                       mode: {
                         name: 'javascript',
@@ -129,6 +216,7 @@ export default class TransitionActionEditor extends PureComponent {
                     }}
                     onChange={this.handleChangeObject}
                   />
+                  <span style={{ color: 'red' }}>{exampleObjectError}{`\u00A0`}</span>
                 </td>
               </tr>
             </tbody>
@@ -138,6 +226,7 @@ export default class TransitionActionEditor extends PureComponent {
           <Button
             bsStyle='primary'
             onClick={this.handleSave}
+            disabled={!this.state.name}
           >
             Ok
           </Button>

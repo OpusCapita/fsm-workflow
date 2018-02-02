@@ -71,7 +71,6 @@ export default class TransitionsTable extends PureComponent {
   }
 
   handleSaveActions = index => actions => {
-    console.log('tt handleSaveActions', { index, actions })
     this.handleCloseModal();
     this.props.onSaveActions(index)(actions);
   }

@@ -11,8 +11,12 @@ const evaluateArgs = (actionArgs, commonArgs) => ({
   }), {})
 })
 
-export const invokeAction = (actions, name, actionCalls, commonArgs) => {
-  const actionArgs = find(actionCalls, ({ name: actionName }) => actionName === name).arguments;
+export const invokeAction = (actions, name, actionArgs, commonArgs) => {
+  const actionBody = find(actions, ({ name: actionName }) => name === actionName).
+    body.
+    split('\n').
+    filter(Boolean).
+    join(' ');
 
   const evaluatedArgs = evaluateArgs(actionArgs, commonArgs);
 
@@ -21,6 +25,7 @@ export const invokeAction = (actions, name, actionCalls, commonArgs) => {
     'object',
     'from',
     'to',
+    'event',
     ...actionArgs.map(({ name }) => name)
   ].
     map(key => `var ${key} = args['${key}'];`).
@@ -29,7 +34,7 @@ export const invokeAction = (actions, name, actionCalls, commonArgs) => {
   const func = `(
     function(args) {
       ${spreadArgs}
-      ${actions[name].body}
+      ${actionBody}
     }
   )`
 

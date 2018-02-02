@@ -31,6 +31,7 @@ export default class ActionsTable extends PureComponent {
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
+    exampleObject: PropTypes.object,
     triggerDialog: PropTypes.func.isRequired // injected by withConfirmDialog
   }
 
@@ -66,6 +67,13 @@ export default class ActionsTable extends PureComponent {
     currentActionIndex: null
   })
 
+  handleSaveAction = index => action => this.setState(prevState => ({
+    transitionActions: isDef(index) ?
+      prevState.transitionActions.map((ta, i) => i === index ? action : ta) :
+      prevState.transitionActions.concat(action)
+  }), this.handleCloseEditor)
+
+
   render() {
     const { title, actions } = this.props;
 
@@ -87,6 +95,7 @@ export default class ActionsTable extends PureComponent {
           onClose={this.handleCloseEditor}
           exampleObject={this.props.exampleObject}
           transition={this.props.transition}
+          onSave={this.handleSaveAction(currentActionIndex)}
         />
       )
     }
@@ -126,7 +135,7 @@ export default class ActionsTable extends PureComponent {
                     <tbody>
                       {
                         transitionActions.map(({ name, arguments: actionArgs = [] }, index) => (
-                          <tr key={name}>
+                          <tr key={`${name}-${index}`}>
                             <td>{name}</td>
                             <td>
                               {
@@ -163,7 +172,7 @@ export default class ActionsTable extends PureComponent {
                   <h4 style={{ textAlign: 'center' }}>
                     No actions specified for this transition. Go ahead and{`\u00A0`}
                     <a
-                      onClick={this.handleAdd}
+                      onClick={this.handleOpenEditor()}
                       style={{ cursor: 'pointer', fontWeight: 'bold' }}
                     >
                       add one
