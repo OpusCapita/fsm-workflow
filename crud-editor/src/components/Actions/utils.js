@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import find from 'lodash/find';
 
 const evaluateArgs = (actionArgs, commonArgs) => ({
   ...commonArgs,
@@ -11,32 +10,9 @@ const evaluateArgs = (actionArgs, commonArgs) => ({
   }), {})
 })
 
-export const invokeAction = (actions, name, actionArgs, commonArgs) => {
-  const actionBody = find(actions, ({ name: actionName }) => name === actionName).
-    body.
-    split('\n').
-    filter(Boolean).
-    join(' ');
+export const invokeAction = (name, actionArgs, commonArgs) => `Action "${name}" called with params:\n` +
+  JSON.stringify(evaluateArgs(actionArgs, commonArgs), null, 2)
 
-  const evaluatedArgs = evaluateArgs(actionArgs, commonArgs);
-
-  // manually spread arguments object to enable direct access to named parameters
-  const spreadArgs = [
-    'object',
-    'from',
-    'to',
-    'event',
-    ...actionArgs.map(({ name }) => name)
-  ].
-    map(key => `var ${key} = args['${key}'];`).
-    join('\n');
-
-  const func = `(
-    function(args) {
-      ${spreadArgs}
-      ${actionBody}
-    }
-  )`
-
-  return eval(func)(evaluatedArgs) // eslint-disable-line no-eval
-}
+export const getActionArgType = ({ actions, action, param }) => ((
+  (actions[action].paramsSchema || {}).properties || {})[param] || {}).
+  type || 'string';

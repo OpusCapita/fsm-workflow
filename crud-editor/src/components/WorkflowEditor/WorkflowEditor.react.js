@@ -10,6 +10,8 @@ import EditorOutput from '../EditorOutput.react';
 import { isDef } from '../utils';
 import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
+import guardPropTypes from '../Guards/guardPropTypes';
+import actionPropTypes from '../Actions/actionPropTypes';
 import {
   DELETE_STATE_TRANSITIONS,
   SWAP_STATE_IN_TRANSITIONS
@@ -31,21 +33,14 @@ export default class WorkflowEditor extends PureComponent {
           from: PropTypes.string,
           to: PropTypes.string,
           event: PropTypes.string,
-          guards: PropTypes.arrayOf(PropTypes.shape({
-            name: PropTypes.string.isRequired
-          }))
+          guards: PropTypes.arrayOf(guardPropTypes),
+          actions: PropTypes.arrayOf(actionPropTypes)
         }),
         states: PropTypes.arrayOf(statePropTypes)
       }),
-      guards: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        body: PropTypes.string.isRequired
-      })),
-      actions: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        body: PropTypes.string.isRequired,
-        argumentsJsonSchema: PropTypes.object
-      }))
+      actions: PropTypes.shape({
+        paramsSchema: PropTypes.object
+      })
     })
   }
 
@@ -70,23 +65,8 @@ export default class WorkflowEditor extends PureComponent {
   stateFromProps = props => {
     const schema = (props.workflow || {}).schema || {};
 
-    const transitions = (schema.transitions || []);
-
-    const guardDefinitions = (this.props.workflow || {}).guards || [];
-
     return ({
-      schema: {
-        ...schema,
-        transitions: transitions.map(({ guards, ...rest }) => ({
-          ...rest,
-          ...(guards && {
-            guards: guards.map(({ name }) => ({
-              name,
-              body: find(guardDefinitions, ({ name: guardName }) => name === guardName).body
-            }))
-          })
-        }))
-      }
+      schema
     })
   }
 
@@ -148,13 +128,9 @@ export default class WorkflowEditor extends PureComponent {
   createJsonOutput = _ => {
     const { schema } = this.state;
 
-    const guards = schema.transitions.reduce((acc, { guards }) => acc.concat(guards || []), []);
-
     const transitions = schema.transitions.map(({ guards, actions, ...rest }) => ({
       ...rest,
-      ...(guards && guards.length > 0 && {
-        guards: guards.map(({ name }) => ({ name }))
-      }),
+      ...(guards && guards.length > 0 && { guards }),
       ...(actions && actions.length > 0 && { actions })
     }))
 
@@ -162,8 +138,7 @@ export default class WorkflowEditor extends PureComponent {
       schema: {
         ...schema,
         transitions
-      },
-      guards
+      }
     }
   }
 

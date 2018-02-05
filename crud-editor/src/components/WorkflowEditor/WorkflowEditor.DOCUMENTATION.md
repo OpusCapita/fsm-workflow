@@ -29,15 +29,11 @@
         "from": "inspectionRequired",
         "to": "approvalRequired",
         "event": "inspect",
-        "guards": [
-          {
-            "name": "guard_15486021085119572"
-          }
-        ],
+        "guards": ["object.netAmount > 100"],
         actions: [
           {
             name: 'sendMail',
-            arguments: [
+            params: [
               {
                 name: 'fromAddress',
                 value: 'support@client.com'
@@ -172,23 +168,9 @@
       }
     ]
   },
-  "guards": [
-    {
-      "name": "guard_15486021085119572",
-      "body": "object.netAmount > 0"
-    }
-  ],
-  actions: [
-    {
-      name: 'sendMail',
-      body: `return \`
-Successfully sent a message\n
-from "\${fromAddress}"\n
-with body:\n
-"\${greeting}, you have a new invoice #\${object.invoiceNo}\u00A0
-from customer \${object.customerId} to supplier \${object.supplierId}\u00A0
-with gross amount of \${object.grossAmount} \${object.currencyId}."\``,
-      argumentsJsonSchema: {
+  actions: {
+    sendMail: {
+      paramsSchema: {
         "title": "sendMail arguments schema",
         "type": "object",
         "properties": {
@@ -197,13 +179,15 @@ with gross amount of \${object.grossAmount} \${object.currencyId}."\``,
           },
           "greeting": {
             "type": "string"
+          },
+          "sendCopy": {
+            "type": "boolean"
           }
         },
         "required": ["fromAddress'", "greeting"]
       }
     }
-
-  ]
+  }
 }}
 
   exampleObject={{

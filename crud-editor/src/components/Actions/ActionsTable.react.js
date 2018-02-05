@@ -12,6 +12,8 @@ import withConfirmDialog from '../ConfirmDialog';
 import './ActionsTable.less';
 import ActionInvocationEditor from './ActionInvocationEditor.react';
 import { isDef } from '../utils';
+import { getActionArgType } from './utils';
+import actionPropTypes from './actionPropTypes';
 
 @withConfirmDialog
 export default class ActionsTable extends PureComponent {
@@ -20,15 +22,11 @@ export default class ActionsTable extends PureComponent {
       from: PropTypes.string,
       to: PropTypes.string,
       event: PropTypes.string,
-      actions: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        arguments: PropTypes.arrayOf(PropTypes.shape({
-          name: PropTypes.string.isRequired,
-          value: PropTypes.any
-        }))
-      }))
+      actions: PropTypes.arrayOf(actionPropTypes)
     }),
-    actions: PropTypes.arrayOf(PropTypes.object),
+    actions: PropTypes.shape({
+      paramsSchema: PropTypes.object
+    }),
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
@@ -140,13 +138,22 @@ export default class ActionsTable extends PureComponent {
               <tbody>
                 {
                   transitionActions.length > 0 ?
-                    transitionActions.map(({ name, arguments: actionArgs = [] }, index) => (
-                      <tr key={`${name}-${index}`}>
-                        <td>{name}</td>
+                    transitionActions.map(({ name: actionName, params = [] }, index) => (
+                      <tr key={`${actionName}-${index}`}>
+                        <td>{actionName}</td>
                         <td>
                           {
-                            actionArgs.map(({ name, value }, i) => (
-                              <p key={`${i}-${name}`}><b>{name}:</b> {value}</p>
+                            params.map(({ name, value }, i) => (
+                              <p key={`${i}-${name}`}>
+                                <b>{name}:</b> {
+                                  isDef(value) &&
+                                  getActionArgType({
+                                    actions,
+                                    action: actionName,
+                                    param: name
+                                  }) === 'boolean' ? String(value) : value
+                                }
+                              </p>
                             ))
                           }
                         </td>

@@ -10,10 +10,10 @@ import {
   Glyphicon
 } from 'react-bootstrap';
 import CodeEditor from '../CodeEditor';
-import { uidFor } from '../utils';
 import './Guards.less';
 import withConfirmDialog from '../ConfirmDialog';
 import ErrorLabel from '../ErrorLabel.react';
+import guardPropTypes from './guardPropTypes';
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -33,10 +33,7 @@ const evaluateCode = ({ code, arg }) => {
 @withConfirmDialog
 export default class Guards extends PureComponent {
   static propTypes = {
-    guards: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string,
-      body: PropTypes.string // to be eval'd
-    })),
+    guards: PropTypes.arrayOf(guardPropTypes),
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     exampleObject: PropTypes.object,
@@ -52,7 +49,7 @@ export default class Guards extends PureComponent {
   }
 
   state = {
-    guards: this.props.guards || [],
+    guards: (this.props.guards || []).map(body => ({ body })),
     exampleObject: JSON.stringify(this.props.exampleObject, null, 2),
     autoplay: true
   }
@@ -89,7 +86,6 @@ export default class Guards extends PureComponent {
     guards: [
       ...prevState.guards,
       {
-        name: uidFor('guard'),
         body: ''
       }
     ]
@@ -145,9 +141,7 @@ export default class Guards extends PureComponent {
   }
 
   handleSave = _ => this.props.onSave(
-    this.state.guards.
-      map(({ name, body }) => ({ name, body: body.trim() })).
-      filter(({ body }) => body)
+    this.state.guards.map(({ body }) => body.trim()).filter(Boolean)
   )
 
   handleCleanGuardBody = guardIndex => _ => this.setState(prevState => ({

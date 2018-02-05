@@ -14,23 +14,19 @@ import {
 } from 'react-bootstrap';
 import withConfirmDialog from '../ConfirmDialog';
 import CodeEditor from '../CodeEditor';
-import { invokeAction } from './utils';
+import { invokeAction, getActionArgType } from './utils';
 import { isDef } from '../utils';
+import components from './components';
 
-// const components = {
-//   string: props => (
-//     <FormControl {...props}/>
-//   )
-// }
-
-// const getActionArgType = ({ actions, action, argument }) =>
-// find(actions, ({ name }) => name === action).argumentsJsonSchema
+const getComponentByType = type => components[type] || components.string;
 
 @withConfirmDialog
 export default class TransitionActionEditor extends PureComponent {
   static propTypes = {
     action: PropTypes.object,
-    actions: PropTypes.arrayOf(PropTypes.object),
+    actions: PropTypes.shape({
+      paramsSchema: PropTypes.object
+    }),
     transition: PropTypes.shape({
       from: PropTypes.string,
       to: PropTypes.string,
@@ -43,7 +39,7 @@ export default class TransitionActionEditor extends PureComponent {
 
   state = {
     name: '',
-    arguments: [],
+    params: [],
     ...(this.props.action || {}),
     isCreating: !this.props.action,
     exampleObject: JSON.stringify(this.props.exampleObject, null, 2),
@@ -51,12 +47,18 @@ export default class TransitionActionEditor extends PureComponent {
     autoplay: false
   }
 
+  getActionArgType = param => getActionArgType({
+    actions: this.props.actions,
+    action: this.state.name,
+    param
+  })
+
   hasUnsavedChanges = _ => {
-    const { name: pName = '', arguments: pArgs = [] } = this.props.action || {};
+    const { name: pName = '', params: pArgs = [] } = this.props.action || {};
 
-    const { name: sName, arguments: sArgs } = this.state;
+    const { name: sName, params: sArgs } = this.state;
 
-    const result = !isEqual({ name: pName, arguments: pArgs }, { name: sName, arguments: sArgs });
+    const result = !isEqual({ name: pName, params: pArgs }, { name: sName, params: sArgs });
 
     return result
   }
@@ -68,28 +70,35 @@ export default class TransitionActionEditor extends PureComponent {
 
   handleSelectFunction = ({ target: { value } }) => this.setState(prevState => ({
     name: value,
-    arguments: value ?
+    params: value ?
       value === (this.props.action || {}).name ?
-        ((this.props.action || {}).arguments || []) :
+        ((this.props.action || {}).params || []) :
         Object.keys(
-          (find(this.props.actions, ({ name }) => name === value).argumentsJsonSchema || {}).properties || {}
+          (this.props.actions[value].paramsSchema || {}).properties || {}
         ).map(name => ({ name })) :
       []
   }), this.state.autoplay && this.handleInvoke)
 
-  handleChangeArg = argName => ({ target: { value } }) => this.setState(prevState => ({
-    arguments: prevState.arguments.map(
+  handleChangeArg = param => ({ target: { value } }) => this.setState(prevState => ({
+    params: (
+      // either change existing param or add a new one
+      params => find(params, ({ name }) => name === param) ? params : params.concat({ name: param })
+    )(prevState.params).map(
       ({ name, ...rest }) => ({
         name,
         ...rest,
-        ...(argName === name && { value })
+        ...(param === name && {
+          value: this.getActionArgType(param) === 'boolean' ? // toggle boolean values
+            !(find(prevState.params, ({ name: n }) => n === name) || {}).value :
+            value
+        })
       })
     )
   }), this.state.autoplay && this.handleInvoke)
 
   handleSave = _ => this.props.onSave({
     name: this.state.name,
-    arguments: this.state.arguments
+    params: this.state.params
   })
 
   handleChangeObject = value => {
@@ -112,7 +121,7 @@ export default class TransitionActionEditor extends PureComponent {
     const {
       exampleObject,
       name,
-      arguments: actionArgs
+      params
     } = this.state;
 
     if (!name) {
@@ -120,7 +129,6 @@ export default class TransitionActionEditor extends PureComponent {
     }
 
     const {
-      actions,
       transition: {
         from,
         to,
@@ -136,7 +144,7 @@ export default class TransitionActionEditor extends PureComponent {
     }
 
     this.setState({
-      invocationResults: invokeAction(actions, name, actionArgs, commonArgs)
+      invocationResults: invokeAction(name, params, commonArgs)
     })
   }
 
@@ -153,8 +161,8 @@ export default class TransitionActionEditor extends PureComponent {
     const { actions } = this.props;
 
     const {
-      name,
-      arguments: actionArgs,
+      name: actionName,
+      params,
       exampleObject,
       exampleObjectError,
       invocationResults,
@@ -178,7 +186,7 @@ export default class TransitionActionEditor extends PureComponent {
             <thead>
               <tr>
                 <th>Current action</th>
-                <th>Arguments</th>
+                <th>Parameters</th>
                 <th>Example Object</th>
               </tr>
             </thead>
@@ -189,12 +197,12 @@ export default class TransitionActionEditor extends PureComponent {
                     <ControlLabel>Choose function</ControlLabel>
                     <FormControl
                       componentClass="select"
-                      value={name || ''}
+                      value={actionName || ''}
                       onChange={this.handleSelectFunction}
                     >
                       <option value="">Select</option>
                       {
-                        (actions || []).map(({ name }, i) => (
+                        Object.keys(actions).map((name, i) => (
                           <option key={`${i}-${name}`} value={name}>{name}</option>
                         ))
                       }
@@ -207,9 +215,9 @@ export default class TransitionActionEditor extends PureComponent {
                         <Glyphicon
                           glyph='play'
                           style={{
-                            ...(name && autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
+                            ...(actionName && autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
                           }}
-                          {...(name && !autoplay && { onClick: this.handleInvoke })}
+                          {...(actionName && !autoplay && { onClick: this.handleInvoke }) }
                         />
                         <Checkbox
                           onChange={this.handleToggleAutoplay}
@@ -233,17 +241,24 @@ export default class TransitionActionEditor extends PureComponent {
                 </td>
                 <td>
                   {
-                    actionArgs.map(({ name, value }, i) => (
+                    actions[actionName] &&
+                    Object.keys(actions[actionName].paramsSchema.properties).map((name, i) => (
                       <FormGroup
                         key={`${i}-${name}`}
                         controlId="formControlsSelect"
                       >
                         <ControlLabel>{name}</ControlLabel>
-                        <FormControl
-                          value={value || ''}
-                          placeholder="Enter value"
-                          onChange={this.handleChangeArg(name)}
-                        />
+                        {
+                          (
+                            Component => (
+                              <Component
+                                value={(find(params, ({ name: paramName }) => paramName === name) || {}).value}
+                                placeholder="Enter value"
+                                onChange={this.handleChangeArg(name)}
+                              />
+                            )
+                          )(getComponentByType(getActionArgType({ actions, action: actionName, param: name })))
+                        }
                       </FormGroup>
                     ))
                   }
@@ -274,7 +289,7 @@ export default class TransitionActionEditor extends PureComponent {
           <Button
             bsStyle='primary'
             onClick={this.handleSave}
-            disabled={!this.state.name}
+            disabled={!actionName}
           >
             Ok
           </Button>

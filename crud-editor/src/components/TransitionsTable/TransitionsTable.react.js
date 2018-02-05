@@ -11,6 +11,8 @@ import Guards from '../Guards';
 import Actions from '../Actions';
 import TransitionEditor from './TransitionEditor.react';
 import withConfirmDialog from '../ConfirmDialog';
+import guardPropTypes from '../Guards/guardPropTypes';
+import actionPropTypes from '../Actions/actionPropTypes';
 
 @withConfirmDialog
 export default class TransitionsTable extends PureComponent {
@@ -19,20 +21,13 @@ export default class TransitionsTable extends PureComponent {
       from: PropTypes.string,
       to: PropTypes.string,
       event: PropTypes.string,
-      guards: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string,
-        body: PropTypes.string
-      })),
-      actions: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        arguments: PropTypes.arrayOf(PropTypes.shape({
-          name: PropTypes.string.isRequired,
-          value: PropTypes.any
-        }))
-      }))
+      guards: PropTypes.arrayOf(guardPropTypes),
+      actions: PropTypes.arrayOf(actionPropTypes)
     })),
     states: PropTypes.arrayOf(PropTypes.string),
-    actions: PropTypes.arrayOf(PropTypes.object),
+    actions: PropTypes.shape({
+      paramsSchema: PropTypes.object
+    }),
     getStateLabel: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
