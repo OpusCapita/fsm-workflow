@@ -16,3 +16,11 @@ export const invokeAction = (name, actionArgs, commonArgs) => `Action "${name}" 
 export const getActionArgType = ({ actions, action, param }) => ((
   (actions[action].paramsSchema || {}).properties || {})[param] || {}).
   type || 'string';
+
+// export const formatArg = i18n => type => value => {
+//   let result;
+
+//   switch (type) {
+
+//   }
+// }

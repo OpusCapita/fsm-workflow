@@ -174,14 +174,20 @@
         "title": "sendMail arguments schema",
         "type": "object",
         "properties": {
-          "fromAddress": {
+          fromAddress: {
             "type": "string"
           },
-          "greeting": {
+          greeting: {
             "type": "string"
           },
-          "sendCopy": {
+          sendCopy: {
             "type": "boolean"
+          },
+          maxRetries: {
+            "type": "integer"
+          },
+          interest: {
+            "type": "number"
           }
         },
         "required": ["fromAddress'", "greeting"]
