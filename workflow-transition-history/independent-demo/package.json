@@ -1,0 +1,20 @@
+{
+  "name": "workflow-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -e \"require('./demo/server').run()\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opuscapita/fsm-workflow-transition-history": "0.0.4",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "helmet": "^3.10.0",
+    "mysql2": "^1.5.1",
+    "sequelize": "^4.32.6"
+  }
+}
