@@ -1,10 +1,11 @@
 {
   "name": "@opuscapita/fsm-workflow-transition-history",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Business-object history for FSM workflow",
   "main": "index.js",
   "files": [
     "index.js",
+    "constants.js",
     "db/"
   ],
   "scripts": {
