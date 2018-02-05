@@ -171,7 +171,6 @@
   actions: {
     sendMail: {
       paramsSchema: {
-        "title": "sendMail arguments schema",
         "type": "object",
         "properties": {
           fromAddress: {
@@ -190,7 +189,18 @@
             "type": "number"
           }
         },
-        "required": ["fromAddress'", "greeting"]
+        "required": ["fromAddress", "greeting"]
+      }
+    },
+    updateProcessedBy: {
+      paramsSchema: {
+        "type": "object",
+        "properties": {
+          processedByFieldName: {
+            "type": "string"
+          }
+        },
+        "required": ["processedByFieldName"]
       }
     }
   }

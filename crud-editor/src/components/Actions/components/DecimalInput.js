@@ -26,7 +26,7 @@ export default class DecimalInput extends PureComponent {
       this.props.onChange({
         target: {
           // chop long tail after decimal separator
-          value: i18n.parseDecimalNumber(i18n.formatDecimalNumber(result || '') || null)
+          value: i18n.parseDecimalNumber(i18n.formatDecimalNumber(result || null) || null)
         }
       })
     } catch (err) {
@@ -41,7 +41,7 @@ export default class DecimalInput extends PureComponent {
     const { value } = this.state;
 
     try {
-      const parsed = i18n.parseDecimalNumber(value);
+      const parsed = i18n.parseDecimalNumber(value || null);
       this.setState({
         value: i18n.formatDecimalNumber(parsed || null) || ''
       })

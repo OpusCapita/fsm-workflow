@@ -68,16 +68,29 @@ export default class TransitionActionEditor extends PureComponent {
     confirmHandler: this.props.onClose
   })
 
-  handleSelectFunction = ({ target: { value } }) => this.setState(prevState => ({
-    name: value,
-    params: value ?
-      value === (this.props.action || {}).name ?
-        ((this.props.action || {}).params || []) :
-        Object.keys(
-          (this.props.actions[value].paramsSchema || {}).properties || {}
-        ).map(name => ({ name })) :
-      []
-  }), this.state.autoplay && this.handleInvoke)
+  handleSelect = this._triggerDialog({
+    showDialog: _ => {
+      const { name: pName, params: propParams } = this.props.action || {};
+      const { name: sName, params: stateParams } = this.state;
+
+      return pName === sName ?
+        !isEqual(propParams, stateParams) ||
+        stateParams.some(
+          ({ name, value }) => !find(propParams, ({ name: paramName }) => name === paramName) && isDef(value)
+        ) :
+        stateParams.some(({ value }) => isDef(value))
+    },
+    confirmHandler: ({ target: { value } }) => this.setState(prevState => ({
+      name: value,
+      params: value ?
+        value === (this.props.action || {}).name ?
+          ((this.props.action || {}).params || []) :
+          Object.keys(
+            (this.props.actions[value].paramsSchema || {}).properties || {}
+          ).map(name => ({ name })) :
+        []
+    }), this.state.autoplay && this.handleInvoke)
+  })
 
   handleChangeArg = param => ({ target: { value } }) => this.setState(prevState => ({
     params: (
@@ -185,29 +198,28 @@ export default class TransitionActionEditor extends PureComponent {
           <Table className="oc-fsm-crud-editor--table-actions">
             <thead>
               <tr>
-                <th>Current action</th>
-                <th>Parameters</th>
-                <th>Example Object</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <FormGroup controlId="formControlsSelect">
-                    <ControlLabel>Choose function</ControlLabel>
-                    <FormControl
-                      componentClass="select"
-                      value={actionName || ''}
-                      onChange={this.handleSelectFunction}
-                    >
-                      <option value="">Select</option>
-                      {
-                        Object.keys(actions).map((name, i) => (
-                          <option key={`${i}-${name}`} value={name}>{name}</option>
-                        ))
-                      }
-                    </FormControl>
-                  </FormGroup>
+                <th>
+                  <div className="oc-fsm-crud-editor--modal-heading">
+                    <div className="output-heading">
+                      <b>Choose action</b>
+                      <div className='right-block'>
+                        <FormControl
+                          componentClass="select"
+                          value={actionName || ''}
+                          onChange={this.handleSelect}
+                        >
+                          <option value="">Select</option>
+                          {
+                            Object.keys(actions).map((name, i) => (
+                              <option key={`${i}-${name}`} value={name}>{name}</option>
+                            ))
+                          }
+                        </FormControl>
+                      </div>
+                    </div>
+                  </div>
+                </th>
+                <th>
                   <div className="oc-fsm-crud-editor--modal-heading">
                     <div className="output-heading">
                       <b>Results</b>
@@ -228,17 +240,12 @@ export default class TransitionActionEditor extends PureComponent {
                       </div>
                     </div>
                   </div>
-                  <CodeEditor
-                    className="output-code"
-                    value={isDef(invocationResults) ? String(invocationResults).trim() : ''}
-                    options={{
-                      theme: "eclipse",
-                      lineWrapping: true,
-                      readOnly: 'nocursor'
-                    }}
-                  />
-                  <p>Not sure this is needed.</p>
-                </td>
+                </th>
+                <th>Example Object</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
                 <td>
                   {
                     actions[actionName] &&
@@ -265,6 +272,21 @@ export default class TransitionActionEditor extends PureComponent {
                 </td>
                 <td>
                   <CodeEditor
+                    className="output-code"
+                    value={isDef(invocationResults) ? String(invocationResults).trim() : ''}
+                    options={{
+                      theme: "eclipse",
+                      lineWrapping: true,
+                      readOnly: 'nocursor'
+                    }}
+                  />
+                  <p>
+                    This is NOT a real action invocation result.{`\u00A0`}
+                    It's just a quick view on parameters passed to corresponding function.
+                  </p>
+                </td>
+                <td>
+                  <CodeEditor
                     className="example-object"
                     value={exampleObject}
                     options={{
@@ -279,7 +301,6 @@ export default class TransitionActionEditor extends PureComponent {
                     onChange={this.handleChangeObject}
                   />
                   <span style={{ color: 'red' }}>{exampleObjectError}{`\u00A0`}</span>
-                  <p>Not sure this is needed.</p>
                 </td>
               </tr>
             </tbody>

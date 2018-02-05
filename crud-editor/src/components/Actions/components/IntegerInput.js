@@ -36,10 +36,10 @@ export default class IntegerInput extends PureComponent {
     const { value } = this.state;
 
     try {
-      const parsed = i18n.parseNumber(value);
+      const parsed = i18n.parseNumber(value || null);
       this.setState({
         value: i18n.formatNumber(parsed || null) || ''
-      }, _ => this.props.onChange({ target: { value: parsed } }))
+      })
     } catch (err) {
       this.setState({
         error: 'Not a valid integer'

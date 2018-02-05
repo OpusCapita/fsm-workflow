@@ -12,7 +12,7 @@ import withConfirmDialog from '../ConfirmDialog';
 import './ActionsTable.less';
 import ActionInvocationEditor from './ActionInvocationEditor.react';
 import { isDef } from '../utils';
-import { getActionArgType } from './utils';
+import { getActionArgType, formatArg } from './utils';
 import actionPropTypes from './actionPropTypes';
 
 @withConfirmDialog
@@ -31,6 +31,10 @@ export default class ActionsTable extends PureComponent {
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     exampleObject: PropTypes.object
+  }
+
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
   }
 
   state = {
@@ -81,8 +85,8 @@ export default class ActionsTable extends PureComponent {
 
 
   render() {
+    const { i18n } = this.context;
     const { title, actions } = this.props;
-
     const { transitionActions, showEditor, currentActionIndex } = this.state;
 
     let editorModal;
@@ -146,12 +150,15 @@ export default class ActionsTable extends PureComponent {
                             params.map(({ name, value }, i) => (
                               <p key={`${i}-${name}`}>
                                 <b>{name}:</b> {
-                                  isDef(value) &&
-                                  getActionArgType({
-                                    actions,
-                                    action: actionName,
-                                    param: name
-                                  }) === 'boolean' ? String(value) : value
+                                  formatArg({
+                                    i18n,
+                                    type: getActionArgType({
+                                      actions,
+                                      action: actionName,
+                                      param: name
+                                    }),
+                                    value
+                                  })
                                 }
                               </p>
                             ))

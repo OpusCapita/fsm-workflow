@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import { isDef } from '../utils';
 
 const evaluateArgs = (actionArgs, commonArgs) => ({
   ...commonArgs,
@@ -17,10 +18,15 @@ export const getActionArgType = ({ actions, action, param }) => ((
   (actions[action].paramsSchema || {}).properties || {})[param] || {}).
   type || 'string';
 
-// export const formatArg = i18n => type => value => {
-//   let result;
-
-//   switch (type) {
-
-//   }
-// }
+export const formatArg = ({ i18n, type, value }) => {
+  switch (type) {
+    case 'number':
+      return i18n.formatDecimalNumber(value);
+    case 'integer':
+      return i18n.formatNumber(value);
+    case 'boolean':
+      return isDef(value) ? String(value) : value;
+    default:
+      return value
+  }
+}

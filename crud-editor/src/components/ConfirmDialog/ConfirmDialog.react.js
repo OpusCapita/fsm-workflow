@@ -45,8 +45,8 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     confirmHandler: null
   })
 
-  handleConfirm = event => {
-    this.state.confirmHandler(event)
+  handleConfirm = _ => {
+    this.state.confirmHandler()
     this.handleClose();
   }
 
@@ -95,15 +95,23 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     title,
     message,
     BodyComponent
-  }) => event => showDialog() ?
-    this.setState({
-      show: true,
-      confirmHandler: _ => confirmHandler(event),
-      ...(title && { title }),
-      ...(message && { message }),
-      ...(BodyComponent && { BodyComponent }),
-    }) :
-    confirmHandler(event)
+  }) => event => {
+    if ('persist' in event) {
+      event.persist()
+    }
+
+    const { value } = event.target;
+
+    return showDialog() ?
+      this.setState(_ => ({
+        show: true,
+        confirmHandler: _ => confirmHandler({ target: { value } }),
+        ...(title && { title }),
+        ...(message && { message }),
+        ...(BodyComponent && { BodyComponent }),
+      })) :
+      confirmHandler(event)
+  }
 
   renderDialog = _ => {
     ReactDOM.render(this.createDialog(), this._mountNode);
