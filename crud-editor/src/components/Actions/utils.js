@@ -2,13 +2,13 @@ import get from 'lodash/get';
 import { isDef } from '../utils';
 
 const evaluateArgs = (actionArgs, commonArgs) => ({
-  ...commonArgs,
   ...actionArgs.reduce((customArgsObject, { name, type, value }) => ({
     ...customArgsObject,
     [name]: type === 'pathExpression' ?
       get(commonArgs[value.variable], value.path) :
       value
-  }), {})
+  }), {}),
+  ...commonArgs
 })
 
 export const invokeAction = (name, actionArgs, commonArgs) => `Action "${name}" called with params:\n` +

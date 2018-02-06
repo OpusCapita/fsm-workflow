@@ -23,7 +23,7 @@ export default class IntegerInput extends PureComponent {
 
     try {
       const result = i18n.parseNumber(value || null);
-      this.props.onChange({ target: { value: result } })
+      this.props.onChange(result)
     } catch (err) {
       error = 'Not a valid integer'
     } finally {

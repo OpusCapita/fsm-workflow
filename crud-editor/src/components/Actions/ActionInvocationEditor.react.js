@@ -68,7 +68,7 @@ export default class TransitionActionEditor extends PureComponent {
     confirmHandler: this.props.onClose
   })
 
-  handleSelect = this._triggerDialog({
+  handleSelect = ({ target: { value } }) => this._triggerDialog({
     showDialog: _ => {
       const { name: pName, params: propParams } = this.props.action || {};
       const { name: sName, params: stateParams } = this.state;
@@ -80,7 +80,7 @@ export default class TransitionActionEditor extends PureComponent {
         ) :
         stateParams.some(({ value }) => isDef(value))
     },
-    confirmHandler: ({ target: { value } }) => this.setState(prevState => ({
+    confirmHandler: _ => this.setState(prevState => ({
       name: value,
       params: value ?
         value === (this.props.action || {}).name ?
@@ -90,9 +90,9 @@ export default class TransitionActionEditor extends PureComponent {
           ).map(name => ({ name })) :
         []
     }), this.state.autoplay && this.handleInvoke)
-  })
+  })(value)
 
-  handleChangeArg = param => ({ target: { value } }) => this.setState(prevState => ({
+  handleChangeArg = param => value => this.setState(prevState => ({
     params: (
       // either change existing param or add a new one
       params => find(params, ({ name }) => name === param) ? params : params.concat({ name: param })

@@ -96,16 +96,10 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     message,
     BodyComponent
   }) => event => {
-    if ('persist' in event) {
-      event.persist()
-    }
-
-    const { value } = event.target;
-
     return showDialog() ?
       this.setState(_ => ({
         show: true,
-        confirmHandler: _ => confirmHandler({ target: { value } }),
+        confirmHandler: _ => confirmHandler(event),
         ...(title && { title }),
         ...(message && { message }),
         ...(BodyComponent && { BodyComponent }),

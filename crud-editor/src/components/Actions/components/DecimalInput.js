@@ -23,12 +23,8 @@ export default class DecimalInput extends PureComponent {
 
     try {
       const result = i18n.parseDecimalNumber(value || null);
-      this.props.onChange({
-        target: {
-          // chop long tail after decimal separator
-          value: i18n.parseDecimalNumber(i18n.formatDecimalNumber(result || null) || null)
-        }
-      })
+      // chop long tail after decimal separator
+      this.props.onChange(i18n.parseDecimalNumber(i18n.formatDecimalNumber(result || null) || null))
     } catch (err) {
       error = 'Not a valid number'
     } finally {
