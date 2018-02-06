@@ -30,7 +30,7 @@ machine.sendEvent({
   object,
   event,
   request,
-  //historyInfo: { description, user }
+  //historyInfo: { description, user } // Diff from Alexey's proposal.
   description,
   user
 });
