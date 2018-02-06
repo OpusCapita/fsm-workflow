@@ -22,7 +22,10 @@ export default class WorkflowEditor extends PureComponent {
   static propTypes = {
     onSave: PropTypes.func,
     title: PropTypes.string,
-    exampleObject: PropTypes.object,
+    objectInfo: PropTypes.shape({
+      example: PropTypes.object.isRequired,
+      schema: PropTypes.object
+    }).isRequired,
     workflow: PropTypes.shape({
       schema: PropTypes.shape({
         name: PropTypes.string,
@@ -278,7 +281,7 @@ export default class WorkflowEditor extends PureComponent {
                   states={schema.states.map(({ name }) => name)}
                   actions={actions}
                   getStateLabel={this.getStateLabel}
-                  exampleObject={this.props.exampleObject}
+                  exampleObject={this.props.objectInfo.example}
                   onEditTransition={this.handleEditTransition}
                   onDeleteTransition={this.handleDeleteTransition}
                   onSaveGuards={this.handleSaveTransitionGuards}

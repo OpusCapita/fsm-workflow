@@ -22,7 +22,7 @@ export const getParamSchema = ({ actions, action, param }) => (
 export const getArgType = ({ actions, action, param }) => {
   const schema = getParamSchema({ actions, action, param }) || {};
   const { type, format } = schema;
-  return type === 'string' && format === 'date-time' ? 'date' : type;
+  return type === 'string' && format === 'date' ? 'date' : type;
 }
 
 export const formatArg = ({ i18n, type, value }) => {

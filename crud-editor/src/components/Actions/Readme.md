@@ -100,11 +100,13 @@ Arguments types and corresponding editors
 --------------
 Action editor supports the following types of parameters and provides corresponding editor components. Types of parameters are defined in `paramsSchema` field of `action` object.
 
-| Type        | Component           | Notes  |
-| ------------- |-------------|-----|
-| `string`      | StringInput | Also used as a fallback component for types not mentioned in this table. Signature: `string` => `string`. |
-| `integer`      | IntegerInput | Signature: `integer` => `integer`. |
-| `number` | DecimalInput | Treats all numbers as `decimal`. Signature: `number` => `number`. |
-| `boolean` | BooleanInput | Checkbox. |
-| `string`, `number` or `integer` with `enum` field | EnumInput | Select box based on values in `enum` array. |
-| `date-time` | DateInput | Accepts and returns `date-time` formatted date string. Signature: `date-time` => `date-time`.|
+| Type        | Format | Enum | Component | Notes  |
+| ------------- | --------- | ------- | --------- | ----- |
+| `string`      |  |  | StringInput | Also used as a fallback component for types not mentioned in this table. Signature: `string` => `string`. |
+| `string` |  | yes | EnumInput | Select box based on values in `enum` array. |
+| `string` | `date` |  | DateInput | Accepts and returns `date` formatted date string. Signature: `date` => `date`.|
+| `integer`      |  |  | IntegerInput | Signature: `integer` => `integer`. |
+| `integer` |  | yes | EnumInput | Select box based on values in `enum` array. |
+| `number` |  |  | DecimalInput | Treats all numbers as `decimal`. Signature: `number` => `number`. |
+| `number` |  | yes | EnumInput | Select box based on values in `enum` array. |
+| `boolean` |  |  | BooleanInput | Checkbox. |

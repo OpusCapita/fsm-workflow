@@ -144,7 +144,9 @@ export default class ActionsTable extends PureComponent {
                   transitionActions.length > 0 ?
                     transitionActions.map(({ name: actionName, params = [] }, index) => (
                       <tr key={`${actionName}-${index}`}>
-                        <td>{formatLabel(actionName)}</td>
+                        <td style={{ paddingTop: '15px' }}>
+                          {formatLabel(actionName)}
+                        </td>
                         <td>
                           { params.length > 0 &&
                             <table className="oc-fsm-crud-editor--table-actions-parameters">

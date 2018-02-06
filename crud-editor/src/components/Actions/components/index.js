@@ -28,7 +28,7 @@ const getParamComponent = (schema = {}) => {
     )
   }
 
-  if (type === 'string' && schema.format === 'date-time') {
+  if (type === 'string' && schema.format === 'date') {
     Component = DateInput
   }
 
