@@ -123,7 +123,7 @@ export default class StatesTable extends PureComponent {
 
     return (
       <div className="oc-fsm-crud-editor--states-editor">
-        <Table className="oc-fsm-crud-editor--table">
+        <Table condensed={true} className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
               <th>Name</th>
@@ -157,8 +157,9 @@ export default class StatesTable extends PureComponent {
                     }
                   </td>
                   <td className='text-right'>
-                    <ButtonGroup bsStyle='sm'>
+                    <div className="btn-group btn-group-sm">
                       <Button
+                        title="Edit"
                         onClick={this.handleEdit(name)}
                       >
                         <Glyphicon glyph='edit'/>
@@ -166,13 +167,12 @@ export default class StatesTable extends PureComponent {
                         Edit
                       </Button>
                       <Button
+                        title="Delete"
                         onClick={this.handleDelete(name)}
                       >
                         <Glyphicon glyph='trash'/>
-                        {'\u2000'}
-                        Delete
                       </Button>
-                    </ButtonGroup>
+                    </div>
                   </td>
                 </tr>
               ))

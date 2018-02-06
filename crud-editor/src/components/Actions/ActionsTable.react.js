@@ -114,7 +114,7 @@ export default class ActionsTable extends PureComponent {
       <Modal
         show={true}
         onHide={this.handleClose}
-        dialogClassName="oc-fsm-crud-editor--modal"
+        dialogClassName="oc-fsm-crud-editor--modal oc-fsm-crud-editor--modal--large"
         backdrop='static'
       >
         <Modal.Header closeButton={true}>
@@ -124,7 +124,7 @@ export default class ActionsTable extends PureComponent {
         </Modal.Header>
         <Modal.Body>
           <div className="oc-fsm-crud-editor--states-editor">
-            <Table className="oc-fsm-crud-editor--table-actions">
+            <Table condensed={true} className="oc-fsm-crud-editor--table-actions">
               <thead>
                 <tr>
                   <th>Name</th>

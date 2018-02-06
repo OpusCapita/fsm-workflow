@@ -179,7 +179,7 @@ export default class Guards extends PureComponent {
       <Modal
         show={true}
         onHide={this.handleClose}
-        dialogClassName="oc-fsm-crud-editor--modal"
+        dialogClassName="oc-fsm-crud-editor--modal oc-fsm-crud-editor--modal--large"
         backdrop='static'
       >
         <Modal.Header closeButton={true}>

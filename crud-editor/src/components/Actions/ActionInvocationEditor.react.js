@@ -184,7 +184,7 @@ export default class TransitionActionEditor extends PureComponent {
       <Modal
         show={true}
         onHide={this.handleClose}
-        dialogClassName="oc-fsm-crud-editor--modal"
+        dialogClassName="oc-fsm-crud-editor--modal oc-fsm-crud-editor--modal--large"
         backdrop='static'
       >
         <Modal.Header closeButton={true}>
@@ -193,7 +193,7 @@ export default class TransitionActionEditor extends PureComponent {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Table className="oc-fsm-crud-editor--table-actions">
+          <Table condensed={true} className="oc-fsm-crud-editor--table-actions">
             <thead>
               <tr>
                 <th>

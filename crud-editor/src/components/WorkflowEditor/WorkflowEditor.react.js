@@ -54,6 +54,7 @@ export default class WorkflowEditor extends Component {
   }
 
   static defaultProps = {
+    title: '',
     workflow: {},
     onSave: _ => {}
   }
@@ -258,74 +259,97 @@ export default class WorkflowEditor extends Component {
     let { title } = this.props;
     let { schema, actions } = this.state.machine;
 
+    let headerElement = (
+      <div className="oc-fsm-crud-editor--workflow-editor__page-header">
+        <h2 className="oc-fsm-crud-editor--workflow-editor__page-header-text">
+          Workflow Editor <small>{title}</small>
+        </h2>
+        <Button
+          bsStyle="primary"
+          disabled={!schema.name ||
+                    schema.transitions.some(({ from, to, event }) => !(from && to && event))
+          }
+          onClick={this.handleSave}
+        >
+          Save
+        </Button>
+      </div>
+    );
+
+
+    let topFormElement = (
+      <div className="oc-fsm-crud-editor--workflow-editor__top-form">
+        <TopForm
+          name={schema.name}
+          onNameChange={this.handleNameChange}
+        />
+      </div>
+    );
+
+    let tabsElement = (
+      <Tabs
+        animation={false}
+        id="fsm-workflow-editor-elements"
+        mountOnEnter={true}
+        unmountOnExit={true}
+      >
+        <Tab eventKey={1} title="States">
+          <StatesTable
+            states={schema.states}
+            statesInTransitions={
+              schema.transitions.reduce(
+                (involvedStates, transition) => ['from', 'to'].reduce(
+                  (acc, key) => involvedStates.indexOf(transition[key]) === -1 ?
+                    acc.concat(transition[key]) :
+                    acc
+                  , involvedStates
+                ), []
+              )
+            }
+            initialState={schema.initialState}
+            finalStates={schema.finalStates}
+            onDelete={this.handleDeleteState}
+            onEdit={this.handleEditState}
+          />
+        </Tab>
+        <Tab eventKey={2} title="Transitions">
+          <TransitionsTable
+            transitions={schema.transitions}
+            states={schema.states.map(({ name }) => name)}
+            actions={actions}
+            getStateLabel={this.getStateLabel}
+            exampleObject={this.props.objectInfo.example}
+            onEditTransition={this.handleEditTransition}
+            onDeleteTransition={this.handleDeleteTransition}
+            onSaveGuards={this.handleSaveTransitionGuards}
+            onSaveActions={this.handleSaveTransitionActions}
+          />
+        </Tab>
+      </Tabs>
+    );
+
     return (
-      <Grid>
+      <Grid fluid={true}>
         <Row>
-          <Col sm={12}>
-            <h1>
-              Workflow Editor{title && `:\u00A0${title}`}
-              <Button
-                bsStyle="primary"
-                style={{ float: 'right', marginTop: '16px' }}
-                disabled={!schema.name ||
-                  schema.transitions.some(({ from, to, event }) => !(from && to && event))
-                }
-                onClick={this.handleSave}
-              >
-                Save
-              </Button>
-            </h1>
+          <Col lg={12}>
 
-            <TopForm
-              name={schema.name}
-              onNameChange={this.handleNameChange}
-            />
+            {headerElement}
 
-            <Tabs
-              animation={false}
-              id="fsm-workflow-editor-elements"
-              mountOnEnter={true}
-              unmountOnExit={true}
-            >
-              <Tab eventKey={1} title="States">
-                <StatesTable
-                  states={schema.states}
-                  statesInTransitions={
-                    schema.transitions.reduce(
-                      (involvedStates, transition) => ['from', 'to'].reduce(
-                        (acc, key) => involvedStates.indexOf(transition[key]) === -1 ?
-                          acc.concat(transition[key]) :
-                          acc
-                        , involvedStates
-                      ), []
-                    )
-                  }
-                  initialState={schema.initialState}
-                  finalStates={schema.finalStates}
-                  onDelete={this.handleDeleteState}
-                  onEdit={this.handleEditState}
-                />
-              </Tab>
-              <Tab eventKey={2} title="Transitions">
-                <TransitionsTable
-                  transitions={schema.transitions}
-                  states={schema.states.map(({ name }) => name)}
-                  actions={actions}
+            <Row>
+              <Col lg={6} md={12}>
+              {topFormElement}
+              {tabsElement}
+              </Col>
+
+              <Col lg={6} md={12}>
+                <EditorOutput
+                  schema={schema}
                   getStateLabel={this.getStateLabel}
-                  exampleObject={this.props.objectInfo.example}
-                  onEditTransition={this.handleEditTransition}
-                  onDeleteTransition={this.handleDeleteTransition}
-                  onSaveGuards={this.handleSaveTransitionGuards}
-                  onSaveActions={this.handleSaveTransitionActions}
+                  createJsonOutput={this.createJsonOutput}
                 />
-              </Tab>
-            </Tabs>
+              </Col>
+            </Row>
 
-            <EditorOutput
-              schema={schema}
-              getStateLabel={this.getStateLabel}
-              createJsonOutput={this.createJsonOutput}
-            />
           </Col>
         </Row>
       </Grid>

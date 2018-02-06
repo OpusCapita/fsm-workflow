@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Table,
   Button,
-  Glyphicon,
-  ButtonGroup
+  Glyphicon
 } from 'react-bootstrap';
 import { isDef } from '../utils';
 import Guards from '../Guards';
@@ -92,31 +91,31 @@ export default class TransitionsTable extends PureComponent {
             getStateLabel(to) || (<span style={{ color: 'red' }}>Specify 'to' state</span>)
           }
         </td>
-        <td className='text-right'>
-          <ButtonGroup bsSize="sm">
-            <Button onClick={this.handleModal(index)('edit')}>
+        <td className="text-right">
+          <div className="btn-group btn-group-sm">
+            <Button title="Edit" onClick={this.handleModal(index)('edit')}>
               <Glyphicon glyph='edit'/>
               {'\u2000'}
               Edit
             </Button>
             <Button
+              title="Guard"
               onClick={this.handleModal(index)('guard')}
               disabled={!(from && to && event)}
             >
               Guard
             </Button>
             <Button
+              title="Actions"
               onClick={this.handleModal(index)('action')}
               disabled={!(from && to && event)}
             >
               Actions
             </Button>
-            <Button onClick={this.handleDelete(index)}>
+            <Button title="Delete" onClick={this.handleDelete(index)}>
               <Glyphicon glyph='trash'/>
-              {'\u2000'}
-              Delete
             </Button>
-          </ButtonGroup>
+          </div>
         </td>
       </tr>
     ))
@@ -185,7 +184,7 @@ export default class TransitionsTable extends PureComponent {
 
     return (
       <div>
-        <Table className="oc-fsm-crud-editor--table">
+        <Table condensed={true} className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
               <th>Event</th>
