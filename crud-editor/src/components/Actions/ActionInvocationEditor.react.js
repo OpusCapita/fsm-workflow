@@ -99,7 +99,7 @@ export default class TransitionActionEditor extends PureComponent {
         name,
         ...rest,
         ...(param === name && {
-          value: this.getActionArgType(param) === 'boolean' ? // toggle boolean values
+          value: (this.getParamSchema(param) || {}).type === 'boolean' ? // toggle boolean values
             !(find(prevState.params, ({ name: n }) => n === name) || {}).value :
             value
         })
@@ -109,7 +109,7 @@ export default class TransitionActionEditor extends PureComponent {
 
   handleSave = _ => this.props.onSave({
     name: this.state.name,
-    params: this.state.params
+    params: this.state.params.filter(({ value }) => isDef(value))
   })
 
   handleChangeObject = value => {

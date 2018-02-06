@@ -185,6 +185,14 @@
           language: {
             "type": "string",
             "enum": ['en', 'de', 'fi', 'ru', 'sv', 'no']
+          },
+          priority: {
+            "type": "integer",
+            "enum": [0, 1, 2, 3, 4, 5]
+          },
+          expiryDate: {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "required": ["fromAddress", "greeting"]

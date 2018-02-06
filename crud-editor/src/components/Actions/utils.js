@@ -17,7 +17,13 @@ export const invokeAction = (name, actionArgs, commonArgs) => `Action "${name}" 
 
 export const getParamSchema = ({ actions, action, param }) => (
   (actions[action].paramsSchema || {}).properties || {}
-)[param]
+)[param];
+
+export const getArgType = ({ actions, action, param }) => {
+  const schema = getParamSchema({ actions, action, param }) || {};
+  const { type, format } = schema;
+  return type === 'string' && format === 'date-time' ? 'date' : type;
+}
 
 export const formatArg = ({ i18n, type, value }) => {
   switch (type) {
@@ -27,6 +33,8 @@ export const formatArg = ({ i18n, type, value }) => {
       return i18n.formatNumber(value);
     case 'boolean':
       return isDef(value) ? String(value) : value;
+    case 'date':
+      return isDef(value) ? i18n.formatDate(value) : value;
     default:
       return value
   }

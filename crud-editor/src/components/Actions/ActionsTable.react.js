@@ -12,7 +12,7 @@ import withConfirmDialog from '../ConfirmDialog';
 import './ActionsTable.less';
 import ActionInvocationEditor from './ActionInvocationEditor.react';
 import { isDef } from '../utils';
-import { formatArg, formatLabel, getParamSchema } from './utils';
+import { formatArg, formatLabel, getArgType } from './utils';
 import actionPropTypes from './actionPropTypes';
 
 @withConfirmDialog
@@ -150,24 +150,26 @@ export default class ActionsTable extends PureComponent {
                             <table className="oc-fsm-crud-editor--table-actions-parameters">
                               <tbody>
                                 {
-                                  params.map(({ name, value }, i) => (
-                                    <tr key={`${i}-${name}`}>
-                                      <td>{formatLabel(name)}</td>
-                                      <td className="parameter-value">
-                                        {
-                                          formatArg({
-                                            i18n,
-                                            type: (getParamSchema({
-                                              actions,
-                                              action: actionName,
-                                              param: name
-                                            }) || {}).type,
-                                            value
-                                          })
-                                        }
-                                      </td>
-                                    </tr>
-                                  ))
+                                  params.map(({ name, value }, i) => {
+                                    return (
+                                      <tr key={`${i}-${name}`}>
+                                        <td>{formatLabel(name)}</td>
+                                        <td className="parameter-value">
+                                          {
+                                            formatArg({
+                                              i18n,
+                                              type: getArgType({
+                                                actions,
+                                                action: actionName,
+                                                param: name
+                                              }),
+                                              value
+                                            })
+                                          }
+                                        </td>
+                                      </tr>
+                                    )
+                                  })
                                 }
                               </tbody>
                             </table>
