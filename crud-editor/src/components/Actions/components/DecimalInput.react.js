@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, Label } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
+import ErrorLabel from '../../ErrorLabel.react';
 
 export default class DecimalInput extends PureComponent {
   static propTypes = {
@@ -59,7 +60,7 @@ export default class DecimalInput extends PureComponent {
           onChange={this.handleChange}
           onBlur={this.handleBlur}
         />
-        <Label bsStyle='danger' style={{ ...(!error && { opacity: 0 }) }}>{error}{` `}</Label>
+        <ErrorLabel error={error}/>
       </div>
     )
   }
