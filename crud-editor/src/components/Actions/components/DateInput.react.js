@@ -10,7 +10,7 @@ export default function DateInput({ value, onChange, ...props }, { i18n }) {
       {...props}
       locale={i18n.locale}
       value={isDef(value) ? new Date(value) : null}
-      onChange={date => onChange(date instanceof Date ? date.toJSON() : null)}
+      onChange={date => onChange(date instanceof Date ? date.toJSON().slice(0, 10) : null)}
     />
   )
 }
