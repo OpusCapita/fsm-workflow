@@ -10,99 +10,79 @@ Workflow Transition History is an extension to FSM Core.  It provies server-side
 Install package
 
 ```
-npm install --save @opuscapita/fsm-workflow-transition-history
+npm install @opuscapita/fsm-workflow-transition-history
 ```
 
 ## Basic Usage
 
 ```javascript
-// By end app:
+// Run migrations and initiate an instance of FSM Workflow History.
+const { history } = await require('@opuscapita/fsm-workflow-history')(sequelize);
 
-const workflowTransitionHistory = require('@opuscapita/fsm-workflow-transition-history');
-
-const Sequelize = require('sequelize');
-const dbConfig = require('./config/db.js');
-const sequelize = new Sequelize(dbConfig);
-
-const machineDefinition = new MachineDefinition({
-  schema: schema,
-  conditions: require('../conditions/index'),
-  actions: require('../actions/index')
+// machine creation (per tenant/customer) could be own instalce(s) created.
+const machine = new Machine({
+  machineDefinition,
+  addHistory: history.add // Diff from Alexey's proposal.
 });
 
-let searchHistory, request, machine;
-
-const historyManager = workflowTransitionHistory.runMigrations(sequelize).
-  then(_ => workflowTransitionHistory.createModel(sequelize)).
-  then(({ add: addHistory, search }) => {
-    searchHistory = search;
-
-    machine = new Machine({
-      get addHistory() {
-          return addHistory({ user: request.user });
-      },
-      machineDefinition,
-      context: { db: { models: { BusinessObjectFlowAssignee: { update: function() {} } } } }
-    });
-  });
-
-app.get('/eventURL', (req, res) => {
-  request = req;
-
-  machine.sendEvent({
-    event: req.params.event,
-    object,
-    // ??? ALTERNATIVE APPROACH ??? request: {user: req.user},
-    context: {sequelize},
-    description: req.description // optional transition desciption.
-    })
+// Application has to pass history info/data into `sendEvent` via named parameter 'historyInfo'.
+machine.sendEvent({
+  object,
+  event,
+  request,
+  //historyInfo: { description, user }
+  description,
+  user
 });
-
-app.get('/searchURL', (req, res) => {
-  search({
-
-    // Optional.
-    // Its format is the same as "where" in sequelize.model().findAll
-    where: {
-      from: req.from, // from-state
-      to: req.to // to-state
-    },
-
-    // Optional.
-    // Its format is the same as "order" in sequelize.model().findAll
-    // default is ['createdOn','ASC']
-    order: [[req.field, req.direction]]
-
-  }).
-    then(objList => res.json({
-      id: obj.id,
-      from: obj.from,
-      to: obj.to,
-      event: obj.event,
-      businessObjType: obj.businessObjType,
-      businessObjId: obj.businessObjId,
-      user: obj.user,
-      description: obj.description,
-      createdOn: obj.createdOn
-    })).
-      catch(err => console.error('Error extracting objects from history:', err));
-})
 ```
 
-```javascript
-// By fsm-workflow core:
+**history** is JavaScript object with the followign structure/interface:
 
-function sendEvent({ object, event, request, description }) {
-  machineDefinition.addHistory({
+```javascript
+{
+  add({
     from: 'from-state',
     to: 'to-state',
-    event,
-    businessObjType: machineDefinition.schema.businessObjType,
-    businessObjId: object[machineDefinition.schema.businessObjectIdField],
-    description
-  }).
-    then(obj => console.log('The following obj has been added to history:', obj)).
-    catch(err => console.error('Error adding obj to histofy:', err));
+    event: 'transition-event',
+    businessObjType: 'invoice',
+    businessObjId: 'ew153-7210',
+    user: 'user-id-46270e',
+    description: 'Optional business object transition description text'
+  }) {
+    ...
+	return <promise of Transition Object>;
+  },
+
+  search({
+
+    // Optional. Its format is the same as "where" in sequelize.model().findAll
+    where: {
+      from: 'from-state',
+      to: 'to-state'
+    },
+
+    // Optional. Its format is the same as "order" in sequelize.model().findAll
+    order: [["createdOn","ASC"]]
+  }) {
+    ...
+	return <promise of Transition Object>;
+  }
+}
+```
+
+**Transition Object** is JavaScript object with values from DB:
+
+```javascript
+{
+  id: <string, Transition Object ID>,
+  from: <string>,
+  to: <string>,
+  event: <string>,
+  businessObjType: <string>,
+  businessObjId: <string>,
+  user: <string, user ID>,
+  description: <string or null>,
+  createdOn: <date>
 }
 ```
 
