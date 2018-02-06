@@ -153,11 +153,11 @@ export default class Guards extends PureComponent {
   hasUnsavedChanges = _ => {
     const initialGuards = this.props.guards;
 
-    const currentGuards = this.state.guards.map(({ name, body }) => ({ name, body }));
+    const currentGuards = this.state.guards.map(({ body }) => body);
 
     return initialGuards && initialGuards.length > 0 ?
       !isEqual(initialGuards, currentGuards) :
-      currentGuards[0].body
+      currentGuards[0]
   }
 
   handleClose = this._triggerDialog({
@@ -227,15 +227,17 @@ export default class Guards extends PureComponent {
                       <Col style={{ margin: '0 10px 0' }}>
                         <div className="oc-fsm-crud-editor--modal-heading">
                           <div className="output-heading">
-                            <b>Output</b>
+                            <b>Results</b>
                             <div className='right-block'>
-                              <Glyphicon
-                                glyph='play'
-                                style={{
-                                  ...(autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
-                                }}
-                                {...(!autoplay && { onClick: this.handleEvalCode(guardIndex) })}
-                              />
+                              <div>
+                                <Glyphicon
+                                  glyph='play'
+                                  style={{
+                                    ...(autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
+                                  }}
+                                  {...(!autoplay && { onClick: this.handleEvalCode(guardIndex) })}
+                                />
+                              </div>
                               <Checkbox
                                 onChange={this.handleToggleAutoplay}
                                 checked={!!autoplay}

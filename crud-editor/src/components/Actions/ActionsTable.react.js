@@ -12,7 +12,7 @@ import withConfirmDialog from '../ConfirmDialog';
 import './ActionsTable.less';
 import ActionInvocationEditor from './ActionInvocationEditor.react';
 import { isDef } from '../utils';
-import { getActionArgType, formatArg } from './utils';
+import { getActionArgType, formatArg, formatLabel } from './utils';
 import actionPropTypes from './actionPropTypes';
 
 @withConfirmDialog
@@ -128,7 +128,7 @@ export default class ActionsTable extends PureComponent {
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Arguments</th>
+                  <th>Parameters</th>
                   <th className='text-right'>
                     <Button
                       bsSize='sm'
@@ -144,24 +144,33 @@ export default class ActionsTable extends PureComponent {
                   transitionActions.length > 0 ?
                     transitionActions.map(({ name: actionName, params = [] }, index) => (
                       <tr key={`${actionName}-${index}`}>
-                        <td>{actionName}</td>
+                        <td>{formatLabel(actionName)}</td>
                         <td>
-                          {
-                            params.map(({ name, value }, i) => (
-                              <p key={`${i}-${name}`}>
-                                <b>{name}:</b> {
-                                  formatArg({
-                                    i18n,
-                                    type: getActionArgType({
-                                      actions,
-                                      action: actionName,
-                                      param: name
-                                    }),
-                                    value
-                                  })
+                          { params.length > 0 &&
+                            <table className="oc-fsm-crud-editor--table-actions-parameters">
+                              <tbody>
+                                {
+                                  params.map(({ name, value }, i) => (
+                                    <tr key={`${i}-${name}`}>
+                                      <td>{formatLabel(name)}</td>
+                                      <td className="parameter-value">
+                                        {
+                                          formatArg({
+                                            i18n,
+                                            type: getActionArgType({
+                                              actions,
+                                              action: actionName,
+                                              param: name
+                                            }),
+                                            value
+                                          })
+                                        }
+                                      </td>
+                                    </tr>
+                                  ))
                                 }
-                              </p>
-                            ))
+                              </tbody>
+                            </table>
                           }
                         </td>
                         <td className='text-right'>

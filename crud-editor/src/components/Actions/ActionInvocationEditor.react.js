@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap';
 import withConfirmDialog from '../ConfirmDialog';
 import CodeEditor from '../CodeEditor';
-import { invokeAction, getActionArgType } from './utils';
+import { invokeAction, getActionArgType, formatLabel } from './utils';
 import { isDef } from '../utils';
 import components from './components';
 
@@ -208,10 +208,10 @@ export default class TransitionActionEditor extends PureComponent {
                           value={actionName || ''}
                           onChange={this.handleSelect}
                         >
-                          <option value="">Select</option>
+                          <option value=""></option>
                           {
                             Object.keys(actions).map((name, i) => (
-                              <option key={`${i}-${name}`} value={name}>{name}</option>
+                              <option key={`${i}-${name}`} value={name}>{formatLabel(name)}</option>
                             ))
                           }
                         </FormControl>
@@ -224,13 +224,15 @@ export default class TransitionActionEditor extends PureComponent {
                     <div className="output-heading">
                       <b>Results</b>
                       <div className='right-block'>
-                        <Glyphicon
-                          glyph='play'
-                          style={{
-                            ...(actionName && autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
-                          }}
-                          {...(actionName && !autoplay && { onClick: this.handleInvoke }) }
-                        />
+                        <div>
+                          <Glyphicon
+                            glyph='play'
+                            style={{
+                              ...(actionName && autoplay ? { color: '#ddd' } : { cursor: 'pointer' })
+                            }}
+                            {...(actionName && !autoplay && { onClick: this.handleInvoke }) }
+                          />
+                        </div>
                         <Checkbox
                           onChange={this.handleToggleAutoplay}
                           checked={!!autoplay}
@@ -254,7 +256,7 @@ export default class TransitionActionEditor extends PureComponent {
                         key={`${i}-${name}`}
                         controlId="formControlsSelect"
                       >
-                        <ControlLabel>{name}</ControlLabel>
+                        <ControlLabel>{formatLabel(name)}</ControlLabel>
                         {
                           (
                             Component => (

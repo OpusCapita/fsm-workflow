@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
+import startCase from 'lodash/startCase';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
@@ -44,6 +45,10 @@ export default class WorkflowEditor extends PureComponent {
     })
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   static defaultProps = {
     onSave: _ => {}
   }
@@ -64,10 +69,7 @@ export default class WorkflowEditor extends PureComponent {
 
   stateFromProps = props => {
     const schema = (props.workflow || {}).schema || {};
-
-    return ({
-      schema
-    })
+    return ({ schema })
   }
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
@@ -214,7 +216,7 @@ export default class WorkflowEditor extends PureComponent {
     })
   )
 
-  getStateLabel = name => (({ name, description } = {}) => description || name)(
+  getStateLabel = name => (({ name, description } = {}) => description || startCase(name))(
     find(this.state.schema.states, ({ name: stateName }) => name === stateName)
   )
 

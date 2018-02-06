@@ -143,28 +143,22 @@
         "description": "Inspection Required"
       },
       {
-        "name": "approvalRequired",
-        "description": "Approval Required"
+        "name": "approvalRequired"
       },
       {
-        "name": "inspClrRequired",
-        "description": "Insp Clr Required"
+        "name": "inspClrRequired"
       },
       {
-        "name": "inspectionRejected",
-        "description": "Inspection Rejected"
+        "name": "inspectionRejected"
       },
       {
-        "name": "approved",
-        "description": "Approved"
+        "name": "approved"
       },
       {
-        "name": "appClrRequired",
-        "description": "App Clr Required"
+        "name": "appClrRequired"
       },
       {
-        "name": "approvalRejected",
-        "description": "Approval Rejected"
+        "name": "approvalRejected"
       }
     ]
   },

@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import startCase from 'lodash/startCase';
 import { isDef } from '../utils';
 
 const evaluateArgs = (actionArgs, commonArgs) => ({
@@ -11,7 +12,7 @@ const evaluateArgs = (actionArgs, commonArgs) => ({
   ...commonArgs
 })
 
-export const invokeAction = (name, actionArgs, commonArgs) => `Action "${name}" called with params:\n` +
+export const invokeAction = (name, actionArgs, commonArgs) => `Action "${name}" called with parameters:\n` +
   JSON.stringify(evaluateArgs(actionArgs, commonArgs), null, 2)
 
 export const getActionArgType = ({ actions, action, param }) => ((
@@ -30,3 +31,5 @@ export const formatArg = ({ i18n, type, value }) => {
       return value
   }
 }
+
+export const formatLabel = str => startCase(str);
