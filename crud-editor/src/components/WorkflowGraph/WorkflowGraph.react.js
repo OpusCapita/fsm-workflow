@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Viz from 'viz.js';
 import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-bootstrap';
 
 const propTypes = {
   schema: PropTypes.object,
@@ -39,8 +40,8 @@ class WorkflowGraph extends Component {
     const { getStateLabel } = this.props;
 
     let src = '';
-    src += `digraph finite_state_machine {\n`;
-    src += `graph [splines=ortho, nodesep=0.6]`;
+    src += `digraph {\n`;
+    src += `graph [splines=ortho, nodesep=0.6, size=7]`;
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     // eslint-disable-next-line max-len
@@ -84,13 +85,30 @@ class WorkflowGraph extends Component {
     return (
       <div
         className="oc-fsm-crud-editor--workflow-graph"
-      >
+        >
+        <Navbar fluid={true}>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <span>Schema</span>
+            </Navbar.Brand>
+          </Navbar.Header>
+          <Nav>
+            <NavDropdown eventKey={3} title="Available events" id="oc-fsm--crud-editor--workflow-graph-nav">
+              <MenuItem eventKey={3.1}>Action</MenuItem>
+              <MenuItem eventKey={3.2}>Another action</MenuItem>
+              <MenuItem eventKey={3.3}>Something else here</MenuItem>
+              <MenuItem divider />
+              <MenuItem eventKey={3.4}>Reset</MenuItem>
+            </NavDropdown>
+          </Nav>
+        </Navbar>
         <div
           className="oc-fsm-crud-editor--workflow-graph__svg"
           dangerouslySetInnerHTML={{ __html: svg }}
-        >
+          >
         </div>
-        <div className="oc-fsm-crud-editor--workflow-graph__legend">
+
+        <div className="oc-fsm-crud-editor--workflow-graph__legend panel-body">
           <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
             <div
               className={`
@@ -118,7 +136,6 @@ class WorkflowGraph extends Component {
             ></div>
             <div>— final state nodes</div>
           </div>
-
         </div>
       </div>
     );
