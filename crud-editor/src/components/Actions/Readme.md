@@ -98,7 +98,7 @@ For `path expression` perameters type is taken from paramsSchema and checked aga
 
 Arguments types and corresponding editors
 --------------
-Action editor supports the following types of parameters. Types are defined in `paramsSchema` field in `action` object.
+Action editor supports the following types of parameters and provides corresponding editor components. Types of parameters are defined in `paramsSchema` field of `action` object.
 
 | Type        | Component           | Notes  |
 | ------------- |-------------|-----|
@@ -106,5 +106,5 @@ Action editor supports the following types of parameters. Types are defined in `
 | `integer`      | IntegerInput | Accepts only integer numbers. |
 | `number` | DecimalInput | Treats all numbers as decimal. |
 | `boolean` | BooleanInput | Checkbox |
-| `string`, `number`, `integer` with `enum` field | EnumInput | Select box based on values in `enum` array. |
+| `string`, `number` or `integer` with `enum` field | EnumInput | Select box based on values in `enum` array. |
 | `date-time` | DateInput | Accepts and returns `date-time` formatted date string. |
