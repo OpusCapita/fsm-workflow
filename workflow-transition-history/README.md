@@ -20,19 +20,14 @@ npm install @opuscapita/fsm-workflow-transition-history
 const { history } = await require('@opuscapita/fsm-workflow-history')(sequelize);
 
 // machine creation (per tenant/customer) could be own instalce(s) created.
-const machine = new Machine({
-  machineDefinition,
-  addHistory: history.add // Diff from Alexey's proposal.
-});
+const machine = new Machine({ machineDefinition, history });
 
 // Application has to pass history info/data into `sendEvent` via named parameter 'historyInfo'.
 machine.sendEvent({
   object,
   event,
   request,
-  //historyInfo: { description, user } // Diff from Alexey's proposal.
-  description,
-  user
+  historyInfo: { description, user, businessObjId, businessObjType }
 });
 ```
 
