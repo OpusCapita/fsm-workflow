@@ -98,3 +98,13 @@ For `path expression` perameters type is taken from paramsSchema and checked aga
 
 Arguments types and corresponding editors
 --------------
+Action editor supports the following types of parameters. Types are defined in `paramsSchema` field in `action` object.
+
+| Type        | Component           | Notes  |
+| ------------- |-------------|-----|
+| `string`      | StringInput | Also used as a fallback component for types not mentioned in this table. |
+| `integer`      | IntegerInput | Accepts only integer numbers. |
+| `number` | DecimalInput | Treats all numbers as decimal. |
+| `boolean` | BooleanInput | Checkbox |
+| `string`, `number`, `integer` with `enum` field | EnumInput | Select box based on values in `enum` array. |
+| `date-time` | DateInput | Accepts and returns `date-time` formatted date string. |
