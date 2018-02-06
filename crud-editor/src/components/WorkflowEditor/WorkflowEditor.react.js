@@ -287,7 +287,7 @@ export default class WorkflowEditor extends Component {
               mountOnEnter={true}
               unmountOnExit={true}
             >
-              <Tab eventKey={1} title={(<h4>States</h4>)}>
+              <Tab eventKey={1} title="States">
                 <StatesTable
                   states={schema.states}
                   statesInTransitions={
@@ -306,7 +306,7 @@ export default class WorkflowEditor extends Component {
                   onEdit={this.handleEditState}
                 />
               </Tab>
-              <Tab eventKey={2} title={(<h4>Transitions</h4>)}>
+              <Tab eventKey={2} title="Transitions">
                 <TransitionsTable
                   transitions={schema.transitions}
                   states={schema.states.map(({ name }) => name)}
