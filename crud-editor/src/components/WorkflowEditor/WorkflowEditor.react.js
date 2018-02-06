@@ -17,7 +17,6 @@ import {
   DELETE_STATE_TRANSITIONS,
   SWAP_STATE_IN_TRANSITIONS
 } from '../StatesTable/StatesTable.react';
-import ActionsExample from '../ActionsExample';
 
 export default class WorkflowEditor extends PureComponent {
   static propTypes = {
@@ -285,9 +284,6 @@ export default class WorkflowEditor extends PureComponent {
                   onSaveGuards={this.handleSaveTransitionGuards}
                   onSaveActions={this.handleSaveTransitionActions}
                 />
-              </Tab>
-              <Tab eventKey={3} title={(<h4>Actions Dev Playground</h4>)}>
-                <ActionsExample/>
               </Tab>
             </Tabs>
 

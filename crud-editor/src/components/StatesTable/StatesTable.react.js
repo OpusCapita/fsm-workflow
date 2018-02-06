@@ -5,7 +5,6 @@ import {
   Table,
   ButtonGroup,
   Button,
-  Label,
   Glyphicon
 } from 'react-bootstrap';
 import statePropTypes from './statePropTypes';
@@ -129,7 +128,8 @@ export default class StatesTable extends PureComponent {
             <tr>
               <th>Name</th>
               <th>Description</th>
-              <th>Notes</th>
+              <th style={{ width: '60px' }} className='text-center'>Initial</th>
+              <th style={{ width: '60px' }} className='text-center'>Final</th>
               <th className='text-right'>
                 <Button
                   bsSize='sm'
@@ -146,12 +146,14 @@ export default class StatesTable extends PureComponent {
                 <tr key={name}>
                   <td>{name}</td>
                   <td>{description}</td>
-                  <td>
+                  <td className='text-center'>
                     {
-                      isInitial && (<Label bsStyle="primary" style={{ marginLeft: '5px' }}>Initial</Label>)
+                      isInitial && (<Glyphicon glyph='ok'/>)
                     }
+                  </td>
+                  <td className='text-center'>
                     {
-                      isFinal && (<Label bsStyle="success" style={{ marginLeft: '5px' }}>Final</Label>)
+                      isFinal && (<Glyphicon glyph='ok'/>)
                     }
                   </td>
                   <td className='text-right'>
