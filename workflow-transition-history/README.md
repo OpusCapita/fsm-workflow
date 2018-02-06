@@ -15,7 +15,7 @@ npm install --save @opuscapita/fsm-workflow-transition-history
 
 ## Basic Usage
 
-```
+```javascript
 // By end app:
 
 const workflowTransitionHistory = require('@opuscapita/fsm-workflow-transition-history');
@@ -92,7 +92,7 @@ app.get('/searchURL', (req, res) => {
 ```javascript
 // By fsm-workflow core:
 
-sendEvent({ object, event, request, description }) {
+function sendEvent({ object, event, request, description }) {
   machineDefinition.addHistory({
     from: 'from-state',
     to: 'to-state',
