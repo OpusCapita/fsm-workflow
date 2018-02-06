@@ -15,9 +15,9 @@ const evaluateArgs = (actionArgs, commonArgs) => ({
 export const invokeAction = (name, actionArgs, commonArgs) => `Action "${name}" called with parameters:\n` +
   JSON.stringify(evaluateArgs(actionArgs, commonArgs), null, 2)
 
-export const getActionArgType = ({ actions, action, param }) => ((
-  (actions[action].paramsSchema || {}).properties || {})[param] || {}).
-  type || 'string';
+export const getParamSchema = ({ actions, action, param }) => (
+  (actions[action].paramsSchema || {}).properties || {}
+)[param]
 
 export const formatArg = ({ i18n, type, value }) => {
   switch (type) {

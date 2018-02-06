@@ -14,11 +14,9 @@ import {
 } from 'react-bootstrap';
 import withConfirmDialog from '../ConfirmDialog';
 import CodeEditor from '../CodeEditor';
-import { invokeAction, getActionArgType, formatLabel } from './utils';
+import { invokeAction, getParamSchema, formatLabel } from './utils';
 import { isDef } from '../utils';
-import components from './components';
-
-const getComponentByType = type => components[type] || components.string;
+import getParamComponent from './components';
 
 @withConfirmDialog
 export default class TransitionActionEditor extends PureComponent {
@@ -47,7 +45,7 @@ export default class TransitionActionEditor extends PureComponent {
     autoplay: false
   }
 
-  getActionArgType = param => getActionArgType({
+  getParamSchema = param => getParamSchema({
     actions: this.props.actions,
     action: this.state.name,
     param
@@ -266,7 +264,15 @@ export default class TransitionActionEditor extends PureComponent {
                                 onChange={this.handleChangeArg(name)}
                               />
                             )
-                          )(getComponentByType(getActionArgType({ actions, action: actionName, param: name })))
+                          )(
+                            getParamComponent(
+                              getParamSchema({
+                                actions,
+                                action: actionName,
+                                param: name
+                              })
+                            )
+                          )
                         }
                       </FormGroup>
                     ))

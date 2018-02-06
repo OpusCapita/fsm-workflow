@@ -12,7 +12,7 @@ import withConfirmDialog from '../ConfirmDialog';
 import './ActionsTable.less';
 import ActionInvocationEditor from './ActionInvocationEditor.react';
 import { isDef } from '../utils';
-import { getActionArgType, formatArg, formatLabel } from './utils';
+import { formatArg, formatLabel, getParamSchema } from './utils';
 import actionPropTypes from './actionPropTypes';
 
 @withConfirmDialog
@@ -157,11 +157,11 @@ export default class ActionsTable extends PureComponent {
                                         {
                                           formatArg({
                                             i18n,
-                                            type: getActionArgType({
+                                            type: (getParamSchema({
                                               actions,
                                               action: actionName,
                                               param: name
-                                            }),
+                                            }) || {}).type,
                                             value
                                           })
                                         }

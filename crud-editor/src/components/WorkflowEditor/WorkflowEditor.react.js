@@ -215,7 +215,7 @@ export default class WorkflowEditor extends PureComponent {
     })
   )
 
-  getStateLabel = name => (({ name, description } = {}) => description || startCase(name))(
+  getStateLabel = name => (({ name, description } = {}) => description || startCase(name || ''))(
     find(this.state.schema.states, ({ name: stateName }) => name === stateName)
   )
 

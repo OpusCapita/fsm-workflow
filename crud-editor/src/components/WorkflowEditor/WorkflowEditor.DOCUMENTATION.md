@@ -181,6 +181,10 @@
           },
           interest: {
             "type": "number"
+          },
+          language: {
+            "type": "string",
+            "enum": ['en', 'de', 'fi', 'ru', 'sv', 'no']
           }
         },
         "required": ["fromAddress", "greeting"]
