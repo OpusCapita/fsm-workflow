@@ -54,7 +54,7 @@ app.get('/eventURL', (req, res) => {
     object,
     // ??? ALTERNATIVE APPROACH ??? request: {user: req.user},
     context: {sequelize},
-	description: req.description // optional transition desciption.
+    description: req.description // optional transition desciption.
     })
 });
 
