@@ -12,6 +12,7 @@
     "lint-fix": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc --fix"
   },
   "dependencies": {
+    "@opuscapita/fsm-workflow-core": "0.0.3",
     "@opuscapita/react-dates": "^0.4.0-beta.4",
     "@opuscapita/react-select": "1.0.0-oc.0",
     "codemirror": "5.33.0",

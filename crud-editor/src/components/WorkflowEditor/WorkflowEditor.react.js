@@ -1,13 +1,15 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
 import isEqual from 'lodash/isEqual';
+import extend from 'lodash/extend';
 import find from 'lodash/find';
 import startCase from 'lodash/startCase';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
 import EditorOutput from '../EditorOutput.react';
+import { MachineDefinition, Machine } from '@opuscapita/fsm-workflow-core';
 import { isDef } from '../utils';
 import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
@@ -18,7 +20,7 @@ import {
   SWAP_STATE_IN_TRANSITIONS
 } from '../StatesTable/StatesTable.react';
 
-export default class WorkflowEditor extends PureComponent {
+export default class WorkflowEditor extends Component {
   static propTypes = {
     onSave: PropTypes.func,
     title: PropTypes.string,
@@ -52,77 +54,75 @@ export default class WorkflowEditor extends PureComponent {
   }
 
   static defaultProps = {
+    workflow: {},
     onSave: _ => {}
   }
 
-  constructor(...args) {
-    super(...args);
+  constructor(props) {
+    super(props);
 
     this.state = {
-      ...this.stateFromProps(this.props)
-    }
+      machine: new MachineDefinition(props.workflow)
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps, this.props)) {
-      this.setState(this.stateFromProps(nextProps))
+    if (!isEqual(nextProps.workflow, this.props.workflow)) {
+      this.setState({
+        machine: new MachineDefinition(props.workflow)
+      });
     }
-  }
-
-  stateFromProps = props => {
-    const schema = (props.workflow || {}).schema || {};
-    return ({ schema })
   }
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
   setNewState = setFunc => this.setState(setFunc)
 
-  handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
-    schema: {
-      ...prevState.schema,
-      name
-    }
-  }))
+  handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => {
+    let machine = extend({}, prevState.machine);
+    machine.schema.name = name;
 
-  handleInitialStateChange = initialState => this.setNewState(prevState => ({
-    schema: {
-      ...prevState.schema,
-      initialState
-    }
-  }))
+    return ({ machine });
+  });
 
-  handleFinalStatesChange = finalStates => this.setNewState(prevState => ({
-    schema: {
-      ...prevState.schema,
-      finalStates
-    }
-  }))
+  handleInitialStateChange = initialState => this.setNewState(prevState => {
+    let machine = extend({}, prevState.machine);
+    machine.schema.initialState = initialState;
 
-  handleEditTransition = ({ index, ...rest }) => this.setNewState(prevState => ({
-    schema: {
-      ...prevState.schema,
-      transitions: [
-        ...(
-          isDef(index) ?
-            prevState.schema.transitions.map((t, i) => i === index ? { ...t, ...rest } : t) :
-            prevState.schema.transitions.concat({ ...rest })
-        )
-      ]
-    }
-  }))
+    return ({ machine });
+  });
+
+  handleFinalStatesChange = finalStates => this.setNewState(prevState => {
+    let machine = extend({}, prevState.machine);
+    machine.schema.finalStates = finalStates;
+
+    return ({ machine });
+  });
+
+  handleEditTransition = ({ index, ...rest }) => this.setNewState(prevState => {
+    let machine = extend({}, prevState.machine);
+    let schema = machine.schema;
+
+    let transitions = isDef(index) ?
+      schema.transitions.map((t, i) => i === index ? { ...t, ...rest } : t) :
+      schema.transitions.concat({ ...rest });
+
+    schema.transitions = transitions;
+    machine.schema = schema;
+
+    return ({ machine });
+  });
 
   handleDeleteTransition = index => {
-    const { transitions } = this.state.schema;
+    let machine = extend({}, this.state.machine);
 
-    this.setNewState(prevState => ({
-      schema: {
-        ...prevState.schema,
-        transitions: [
-          ...transitions.slice(0, index),
-          ...transitions.slice(index + 1)
-        ]
-      }
-    }))
+    let transitions = [
+      ...machine.schema.transitions.slice(0, index),
+      ...machine.schema.transitions.slice(index + 1)
+    ];
+
+    machine.schema.transitions = transitions;
+
+    this.setNewState(prevState => ({ machine }));
   }
 
   handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards })
@@ -130,20 +130,20 @@ export default class WorkflowEditor extends PureComponent {
   handleSaveTransitionActions = index => actions => this.handleEditTransition({ index, actions })
 
   createJsonOutput = _ => {
-    const { schema } = this.state;
+    const { schema } = this.state.machine;
 
     const transitions = schema.transitions.map(({ guards, actions, ...rest }) => ({
       ...rest,
       ...(guards && guards.length > 0 && { guards }),
       ...(actions && actions.length > 0 && { actions })
-    }))
+    }));
 
     return {
       schema: {
         ...schema,
         transitions
       }
-    }
+    };
   }
 
   handleSave = _ => this.props.onSave(this.createJsonOutput())
@@ -151,25 +151,36 @@ export default class WorkflowEditor extends PureComponent {
   handleDeleteState = ({ name: stateName, sideEffect = {} }) => {
     const { name: sideEffectName, alternative } = sideEffect;
 
-    return this.setNewState(prevState => ({
-      schema: {
-        ...prevState.schema,
-        states: prevState.schema.states.filter(({ name }) => name !== stateName),
-        ...(sideEffectName && {
-          transitions: sideEffectName === DELETE_STATE_TRANSITIONS ?
-            prevState.schema.transitions.filter(({ from, to }) => !(from === stateName || to === stateName)) :
-            sideEffectName === SWAP_STATE_IN_TRANSITIONS ?
-              prevState.schema.transitions.map(({ from, to, ...rest }) => ({
-                ...rest,
-                from: from === stateName ? alternative : from,
-                to: to === stateName ? alternative : to
-              })) :
-              prevState.schema.transitions
-        }),
-        initialState: prevState.schema.initialState === stateName ? '' : prevState.schema.initialState,
-        finalStates: prevState.schema.finalStates.filter(state => state !== stateName)
-      }
-    }))
+    let machine = extend({}, this.state.machine);
+    let schema = machine.schema;
+
+    let states = schema.states.filter(({ name }) => name !== stateName);
+    schema.states = states;
+
+    let initialState = schema.initialState === stateName ? '' : schema.initialState;
+    schema.initialState = initialState;
+
+    let finalStates = schema.finalStates.filter(state => state !== stateName);
+    schema.finalStates = finalStates;
+
+    let transitions;
+    if (!sideEffectName) {
+      transitions = schema.transitions;
+
+    } else if (sideEffectName === DELETE_STATE_TRANSITIONS) {
+      transitions = schema.transitions.filter(({ from, to }) => !(from === stateName || to === stateName));
+
+    } else if (sideEffectName === SWAP_STATE_IN_TRANSITIONS) {
+      transitions = schema.transitions.map(({ from, to, ...rest }) => ({
+        ...rest,
+        from: from === stateName ? alternative : from,
+        to: to === stateName ? alternative : to
+      }));
+    }
+
+    schema.transitions = transitions;
+
+    return this.setNewState(prevState => ({ machine }));
   }
 
   handleEditState = ({
@@ -178,54 +189,74 @@ export default class WorkflowEditor extends PureComponent {
     description,
     isInitial,
     isFinal
-  }) => this.setNewState(prevState => initialName ?
-    // edited previously existed state
-    ({
-      schema: {
-        ...prevState.schema,
-        states: prevState.schema.states.map(state => state.name === initialName ? { name, description } : state),
-        initialState: (initialState => isInitial ?
-          name :
-          initialState === initialName ?
-            '' :
-            initialState
-        )(prevState.schema.initialState),
-        finalStates: (fs => fs.indexOf(initialName) > -1 && isFinal === false ?
-          fs.filter(state => state !== initialName) :
-          fs.indexOf(initialName) > -1 && isFinal ? // should rename
-            fs.map(state => state === initialName ? name : state) :
-            isFinal ?
-              fs.concat(name) : // state was not already final -> should add state to finalStates
-              fs // nothing to do
-        )(prevState.schema.finalStates),
-        transitions: prevState.schema.transitions.map(({ from, to, ...other }) => ({
-          ...other,
-          from: from === initialName ? name : from,
-          to: to === initialName ? name : to
-        }))
+  }) => this.setNewState(prevState => {
+    let machine = extend({}, this.state.machine);
+    let schema = machine.schema;
+
+
+    if (initialName) { // edited previously existed state
+      let states = schema.states.map(state => state.name === initialName ? { name, description } : state);
+      schema.states = states;
+
+
+      let initialState;
+      if (isInitial) {
+        initialState = name;
+      } else if (schema.initialState === initialName) {
+        initialState = '';
+      } else {
+        initialState = schema.initialState;
+      };
+      schema.initialState = initialState;
+
+
+      let finalStates;
+      if (schema.finalStates.indexOf(initialName) > -1 && isFinal === false) {
+        finalStates = schema.finalStates.filter(state => state !== initialName);
+
+      } else if (schema.finalStates.indexOf(initialName) > -1 && isFinal) {
+        finalStates = schema.finalStates.map(state => state === initialName ? name : state);
+
+      } else if (isFinal) {
+        finalStates = schema.finalStates.concat([name]);
+      } else {
+        finalStates = schema.finalStates;
       }
-    }) :
-    // add new state
-    ({
-      schema: {
-        ...prevState.schema,
-        states: prevState.schema.states.concat({ name, description }),
-        ...(isInitial && { initialState: name }),
-        ...(isFinal && {
-          finalStates: prevState.schema.finalStates.concat(name)
-        })
+      schema.finalStates = finalStates;
+
+
+      let transitions = schema.transitions.map(({ from, to, ...other }) => ({
+        ...other,
+        from: from === initialName ? name : from,
+        to: to === initialName ? name : to
+      }));
+      schema.transitions = transitions;
+
+
+    } else { // add new state
+      let states = schema.states.concat([{ name, description }]);
+      schema.states = states;
+
+      if (isInitial) {
+        schema.initialState = name;
       }
-    })
-  )
+
+      if (isFinal) {
+        let finalStates = prevState.schema.finalStates.concat(name);
+        schema.finalStates = finalStates;
+      }
+    }
+
+    return ({ machine });
+  });
 
   getStateLabel = name => (({ name, description } = {}) => description || startCase(name || ''))(
-    find(this.state.schema.states, ({ name: stateName }) => name === stateName)
+    find(this.state.machine.schema.states, ({ name: stateName }) => name === stateName)
   )
 
   render() {
-    const { schema } = this.state;
-
-    const { title, workflow: { actions } } = this.props;
+    let { title } = this.props;
+    let { schema, actions } = this.state.machine;
 
     return (
       <Grid>
