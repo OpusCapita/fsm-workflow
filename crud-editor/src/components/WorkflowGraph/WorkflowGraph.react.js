@@ -14,12 +14,14 @@ const REGULAR_STATE_COLOR = '#0277bd';
 const propTypes = {
   schema: PropTypes.object,
   selectedStates: PropTypes.arrayOf(PropTypes.string),
-  getStateLabel: PropTypes.func.isRequired
+  getStateLabel: PropTypes.func.isRequired,
+  onStatesSelect: PropTypes.func
 };
 
 const defaultProps = {
   schema: null,
-  selectedStates: []
+  selectedStates: [],
+  onStatesSelect: () => {}
 };
 
 export default
@@ -45,6 +47,26 @@ class WorkflowGraph extends Component {
       selectedStates: nextProps.selectedStates,
       getStateLabel: nextProps.getStateLabel
     });
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.addNodesEventListenersTimeout);
+  }
+
+  addNodesEventListeners = () => {
+    if (this.svgRef) {
+      this.addNodesEventListenersTimeout = setTimeout(() => {
+        let svgNodes = Array.from(this.svgRef.querySelectorAll('[id^=oc-fsm--graph__node--]'));
+        console.log(svgNodes);
+
+        svgNodes.map((node) => {
+          let nodeName = decodeURIComponent(node.id.replace('oc-fsm--graph__node--', ''));
+          node.addEventListener('click', () => this.props.onStatesSelect([nodeName]));
+        });
+      }, 300);
+    } else {
+      this.addNodesEventListeners();
+    }
   }
 
   renderStates = ({
@@ -86,7 +108,7 @@ class WorkflowGraph extends Component {
       // eslint-disable-next-line max-len
       let nodeStr = `node [shape = record fillcolor="${fillColor}" margin="0.2,0.1" color="${color}" fontname="Helvetica" style="rounded,filled", penwidth=6];`;
 
-      return `${nodeStr} "${getStateLabel(state.name)}" [id="fsm-node--${state.name}"]`;
+      return `${nodeStr} "${getStateLabel(state.name)}" [id="oc-fsm--graph__node--${encodeURIComponent(state.name)}"]`;
     }).join(' ');
   }
 
@@ -112,7 +134,7 @@ class WorkflowGraph extends Component {
     src += transitions.
       filter(({ from, to, event }) => (from && to && event)).
       // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
-      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="fsm-edge-${from}-${to}"]`)).
+      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge-${encodeURIComponent(from)}-${encodeURIComponent(to)}", penwidth=2, color="#333333"]`)).
       join(`\n`);
     src += `}`;
 
@@ -124,6 +146,8 @@ class WorkflowGraph extends Component {
     this.setState({
       svg: Viz(vizSrc, { format: "svg", engine: "dot", totalMemory: 16777216 })
     });
+
+    this.addNodesEventListeners();
   }
 
   render() {
@@ -162,6 +186,7 @@ class WorkflowGraph extends Component {
           </Nav>
         </Navbar>
         <div
+          ref={ref => (this.svgRef = ref)}
           className="oc-fsm-crud-editor--workflow-graph__svg"
           dangerouslySetInnerHTML={{ __html: svg }}
         >

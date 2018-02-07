@@ -4,7 +4,13 @@ import PropTypes from 'prop-types';
 import WorkflowGraph from './WorkflowGraph';
 // import CodeEditor from './CodeEditor';
 
-export default function EditorOutput({ schema, getStateLabel, createJsonOutput, selectedStates }) {
+export default function EditorOutput({
+  schema,
+  getStateLabel,
+  createJsonOutput,
+  selectedStates,
+  onStatesSelect
+}) {
   // const jsonSchema = JSON.stringify(createJsonOutput(), null, 2);
 
   return (
@@ -14,6 +20,7 @@ export default function EditorOutput({ schema, getStateLabel, createJsonOutput, 
           schema={schema}
           selectedStates={selectedStates}
           getStateLabel={getStateLabel}
+          onStatesSelect={onStatesSelect}
         />
       </div>
       {/* <Tabs
@@ -53,5 +60,11 @@ EditorOutput.propTypes = {
   schema: PropTypes.object.isRequired,
   selectedStates: PropTypes.arrayOf(PropTypes.string),
   getStateLabel: PropTypes.func.isRequired,
-  createJsonOutput: PropTypes.func.isRequired
+  createJsonOutput: PropTypes.func.isRequired,
+  onStatesSelect: PropTypes.func
+};
+
+EditorOutput.defaultProps = {
+  selectedStates: [],
+  onStatesSelect: () => {}
 };

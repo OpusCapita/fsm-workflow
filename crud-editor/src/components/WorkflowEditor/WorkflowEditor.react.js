@@ -79,10 +79,8 @@ export default class WorkflowEditor extends Component {
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
   setNewState = setFunc => this.setState(setFunc);
 
-  handleSelectState = (stateName) => {
-    this.setState({
-      selectedStates: [stateName]
-    });
+  handleSelectStates = (selectedStates) => {
+    this.setState({ selectedStates });
   }
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => {
@@ -314,7 +312,7 @@ export default class WorkflowEditor extends Component {
             selectedStates={selectedStates}
             onDelete={this.handleDeleteState}
             onEdit={this.handleEditState}
-            onSelect={this.handleSelectState}
+            onSelect={(state) => this.handleSelectStates([state])}
           />
         </Tab>
         <Tab eventKey={2} title="Transitions">
@@ -352,6 +350,7 @@ export default class WorkflowEditor extends Component {
                   selectedStates={selectedStates}
                   getStateLabel={this.getStateLabel}
                   createJsonOutput={this.createJsonOutput}
+                  onStatesSelect={this.handleSelectStates}
                 />
               </Col>
             </Row>
