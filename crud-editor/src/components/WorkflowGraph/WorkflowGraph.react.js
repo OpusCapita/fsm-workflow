@@ -54,16 +54,17 @@ class WorkflowGraph extends Component {
   }
 
   addNodesEventListeners = () => {
+    clearTimeout(this.addNodesEventListenersTimeout);
+
     if (this.svgRef) {
       this.addNodesEventListenersTimeout = setTimeout(() => {
         let svgNodes = Array.from(this.svgRef.querySelectorAll('[id^=oc-fsm--graph__node--]'));
-        console.log(svgNodes);
 
         svgNodes.map((node) => {
           let nodeName = decodeURIComponent(node.id.replace('oc-fsm--graph__node--', ''));
           node.addEventListener('click', () => this.props.onStatesSelect([nodeName]));
         });
-      }, 300);
+      }, 200);
     } else {
       this.addNodesEventListeners();
     }
@@ -118,7 +119,7 @@ class WorkflowGraph extends Component {
 
     let src = '';
     src += `digraph schema {\n`;
-    src += `graph [splines=ortho, nodesep=0.6, size=7]`;
+    src += `graph [splines=true, nodesep=0.3, size=12]`;
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     src += `\t${this.renderStates({
@@ -134,7 +135,7 @@ class WorkflowGraph extends Component {
     src += transitions.
       filter(({ from, to, event }) => (from && to && event)).
       // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
-      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge-${encodeURIComponent(from)}-${encodeURIComponent(to)}", penwidth=2, color="#333333"]`)).
+      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge-${encodeURIComponent(from)}-${encodeURIComponent(to)}", penwidth=1, color="#333333", label = "${event}"]`)).
       join(`\n`);
     src += `}`;
 
