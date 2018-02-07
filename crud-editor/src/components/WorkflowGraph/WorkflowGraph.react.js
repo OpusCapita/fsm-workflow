@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Viz from 'viz.js';
 import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 
 const propTypes = {
   schema: PropTypes.object,
@@ -99,7 +99,7 @@ class WorkflowGraph extends Component {
               <MenuItem eventKey={3.1}>Action</MenuItem>
               <MenuItem eventKey={3.2}>Another action</MenuItem>
               <MenuItem eventKey={3.3}>Something else here</MenuItem>
-              <MenuItem divider />
+              <MenuItem divider={true} />
               <MenuItem eventKey={3.4}>Reset</MenuItem>
             </NavDropdown>
           </Nav>
@@ -107,7 +107,7 @@ class WorkflowGraph extends Component {
         <div
           className="oc-fsm-crud-editor--workflow-graph__svg"
           dangerouslySetInnerHTML={{ __html: svg }}
-          >
+        >
         </div>
 
         <div className="oc-fsm-crud-editor--workflow-graph__legend panel-body">

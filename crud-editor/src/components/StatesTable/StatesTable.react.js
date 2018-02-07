@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import {
   Table,
-  ButtonGroup,
   Button,
   Glyphicon
 } from 'react-bootstrap';

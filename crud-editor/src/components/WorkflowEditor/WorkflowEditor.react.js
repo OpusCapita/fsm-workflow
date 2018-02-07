@@ -9,7 +9,7 @@ import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
 import EditorOutput from '../EditorOutput.react';
-import { MachineDefinition, Machine } from '@opuscapita/fsm-workflow-core';
+import { MachineDefinition } from '@opuscapita/fsm-workflow-core';
 import { isDef } from '../utils';
 import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
@@ -71,7 +71,7 @@ export default class WorkflowEditor extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps.workflow, this.props.workflow)) {
       this.setState({
-        machine: new MachineDefinition(props.workflow)
+        machine: new MachineDefinition(nextProps.workflow)
       });
     }
   }
@@ -174,10 +174,8 @@ export default class WorkflowEditor extends Component {
     let transitions;
     if (!sideEffectName) {
       transitions = schema.transitions;
-
     } else if (sideEffectName === DELETE_STATE_TRANSITIONS) {
       transitions = schema.transitions.filter(({ from, to }) => !(from === stateName || to === stateName));
-
     } else if (sideEffectName === SWAP_STATE_IN_TRANSITIONS) {
       transitions = schema.transitions.map(({ from, to, ...rest }) => ({
         ...rest,
@@ -214,17 +212,15 @@ export default class WorkflowEditor extends Component {
         initialState = '';
       } else {
         initialState = schema.initialState;
-      };
+      }
       schema.initialState = initialState;
 
 
       let finalStates;
       if (schema.finalStates.indexOf(initialName) > -1 && isFinal === false) {
         finalStates = schema.finalStates.filter(state => state !== initialName);
-
       } else if (schema.finalStates.indexOf(initialName) > -1 && isFinal) {
         finalStates = schema.finalStates.map(state => state === initialName ? name : state);
-
       } else if (isFinal) {
         finalStates = schema.finalStates.concat([name]);
       } else {
@@ -239,8 +235,6 @@ export default class WorkflowEditor extends Component {
         to: to === initialName ? name : to
       }));
       schema.transitions = transitions;
-
-
     } else { // add new state
       let states = schema.states.concat([{ name, description }]);
       schema.states = states;
@@ -348,8 +342,8 @@ export default class WorkflowEditor extends Component {
 
             <Row>
               <Col lg={6} md={12}>
-              {topFormElement}
-              {tabsElement}
+                {topFormElement}
+                {tabsElement}
               </Col>
 
               <Col lg={6} md={12}>
