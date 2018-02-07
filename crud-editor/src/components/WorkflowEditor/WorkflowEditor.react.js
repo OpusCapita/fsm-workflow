@@ -65,7 +65,8 @@ export default class WorkflowEditor extends Component {
     this.state = {
       machine: new MachineDefinition(props.workflow),
       selectedStates: [],
-      selectedTransitions: []
+      selectedTransitions: [],
+      activeTabKey: 0
     };
   }
 
@@ -81,11 +82,19 @@ export default class WorkflowEditor extends Component {
   setNewState = setFunc => this.setState(setFunc);
 
   handleSelectStates = (selectedStates) => {
-    this.setState({ selectedStates });
+    this.setState({
+      selectedStates,
+      selectedTransitions: [],
+      activeTabKey: 0
+    });
   }
 
   handleSelectTransitions = (selectedTransitions) => {
-    this.setState({ selectedTransitions });
+    this.setState({
+      selectedStates: [],
+      selectedTransitions,
+      activeTabKey: 1
+    });
   }
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => {
@@ -261,7 +270,7 @@ export default class WorkflowEditor extends Component {
 
   render() {
     let { title } = this.props;
-    let { selectedStates, selectedTransitions, machine } = this.state;
+    let { selectedStates, selectedTransitions, activeTabKey, machine } = this.state;
 
     let { schema, actions } = machine;
 
@@ -294,12 +303,14 @@ export default class WorkflowEditor extends Component {
 
     let tabsElement = (
       <Tabs
+        activeKey={activeTabKey}
+        onSelect={(key) => this.setState({ activeTabKey: key })}
         animation={false}
         id="fsm-workflow-editor-elements"
         mountOnEnter={true}
         unmountOnExit={true}
       >
-        <Tab eventKey={1} title="States">
+        <Tab eventKey={0} title="States">
           <StatesTable
             states={schema.states}
             statesInTransitions={
@@ -320,7 +331,7 @@ export default class WorkflowEditor extends Component {
             onSelect={(state) => this.handleSelectStates([state])}
           />
         </Tab>
-        <Tab eventKey={2} title="Transitions">
+        <Tab eventKey={1} title="Transitions">
           <TransitionsTable
             transitions={schema.transitions}
             selectedTransitions={selectedTransitions}
@@ -336,7 +347,7 @@ export default class WorkflowEditor extends Component {
         </Tab>
       </Tabs>
     );
-    console.log('st', selectedTransitions);
+
     return (
       <Grid fluid={true}>
         <Row>
@@ -354,6 +365,7 @@ export default class WorkflowEditor extends Component {
                 <EditorOutput
                   schema={schema}
                   selectedStates={selectedStates}
+                  selectedTransitions={selectedTransitions}
                   getStateLabel={this.getStateLabel}
                   createJsonOutput={this.createJsonOutput}
                   onStatesSelect={this.handleSelectStates}

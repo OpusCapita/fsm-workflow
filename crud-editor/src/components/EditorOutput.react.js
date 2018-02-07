@@ -9,6 +9,7 @@ export default function EditorOutput({
   getStateLabel,
   createJsonOutput,
   selectedStates,
+  selectedTransitions,
   onStatesSelect,
   onTransitionsSelect
 }) {
@@ -20,6 +21,7 @@ export default function EditorOutput({
         <WorkflowGraph
           schema={schema}
           selectedStates={selectedStates}
+          selectedTransitions={selectedTransitions}
           getStateLabel={getStateLabel}
           onStatesSelect={onStatesSelect}
           onTransitionsSelect={onTransitionsSelect}
@@ -61,6 +63,7 @@ export default function EditorOutput({
 EditorOutput.propTypes = {
   schema: PropTypes.object.isRequired,
   selectedStates: PropTypes.arrayOf(PropTypes.string),
+  selectedTransitions: PropTypes.arrayOf(PropTypes.object),
   getStateLabel: PropTypes.func.isRequired,
   createJsonOutput: PropTypes.func.isRequired,
   onStatesSelect: PropTypes.func,
@@ -69,6 +72,7 @@ EditorOutput.propTypes = {
 
 EditorOutput.defaultProps = {
   selectedStates: [],
+  selectedTransitions: [],
   onStatesSelect: () => {},
   onTransitionsSelect: () => {}
 };

@@ -29,7 +29,8 @@ export default class TransitionsTable extends PureComponent {
     }),
     selectedTransitions: PropTypes.arrayOf(PropTypes.shape({
       from: PropTypes.string,
-      to: PropTypes.string
+      to: PropTypes.string,
+      event: PropTypes.string
     })),
     getStateLabel: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
@@ -87,7 +88,7 @@ export default class TransitionsTable extends PureComponent {
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr
         key={index}
-        className={selectedTransitions.filter(tr => (tr.from === from && tr.to === to)).length ? 'active' : ''}
+        className={selectedTransitions.filter(tr => (tr.from === from && tr.to === to && tr.event === event)).length ? 'active' : ''}
       >
         <td>
           {event}

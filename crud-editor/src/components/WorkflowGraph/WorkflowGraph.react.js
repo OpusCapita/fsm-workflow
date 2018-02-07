@@ -10,10 +10,13 @@ import rgbHex from 'rgb-hex';
 const INITIAL_STATE_COLOR = '#14892c';
 const FINAL_STATE_COLOR = '#b71c1c';
 const REGULAR_STATE_COLOR = '#0277bd';
+const REGULAR_EDGE_COLOR = '#333333';
+const SELECTED_EDGE_COLOR = '#333333';
 
 const propTypes = {
   schema: PropTypes.object,
   selectedStates: PropTypes.arrayOf(PropTypes.string),
+  selectedTransitions: PropTypes.arrayOf(PropTypes.object),
   getStateLabel: PropTypes.func.isRequired,
   onStatesSelect: PropTypes.func,
   onTransitionsSelect: PropTypes.func
@@ -22,6 +25,7 @@ const propTypes = {
 const defaultProps = {
   schema: null,
   selectedStates: [],
+  selectedTransitions: [],
   onStatesSelect: () => {},
   onTransitionsSelect: () => {}
 };
@@ -39,6 +43,7 @@ class WorkflowGraph extends Component {
     this.renderGraph({
       schema: this.props.schema,
       selectedStates: this.props.selectedStates,
+      selectedTransitions: this.props.selectedTransitions,
       getStateLabel: this.props.getStateLabel
     });
   }
@@ -47,6 +52,7 @@ class WorkflowGraph extends Component {
     this.renderGraph({
       schema: nextProps.schema,
       selectedStates: nextProps.selectedStates,
+      selectedTransitions: nextProps.selectedTransitions,
       getStateLabel: nextProps.getStateLabel
     });
   }
@@ -75,19 +81,19 @@ class WorkflowGraph extends Component {
 
   addEdgesEventListeners = () => {
     clearTimeout(this.addEdgesEventListenersTimeout);
-    console.log('1');
+
     if (this.svgRef) {
-      console.log('2');
       this.addEdgesEventListenersTimeout = setTimeout(() => {
         let svgEdges = Array.from(this.svgRef.querySelectorAll('[id^=oc-fsm--graph__edge----]'));
-        console.log('sv', svgEdges);
+
         svgEdges.map((edge) => {
           let edgeFromTo = decodeURIComponent(edge.id.replace('oc-fsm--graph__edge----', ''));
           let splittedEdgeFromTo = edgeFromTo.split('----');
-          let edgeFrom = splittedEdgeFromTo[0];
-          let edgeTo = splittedEdgeFromTo[1];
+          let from = decodeURIComponent(splittedEdgeFromTo[0]);
+          let to = decodeURIComponent(splittedEdgeFromTo[1]);
+          let event = decodeURIComponent(splittedEdgeFromTo[2]);
 
-          edge.addEventListener('click', () => this.props.onTransitionsSelect([{ from: edgeFrom, to: edgeTo }]));
+          edge.addEventListener('click', () => this.props.onTransitionsSelect([{ from, to, event }]));
         });
       }, 200);
     } else {
@@ -138,13 +144,33 @@ class WorkflowGraph extends Component {
     }).join(' ');
   }
 
-  convertSchemaToDotLang({ schema, selectedStates, getStateLabel }) {
+  renderEdges = ({
+    transitions,
+    selectedTransitions,
+    regularEdgeColor,
+    selectedEdgeColor,
+    getStateLabel
+  }) => {
+    return transitions.
+      filter(({ from, to, event }) => (from && to && event)).
+      // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
+      map(({ from, to, event }) => {
+        let isSelected = selectedTransitions.filter((tr) => tr.from === from && tr.to === to && tr.event === event).length;
+        let color = isSelected ? regularEdgeColor : regularEdgeColor;
+        let penwidth = isSelected ? '4' : '1';
+
+        return (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge----${encodeURIComponent(from)}----${encodeURIComponent(to)}----${encodeURIComponent(event)}", penwidth=${penwidth}, color="${color}", label = "${event}"]`);
+      }).
+      join(`\n`);
+  }
+
+  convertSchemaToDotLang({ schema, selectedStates, selectedTransitions, getStateLabel }) {
     // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
     const { transitions, initialState, finalStates, states } = schema;
 
     let src = '';
     src += `digraph schema {\n`;
-    src += `graph [splines=true, nodesep=0.3, size=10]`;
+    src += `graph [splines=true, nodesep=0.3, size=12]`;
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     src += `\t${this.renderStates({
@@ -157,18 +183,20 @@ class WorkflowGraph extends Component {
         finalStateColor: FINAL_STATE_COLOR,
         getStateLabel
     })}\n`;
-    src += transitions.
-      filter(({ from, to, event }) => (from && to && event)).
-      // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
-      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge----${encodeURIComponent(from)}----${encodeURIComponent(to)}", penwidth=1, color="#333333", label = "${event}"]`)).
-      join(`\n`);
+    src += this.renderEdges({
+      transitions,
+      selectedTransitions,
+      regularEdgeColor: REGULAR_EDGE_COLOR,
+      selectedEdgeColor: SELECTED_EDGE_COLOR,
+      getStateLabel
+    });
     src += `}`;
 
     return src;
   }
 
-  renderGraph = ({ schema, selectedStates, getStateLabel }) => {
-    const vizSrc = this.convertSchemaToDotLang({ schema, selectedStates, getStateLabel });
+  renderGraph = ({ schema, selectedStates, selectedTransitions, getStateLabel }) => {
+    const vizSrc = this.convertSchemaToDotLang({ schema, selectedStates, selectedTransitions, getStateLabel });
     this.setState({
       svg: Viz(vizSrc, { format: "svg", engine: "dot", totalMemory: 16777216 })
     });
