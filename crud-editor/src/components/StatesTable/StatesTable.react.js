@@ -22,10 +22,17 @@ export default class StatesTable extends PureComponent {
     states: PropTypes.arrayOf(statePropTypes),
     initialState: PropTypes.string.isRequired,
     finalStates: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedStates: PropTypes.arrayOf(PropTypes.string),
     onDelete: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
+    onSelect: PropTypes.func,
     statesInTransitions: PropTypes.arrayOf(PropTypes.string)
-  }
+  };
+
+  static defaultProps = {
+    selectedStates: [],
+    onSelect: () => {}
+  };
 
   constructor(...args) {
     super(...args);
@@ -34,10 +41,14 @@ export default class StatesTable extends PureComponent {
       states: this.statesFromProps(this.props),
       currentState: null,
       showModal: false
-    }
+    };
   }
 
   componentWillReceiveProps = props => this.setState({ states: this.statesFromProps(props) })
+
+  handleStateClick = (stateName) => {
+    this.props.onSelect(stateName);
+  }
 
   statesFromProps = ({ states, initialState, finalStates }) => states.map(state => ({
     ...state,
@@ -49,7 +60,7 @@ export default class StatesTable extends PureComponent {
     name: DELETE_STATE_TRANSITIONS
   }
 
-  handleDelete = name => {
+  handleDelete = (e, name) => {
     const { statesInTransitions } = this.props;
 
     const { states } = this.state;
@@ -100,6 +111,8 @@ export default class StatesTable extends PureComponent {
   }
 
   render() {
+    const { selectedStates } = this.props;
+    console.log('ss', selectedStates);
     const { states, currentState, showModal } = this.state;
 
     let modal;
@@ -108,7 +121,7 @@ export default class StatesTable extends PureComponent {
       let state;
 
       if (isDef(currentState)) {
-        state = find(states, ({ name }) => name === currentState)
+        state = find(states, ({ name }) => name === currentState);
       }
 
       modal = (
@@ -118,12 +131,16 @@ export default class StatesTable extends PureComponent {
           onClose={this.handleClose}
           onSave={this.handleSave}
         />
-      )
+      );
     }
 
     return (
       <div className="oc-fsm-crud-editor--states-editor">
-        <Table condensed={true} className="oc-fsm-crud-editor--table">
+        <Table
+          condensed={true}
+          hover={true}
+          className="oc-fsm-crud-editor--table"
+        >
           <thead>
             <tr>
               <th>Name</th>
@@ -143,7 +160,11 @@ export default class StatesTable extends PureComponent {
           <tbody>
             {
               states.map(({ name, description, isInitial, isFinal }) => (
-                <tr key={name}>
+                <tr
+                  key={name}
+                  onClick={e => this.handleStateClick(name)}
+                  className={selectedStates.indexOf(name) === -1 ? '' : 'active'}
+                >
                   <td>{name}</td>
                   <td>{description}</td>
                   <td className='text-center'>

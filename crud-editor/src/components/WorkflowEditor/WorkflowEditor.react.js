@@ -63,7 +63,8 @@ export default class WorkflowEditor extends Component {
     super(props);
 
     this.state = {
-      machine: new MachineDefinition(props.workflow)
+      machine: new MachineDefinition(props.workflow),
+      selectedStates: []
     };
   }
 
@@ -76,7 +77,13 @@ export default class WorkflowEditor extends Component {
   }
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
-  setNewState = setFunc => this.setState(setFunc)
+  setNewState = setFunc => this.setState(setFunc);
+
+  handleSelectState = (stateName) => {
+    this.setState({
+      selectedStates: [stateName]
+    });
+  }
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => {
     let machine = extend({}, prevState.machine);
@@ -257,7 +264,9 @@ export default class WorkflowEditor extends Component {
 
   render() {
     let { title } = this.props;
-    let { schema, actions } = this.state.machine;
+    let { selectedStates, machine } = this.state;
+
+    let { schema, actions } = machine;
 
     let headerElement = (
       <div className="oc-fsm-crud-editor--workflow-editor__page-header">
@@ -308,8 +317,10 @@ export default class WorkflowEditor extends Component {
             }
             initialState={schema.initialState}
             finalStates={schema.finalStates}
+            selectedStates={selectedStates}
             onDelete={this.handleDeleteState}
             onEdit={this.handleEditState}
+            onSelect={this.handleSelectState}
           />
         </Tab>
         <Tab eventKey={2} title="Transitions">
@@ -344,6 +355,7 @@ export default class WorkflowEditor extends Component {
               <Col lg={6} md={12}>
                 <EditorOutput
                   schema={schema}
+                  selectedStates={selectedStates}
                   getStateLabel={this.getStateLabel}
                   createJsonOutput={this.createJsonOutput}
                 />

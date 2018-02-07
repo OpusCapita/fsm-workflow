@@ -7,11 +7,13 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-boots
 
 const propTypes = {
   schema: PropTypes.object,
+  selectedStates: PropTypes.arrayOf(PropTypes.string),
   getStateLabel: PropTypes.func.isRequired
 };
 
 const defaultProps = {
-  schema: null
+  schema: null,
+  selectedStates: []
 };
 
 export default
@@ -40,16 +42,16 @@ class WorkflowGraph extends Component {
     const { getStateLabel } = this.props;
 
     let src = '';
-    src += `digraph {\n`;
+    src += `digraph schema {\n`;
     src += `graph [splines=ortho, nodesep=0.6, size=7]`;
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     // eslint-disable-next-line max-len
     src += `\tnode [shape = record fillcolor="#b71c1c" margin="0.2,0.1" color="transparent" fontname="Helvetica" style="rounded,filled"];\n`;
-    src += `\t${finalStates.map(state => `"${getStateLabel(state)}"`).join(' ')}\n`;
+    src += `\t${finalStates.map(state => `"${getStateLabel(state)}"`).join(' ')}\n`; // render final state nodes
     src += `\tnode [fillcolor="#14892c"];\n`;
-    src = initialState ? src + `\t"${getStateLabel(initialState)}"\n` : src;
-    src += `\tnode [fillcolor="#0277bd"];\n`;
+    src = initialState ? src + `\t"${getStateLabel(initialState)}"\n` : src; // render initial state node
+    src += `\tnode [fillcolor="#0277bd"];\n`; // render regular state nodes
     src += transitions.
       filter(({ from, to, event }) => (from && to && event)).
       // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
@@ -85,7 +87,7 @@ class WorkflowGraph extends Component {
     return (
       <div
         className="oc-fsm-crud-editor--workflow-graph"
-        >
+      >
         <Navbar fluid={true}>
           <Navbar.Header>
             <Navbar.Brand>

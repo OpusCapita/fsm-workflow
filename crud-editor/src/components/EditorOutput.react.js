@@ -4,13 +4,17 @@ import PropTypes from 'prop-types';
 import WorkflowGraph from './WorkflowGraph';
 // import CodeEditor from './CodeEditor';
 
-export default function EditorOutput({ schema, getStateLabel, createJsonOutput }) {
+export default function EditorOutput({ schema, getStateLabel, createJsonOutput, selectedStates }) {
   // const jsonSchema = JSON.stringify(createJsonOutput(), null, 2);
 
   return (
     <div>
       <div className="oc-fsm-crud-editor--workflow-editor__tab">
-        <WorkflowGraph schema={schema} getStateLabel={getStateLabel}/>
+        <WorkflowGraph
+          schema={schema}
+          selectedStates={selectedStates}
+          getStateLabel={getStateLabel}
+        />
       </div>
       {/* <Tabs
         animation={false}
@@ -42,11 +46,12 @@ export default function EditorOutput({ schema, getStateLabel, createJsonOutput }
         </Tab>
       </Tabs> */}
     </div>
-  )
+  );
 }
 
 EditorOutput.propTypes = {
   schema: PropTypes.object.isRequired,
+  selectedStates: PropTypes.arrayOf(PropTypes.string),
   getStateLabel: PropTypes.func.isRequired,
   createJsonOutput: PropTypes.func.isRequired
-}
+};

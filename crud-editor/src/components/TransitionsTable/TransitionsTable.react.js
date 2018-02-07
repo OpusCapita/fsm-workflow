@@ -184,7 +184,11 @@ export default class TransitionsTable extends PureComponent {
 
     return (
       <div>
-        <Table condensed={true} className="oc-fsm-crud-editor--table">
+        <Table
+          condensed={true}
+          hover={true}
+          className="oc-fsm-crud-editor--table"
+        >
           <thead>
             <tr>
               <th>Event</th>
