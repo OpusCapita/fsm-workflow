@@ -343,6 +343,7 @@ export default class WorkflowEditor extends Component {
             onDeleteTransition={this.handleDeleteTransition}
             onSaveGuards={this.handleSaveTransitionGuards}
             onSaveActions={this.handleSaveTransitionActions}
+            onSelect={(transition) => this.handleSelectTransitions([transition])}
           />
         </Tab>
       </Tabs>

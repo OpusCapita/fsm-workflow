@@ -33,6 +33,7 @@ export default class TransitionsTable extends PureComponent {
       event: PropTypes.string
     })),
     getStateLabel: PropTypes.func.isRequired,
+    onSelect: PropTypes.func,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
@@ -41,13 +42,18 @@ export default class TransitionsTable extends PureComponent {
   }
 
   static defaultProps = {
-    selectedTransitions: []
+    selectedTransitions: [],
+    onSelect: () => {}
   }
 
   state = {
     showModal: false,
     modalType: null,
     currentTransition: null
+  }
+
+  handleTransitionClick = (transition) => {
+    this.props.onSelect(transition);
   }
 
   handleDelete = index => this._triggerDialog({
@@ -88,6 +94,7 @@ export default class TransitionsTable extends PureComponent {
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr
         key={index}
+        onClick={e => this.handleTransitionClick({ from, to, event })}
         className={selectedTransitions.filter(tr => (tr.from === from && tr.to === to && tr.event === event)).length ? 'active' : ''}
       >
         <td>
