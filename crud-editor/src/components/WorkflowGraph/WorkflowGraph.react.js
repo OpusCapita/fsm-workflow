@@ -15,13 +15,15 @@ const propTypes = {
   schema: PropTypes.object,
   selectedStates: PropTypes.arrayOf(PropTypes.string),
   getStateLabel: PropTypes.func.isRequired,
-  onStatesSelect: PropTypes.func
+  onStatesSelect: PropTypes.func,
+  onTransitionsSelect: PropTypes.func
 };
 
 const defaultProps = {
   schema: null,
   selectedStates: [],
-  onStatesSelect: () => {}
+  onStatesSelect: () => {},
+  onTransitionsSelect: () => {}
 };
 
 export default
@@ -51,6 +53,7 @@ class WorkflowGraph extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.addNodesEventListenersTimeout);
+    clearTimeout(this.addNodesEdgesListenersTimeout);
   }
 
   addNodesEventListeners = () => {
@@ -58,15 +61,37 @@ class WorkflowGraph extends Component {
 
     if (this.svgRef) {
       this.addNodesEventListenersTimeout = setTimeout(() => {
-        let svgNodes = Array.from(this.svgRef.querySelectorAll('[id^=oc-fsm--graph__node--]'));
+        let svgNodes = Array.from(this.svgRef.querySelectorAll('[id^=oc-fsm--graph__node----]'));
 
         svgNodes.map((node) => {
-          let nodeName = decodeURIComponent(node.id.replace('oc-fsm--graph__node--', ''));
+          let nodeName = decodeURIComponent(node.id.replace('oc-fsm--graph__node----', ''));
           node.addEventListener('click', () => this.props.onStatesSelect([nodeName]));
         });
       }, 200);
     } else {
       this.addNodesEventListeners();
+    }
+  }
+
+  addEdgesEventListeners = () => {
+    clearTimeout(this.addEdgesEventListenersTimeout);
+    console.log('1');
+    if (this.svgRef) {
+      console.log('2');
+      this.addEdgesEventListenersTimeout = setTimeout(() => {
+        let svgEdges = Array.from(this.svgRef.querySelectorAll('[id^=oc-fsm--graph__edge----]'));
+        console.log('sv', svgEdges);
+        svgEdges.map((edge) => {
+          let edgeFromTo = decodeURIComponent(edge.id.replace('oc-fsm--graph__edge----', ''));
+          let splittedEdgeFromTo = edgeFromTo.split('----');
+          let edgeFrom = splittedEdgeFromTo[0];
+          let edgeTo = splittedEdgeFromTo[1];
+
+          edge.addEventListener('click', () => this.props.onTransitionsSelect([{ from: edgeFrom, to: edgeTo }]));
+        });
+      }, 200);
+    } else {
+      this.addEdgesEventListeners();
     }
   }
 
@@ -109,7 +134,7 @@ class WorkflowGraph extends Component {
       // eslint-disable-next-line max-len
       let nodeStr = `node [shape = record fillcolor="${fillColor}" margin="0.2,0.1" color="${color}" fontname="Helvetica" style="rounded,filled", penwidth=6];`;
 
-      return `${nodeStr} "${getStateLabel(state.name)}" [id="oc-fsm--graph__node--${encodeURIComponent(state.name)}"]`;
+      return `${nodeStr} "${getStateLabel(state.name)}" [id="oc-fsm--graph__node----${encodeURIComponent(state.name)}"]`;
     }).join(' ');
   }
 
@@ -119,7 +144,7 @@ class WorkflowGraph extends Component {
 
     let src = '';
     src += `digraph schema {\n`;
-    src += `graph [splines=true, nodesep=0.3, size=12]`;
+    src += `graph [splines=true, nodesep=0.3, size=10]`;
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     src += `\t${this.renderStates({
@@ -135,7 +160,7 @@ class WorkflowGraph extends Component {
     src += transitions.
       filter(({ from, to, event }) => (from && to && event)).
       // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
-      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge-${encodeURIComponent(from)}-${encodeURIComponent(to)}", penwidth=1, color="#333333", label = "${event}"]`)).
+      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge----${encodeURIComponent(from)}----${encodeURIComponent(to)}", penwidth=1, color="#333333", label = "${event}"]`)).
       join(`\n`);
     src += `}`;
 
@@ -149,6 +174,7 @@ class WorkflowGraph extends Component {
     });
 
     this.addNodesEventListeners();
+    this.addEdgesEventListeners();
   }
 
   render() {
@@ -201,7 +227,7 @@ class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--regular-state
               `}
             ></div>
-            <div>— regular state nodes</div>
+            <div>regular state nodes</div>
           </div>
           <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
             <div
@@ -210,7 +236,7 @@ class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--initial-state
               `}
             ></div>
-            <div>— initial state nodes</div>
+            <div>initial state nodes</div>
           </div>
           <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
             <div
@@ -219,7 +245,7 @@ class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--final-state
               `}
             ></div>
-            <div>— final state nodes</div>
+            <div>final state nodes</div>
           </div>
         </div>
       </div>

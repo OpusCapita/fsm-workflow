@@ -64,7 +64,8 @@ export default class WorkflowEditor extends Component {
 
     this.state = {
       machine: new MachineDefinition(props.workflow),
-      selectedStates: []
+      selectedStates: [],
+      selectedTransitions: []
     };
   }
 
@@ -81,6 +82,10 @@ export default class WorkflowEditor extends Component {
 
   handleSelectStates = (selectedStates) => {
     this.setState({ selectedStates });
+  }
+
+  handleSelectTransitions = (selectedTransitions) => {
+    this.setState({ selectedTransitions });
   }
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => {
@@ -256,7 +261,7 @@ export default class WorkflowEditor extends Component {
 
   render() {
     let { title } = this.props;
-    let { selectedStates, machine } = this.state;
+    let { selectedStates, selectedTransitions, machine } = this.state;
 
     let { schema, actions } = machine;
 
@@ -318,6 +323,7 @@ export default class WorkflowEditor extends Component {
         <Tab eventKey={2} title="Transitions">
           <TransitionsTable
             transitions={schema.transitions}
+            selectedTransitions={selectedTransitions}
             states={schema.states.map(({ name }) => name)}
             actions={actions}
             getStateLabel={this.getStateLabel}
@@ -330,7 +336,7 @@ export default class WorkflowEditor extends Component {
         </Tab>
       </Tabs>
     );
-
+    console.log('st', selectedTransitions);
     return (
       <Grid fluid={true}>
         <Row>
@@ -351,6 +357,7 @@ export default class WorkflowEditor extends Component {
                   getStateLabel={this.getStateLabel}
                   createJsonOutput={this.createJsonOutput}
                   onStatesSelect={this.handleSelectStates}
+                  onTransitionsSelect={this.handleSelectTransitions}
                 />
               </Col>
             </Row>

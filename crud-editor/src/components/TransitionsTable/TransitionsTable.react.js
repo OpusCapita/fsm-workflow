@@ -27,12 +27,20 @@ export default class TransitionsTable extends PureComponent {
     actions: PropTypes.shape({
       paramsSchema: PropTypes.object
     }),
+    selectedTransitions: PropTypes.arrayOf(PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string
+    })),
     getStateLabel: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
     onSaveActions: PropTypes.func.isRequired,
     exampleObject: PropTypes.object
+  }
+
+  static defaultProps = {
+    selectedTransitions: []
   }
 
   state = {
@@ -74,10 +82,13 @@ export default class TransitionsTable extends PureComponent {
   }
 
   render() {
-    const { transitions, states, getStateLabel, actions } = this.props;
+    const { transitions, states, selectedTransitions, getStateLabel, actions } = this.props;
 
     const rows = transitions.map(({ from, to, event }, index) => (
-      <tr key={index}>
+      <tr
+        key={index}
+        className={selectedTransitions.filter(tr => (tr.from === from && tr.to === to)).length ? 'active' : ''}
+      >
         <td>
           {event}
         </td>

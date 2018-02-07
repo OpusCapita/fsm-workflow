@@ -9,7 +9,8 @@ export default function EditorOutput({
   getStateLabel,
   createJsonOutput,
   selectedStates,
-  onStatesSelect
+  onStatesSelect,
+  onTransitionsSelect
 }) {
   // const jsonSchema = JSON.stringify(createJsonOutput(), null, 2);
 
@@ -21,6 +22,7 @@ export default function EditorOutput({
           selectedStates={selectedStates}
           getStateLabel={getStateLabel}
           onStatesSelect={onStatesSelect}
+          onTransitionsSelect={onTransitionsSelect}
         />
       </div>
       {/* <Tabs
@@ -61,10 +63,12 @@ EditorOutput.propTypes = {
   selectedStates: PropTypes.arrayOf(PropTypes.string),
   getStateLabel: PropTypes.func.isRequired,
   createJsonOutput: PropTypes.func.isRequired,
-  onStatesSelect: PropTypes.func
+  onStatesSelect: PropTypes.func,
+  onTransitionsSelect: PropTypes.func
 };
 
 EditorOutput.defaultProps = {
   selectedStates: [],
-  onStatesSelect: () => {}
+  onStatesSelect: () => {},
+  onTransitionsSelect: () => {}
 };

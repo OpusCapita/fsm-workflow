@@ -1,9 +1,14 @@
 .oc-fsm-crud-editor--workflow-graph {
 }
 
+.oc-fsm-crud-editor--workflow-graph > .navbar {
+  margin-bottom: 0;
+}
+
 .oc-fsm-crud-editor--workflow-graph__svg {
   overflow: auto;
   padding: 8px;
+  max-height: 90vh;
 }
 
 .oc-fsm-crud-editor--workflow-graph text {
@@ -17,21 +22,21 @@
 .oc-fsm-crud-editor--workflow-graph__legend {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
+  justify-content: space-around;
 }
 
 
 .oc-fsm-crud-editor--workflow-graph__legend-item {
   display: inline-flex;
   align-items: center;
+  margin-left: 12px;
 }
 
 .oc-fsm-crud-editor--workflow-graph__legend-item-badge {
   width: 18px;
   height: 12px;
   border-radius: 4px;
-  margin-right: 4px;
+  margin-right: 8px;
 }
 
 .oc-fsm-crud-editor--workflow-graph__legend-item-badge--regular-state {
