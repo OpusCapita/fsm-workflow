@@ -4,6 +4,12 @@ import Viz from 'viz.js';
 import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
+import Color from 'color';
+import rgbHex from 'rgb-hex';
+
+const INITIAL_STATE_COLOR = '#14892c';
+const FINAL_STATE_COLOR = '#b71c1c';
+const REGULAR_STATE_COLOR = '#0277bd';
 
 const propTypes = {
   schema: PropTypes.object,
@@ -26,44 +32,95 @@ class WorkflowGraph extends Component {
   }
 
   componentDidMount() {
-    this.renderGraph(this.props.schema);
+    this.renderGraph({
+      schema: this.props.schema,
+      selectedStates: this.props.selectedStates,
+      getStateLabel: this.props.getStateLabel
+    });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.schema, nextProps.schema)) {
-      this.renderGraph(nextProps.schema);
-    }
+    this.renderGraph({
+      schema: nextProps.schema,
+      selectedStates: nextProps.selectedStates,
+      getStateLabel: nextProps.getStateLabel
+    });
   }
 
-  convertSchemaToDotLang(schema) {
-    // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
-    const { transitions, initialState, finalStates } = schema;
+  renderStates = ({
+    states,
+    initialState,
+    finalStates,
+    selectedStates,
+    regularStateColor,
+    finalStateColor,
+    initialStateColor,
+    getStateLabel
+  }) => {
+    return states.map((state, i) => {
+      let { name } = state;
 
-    const { getStateLabel } = this.props;
+      let type;
+      let fillColor;
+
+      if (finalStates.indexOf(name) !== -1) {
+        type = 'FINAL_STATE';
+        fillColor = finalStateColor;
+
+      } else if (initialState === name) {
+        type = 'INITIAL_STATE';
+        fillColor = initialStateColor;
+
+      } else {
+        type = 'REGULAR_STATE';
+        fillColor = regularStateColor;
+      }
+
+      let isSelected = selectedStates.indexOf(name) !== -1;
+
+       // border color
+      let color = isSelected ?
+         `#${rgbHex(Color(fillColor).darken(0.3).rgb().string())}` :
+        'transparent';
+
+      // eslint-disable-next-line max-len
+      let nodeStr = `node [shape = record fillcolor="${fillColor}" margin="0.2,0.1" color="${color}" fontname="Helvetica" style="rounded,filled", penwidth=6];`;
+
+      return `${nodeStr} "${getStateLabel(state.name)}" [id="fsm-node--${state.name}"]`;
+    }).join(' ');
+  }
+
+  convertSchemaToDotLang({ schema, selectedStates, getStateLabel }) {
+    // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
+    const { transitions, initialState, finalStates, states } = schema;
 
     let src = '';
     src += `digraph schema {\n`;
     src += `graph [splines=ortho, nodesep=0.6, size=7]`;
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
-    // eslint-disable-next-line max-len
-    src += `\tnode [shape = record fillcolor="#b71c1c" margin="0.2,0.1" color="transparent" fontname="Helvetica" style="rounded,filled"];\n`;
-    src += `\t${finalStates.map(state => `"${getStateLabel(state)}"`).join(' ')}\n`; // render final state nodes
-    src += `\tnode [fillcolor="#14892c"];\n`;
-    src = initialState ? src + `\t"${getStateLabel(initialState)}"\n` : src; // render initial state node
-    src += `\tnode [fillcolor="#0277bd"];\n`; // render regular state nodes
+    src += `\t${this.renderStates({
+        states,
+        initialState,
+        finalStates,
+        selectedStates,
+        regularStateColor: REGULAR_STATE_COLOR,
+        initialStateColor: INITIAL_STATE_COLOR,
+        finalStateColor: FINAL_STATE_COLOR,
+        getStateLabel
+    })}\n`;
     src += transitions.
       filter(({ from, to, event }) => (from && to && event)).
       // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
-      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}"`)).
+      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="fsm-edge-${from}-${to}"]`)).
       join(`\n`);
     src += `}`;
 
     return src;
   }
 
-  renderGraph = (schema) => {
-    const vizSrc = this.convertSchemaToDotLang(schema);
+  renderGraph = ({ schema, selectedStates, getStateLabel }) => {
+    const vizSrc = this.convertSchemaToDotLang({ schema, selectedStates, getStateLabel });
     this.setState({
       svg: Viz(vizSrc, { format: "svg", engine: "dot", totalMemory: 16777216 })
     });

@@ -16,9 +16,11 @@
     "@opuscapita/react-dates": "^0.4.0-beta.4",
     "@opuscapita/react-select": "1.0.0-oc.0",
     "codemirror": "5.33.0",
+    "color": "3.0.0",
     "kvolkovich-sc-react-codemirror": "1.0.1",
     "lodash": "4.17.4",
     "react-bootstrap": "0.32.0",
+    "rgb-hex": "2.1.0",
     "viz.js": "1.8.0"
   },
   "devDependencies": {

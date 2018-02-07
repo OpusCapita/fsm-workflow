@@ -111,7 +111,6 @@ export default class StatesTable extends PureComponent {
 
   render() {
     const { selectedStates } = this.props;
-    console.log('ss', selectedStates);
     const { states, currentState, showModal } = this.state;
 
     let modal;
