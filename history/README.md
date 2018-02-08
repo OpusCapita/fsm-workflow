@@ -82,4 +82,4 @@ const { history } = await require('@opuscapita/fsm-workflow-history')(sequelize)
 | finishedAt       | timestamp | true     | like in Grailsflow, object finished the transition in 'to' state |
 | workflowName     | string    | true     | unique workflow name, known by workflow machine                  |
 
-See [Express Server Demo](demo/server.js) for an example of using Workflow History.
+See [Express Server Demo](src/demo/server.js) for an example of using Workflow History.
