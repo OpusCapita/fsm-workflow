@@ -1,15 +1,12 @@
 {
-  "name": "@opuscapita/fsm-workflow-transition-history",
+  "name": "@opuscapita/fsm-workflow-history",
   "version": "0.0.4",
   "description": "Business-object history for FSM workflow",
   "main": "index.js",
-  "files": [
-    "index.js",
-    "constants.js",
-    "db/"
-  ],
+  "repository": "OpusCapita/fsm-workflow",
   "scripts": {
-    "start": "node -e \"require('./demo/server').run()\"",
+    "start": "node -e \"require('./src/demo/server').run()\"",
+    "debug": "npm start -- --inspect",
     "lint": "node ./node_modules/.bin/eslint .",
     "lint-tab": "node ./node_modules/.bin/eslint . --rule '\"indent\": [2, \"tab\", { \"SwitchCase\": 1, \"VariableDeclarator\": 1 }]'",
     "npm-publish": "update-changelog -- --all && npm-publish",
@@ -24,6 +21,9 @@
   "dependencies": {
     "umzug": "2.1.0"
   },
+  "peerDependencies": {
+    "sequelize": "~3 || ~4"
+  },
   "devDependencies": {
     "@opuscapita/npm-scripts": "2.0.0",
     "babel-eslint": "7.2.3",
@@ -33,8 +33,8 @@
     "eslint-plugin-react": "6.10.3",
     "express": "4.16.2",
     "helmet": "3.10.0",
-    "mysql2": "1.5.1",
-    "sequelize": "4.32.1",
+    "mysql2": "1.5.2",
+    "sequelize": "4.33.1",
     "sequelize-cli": "3.2.0"
   }
 }

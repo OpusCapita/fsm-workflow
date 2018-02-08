@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define(MODEL_NAME, {
   businessObjType: { type: DataTypes.STRING, allowNull: false },
   businessObjId: { type: DataTypes.STRING, allowNull: false },
   user: { type: DataTypes.STRING, allowNull: false },
+  workflowName: { type: DataTypes.STRING, allowNull: false },
   description: { type: DataTypes.TEXT }
 }, {
   // enable timestamps
@@ -19,7 +20,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define(MODEL_NAME, {
   updatedAt: false,
 
   // rename "createdAt" timestamp attribute
-  createdAt: 'createdOn',
+  createdAt: 'finishedOn',
 
   // disable the modification of table names; By default, sequelize will automatically
   // transform all passed model names (first parameter of define) into plural.

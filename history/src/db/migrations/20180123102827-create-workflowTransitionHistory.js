@@ -11,8 +11,9 @@ module.exports = {
     businessObjType: { type: DataTypes.STRING, allowNull: false },
     businessObjId: { type: DataTypes.STRING, allowNull: false },
     user: { type: DataTypes.STRING, allowNull: false },
+    workflowName: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.TEXT },
-    createdOn: { type: DataTypes.DATE, allowNull: false }
+    finishedOn: { type: DataTypes.DATE, allowNull: false }
   }),
   down: (queryInterface, DataTypes) => queryInterface.dropTable(MODEL_NAME)
 };

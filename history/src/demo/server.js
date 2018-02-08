@@ -4,8 +4,8 @@ const app = require('express')();
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
-const workflowTransitionHistory = require('@opuscapita/fsm-workflow-transition-history');
 
+const workflowTransitionHistory = require('..');
 const dbConfig = require('./config/db')[process.env.NODE_ENV || 'development'];
 
 const sequelize = new Sequelize(
@@ -14,8 +14,6 @@ const sequelize = new Sequelize(
   dbConfig.password,
   dbConfig
 );
-
-workflowTransitionHistory.runMigrations(sequelize);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET,POST,HEAD,OPTIONS,PUT,PATCH,DELETE');
@@ -32,22 +30,36 @@ exports.run = (
     host,
     port
   } = require('./config/server')
-) => workflowTransitionHistory.createModel(sequelize).
-  then(handlers => {
-    let { add, search } = handlers;
-
+) => workflowTransitionHistory(sequelize).
+  then(({ add, search }) => {
     app.post('/history', (req, res) => add(req.body).
       then(entry => res.json(entry))
     );
 
-    app.get('/history', (req, res) =>
-      search({
-        where: req.query.where && JSON.parse(req.query.where),
-        order: req.query.order && JSON.parse(req.query.order)
-      }).
-        then(entries => res.json(entries))
-    );
+    app.get('/history', (req, res) => {
+      let { searchParameters, paging, sorting } = req.query;
 
+      if (searchParameters) {
+        searchParameters = JSON.parse(searchParameters);
+
+        if (searchParameters.finishedOn) {
+          searchParameters.finishedOn = Object.keys(searchParameters.finishedOn).reduce(
+            (rez, operand) => ({
+              ...rez,
+              [operand]: new Date(searchParameters.finishedOn[operand])
+            }),
+            {}
+          );
+        }
+      }
+
+      return search({
+        ...(searchParameters && { searchParameters }),
+        ...(paging && { paging: JSON.parse(paging) }),
+        ...(sorting && { sorting: JSON.parse(sorting) })
+      }).
+        then(entries => res.json(entries));
+    });
 
     app.listen(port, host, err => {
       if (err) {
@@ -59,4 +71,4 @@ exports.run = (
       process.on('exit', _ => console.warn('■■■ Server has been stopped ■■■'));
     });
   }).
-  catch(err => console.error('■■■ Business-object-history library error:', err, '■■■'));
+  catch(err => console.error('■■■ Workflow Transition History package error:', err, '■■■'));
