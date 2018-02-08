@@ -9,6 +9,7 @@ import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
 import EditorOutput from '../EditorOutput.react';
+import WorkflowSimulator from '../WorkflowSimulator';
 import { MachineDefinition } from '@opuscapita/fsm-workflow-core';
 import { isDef } from '../utils';
 import './styles.less';
@@ -344,6 +345,16 @@ export default class WorkflowEditor extends Component {
             onSaveGuards={this.handleSaveTransitionGuards}
             onSaveActions={this.handleSaveTransitionActions}
             onSelect={(transition) => this.handleSelectTransitions([transition])}
+          />
+        </Tab>
+        <Tab
+          eventKey={2}
+          title={(
+            <span><i className="fa fa-play-circle" /> Simulate</span>
+          )}>
+          <WorkflowSimulator
+            onExampleObjectChange={() => {}}
+            exampleObject={this.props.objectInfo.example}
           />
         </Tab>
       </Tabs>

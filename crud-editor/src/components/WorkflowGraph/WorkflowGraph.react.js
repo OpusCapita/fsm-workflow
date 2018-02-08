@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Viz from 'viz.js';
 import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
-import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import Color from 'color';
 import rgbHex from 'rgb-hex';
 
@@ -230,15 +230,6 @@ class WorkflowGraph extends Component {
               <span>Schema</span>
             </Navbar.Brand>
           </Navbar.Header>
-          <Nav>
-            <NavDropdown eventKey={3} title="Available events" id="oc-fsm--crud-editor--workflow-graph-nav">
-              <MenuItem eventKey={3.1}>Action</MenuItem>
-              <MenuItem eventKey={3.2}>Another action</MenuItem>
-              <MenuItem eventKey={3.3}>Something else here</MenuItem>
-              <MenuItem divider={true} />
-              <MenuItem eventKey={3.4}>Reset</MenuItem>
-            </NavDropdown>
-          </Nav>
         </Navbar>
         <div
           ref={ref => (this.svgRef = ref)}
