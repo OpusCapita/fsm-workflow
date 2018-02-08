@@ -42,7 +42,7 @@ is not available, still sources without documentation is here: https://github.co
 #### noblemachine (https://github.com/noblesamurai/noblemachine)
 linear queue/state machine - no graph
 
-#### Automata (https://github.com/hyperandroid/Automata)
+#### Automata (https://github.com/hyperandroid/Automata) - д
 supports automatic transitions - via defined timeout (!)
 supports guards
 supports subStates(?)

@@ -1,6 +1,6 @@
 # FSM core
 
-![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-core.svg) 
+![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-core.svg)
 ![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-core.svg)
 
 Machine and its definition.
@@ -9,7 +9,7 @@ Machine and its definition.
 
 ### Install package
 
-Run ```npm install @opuscapita/fsm-workflow-core``` to get up and running.
+Run `npm install @opuscapita/fsm-workflow-core` to get up and running.
 
 ### Use in code
 
@@ -29,16 +29,16 @@ Machine definition consist of:
 ```javascript
 const machineDefinition = new MachineDefinition({
   schema: {
-    name: "invoice approval",               
-    initialState: "open",                   
+    name: "invoice approval",
+    initialState: "open",
     finalStates: ["approved"],
-    objectStateFieldName: "status",         
+    objectStateFieldName: "status",
     transitions: [
       {
-          from: "open",                    
-          event: "approve",                 
-          guards: [                       
-            {                               
+          from: "open",
+          event: "approve",
+          guards: [
+            {
               "name": "validate",
               "arguments": {
                 "argument1": "value1",
@@ -46,9 +46,9 @@ const machineDefinition = new MachineDefinition({
               }
             }
           ],
-          to: "approved",                   
-          actions: [                       
-            {                                
+          to: "approved",
+          actions: [
+            {
               "name": "archive",
               "arguments": {
                 "argument1": "value1",
@@ -56,8 +56,8 @@ const machineDefinition = new MachineDefinition({
               }
             }
           ],
-          automatic: [                          
-            {                                
+          automatic: [
+            {
                 "name": "lastlyUpdatedMoreThan24hAgo",
                 "arguments": {
                   "argument1": "value1",
@@ -70,11 +70,11 @@ const machineDefinition = new MachineDefinition({
     ]
   },
   actions: {
-    archive: function({argument1, argument1}) {}
+    archive: function({argument1, argument2}) {}
   },
   conditions: {
-    validate: function({argument1, argument1}) {},
-    lastlyUpdatedMoreThan24hAgo: function({argument1, argument1}) {}
+    validate: function({argument1, argument2}) {},
+    lastlyUpdatedMoreThan24hAgo: function({argument1, argument2}) {}
   }
 });
 ```
@@ -105,7 +105,7 @@ const object = {status: 'none'};
 const machine = new Machine(machineDefinition);
 machine.start(object).then(({object}) => {
   console.log(machine.currentState({object}));
-  // start  
+  // start
 });
 ```
 
@@ -181,39 +181,34 @@ machine.start(object).then(({object}) => {
 ### API
 
 ```javascript
-// set up maching definition
-var machineDefinition = new MachineDefinition({ schema, guards, actions })
-
-// create workflow/machine
+var machineDefinition = new MachineDefinition({schema, conditions, actions})
+// register workflow
 var machine = new Machine(machineDefinition, context);
 
-// start/initialize process inside the workflow/machine
-machine.start({ object })
+// start/initialize machine/workflow
+machine.start({object})
 
-// figure out which transitions are available
-// methid returns an array of available transitions where each of them is an object of the following structure: 
-// { event, from, to, request..}, e.g. event request is used to pass parameters to guards for some dynamic calculation, 
-// e.g. when event availability depends on current user information as roles and etc. 
-machine.availableTransitions({ object })
-
-// returns an array of available automatic transitions: {event, from, to, ..}, e.g. event
+// returns a list of available transitions: {event, from, to, request..}, e.g. event
+// request is used to pass parameters to guards for some dynamic calculation, e.g. when event availability depends
+// on current user information as roles and etc.
+machine.availableTransitions({object})
+// returns a list of available automatic transitions: {event, from, to, ..}, e.g. event
 // if machine schema is adequate then there should be not more than 1 such transition
-machine.availableAutomaticTransitions({ object })
+machine.availableAutomaticTransitions({})
 
-// sends 'event' and pass addition 'request' parameter that is posted by user/app
+// send 'event' and pass addition 'request' data that is posted by user/app
 // returns promise, in case of successful transition then function will be called
-// with one parameter { object }, where
+// with one parameter that is an JSON with the following structure:
 // - object - object in new state (the same reference that is passed as parameter)
 machine.sendEvent({object, event, request})
 
-// utility methods
 machine.currentState({ object })     // gets current state
-machine.is({ object, state })        // is object in state
+machine.is({ object, state})         // is object in state
 machine.isInFinalState({ object })   // returns true iff object is in one of final states
 machine.can({ object, event })       // whether event is available
 machine.cannot({ object, event })    // whether event is not available
 
-// hooks (todo in future)
-machine.onStartTransition()          // returns promise
-machine.onFinishTransition()         // returns promise
+// hooks (tbd)
+machine.onStartTransition()   // returns promise
+machine.onFinishTransition()  // returns promise
 ```
