@@ -21,7 +21,7 @@
     "lodash": "4.17.4",
     "react-bootstrap": "0.32.0",
     "react-json-view": "1.16.0",
-    "rgb-hex": "2.1.0",
+    "rgb2hex": "0.1.0",
     "viz.js": "1.8.0"
   },
   "devDependencies": {

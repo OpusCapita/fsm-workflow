@@ -24,7 +24,8 @@ module.exports = merge(common, {
   },
   devServer: {
     historyApiFallback: true,
-    inline: false
+    inline: false,
+    host: process.env.HOST || 'localhost'
   },
   module: {
     rules: [

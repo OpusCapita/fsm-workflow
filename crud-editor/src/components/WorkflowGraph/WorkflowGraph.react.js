@@ -5,13 +5,15 @@ import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
 import { Navbar, Nav } from 'react-bootstrap';
 import Color from 'color';
-import rgbHex from 'rgb-hex';
+import rgb2hex from 'rgb2hex';
 
 const INITIAL_STATE_COLOR = '#14892c';
 const FINAL_STATE_COLOR = '#b71c1c';
 const REGULAR_STATE_COLOR = '#0277bd';
 const REGULAR_EDGE_COLOR = '#333333';
 const SELECTED_EDGE_COLOR = '#333333';
+
+const nodeListToArray = (nodeList) => Array.prototype.slice.call(nodeList);
 
 const propTypes = {
   schema: PropTypes.object,
@@ -59,7 +61,7 @@ class WorkflowGraph extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.addNodesEventListenersTimeout);
-    clearTimeout(this.addNodesEdgesListenersTimeout);
+    clearTimeout(this.addEdgesEventListenersTimeout);
   }
 
   addNodesEventListeners = () => {
@@ -67,7 +69,9 @@ class WorkflowGraph extends Component {
 
     if (this.svgRef) {
       this.addNodesEventListenersTimeout = setTimeout(() => {
-        let svgNodes = Array.from(this.svgRef.querySelectorAll('[id^=oc-fsm--graph__node----]'));
+        let svgNodes = Array.prototype.slice.call(
+          (this.svgRef.querySelectorAll('[id^=oc-fsm--graph__node----]'))
+         );
 
         svgNodes.map((node) => {
           let nodeName = decodeURIComponent(node.id.replace('oc-fsm--graph__node----', ''));
@@ -132,10 +136,8 @@ class WorkflowGraph extends Component {
 
       let isSelected = selectedStates.indexOf(name) !== -1;
 
-       // border color
-      let color = isSelected ?
-         `#${rgbHex(Color(fillColor).darken(0.3).rgb().string())}` :
-        'transparent';
+      // border color
+      let color = isSelected ? rgb2hex(Color(fillColor).darken(0.3).rgb().string()).hex : 'transparent';
 
       // eslint-disable-next-line max-len
       let nodeStr = `node [shape = record fillcolor="${fillColor}" margin="0.2,0.1" color="${color}" fontname="Helvetica" style="rounded,filled", penwidth=6];`;

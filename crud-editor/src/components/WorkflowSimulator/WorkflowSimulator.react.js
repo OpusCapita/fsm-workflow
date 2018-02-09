@@ -13,6 +13,28 @@ const defaultProps = {
   onExampleObjectChange: () => {}
 };
 
+
+const ActivityLogItem = ({ from, to, i, itemNumberLength }) => {
+  return (
+    <div
+      className={`oc-fsm-crud-editor--workflow-simulator__activity-log-item`}
+    >
+      <div className={`oc-fsm-crud-editor--workflow-simulator__activity-log-item-part`}>
+        <div
+          className={`oc-fsm-crud-editor--workflow-simulator__activity-log-item-i`}
+          style={{ width: `${itemNumberLength}ch` }}
+        >
+          {i}
+        </div>
+      </div>
+      <div className={`oc-fsm-crud-editor--workflow-simulator__activity-log-item-part`}>Transition occurred:</div>
+      <div className={`oc-fsm-crud-editor--workflow-simulator__activity-log-item-part`}>{from} </div>
+      <div className={`oc-fsm-crud-editor--workflow-simulator__activity-log-item-part`}><i className="fa fa-arrow-right"/></div>
+      <div className={`oc-fsm-crud-editor--workflow-simulator__activity-log-item-part`}>{to}</div>
+    </div>
+  );
+};
+
 export default
 class WorkflowSimulator extends Component {
   constructor(props) {
@@ -40,8 +62,33 @@ class WorkflowSimulator extends Component {
             <Navbar fluid={true}>
               <Navbar.Header>
                 <Navbar.Brand>
+                  <span>Available transitions</span>
+                </Navbar.Brand>
+              </Navbar.Header>
+            </Navbar>
+            <div className="oc-fsm-crud-editor--workflow-simulator__example-object-editor">
+
+            </div>
+          </div>
+
+          <div
+            className={`
+              oc-fsm-crud-editor--workflow-simulator__content-pane
+              oc-fsm-crud-editor--workflow-simulator__content-pane--example-object-editor
+            `}>
+            <Navbar fluid={true}>
+              <Navbar.Header>
+                <Navbar.Brand>
                   <span>Example object</span>
                 </Navbar.Brand>
+                <span
+                  className={`
+                    oc-fsm-crud-editor--workflow-simulator__example-object-validation-message
+                    ${codeError ? 'text-danger' : 'text-success'}
+                  `}
+                  >
+                  {codeError || 'Object is valid'}
+                </span>
               </Navbar.Header>
             </Navbar>
             <div className="oc-fsm-crud-editor--workflow-simulator__example-object-editor">
@@ -57,31 +104,28 @@ class WorkflowSimulator extends Component {
                 onDelete={(data) => this.handleExampleObjectChange(data['updated_src'])}
               />
             </div>
-            <div className="panel panel-default oc-fsm-crud-editor--workflow-simulator__example-object-validation">
-              <div className="panel-body">
-                <span
-                  className={`
-                    oc-fsm-crud-editor--workflow-simulator__example-object-validation-message
-                    ${codeError ? 'oc-fsm-crud-editor--workflow-simulator__example-object-validation-message--error' : ''}
-                  `}
-                >
-                  {codeError || 'Object is valid'}
-                </span>
-              </div>
-            </div>
           </div>
 
-          <div className="oc-fsm-crud-editor--workflow-simulator__content-pane">
-            <Navbar fluid={true}>
-              <Navbar.Header>
-                <Navbar.Brand>
-                  <span>Activity log</span>
-                </Navbar.Brand>
-              </Navbar.Header>
-            </Navbar>
-            <div className="oc-fsm-crud-editor--workflow-simulator__example-object-editor">
+        </div>
 
-            </div>
+        <div className="oc-fsm-crud-editor--workflow-simulator__content-pane">
+          <Navbar fluid={true}>
+            <Navbar.Header>
+              <Navbar.Brand>
+                <span>Activity log</span>
+              </Navbar.Brand>
+            </Navbar.Header>
+          </Navbar>
+          <div className="oc-fsm-crud-editor--workflow-simulator__activity-log">
+            {Array.from(Array(1000)).fill((v, k) => k).map((v, k, arr) => (
+              <ActivityLogItem
+                key={k}
+                i={k + 1}
+                from={`Approval Required`}
+                to={`Approved`}
+                itemNumberLength={parseInt(arr.length).toString().length + 1}
+              />
+            ))}
           </div>
         </div>
       </div>
