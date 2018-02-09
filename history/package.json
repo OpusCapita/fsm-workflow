@@ -4,11 +4,16 @@
   "description": "Business-object history for FSM workflow",
   "main": "index.js",
   "repository": "OpusCapita/fsm-workflow",
+  "files": [
+    "src/models/",
+    "index.js"
+  ],
   "scripts": {
-    "start": "node -e \"require('./src/demo/server').run()\"",
+    "start": "node ./src/demo/server",
     "debug": "npm start -- --inspect",
     "lint": "node ./node_modules/.bin/eslint .",
     "lint-tab": "node ./node_modules/.bin/eslint . --rule '\"indent\": [2, \"tab\", { \"SwitchCase\": 1, \"VariableDeclarator\": 1 }]'",
+    "test": "mocha --recursive 'src/**/*.spec.js'",
     "npm-publish": "update-changelog -- --all && npm-publish",
     "publish-release": "npm run npm-publish -- --release"
   },
@@ -28,13 +33,16 @@
     "@opuscapita/npm-scripts": "2.0.0",
     "babel-eslint": "7.2.3",
     "body-parser": "1.18.2",
+    "chai": "4.1.2",
     "eslint": "3.19.0",
     "eslint-config-opuscapita": "1.0.7",
     "eslint-plugin-react": "6.10.3",
     "express": "4.16.2",
     "helmet": "3.10.0",
+    "mocha": "5.0.0",
     "mysql2": "1.5.2",
     "sequelize": "4.33.1",
-    "sequelize-cli": "3.2.0"
+    "sequelize-cli": "3.2.0",
+    "sequelize-mock": "0.10.2"
   }
 }
