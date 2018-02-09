@@ -1,6 +1,6 @@
 import assert from 'assert';
-import MachineDefinition from '../MachineDefinition';
 import bluebird from 'bluebird';
+import MachineDefinition from '../MachineDefinition';
 
 describe('machine definition: findAvailableTransitions', function() {
   it("throws an error if 'from' is not specified", function() {
