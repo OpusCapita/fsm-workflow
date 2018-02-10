@@ -1,3 +1,5 @@
+'use strict';
+
 const workflowTransitionHistory = require('./workflowTransitionHistory.js');
 
 module.exports = sequelize => {

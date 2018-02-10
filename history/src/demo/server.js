@@ -6,8 +6,19 @@ const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 
 const workflowTransitionHistory = require('..');
-const serverConfig = require('./config/server');
-const dbConfig = require('./config/db')[process.env.NODE_ENV || 'development'];
+
+const serverConfig = {
+  host: process.env.HOST || 'localhost',
+  port: process.env.PORT || '3040'
+};
+
+const dbConfig = {
+  username: process.env.DB_USERNAME || 'root',
+  password: process.env.DB_PASSWORD || '1111',
+  database: process.env.DB_NAME || 'fsm',
+  host: process.env.DB_HOSTNAME || 'localhost',
+  dialect: process.env.DB_DIALECT || 'mysql'
+};
 
 const sequelize = new Sequelize(
   dbConfig.database,
