@@ -41,7 +41,7 @@ Task management is implemented as additional library. You can find more detailed
 
 ### Workflow Transition History
 
-Workflow Transition History is implemented as separate library. You can find more information [here](workflow-transition-history/README.md).
+Workflow Transition History is implemented as separate library. You can find more information [here](history/README.md).
 
 ### References
 

@@ -3,11 +3,12 @@ import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 import bluebird from "bluebird"
 
-const createMachineCorrectly = ({ promise } = {}) => {
+const createMachineCorrectly = ({ promise, history } = {}) => {
   return new Machine(
     {
       machineDefinition: new MachineDefinition(),
-      promise: promise
+      promise,
+      history
     }
   );
 }
@@ -74,5 +75,17 @@ describe('machine: constructor', function() {
       // restore promise
       global.Promise = Promise;
     }
+  });
+
+  // default history and passed history
+  it('check default machine history', function() {
+    // default history
+    let w = createMachineCorrectly();
+    assert.notEqual(w.history, null);
+    assert.notEqual(w.history, undefined);
+    // passed history
+    const history = {};
+    w = createMachineCorrectly({ history });
+    assert.equal(w.history, history);
   });
 });

@@ -1,8 +1,9 @@
 import assert from 'assert';
+import bluebird from 'bluebird';
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
-let createMachine = ({ actions = {} } = {}) => {
+let createMachine = ({ actions = {}, history } = {}) => {
   return new Machine(
     {
       machineDefinition: new MachineDefinition({
@@ -50,7 +51,8 @@ let createMachine = ({ actions = {} } = {}) => {
           }
         },
         actions
-      })
+      }),
+      history
     }
   );
 }
@@ -143,6 +145,38 @@ describe('machine: sendEvent', function() {
       assert.equal(actionExecutionResults.length, 1);
       assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
       assert.deepEqual(actionExecutionResults[0]['result'], initialObject);
+    });
+  });
+
+  it('creates correct history record', function() {
+    let historyRecordUnderTest = null;
+    const history = {
+      add(passedData) {
+        historyRecordUnderTest = passedData;
+        return bluebird.Promise.resolve(historyRecordUnderTest);
+      }
+    };
+    const machine = createMachine({ history });
+    const from = 'started';
+    const object = {
+      status: from,
+      businessObjId: 'tesla',
+      businessObjType: 'car',
+    };
+    const user = 'johnny';
+    const description = 'getoff!';
+    const event = 'move'
+    return machine.sendEvent({ object, event, user, description }).then(({ object }) => {
+      assert.deepEqual(historyRecordUnderTest, {
+        from: from,
+        to: object.status,
+        event: event,
+        businessObjId: object.businessObjId,
+        businessObjType: object.businessObjType,
+        workflowName: machine.machineDefinition.schema.name,
+        user,
+        description
+      });
     });
   });
 });

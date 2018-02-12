@@ -1,8 +1,6 @@
 'use strict';
 
-const { TABLE_NAME, MODEL_NAME } = require('../../constants');
-
-module.exports = (sequelize, DataTypes) => sequelize.define(MODEL_NAME, {
+module.exports = (sequelize, DataTypes) => sequelize.define('WorkflowTransitionHistory', {
   id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
   from: { type: DataTypes.STRING, allowNull: false },
   to: { type: DataTypes.STRING, allowNull: false },
@@ -28,5 +26,5 @@ module.exports = (sequelize, DataTypes) => sequelize.define(MODEL_NAME, {
   freezeTableName: true,
 
   // define the table's name
-  tableName: TABLE_NAME
+  tableName: 'WorkflowTransitionHistory'
 });
