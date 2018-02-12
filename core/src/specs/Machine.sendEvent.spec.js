@@ -32,16 +32,25 @@ let createMachine = ({ actions = {}, history } = {}) => {
               actions: [
                 {
                   name: 'sendEmail',
-                  arguments: {
-                    first: 1,
-                    second: '2'
-                  }
+                  params: [
+                    {
+                      name: 'first',
+                      value: 1
+                    },
+                    {
+                      name: 'second',
+                      value: '2'
+                    }
+                  ]
                 }
               ]
             }
-          ]
+          ],
+          objectConfig: {
+            objectAlias: 'invoice'
+          }
         },
-        actions: actions || {}
+        actions
       }),
       history
     }
@@ -109,12 +118,33 @@ describe('machine: sendEvent', function() {
     return machine.sendEvent({
       object,
       event: "move (action is defined)"
-    }).then(({ object, actionExecutionResutls }) => {
+    }).then(({ object, actionExecutionResults }) => {
       assert.equal(object.status, 'second-stop');
-      assert(actionExecutionResutls);
-      assert.equal(actionExecutionResutls.length, 1);
-      assert.equal(actionExecutionResutls[0]['name'], 'sendEmail');
-      assert.equal(actionExecutionResutls[0]['result'], sendEmailResult);
+      assert(actionExecutionResults);
+      assert.equal(actionExecutionResults.length, 1);
+      assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
+      assert.equal(actionExecutionResults[0]['result'], sendEmailResult);
+    });
+  });
+
+  it('respects objectAlias', () => {
+    const actions = {
+      'sendEmail': ({ invoice }) => {
+        return invoice;
+      }
+    };
+    const machine = createMachine({ actions });
+    const initialObject = { status: 'first-stop' };
+
+    return machine.sendEvent({
+      object: initialObject,
+      event: "move (action is defined)"
+    }).then(({ object, actionExecutionResults }) => {
+      assert.equal(object.status, 'second-stop');
+      assert(actionExecutionResults);
+      assert.equal(actionExecutionResults.length, 1);
+      assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
+      assert.deepEqual(actionExecutionResults[0]['result'], initialObject);
     });
   });
 

@@ -49,7 +49,8 @@ export default class Machine {
   // @param description - event/transition/object description (this info will be writted into object wortkflow history)
   // N!B!: history record fields 'from' is set to ''NULL' value and 'event' to '__START__' value
   start({ object, user, description }) {
-    const { name, objectStateFieldName, initialState } = this.machineDefinition.schema;
+    const { name, initialState } = this.machineDefinition.schema;
+    const { objectStateFieldName } = this.machineDefinition.schema.objectConfig;
     // eslint-disable-next-line no-param-reassign
     object[objectStateFieldName] = initialState;
     // add history record
@@ -71,11 +72,11 @@ export default class Machine {
 
   // returns current object state
   currentState({ object }) {
-    const { objectStateFieldName } = this.machineDefinition.schema;
+    const { objectStateFieldName } = this.machineDefinition.schema.objectConfig;
     return object[objectStateFieldName];
   }
 
-  // returns a lits of events (names) that are available at current object state
+  // returns a list of events (names) that are available at current object state
   // event is optional, it is required only if you search for transitions with the event
   availableTransitions({ object, event, request }) {
     // calculate from state
@@ -115,7 +116,9 @@ export default class Machine {
   // @param request - event request data
   sendEvent({ object, event, user, description, request }) {
     const { machineDefinition } = this;
-    const { objectStateFieldName, workflowName } = machineDefinition.schema;
+    const { objectStateFieldName, objectAlias } = machineDefinition.schema.objectConfig;
+    const { workflowName } = machineDefinition.schema;
+
     // calculate from state
     const from = this.currentState({ object });
     // get context
@@ -159,9 +162,9 @@ export default class Machine {
         // console.log(`Start transition for 'from': '${from}' and 'event': '${event}' to '${to}'`);
 
         // todo: call onStartTransition handler
-        let result = promise.resolve({ actionExecutionResutls: [], object });
+        let result = promise.resolve({ actionExecutionResults: [], object });
         for (let i = 0; i < actions.length; i++) {
-          result = result.then(({ actionExecutionResutls, object }) => {
+          result = result.then(({ actionExecutionResults, object }) => {
             let action = actionByName(actions[i].name);
             // action is defined in schema, but is not really defined -> error!!!
             if (!action) {
@@ -178,18 +181,22 @@ export default class Machine {
 
             // execute action
             const actionResult = action({
-              ...actions[i].arguments,
+              ...(
+                actions[i].params &&
+                actions[i].params.reduce((params, { name, value }) => ({ ...params, [name]: value }), {})
+              ),
               from,
               to,
               event,
               object,
+              ...(objectAlias && { [objectAlias]: object }),
               request,
               context,
-              actionExecutionResutls
+              actionExecutionResults
             });
             // store action execution result for passing it into the next action
             return {
-              actionExecutionResutls: actionExecutionResutls.concat([
+              actionExecutionResults: actionExecutionResults.concat([
                 {
                   name: actions[i].name,
                   result: actionResult
@@ -200,7 +207,7 @@ export default class Machine {
           });
         }
 
-        return result.then(({ actionExecutionResutls, object }) => {
+        return result.then(({ actionExecutionResults, object }) => {
           return this.history.add({
             from,
             to,
@@ -215,7 +222,7 @@ export default class Machine {
           }).then(() => {
             changeObjectState(to);
             return {
-              actionExecutionResutls,
+              actionExecutionResults,
               object
             };
           });
@@ -242,19 +249,19 @@ export default class Machine {
     return this.machineDefinition.getAvailableStates();
   }
 
-  // returns true iff object in specified state
+  // returns true if object is in specified state
   is({ object, state }) {
     return this.currentState({ object }) === state;
   }
 
-  // returns true iff object in once of filal state specified in machine definition
+  // returns true if object in one of final states specified in machine definition
   // isFinal({ state }) {
   //   // console.log(`finalStates: '${this.machineDefinition.schema.finalStates}'`);
   //   // console.log(`state: '${state}'`);
   //   return this.machineDefinition.schema.finalStates.indexOf(state) >= 0;
   // }
 
-  // returns true iff object in one of final states specified in machine definition schema
+  // returns true if object in one of final states specified in machine definition schema
   isInFinalState({ object }) {
     return this.machineDefinition.schema.finalStates.indexOf(this.currentState({ object })) >= 0;
   }

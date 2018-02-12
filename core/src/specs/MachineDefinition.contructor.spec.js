@@ -4,7 +4,7 @@ import bluebird from "bluebird"
 
 describe('machine definition: constructor', function() {
   it('uses correct default object state field name if not specified', () => {
-    assert.equal(new MachineDefinition().schema.objectStateFieldName,
+    assert.equal(new MachineDefinition().schema.objectConfig.objectStateFieldName,
       MachineDefinition.getDefaultObjectStateFieldName());
   });
 

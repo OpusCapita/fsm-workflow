@@ -13,3 +13,4 @@ core/lib
 gui/lib
 task-manager/lib
 business-object-history/.sequelizerc
+.gh-pages-tmp-crud-editor
