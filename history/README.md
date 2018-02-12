@@ -17,7 +17,7 @@ npm install --save-prod @opuscapita/fsm-workflow-history
 
 ```javascript
 // Run migrations and initiate an instance of FSM Workflow History.
-const { history } = await require('@opuscapita/fsm-workflow-history')(sequelize);
+const history = await require('@opuscapita/fsm-workflow-history')(sequelize);
 ```
 
 **history** is JavaScript object with the followign structure/interface:

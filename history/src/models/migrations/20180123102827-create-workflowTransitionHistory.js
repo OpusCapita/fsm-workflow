@@ -1,9 +1,7 @@
 'use strict';
 
-const { MODEL_NAME } = require('../../constants');
-
 module.exports = {
-  up: (queryInterface, DataTypes) => queryInterface.createTable(MODEL_NAME, {
+  up: (queryInterface, DataTypes) => queryInterface.createTable('WorkflowTransitionHistory', {
     id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
     from: { type: DataTypes.STRING, allowNull: false },
     to: { type: DataTypes.STRING, allowNull: false },
@@ -15,5 +13,5 @@ module.exports = {
     description: { type: DataTypes.TEXT },
     finishedOn: { type: DataTypes.DATE, allowNull: false }
   }),
-  down: (queryInterface, DataTypes) => queryInterface.dropTable(MODEL_NAME)
+  down: (queryInterface, DataTypes) => queryInterface.dropTable('WorkflowTransitionHistory')
 };
