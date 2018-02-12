@@ -1,90 +1,53 @@
 version: 2
 jobs:
-  build-core:
+  build:
     docker:
       - image: circleci/node:6
-    working_directory: ~/repo/core
+    working_directory: ~/repo
     steps:
-      - checkout:
-          path: ~/repo
+      - run:
+          name: save-cache-checksum
+          command: find -name "package.json" | xargs cat > /tmp/cache-checksum
+
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: install-dependencies
-          command: yarn install
+            - v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-      - save_cache:
-          paths:
-            - ./node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: bootstrap
+          command: yarn
 
       - run:
           name: lint
-          command: npm run lint
+          command: yarn lint
 
       - run:
           name: test
           command: |
-            npm test -- --reporter mocha-junit-reporter
-
-          environment:
-            MOCHA_FILE: ./junit/core-test-results.xml
+            yarn test
 
       - store_artifacts:
-          path: ./junit/core-test-results.xml
+          path: ./packages/core/test-results.xml
           prefix: core
 
-      - store_test_results:
-          path: ./junit
-
-  build-task-manager:
-    docker:
-      - image: circleci/node:6
-    working_directory: ~/repo/task-manager
-    steps:
-      - checkout:
-          path: ~/repo
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: install-dependencies
-          command: yarn install
-
-      - save_cache:
-          paths:
-            - ./node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      - run:
-          name: lint
-          command: npm run lint
-
-      - run:
-          name: test
-          command: |
-            npm test -- --reporter mocha-junit-reporter
-
-          environment:
-            MOCHA_FILE: ./junit/task-manager-test-results.xml
-
       - store_artifacts:
-          path: ./junit/task-manager-test-results.xml
+          path: ./packages/task-manager/test-results.xml
           prefix: task-manager
 
+      - store_artifacts:
+          path: ./packages/history/test-results.xml
+          prefix: history
+
       - store_test_results:
           path: ./junit
+
 workflows:
   version: 2
   build-all:
     jobs:
-      - build-core:
-          filters:
-            branches:
-              ignore:
-                - gh-pages
-      - build-task-manager:
+      - build:
           filters:
             branches:
               ignore:
