@@ -7,6 +7,7 @@ export default class MachineDefinition {
     if (!promise) {
       throw new Error("promise is undefined");
     }
+    // TODO: validate that name is passed (it wil be used by machine to write/read history)
     // console.log(`schema '${JSON.stringify(schema)}'`);
     this.schema = {
       objectStateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),

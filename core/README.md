@@ -94,6 +94,7 @@ You can define the initial state by setting the _initialState_ property:
 ```javascript
 var machineDefinition = new MachineDefinition({
   schema: {
+    name: 'sprint'
     initial: 'start'
     transitions: [
       {from: 'start', event: 'run', to: 'finish'}
@@ -101,9 +102,8 @@ var machineDefinition = new MachineDefinition({
   }
 });
 
-const object = {status: 'none'};
-const machine = new Machine(machineDefinition);
-machine.start(object).then(({object}) => {
+const machine = new Machine({machineDefinition});
+machine.start(object).then(({status: 'none'}) => {
   console.log(machine.currentState({object}));
   // start
 });
@@ -176,6 +176,94 @@ machine.start(object).then(({object}) => {
   // finish
 });
 ```
+
+## Object Workflow History
+
+Machine configuration
+```
+var machine = new Machine({history, ...});
+```
+**history** is a DAO that provides a possibility to create and read object workflow history records. You can find its API (and DB specific implementation) [here](https://github.com/OpusCapita/fsm-workflow/tree/master/history).
+
+Machine writes history records for all object transitions within the workflow.
+It happens when you start workflow
+```
+machine.start({object, user, description})
+```
+or you send an event
+```
+machine.sendEvent({ object, event, user, description})
+```
+In both cases, new history records are created.
+Here
+- **object** (required) - business object of the following structure
+```javascript
+{
+  businessObjId,
+  businessObjType
+}
+```
+- **user** (required) - user identifier who initiated an event
+- **description** (optional) - custom text that describes transition/object
+All this info together is stored in workflow history.
+Note: In case of **start** method call history fields **from** and **event** are filled with string value **NULL** (4 upper cases letters: N, U, L, L)
+
+Machine provides possibility to get(search) history records via **getHistory** method:
+
+Getting/searching specific workflow history. You can either search by:
+- specific **object** history
+- initiated by specific **user**
+- additionally, you can restrict query using **finishedBy** to get history within a specific period of time.
+```javascript
+machine.getHistory(searchParameters, paging, sorting)
+```
+where
+  - **searchParameters**
+  ```javascript
+  {
+    object: {
+      businessObjectId,
+      businessObjectType     // example: 'invoice'
+    },
+    user,                    // example: 'john.miller'
+    finishedOn: {
+      gte,                   // example: Date("2018-03-05T21:00:00.000Z")
+      gt,                    // (syntax like 'today', 'yesterday', 'week ago' could be introduced later, if required)
+      lt,
+      lte
+    }
+  }
+  ```
+  - **paging**:
+  ```javascript
+  {
+    max,                      // example: '25', default value: 100
+    offset                    // example: '50', default value: 0
+  }
+  ```
+  - **sorting**:
+  ```javascript
+  {
+   by,                        // example: 'user', default value: 'finishedOn',
+                              // possible values: ['event', 'from', 'to', 'user', 'description', 'finishedOn']
+   order                      // example: 'asc', default value: 'desc'
+  }
+  ```
+  as a result you get a promise that results into array of objects of the following structure:
+  ```javascript
+  {
+    event,
+    from,
+    to,
+    object: {
+      businessObjectId,
+      businessObjectType     
+    },
+    user,
+    description,
+    finishedOn
+  }
+  ```
 
 ## Machine
 ### API
