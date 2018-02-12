@@ -19,6 +19,14 @@ jobs:
           name: bootstrap
           command: yarn
 
+      - save_cache:
+          key: v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+          paths:
+            - node_modules
+            - packages/core/node_modules
+            - packages/history/node_modules
+            - packages/task-manager/node_modules
+
       - run:
           name: lint
           command: yarn lint
