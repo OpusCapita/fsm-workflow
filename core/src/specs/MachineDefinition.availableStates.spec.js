@@ -14,12 +14,36 @@ const machineDefinition = new MachineDefinition({
         from: 'b',
         to: 'x'
       },
+    ],
+    states: [
+      {
+        name: 'a'
+      },
+      {
+        name: 'b',
+        description: 'B'
+      },
+      {
+        name: 'x'
+      },
+      {
+        name: 'y'
+      },
+      {
+        name: 'z'
+      },
+      {
+        name: 'n'
+      },
+      {
+        name: 'e'
+      },
     ]
   }
 });
 
 describe("machine: getAvailableStates", function() {
-  it("returns decalred states", () =>
-    assert.deepEqual(machineDefinition.getAvailableStates(), ['a', 'b', 'x', 'y', 'z'])
+  it("returns declared states", () =>
+    assert.deepEqual(machineDefinition.getAvailableStates(), ['a', 'b', 'e', 'n', 'x', 'y', 'z'])
   );
 });

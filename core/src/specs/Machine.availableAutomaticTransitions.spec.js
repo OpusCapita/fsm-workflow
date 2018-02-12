@@ -19,13 +19,15 @@ describe('machine: availableAutomaticTransitions', function() {
         {
           machineDefinition: {
             schema: {
-              objectStateFieldName: 'status'
+              objectConfig: {
+                objectStateFieldName: 'status'
+              }
             },
-            findAvailableTransitions: (passsedArgument) => {
-              assert(passsedArgument)
-              assert.equal(passsedArgument.object, object);
-              assert.equal(passsedArgument.context, context);
-              assert.equal(passsedArgument.isAutomatic, true);
+            findAvailableTransitions: (passedArgument) => {
+              assert(passedArgument)
+              assert.equal(passedArgument.object, object);
+              assert.equal(passedArgument.context, context);
+              assert.equal(passedArgument.isAutomatic, true);
             }
           },
           context: context

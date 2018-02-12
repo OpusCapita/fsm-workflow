@@ -91,73 +91,101 @@ describe('machine definition: findAvailableTransitions', function() {
   });
 
   describe("'guarded' transitions", function() {
-    const machineDefinition = new MachineDefinition(
-      {
-        schema: {
-          transitions: [
-            {
-              from: 'a',
-              to: 'b',
-              event: 'a->b',
-              guards: [
-                {
-                  name: 'a-to-b',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  }
+    const machineDefinitionConfig = {
+      schema: {
+        transitions: [
+          {
+            from: 'a',
+            to: 'b',
+            event: 'a->b',
+            guards: [
+              {
+                name: 'a-to-b',
+                arguments: {
+                  'one': 1,
+                  'two': 2
                 }
-              ]
-            },
-            {
-              from: 'b',
-              to: 'c',
-              event: 'b->c',
-              guards: [
-                {
-                  name: 'unavailable'
-                }
-              ]
-            },
-            {
-              from: 'c',
-              to: 'd',
-              event: 'c->d',
-              guards: [
-                {
-                  name: 'less-than-max',
-                  arguments: {
-                    max: 10
-                  }
-                }
-              ]
-            },
-            {
-              from: 'd',
-              to: 'e',
-              event: 'd->e',
-              guards: [
-                {
-                  name: 'less-than-max',
-                  arguments: {
-                    max: 10
-                  },
-                  negate: true
-                }
-              ]
-            }
-          ]
-        },
-        conditions: {
-          'a-to-b': ({ object }) => {
-            return object.enabled;
+              }
+            ]
           },
-          'less-than-max': ({ max, request }) => {
-            const { value } = request;
-            return value < max;
+          {
+            from: 'b',
+            to: 'c',
+            event: 'b->c',
+            guards: [
+              {
+                name: 'unavailable'
+              }
+            ]
+          },
+          {
+            from: 'c',
+            to: 'd',
+            event: 'c->d',
+            guards: [
+              {
+                name: 'less-than-max',
+                arguments: {
+                  max: 10
+                }
+              }
+            ]
+          },
+          {
+            from: 'd',
+            to: 'e',
+            event: 'd->e',
+            guards: [
+              {
+                name: 'less-than-max',
+                arguments: {
+                  max: 10
+                },
+                negate: true
+              }
+            ]
+          },
+          {
+            from: 'f',
+            to: 'g',
+            event: 'f->g',
+            guards: [
+              "object.enabled === true"
+            ]
+          },
+          {
+            from: 'g',
+            to: 'h',
+            event: 'g->h',
+            guards: [
+              "2 + 3"
+            ]
+          },
+          {
+            from: 'h',
+            to: 'i',
+            event: 'h->i',
+            guards: [
+              "invoice.enabled === true"
+            ]
           }
+        ],
+        objectConfig: {
+          objectAlias: 'invoice'
         }
-      });
+      },
+      conditions: {
+        'a-to-b': ({ object }) => {
+          return object.enabled;
+        },
+        'less-than-max': ({ max, request }) => {
+          const { value } = request;
+          return value < max;
+        }
+      }
+    };
+
+    const machineDefinition = new MachineDefinition(machineDefinitionConfig);
 
     // todo: check exact transitions, not only array length
     it("guard forbids transition", function() {
@@ -230,6 +258,46 @@ describe('machine definition: findAvailableTransitions', function() {
       }).then(({ transitions }) => {
         assert.equal(transitions.length, 1);
         done();
+      })
+    });
+
+    // check guards expressions
+    it("guard expression properly evaluates", function() {
+      return machineDefinition.findAvailableTransitions({
+        from: 'f',
+        object: {
+          enabled: true
+        }
+      }).then((result) => {
+        assert.equal(result.transitions.length, 1);
+        assert.deepEqual(
+          result.transitions[0],
+          machineDefinitionConfig.schema.transitions.find(t => t.event === 'f->g')
+        )
+      });
+    });
+
+    it("guard expression throws in case expression does not return boolean value", function() {
+      return machineDefinition.findAvailableTransitions({
+        from: 'g',
+        object: {}
+      }).
+        then(() => assert.ok(false)).
+        catch(err => assert.ok(true));
+    });
+
+    it("guard expression properly evaluates using object alias", function() {
+      return machineDefinition.findAvailableTransitions({
+        from: 'h',
+        object: {
+          enabled: true
+        }
+      }).then((result) => {
+        assert.equal(result.transitions.length, 1);
+        assert.deepEqual(
+          result.transitions[0],
+          machineDefinitionConfig.schema.transitions.find(t => t.event === 'h->i')
+        )
       })
     });
   });

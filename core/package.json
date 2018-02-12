@@ -9,7 +9,7 @@
     "lint": "eslint src",
     "publish-release--dont-use": "update-changelog -- --all && npm run build && npm-publish --release",
     "test-only": "mocha src/**/*.spec.js --require config/mocha-setup.js",
-    "test": "rimraf ./.nyc_output ./coverage && cross-env nyc --reporter=lcov --reporter=text mocha --require config/mocha-setup.js --recursive 'src/**/*.spec.js'"
+    "test": "rimraf ./.nyc_output ./coverage && cross-env nyc --reporter=lcov --reporter=text mocha --require config/mocha-setup.js --recursive \"src/**/*.spec.js\""
   },
   "repository": "https://github.com/OpusCapita/fsm/tree/master/core",
   "publishConfig": {

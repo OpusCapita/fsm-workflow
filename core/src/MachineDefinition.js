@@ -2,22 +2,25 @@
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
 
 export default class MachineDefinition {
-  constructor({ schema, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
+  constructor({ schema = {}, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
     // todo validate schema
     if (!promise) {
       throw new Error("promise is undefined");
     }
     // console.log(`schema '${JSON.stringify(schema)}'`);
     this.schema = {
-      objectStateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
       finalStates: [],
-      ...schema
+      ...schema,
+      objectConfig: {
+        objectStateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
+        ...schema.objectConfig
+      }
     };
     // condition is an object, where each property name is condition name and
     // value is condition implentation (function)
     this.conditions = conditions;
     // actions is an object, where each property is implemented action name and
-    // value is action(function) itself
+    // value is action (function) itself
     this.actions = actions;
     this.promise = promise;
   }
@@ -38,7 +41,7 @@ export default class MachineDefinition {
       // to do throw proper error
       return this.promise.reject(new Error("'from' is not defined"));
     }
-    const { transitions } = this.schema;
+    const { transitions, objectConfig } = this.schema;
     // if not transitions, the return empty list
     if (!transitions) {
       return this.promise.resolve({ transitions: [] });
@@ -62,26 +65,67 @@ export default class MachineDefinition {
       if (!guards) {
         return true;
       }
+      // add object alias to the list of implicit parameters
+      const { objectAlias } = objectConfig;
+      const implicitParams = {
+        from,
+        to,
+        event,
+        object,
+        ...(objectAlias && { [objectAlias]: object }),
+        request,
+        context
+      };
       // "ask" each guard
       for (let i = 0; i < guards.length; i++) {
-        const condition = this.conditions[guards[i].name];
-        // guard is defined in schema, but corresponding condition is not really defined -> error!!!
-        if (!condition) {
-          throw new Error(
-            // eslint-disable-next-line max-len
-            `Guard '${guards[i].name}' is specified in one the transitions but corresponding condition is not found/implemented!`
-          );
-        }
-        // if guard return false, return false, e.g. transition is not available at the moment
-        // pass arguments specified in guard call (part of schema)
-        // additionally object, request and context are also passed
-        // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
-        let conditionResult = condition({ ...guards[i].arguments, from, to, event, object, request, context });
-        if (guards[i].negate === true) {
-          conditionResult = !conditionResult;
-        }
-        if (!conditionResult) {
-          return false;
+        const guard = guards[i];
+
+        if (typeof guard === 'string') {
+          // guard is a string representing a JavaScript expression
+          try {
+            const result = (
+              eval( // eslint-disable-line no-eval
+                `
+                  (function(arg) {
+                    ${Object.keys(implicitParams).map(key => `var ${key} = arg[${JSON.stringify(key)}];`).join('\n')}
+                    return (${guard})
+                  })
+                `
+              )(implicitParams)
+            );
+
+            if (typeof result !== 'boolean') {
+              throw new Error(
+                `Guard <${guard}> does not evaluate to boolean value: got ${String(result)} of type ${typeof result}`
+              )
+            }
+
+            return result;
+          } catch (err) {
+            throw err
+          }
+        } else {
+          const condition = this.conditions[guard.name];
+          // guard is defined in schema, but corresponding condition is not really defined -> error!!!
+          if (!condition) {
+            throw new Error(
+              // eslint-disable-next-line max-len
+              `Guard '${guard.name}' is specified in one the transitions but corresponding condition is not found/implemented!`
+            );
+          }
+
+          // if guard returns false, return false, e.g. transition is not available at the moment
+          // pass arguments specified in guard call (part of schema)
+          // additionally object, request and context are also passed
+          // request should be used to pass params for some dynamic calculations
+          // f.e. role dependent transitions and etc.
+          let conditionResult = condition({ ...guard.arguments, ...implicitParams });
+          if (guard.negate === true) {
+            conditionResult = !conditionResult;
+          }
+          if (!conditionResult) {
+            return false;
+          }
         }
       }
 
@@ -153,15 +197,9 @@ export default class MachineDefinition {
    * @return Array
    */
   getAvailableStates() {
-    const result = this.schema.transitions.reduce(
-      // gather all states from transitions
-      (accumulator, t) => {
-        return accumulator.concat(t.from, t.to)
-      },
-      // initial and final states
-      [this.schema.initialState, ...this.schema.finalStates]
-    );
-
+    // TBD do we need to throw if this.schema.states not defined?
+    // or this is a matter of validation and doewsn't belong here?
+    const result = this.schema.states.map(state => state.name);
     return toUnique(result).sort();
   }
 

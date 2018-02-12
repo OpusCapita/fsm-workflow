@@ -19,7 +19,9 @@ describe('machine: availableTransitions', function() {
         {
           machineDefinition: {
             schema: {
-              objectStateFieldName: 'status'
+              objectConfig: {
+                objectStateFieldName: 'status'
+              }
             },
             findAvailableTransitions: (passsedArgument) => {
               assert(passsedArgument)
