@@ -47,7 +47,7 @@ export default class Machine {
   // @param object - stateful object
   // @param user - user name who initiated event/transition (this info will be writted into object wortkflow history)
   // @param description - event/transition/object description (this info will be writted into object wortkflow history)
-  // N!B!: history record fileds 'from' and 'event' will be filled with 'NULL' value
+  // N!B!: history record fields 'from' is set to ''NULL' value and 'event' to '__START__' value
   start({ object, user, description }) {
     const { name, objectStateFieldName, initialState } = this.machineDefinition.schema;
     // eslint-disable-next-line no-param-reassign
@@ -56,7 +56,7 @@ export default class Machine {
     return this.history.add({
       from: 'NULL',
       to: initialState,
-      event: 'NULL',
+      event: '__START__',
       // TODO: add validation for type and id here???
       businessObjType: object && object.businessObjType,
       businessObjId: object && object.businessObjId,
@@ -276,15 +276,15 @@ export default class Machine {
   * Provides access to business object history records within the workflow
   *
   * @param {Object} searchParameters search parameters
-  * @param {string} userInfo.object.businessObjType object type (examples: 'invoice', 'supplie')
-  * @param {string} userInfo.object.businessObjId object identifier (examples: '1234567', 'SDZ-987d')
-  * @param {string} userInfo.user user name initiated event (examles: 'Friedrich Wilhelm Viktor Albert')
-  * @param {Object} userInfo.finishedOn time when transition was completed
-  * @param {Date} userInfo.finishedOn.gt means that finishedOn should be greater than passed date
+  * @param {string} searchParameters.object.businessObjType object type (examples: 'invoice', 'supplie')
+  * @param {string} searchParameters.object.businessObjId object identifier (examples: '1234567', 'SDZ-987d')
+  * @param {string} searchParameters.user user name initiated event (examles: 'Friedrich Wilhelm Viktor Albert')
+  * @param {Object} searchParameters.finishedOn time when transition was completed
+  * @param {Date} searchParameters.finishedOn.gt means that finishedOn should be greater than passed date
    *  (example: Date("2018-03-05T21:00:00.000Z")
-  * @param {Date} userInfo.finishedOn.gte greater than or equal
-  * @param {Date} userInfo.finishedOn.lt lesser than
-  * @param {Date} userInfo.finishedOn.lte lesser than or equal
+  * @param {Date} searchParameters.finishedOn.gte greater than or equal
+  * @param {Date} searchParameters.finishedOn.lt lesser than
+  * @param {Date} searchParameters.finishedOn.lte lesser than or equal
   * @param {Object} paging results paging parameters
   * @param {Object} sorting results searchong parameters
   *

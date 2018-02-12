@@ -59,7 +59,7 @@ describe('machine: start', function() {
       assert.deepEqual(historyRecordUnderTest, {
         from: 'NULL',
         to: object.status,
-        event: 'NULL',
+        event: '__START__',
         businessObjId: object.businessObjId,
         businessObjType: object.businessObjType,
         workflowName: machine.machineDefinition.schema.name,
