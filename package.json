@@ -16,10 +16,6 @@
     "publish": "lerna publish --exact --cd-version patch --skip-git --yes",
     "test": "lerna run test --parallel"
   },
-  "npmClient": "yarn",
-  "npmClientArgs": ["--no-lockfile"],
-  "useWorkspaces": true,
-  "workspaces": ["packages/*"],
   "engines": {
     "node": ">= 8.x"
   }

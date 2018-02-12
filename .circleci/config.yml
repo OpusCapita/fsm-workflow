@@ -30,12 +30,12 @@ jobs:
 
       - run:
           name: lint
-          command: yarn lint
+          command: npm run lint
 
       - run:
           name: test
           command: |
-            yarn test
+            npm test
 
       - store_artifacts:
           path: ./packages/core/test-results.xml
