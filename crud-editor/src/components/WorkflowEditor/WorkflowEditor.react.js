@@ -64,7 +64,7 @@ export default class WorkflowEditor extends Component {
     super(props);
 
     this.state = {
-      machine: new MachineDefinition(props.workflow),
+      machineDefinition: new MachineDefinition(props.workflow),
       selectedStates: [],
       selectedTransitions: [],
       activeTabKey: 0
@@ -74,7 +74,7 @@ export default class WorkflowEditor extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps.workflow, this.props.workflow)) {
       this.setState({
-        machine: new MachineDefinition(nextProps.workflow)
+        machineDefinition: new MachineDefinition(nextProps.workflow)
       });
     }
   }
@@ -99,51 +99,51 @@ export default class WorkflowEditor extends Component {
   }
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => {
-    let machine = extend({}, prevState.machine);
-    machine.schema.name = name;
+    let machineDefinition = extend({}, prevState.machineDefinition);
+    machineDefinition.schema.name = name;
 
-    return ({ machine });
+    return ({ machineDefinition });
   });
 
   handleInitialStateChange = initialState => this.setNewState(prevState => {
-    let machine = extend({}, prevState.machine);
-    machine.schema.initialState = initialState;
+    let machineDefinition = extend({}, prevState.machineDefinition);
+    machineDefinition.schema.initialState = initialState;
 
-    return ({ machine });
+    return ({ machineDefinition });
   });
 
   handleFinalStatesChange = finalStates => this.setNewState(prevState => {
-    let machine = extend({}, prevState.machine);
-    machine.schema.finalStates = finalStates;
+    let machineDefinition = extend({}, prevState.machineDefinition);
+    machineDefinition.schema.finalStates = finalStates;
 
-    return ({ machine });
+    return ({ machineDefinition });
   });
 
   handleEditTransition = ({ index, ...rest }) => this.setNewState(prevState => {
-    let machine = extend({}, prevState.machine);
-    let schema = machine.schema;
+    let machineDefinition = extend({}, prevState.machineDefinition);
+    let schema = machineDefinition.schema;
 
     let transitions = isDef(index) ?
       schema.transitions.map((t, i) => i === index ? { ...t, ...rest } : t) :
       schema.transitions.concat({ ...rest });
 
     schema.transitions = transitions;
-    machine.schema = schema;
+    machineDefinition.schema = schema;
 
-    return ({ machine });
+    return ({ machineDefinition });
   });
 
   handleDeleteTransition = index => {
-    let machine = extend({}, this.state.machine);
+    let machineDefinition = extend({}, this.state.machineDefinition);
 
     let transitions = [
-      ...machine.schema.transitions.slice(0, index),
-      ...machine.schema.transitions.slice(index + 1)
+      ...machineDefinition.schema.transitions.slice(0, index),
+      ...machineDefinition.schema.transitions.slice(index + 1)
     ];
 
-    machine.schema.transitions = transitions;
+    machineDefinition.schema.transitions = transitions;
 
-    this.setNewState(prevState => ({ machine }));
+    this.setNewState(prevState => ({ machineDefinition }));
   }
 
   handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards })
@@ -151,7 +151,7 @@ export default class WorkflowEditor extends Component {
   handleSaveTransitionActions = index => actions => this.handleEditTransition({ index, actions })
 
   createJsonOutput = _ => {
-    const { schema } = this.state.machine;
+    const { schema } = this.state.machineDefinition;
 
     const transitions = schema.transitions.map(({ guards, actions, ...rest }) => ({
       ...rest,
@@ -172,8 +172,8 @@ export default class WorkflowEditor extends Component {
   handleDeleteState = ({ name: stateName, sideEffect = {} }) => {
     const { name: sideEffectName, alternative } = sideEffect;
 
-    let machine = extend({}, this.state.machine);
-    let schema = machine.schema;
+    let machineDefinition = extend({}, this.state.machineDefinition);
+    let schema = machineDefinition.schema;
 
     let states = schema.states.filter(({ name }) => name !== stateName);
     schema.states = states;
@@ -199,7 +199,7 @@ export default class WorkflowEditor extends Component {
 
     schema.transitions = transitions;
 
-    return this.setNewState(prevState => ({ machine }));
+    return this.setNewState(prevState => ({ machineDefinition }));
   }
 
   handleEditState = ({
@@ -209,8 +209,8 @@ export default class WorkflowEditor extends Component {
     isInitial,
     isFinal
   }) => this.setNewState(prevState => {
-    let machine = extend({}, this.state.machine);
-    let schema = machine.schema;
+    let machineDefinition = extend({}, this.state.machineDefinition);
+    let schema = machineDefinition.schema;
 
 
     if (initialName) { // edited previously existed state
@@ -262,18 +262,18 @@ export default class WorkflowEditor extends Component {
       }
     }
 
-    return ({ machine });
+    return ({ machineDefinition });
   });
 
   getStateLabel = name => (({ name, description } = {}) => description || startCase(name || ''))(
-    find(this.state.machine.schema.states, ({ name: stateName }) => name === stateName)
+    find(this.state.machineDefinition.schema.states, ({ name: stateName }) => name === stateName)
   )
 
   render() {
     let { title } = this.props;
-    let { selectedStates, selectedTransitions, activeTabKey, machine } = this.state;
+    let { selectedStates, selectedTransitions, activeTabKey, machineDefinition } = this.state;
 
-    let { schema, actions } = machine;
+    let { schema, actions } = machineDefinition;
 
     let headerElement = (
       <div className="oc-fsm-crud-editor--workflow-editor__page-header">
@@ -349,11 +349,11 @@ export default class WorkflowEditor extends Component {
         </Tab>
         <Tab
           eventKey={2}
-          title={(
-            <span><i className="fa fa-play-circle" /> Simulate</span>
-          )}>
+          mountOnEnter={true}
+          unmountOnExit={true}
+          title={(<span><i className="fa fa-play-circle" /> Simulate</span>)}>
           <WorkflowSimulator
-            onExampleObjectChange={() => {}}
+            machineDefinition={machineDefinition}
             exampleObject={this.props.objectInfo.example}
           />
         </Tab>
@@ -389,6 +389,6 @@ export default class WorkflowEditor extends Component {
           </Col>
         </Row>
       </Grid>
-    )
+    );
   }
 }

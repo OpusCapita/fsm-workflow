@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import { Navbar, Nav } from 'react-bootstrap';
 import './WorkflowSimulator.less';
 import ReactJson from 'react-json-view';
+import { Machine } from '@opuscapita/fsm-workflow-core';
 
 const propTypes = {
   exampleObject: PropTypes.object,
+  machineDefinition: PropTypes.object,
   onExampleObjectChange: PropTypes.func
 };
 const defaultProps = {
   exampleObject: {},
+  machineDefinition: {},
   onExampleObjectChange: () => {}
 };
 
@@ -40,11 +43,22 @@ class WorkflowSimulator extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
     };
+
+    this.machine = new Machine({ machineDefinition: props.machineDefinition });
+    this.machine.start({ object: props.exampleObject });
   }
 
   componentWillReceiveProps(nextProps) {
 
+  }
+
+  execMachine = (funcName, args) => {
+    let execResult = this.machine[funcName](...args);
+    this.forceUpdate();
+    console.log('ex', execResult);
+    return execResult;
   }
 
   handleExampleObjectChange = exampleObject => {
@@ -52,8 +66,12 @@ class WorkflowSimulator extends Component {
   }
 
   render() {
-    let { exampleObject } = this.props;
+    let { exampleObject, machineDefinition } = this.props;
     let { code, codeError } = this.state;
+
+    console.log('md', machineDefinition);
+    window.exampleObject = exampleObject;
+    console.log('execM', this.execMachine);
 
     return (
       <div className="oc-fsm-crud-editor--workflow-simulator">
@@ -118,7 +136,7 @@ class WorkflowSimulator extends Component {
             </Navbar.Header>
           </Navbar>
           <div className="oc-fsm-crud-editor--workflow-simulator__activity-log">
-            {Array.from(Array(1000)).fill((v, k) => k).map((v, k, arr) => (
+            {Array.from(Array(10)).fill((v, k) => k).map((v, k, arr) => (
               <ActivityLogItem
                 key={k}
                 i={k + 1}
