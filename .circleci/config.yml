@@ -18,7 +18,7 @@ jobs:
 
       - run:
           name: bootstrap (install dependencies)
-          command: yarn
+          command: npm install
 
       - save_cache:
           key: v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
