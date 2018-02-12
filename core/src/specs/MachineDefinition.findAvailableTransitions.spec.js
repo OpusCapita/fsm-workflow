@@ -2,6 +2,8 @@ import assert from 'assert';
 import MachineDefinition from '../MachineDefinition';
 import bluebird from 'bluebird';
 
+const { Promise } = global;
+
 describe('machine definition: findAvailableTransitions', function() {
   it("throws an error if 'from' is not specified", function() {
     return new MachineDefinition().findAvailableTransitions().then(() => {
@@ -231,6 +233,130 @@ describe('machine definition: findAvailableTransitions', function() {
         assert.equal(transitions.length, 1);
         done();
       })
+    });
+  });
+
+  describe("transitions with async 'guards'", () => {
+    const machineDefinition = new MachineDefinition(
+      {
+        schema: {
+          transitions: [
+            {
+              from: 'a',
+              to: 'b',
+              event: 'a->b',
+              guards: [
+                {
+                  name: 'isEnabled'
+                }
+              ]
+            },
+            {
+              from: 'b',
+              to: 'c',
+              event: 'b->c',
+              guards: [
+                {
+                  name: 'undefined'
+                }
+              ]
+            },
+            {
+              from: 'c',
+              to: 'd',
+              event: 'c->d',
+              guards: [
+                {
+                  name: 'isEnabled',
+                  negate: true
+                }
+              ]
+            }
+          ]
+        },
+        conditions: {
+          'isEnabled': ({ object }) => {
+            return new Promise((resolve, reject) => {
+              if (object.enabled === undefined) {
+                throw new Error("Invalid object");
+              }
+
+              if (object.shouldFail) {
+                return reject(new Error("Invalid object"));
+              }
+              return object.enabled ? resolve(true) : reject(false);
+            })
+          }
+        }
+      });
+
+    it('find transition with async resolved guard', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'a',
+        object: { enabled: true }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
+        done();
+      })
+    });
+
+    it('find 0 transition with rejected guard', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'a',
+        object: { enabled: false }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 0);
+        done();
+      })
+    });
+
+    it('find 0 transition with failing guard', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'a',
+        object: {}
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 0);
+        done();
+      })
+    });
+
+    it('find transition with negated not passing guard', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'c',
+        object: { enabled: false }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
+        done();
+      })
+    });
+
+    it('find transition with negated failing guard', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'c',
+        object: {}
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
+        done();
+      })
+    });
+
+    it('find 0 transition when guard is rejected with error', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'a',
+        object: { shouldFail: true }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 0);
+        done();
+      })
+    });
+
+    it('is rejected with error in case of undefined guard ', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'b',
+      }).catch((e) => {
+        assert(e, 'Error is thrown as expected');
+        done();
+      });
     });
   });
 

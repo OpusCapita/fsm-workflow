@@ -62,6 +62,7 @@ export default class MachineDefinition {
         return this.promise.resolve(true);
       }
 
+      // eslint-disable-next-line new-cap
       return new this.promise((resolve, reject) => {
         // collecting conditions that belong to current transition
         const conditions = guards.map((guard, idx) => {
@@ -75,32 +76,28 @@ export default class MachineDefinition {
           }
         });
 
-        try {
-          return this.promise.all(
-            conditions.map((condition, idx) => {
-              return this.promise.resolve(condition({
-                ...guards[idx].arguments,
-                from,
-                to,
-                event,
-                object,
-                request,
-                context
-              })).then(result => {
-                // if guard is resolve with false or is rejected, e.g. transition is not available at the moment
-                // pass arguments specified in guard call (part of schema)
-                // additionally object, request and context are also passed
-                // request should be used to pass params for some dynamic calculations f.e.
-                // role dependent transitions and e.t.c
-                return guards[idx].negate ? resolve(!result) : resolve(!!result)
-              }).catch(_ => {
-                return guards[idx].negate ? resolve(true) : resolve(false)
-              })
+        return this.promise.all(
+          conditions.map((condition, idx) => {
+            return this.promise.resolve(condition({
+              ...guards[idx].arguments,
+              from,
+              to,
+              event,
+              object,
+              request,
+              context
+            })).then(result => {
+              // if guard is resolve with false or is rejected, e.g. transition is not available at the moment
+              // pass arguments specified in guard call (part of schema)
+              // additionally object, request and context are also passed
+              // request should be used to pass params for some dynamic calculations f.e.
+              // role dependent transitions and e.t.c
+              return guards[idx].negate ? resolve(!result) : resolve(!!result)
+            }).catch(_ => {
+              return guards[idx].negate ? resolve(true) : resolve(false)
             })
-          ).then(executionResults => resolve(executionResults.every(result => !!result)))
-        } catch (e) {
-          return reject(e)
-        }
+          })
+        ).then(executionResults => resolve(executionResults.every(result => !!result)))
       })
     };
 
@@ -123,6 +120,7 @@ export default class MachineDefinition {
       } else if (!automatic || automatic.length === 0) {
         return false
       }
+      // eslint-disable-next-line new-cap
       return new this.promise((resolve, reject) => {
         // TODO: refactor in the same way as with guards
         try {
