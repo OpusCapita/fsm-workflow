@@ -71,7 +71,7 @@ class WorkflowGraph extends Component {
       this.addNodesEventListenersTimeout = setTimeout(() => {
         let svgNodes = Array.prototype.slice.call(
           (this.svgRef.querySelectorAll('[id^=oc-fsm--graph__node----]'))
-         );
+        );
 
         svgNodes.map((node) => {
           let nodeName = decodeURIComponent(node.id.replace('oc-fsm--graph__node----', ''));
@@ -124,11 +124,9 @@ class WorkflowGraph extends Component {
       if (finalStates.indexOf(name) !== -1) {
         type = 'FINAL_STATE';
         fillColor = finalStateColor;
-
       } else if (initialState === name) {
         type = 'INITIAL_STATE';
         fillColor = initialStateColor;
-
       } else {
         type = 'REGULAR_STATE';
         fillColor = regularStateColor;
@@ -176,14 +174,14 @@ class WorkflowGraph extends Component {
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     src += `\t${this.renderStates({
-        states,
-        initialState,
-        finalStates,
-        selectedStates,
-        regularStateColor: REGULAR_STATE_COLOR,
-        initialStateColor: INITIAL_STATE_COLOR,
-        finalStateColor: FINAL_STATE_COLOR,
-        getStateLabel
+      states,
+      initialState,
+      finalStates,
+      selectedStates,
+      regularStateColor: REGULAR_STATE_COLOR,
+      initialStateColor: INITIAL_STATE_COLOR,
+      finalStateColor: FINAL_STATE_COLOR,
+      getStateLabel
     })}\n`;
     src += this.renderEdges({
       transitions,

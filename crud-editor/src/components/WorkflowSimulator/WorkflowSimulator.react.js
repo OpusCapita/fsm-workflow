@@ -75,7 +75,8 @@ class WorkflowSimulator extends Component {
             className={`
               oc-fsm-crud-editor--workflow-simulator__content-pane
               oc-fsm-crud-editor--workflow-simulator__content-pane--example-object-editor
-            `}>
+            `}
+          >
             <Navbar fluid={true}>
               <Navbar.Header>
                 <Navbar.Brand>
@@ -86,7 +87,7 @@ class WorkflowSimulator extends Component {
                     oc-fsm-crud-editor--workflow-simulator__example-object-validation-message
                     ${codeError ? 'text-danger' : 'text-success'}
                   `}
-                  >
+                >
                   {codeError || 'Object is valid'}
                 </span>
               </Navbar.Header>
