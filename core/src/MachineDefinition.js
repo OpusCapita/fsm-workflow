@@ -55,37 +55,53 @@ export default class MachineDefinition {
       return transition.event === event;
     };
 
-
     const checkGuards = transition => {
       const { guards, from, to, event } = transition;
       // if guards are undefined
       if (!guards) {
-        return true;
-      }
-      // "ask" each guard
-      for (let i = 0; i < guards.length; i++) {
-        const condition = this.conditions[guards[i].name];
-        // guard is defined in schema, but corresponding condition is not really defined -> error!!!
-        if (!condition) {
-          throw new Error(
-            // eslint-disable-next-line max-len
-            `Guard '${guards[i].name}' is specified in one the transitions but corresponding condition is not found/implemented!`
-          );
-        }
-        // if guard return false, return false, e.g. transition is not available at the moment
-        // pass arguments specified in guard call (part of schema)
-        // additionally object, request and context are also passed
-        // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
-        let conditionResult = condition({ ...guards[i].arguments, from, to, event, object, request, context });
-        if (guards[i].negate === true) {
-          conditionResult = !conditionResult;
-        }
-        if (!conditionResult) {
-          return false;
-        }
+        return this.promise.resolve(true);
       }
 
-      return true;
+      return new this.promise((resolve, reject) => {
+        // collecting conditions that belong to current transition
+        const conditions = guards.map((guard, idx) => {
+          if (!this.conditions[guards[idx].name]) {
+            throw new Error(
+              // eslint-disable-next-line max-len
+              new Error(`Guard '${guards[idx].name}' is specified in one the transitions but corresponding condition is not found/implemented!`)
+            )
+          } else {
+            return this.conditions[guards[idx].name];
+          }
+        });
+
+        try {
+          return this.promise.all(
+            conditions.map((condition, idx) => {
+              return this.promise.resolve(condition({
+                ...guards[idx].arguments,
+                from,
+                to,
+                event,
+                object,
+                request,
+                context
+              })).then(result => {
+                // if guard is resolve with false or is rejected, e.g. transition is not available at the moment
+                // pass arguments specified in guard call (part of schema)
+                // additionally object, request and context are also passed
+                // request should be used to pass params for some dynamic calculations f.e.
+                // role dependent transitions and e.t.c
+                return guards[idx].negate ? resolve(!result) : resolve(!!result)
+              }).catch(_ => {
+                return guards[idx].negate ? resolve(true) : resolve(false)
+              })
+            })
+          ).then(executionResults => resolve(executionResults.every(result => !!result)))
+        } catch (e) {
+          return reject(e)
+        }
+      })
     };
 
     /**
@@ -107,44 +123,51 @@ export default class MachineDefinition {
       } else if (!automatic || automatic.length === 0) {
         return false
       }
-      for (let i = 0; i < automatic.length; i++) {
-        const condition = this.conditions[automatic[i].name];
-        // condition is referenced is defined in schema, but is not really defined -> error!!!
-        if (!condition) {
-          throw new Error(
-            // eslint-disable-next-line max-len
-            `Automatic condition '${automatic[i].name}' is specified in one the transitions but is not found/implemented!`
-          );
+      return new this.promise((resolve, reject) => {
+        // TODO: refactor in the same way as with guards
+        try {
+          for (let i = 0; i < automatic.length; i++) {
+            const condition = this.conditions[automatic[i].name];
+            // condition is referenced is defined in schema, but is not really defined -> error!!!
+            if (!condition) {
+              throw new Error(
+                // eslint-disable-next-line max-len
+                `Automatic condition '${automatic[i].name}' is specified in one the transitions but is not found/implemented!`
+              );
+            }
+            // if check return false, return false, e.g. transition is not available at the moment
+            // pass arguments specified in guard call (part of schema)
+            // additionally object and context are also passed
+            let conditionResult = condition({ ...automatic[i].arguments, from, to, event, object, context });
+            if (automatic[i].negate === true) {
+              conditionResult = !conditionResult;
+            }
+            if (!conditionResult) {
+              return resolve(false);
+            }
+          }
+          return resolve(true);
+        } catch (e) {
+          return reject(e)
         }
-        // if check return false, return false, e.g. transition is not available at the moment
-        // pass arguments specified in guard call (part of schema)
-        // additionally object and context are also passed
-        let conditionResult = condition({ ...automatic[i].arguments, from, to, event, object, context });
-        if (automatic[i].negate === true) {
-          conditionResult = !conditionResult;
-        }
-        if (!conditionResult) {
-          return false;
-        }
-      }
-      return true;
+      })
     };
 
-    // console.log(`transitions '${JSON.stringify(transitions)}'`);
     // eslint-disable-next-line new-cap
-    return new this.promise((resolve, reject) => {
-      try {
-        let foundTransitions = transitions.filter(transition => {
-          return checkFrom(transition) &&
-            checkEvent(transition) &&
-            checkGuards(transition) &&
-            (isAutomatic ? checkAutomatic(transition) : true);
-        });
-        resolve({ transitions: foundTransitions });
-      } catch (e) {
-        reject(e);
-      }
-    });
+    return this.promise.all(
+      transitions.filter(t => checkEvent(t) && checkFrom(t)).map(transition => this.promise.all([
+        checkGuards(transition),
+        isAutomatic ? checkAutomatic(transition) : this.promise.resolve(true)
+      ]).then(checkResults => {
+        if (checkResults.every(result => !!result)) {
+          return this.promise.resolve(transition);
+        } else {
+          return this.promise.resolve(null);
+        }
+      }))).then(foundTransitions => this.promise.resolve({
+        transitions: foundTransitions.filter(foundTransitions => !!foundTransitions)
+      })
+    );
   }
 
   /**

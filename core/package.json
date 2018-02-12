@@ -3,7 +3,9 @@
   "version": "0.0.4",
   "description": "FSM workflow (for Node.js)",
   "main": "./lib/index.js",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.config.js",
     "lint": "eslint src",
