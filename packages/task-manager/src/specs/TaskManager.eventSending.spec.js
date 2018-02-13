@@ -11,7 +11,9 @@ describe('Task manager:event sending', function() {
         "finalStates": [
           "finished"
         ],
-        "objectStateFieldName": "status",
+        "objectConfiguration": {
+          "stateFieldName": "status"
+        },
         "transitions": [
           {
             "from": "init",

@@ -49,9 +49,10 @@ export default class Machine {
   // @param description - event/transition/object description (this info will be writted into object wortkflow history)
   // N!B!: history record fields 'from' is set to ''NULL' value and 'event' to '__START__' value
   start({ object, user, description }) {
-    const { name, objectStateFieldName, initialState } = this.machineDefinition.schema;
+    const { name, initialState, objectConfiguration } = this.machineDefinition.schema;
+    const { stateFieldName } = objectConfiguration;
     // eslint-disable-next-line no-param-reassign
-    object[objectStateFieldName] = initialState;
+    object[stateFieldName] = initialState;
     // add history record
     return this.history.add({
       from: 'NULL',
@@ -71,8 +72,8 @@ export default class Machine {
 
   // returns current object state
   currentState({ object }) {
-    const { objectStateFieldName } = this.machineDefinition.schema;
-    return object[objectStateFieldName];
+    const { stateFieldName } = this.machineDefinition.schema.objectConfiguration;
+    return object[stateFieldName];
   }
 
   // returns a lits of events (names) that are available at current object state
@@ -115,7 +116,8 @@ export default class Machine {
   // @param request - event request data
   sendEvent({ object, event, user, description, request }) {
     const { machineDefinition } = this;
-    const { objectStateFieldName, workflowName } = machineDefinition.schema;
+    const { objectConfiguration, workflowName } = machineDefinition.schema;
+    const { stateFieldName } = objectConfiguration;
     // calculate from state
     const from = this.currentState({ object });
     // get context
@@ -123,7 +125,7 @@ export default class Machine {
     //
     const changeObjectState = to => {
       // eslint-disable-next-line no-param-reassign
-      object[objectStateFieldName] = to;
+      object[stateFieldName] = to;
     };
 
     const actionByName = name => {

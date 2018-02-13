@@ -2,17 +2,22 @@
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
 
 export default class MachineDefinition {
-  constructor({ schema, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
+  constructor({ schema = {}, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
     // todo validate schema
     if (!promise) {
       throw new Error("promise is undefined");
     }
     // TODO: validate that name is passed (it wil be used by machine to write/read history)
     // console.log(`schema '${JSON.stringify(schema)}'`);
+
+    const { objectConfiguration, ...restSchema } = schema;
     this.schema = {
-      objectStateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
+      objectConfiguration: {
+        stateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
+        ...objectConfiguration
+      },
       finalStates: [],
-      ...schema
+      ...restSchema
     };
     // condition is an object, where each property name is condition name and
     // value is condition implentation (function)
