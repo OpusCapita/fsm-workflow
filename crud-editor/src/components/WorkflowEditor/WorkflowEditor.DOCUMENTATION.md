@@ -29,7 +29,6 @@
           "from": "inspectionRequired",
           "to": "approvalRequired",
           "event": "inspect",
-          "guards": ["object.netAmount > 100"],
           actions: [
             {
               name: 'sendMail',

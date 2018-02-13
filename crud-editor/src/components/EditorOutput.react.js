@@ -5,6 +5,7 @@ import WorkflowGraph from './WorkflowGraph';
 // import CodeEditor from './CodeEditor';
 
 export default function EditorOutput({
+  availableTransitions,
   schema,
   getStateLabel,
   createJsonOutput,
@@ -19,6 +20,7 @@ export default function EditorOutput({
     <div>
       <div className="oc-fsm-crud-editor--workflow-editor__tab">
         <WorkflowGraph
+          availableTransitions={availableTransitions}
           schema={schema}
           selectedStates={selectedStates}
           selectedTransitions={selectedTransitions}
@@ -61,6 +63,7 @@ export default function EditorOutput({
 }
 
 EditorOutput.propTypes = {
+  availableTransitions: PropTypes.arrayOf(PropTypes.object),
   schema: PropTypes.object.isRequired,
   selectedStates: PropTypes.arrayOf(PropTypes.string),
   selectedTransitions: PropTypes.arrayOf(PropTypes.object),
@@ -71,6 +74,7 @@ EditorOutput.propTypes = {
 };
 
 EditorOutput.defaultProps = {
+  availableTransitions: [],
   selectedStates: [],
   selectedTransitions: [],
   onStatesSelect: () => {},

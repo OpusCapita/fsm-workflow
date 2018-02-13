@@ -67,6 +67,7 @@ export default class WorkflowEditor extends Component {
       machineDefinition: new MachineDefinition(props.workflow),
       selectedStates: [],
       selectedTransitions: [],
+      availableTransitions: [],
       activeTabKey: 0
     };
   }
@@ -165,6 +166,10 @@ export default class WorkflowEditor extends Component {
         transitions
       }
     };
+  }
+
+  handleAvailableTransitionsChange = (availableTransitions) => {
+    this.setState({ availableTransitions });
   }
 
   handleSave = _ => this.props.onSave(this.createJsonOutput())
@@ -271,7 +276,7 @@ export default class WorkflowEditor extends Component {
 
   render() {
     let { title } = this.props;
-    let { selectedStates, selectedTransitions, activeTabKey, machineDefinition } = this.state;
+    let { availableTransitions, selectedStates, selectedTransitions, activeTabKey, machineDefinition } = this.state;
 
     let { schema, actions } = machineDefinition;
 
@@ -355,7 +360,8 @@ export default class WorkflowEditor extends Component {
           <WorkflowSimulator
             machineDefinition={machineDefinition}
             exampleObject={this.props.objectInfo.example}
-          />
+            onAvailableTransitionsChange={this.handleAvailableTransitionsChange}
+        />
         </Tab>
       </Tabs>
     );
@@ -375,6 +381,7 @@ export default class WorkflowEditor extends Component {
 
               <Col lg={6} md={12}>
                 <EditorOutput
+                  availableTransitions={availableTransitions}
                   schema={schema}
                   selectedStates={selectedStates}
                   selectedTransitions={selectedTransitions}

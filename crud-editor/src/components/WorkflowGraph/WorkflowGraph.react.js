@@ -16,6 +16,7 @@ const SELECTED_EDGE_COLOR = '#333333';
 const nodeListToArray = (nodeList) => Array.prototype.slice.call(nodeList);
 
 const propTypes = {
+  availableTransitions: PropTypes.arrayOf(PropTypes.object),
   schema: PropTypes.object,
   selectedStates: PropTypes.arrayOf(PropTypes.string),
   selectedTransitions: PropTypes.arrayOf(PropTypes.object),
@@ -25,6 +26,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  availableTransitions: [],
   schema: null,
   selectedStates: [],
   selectedTransitions: [],
@@ -43,6 +45,7 @@ class WorkflowGraph extends Component {
 
   componentDidMount() {
     this.renderGraph({
+      availableTransitions: this.props.availableTransitions,
       schema: this.props.schema,
       selectedStates: this.props.selectedStates,
       selectedTransitions: this.props.selectedTransitions,
@@ -52,6 +55,7 @@ class WorkflowGraph extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.renderGraph({
+      availableTransitions: nextProps.availableTransitions,
       schema: nextProps.schema,
       selectedStates: nextProps.selectedStates,
       selectedTransitions: nextProps.selectedTransitions,
@@ -106,6 +110,7 @@ class WorkflowGraph extends Component {
   }
 
   renderStates = ({
+    availableTransitions,
     states,
     initialState,
     finalStates,
@@ -117,7 +122,7 @@ class WorkflowGraph extends Component {
   }) => {
     return states.map((state, i) => {
       let { name } = state;
-
+      console.log('av', availableTransitions);
       let type;
       let fillColor;
 
@@ -145,6 +150,7 @@ class WorkflowGraph extends Component {
   }
 
   renderEdges = ({
+    availableTransitions,
     transitions,
     selectedTransitions,
     regularEdgeColor,
@@ -155,16 +161,17 @@ class WorkflowGraph extends Component {
       filter(({ from, to, event }) => (from && to && event)).
       // map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
       map(({ from, to, event }) => {
+        let isAvailable = availableTransitions.some(tr => tr.from === from && tr.to === to && tr.event === event);
         let isSelected = selectedTransitions.filter((tr) => tr.from === from && tr.to === to && tr.event === event).length;
         let color = isSelected ? regularEdgeColor : regularEdgeColor;
-        let penwidth = isSelected ? '4' : '1';
+        let penwidth = (isSelected || isAvailable) ? '4' : '1';
 
         return (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [id="oc-fsm--graph__edge----${encodeURIComponent(from)}----${encodeURIComponent(to)}----${encodeURIComponent(event)}", penwidth=${penwidth}, color="${color}", label = "${event}"]`);
       }).
       join(`\n`);
   }
 
-  convertSchemaToDotLang({ schema, selectedStates, selectedTransitions, getStateLabel }) {
+  convertSchemaToDotLang({ availableTransitions, schema, selectedStates, selectedTransitions, getStateLabel }) {
     // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
     const { transitions, initialState, finalStates, states } = schema;
 
@@ -174,6 +181,7 @@ class WorkflowGraph extends Component {
     src += `\trankdir=LR;\n`;
     src += `\tedge [fontname="Helvetica"];\n`;
     src += `\t${this.renderStates({
+      availableTransitions,
       states,
       initialState,
       finalStates,
@@ -184,6 +192,7 @@ class WorkflowGraph extends Component {
       getStateLabel
     })}\n`;
     src += this.renderEdges({
+      availableTransitions,
       transitions,
       selectedTransitions,
       regularEdgeColor: REGULAR_EDGE_COLOR,
@@ -195,8 +204,8 @@ class WorkflowGraph extends Component {
     return src;
   }
 
-  renderGraph = ({ schema, selectedStates, selectedTransitions, getStateLabel }) => {
-    const vizSrc = this.convertSchemaToDotLang({ schema, selectedStates, selectedTransitions, getStateLabel });
+  renderGraph = ({ availableTransitions, schema, selectedStates, selectedTransitions, getStateLabel }) => {
+    const vizSrc = this.convertSchemaToDotLang({ availableTransitions, schema, selectedStates, selectedTransitions, getStateLabel });
     this.setState({
       svg: Viz(vizSrc, { format: "svg", engine: "dot", totalMemory: 16777216 })
     });

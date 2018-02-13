@@ -8,12 +8,14 @@ import { Machine } from '@opuscapita/fsm-workflow-core';
 const propTypes = {
   exampleObject: PropTypes.object,
   machineDefinition: PropTypes.object,
-  onExampleObjectChange: PropTypes.func
+  onExampleObjectChange: PropTypes.func,
+  onAvailableTransitionsChange: PropTypes.func
 };
 const defaultProps = {
   exampleObject: {},
   machineDefinition: {},
-  onExampleObjectChange: () => {}
+  onExampleObjectChange: () => {},
+  onAvailableTransitionsChange: () => {}
 };
 
 
@@ -42,23 +44,38 @@ export default
 class WorkflowSimulator extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
 
     this.machine = new Machine({ machineDefinition: props.machineDefinition });
     this.machine.start({ object: props.exampleObject });
+
+    this.state = {
+      modifiedExampleObject: props.exampleObject,
+      availableTransitions: []
+    };
+  }
+
+  componentDidMount() {
+    this.renderAwailableTransitions(this.props, this.state);
   }
 
   componentWillReceiveProps(nextProps) {
 
   }
 
-  execMachine = (funcName, args) => {
-    let execResult = this.machine[funcName](...args);
-    this.forceUpdate();
-    console.log('ex', execResult);
-    return execResult;
+  renderAwailableTransitions = (props, state) => {
+    let { modifiedExampleObject } = state;
+    this.machine.availableTransitions({ object: modifiedExampleObject })
+      .then(({ transitions }) => {
+        this.setState({ availableTransitions: transitions });
+        props.onAvailableTransitionsChange(transitions);
+      })
+      .catch(err => console.log(err));
+  }
+
+  sendEventToMachine({ object, event, request }) {
+    this.machine.sendEvent({ object, event, request })
+      .then(res => console.log('res', res))
+      .catch(err => console.log(err));
   }
 
   handleExampleObjectChange = exampleObject => {
@@ -67,11 +84,17 @@ class WorkflowSimulator extends Component {
 
   render() {
     let { exampleObject, machineDefinition } = this.props;
-    let { code, codeError } = this.state;
+    let { code, codeError, availableTransitions } = this.state;
 
-    console.log('md', machineDefinition);
-    window.exampleObject = exampleObject;
-    console.log('execM', this.execMachine);
+    let availableTransitionsElement = availableTransitions.map((transition, i) => (
+      <div key={i}>
+        <div
+          className="oc-fsm-crud-editor--workflow-simulator__available-transition"
+        >
+          {`${transition.event}`}
+        </div>
+      </div>
+    ));
 
     return (
       <div className="oc-fsm-crud-editor--workflow-simulator">
@@ -80,12 +103,12 @@ class WorkflowSimulator extends Component {
             <Navbar fluid={true}>
               <Navbar.Header>
                 <Navbar.Brand>
-                  <span>Available transitions</span>
+                  <span>Available events</span>
                 </Navbar.Brand>
               </Navbar.Header>
             </Navbar>
             <div className="oc-fsm-crud-editor--workflow-simulator__example-object-editor">
-
+              {availableTransitionsElement}
             </div>
           </div>
 
