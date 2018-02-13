@@ -1,0 +1,22 @@
+{
+  "name": "@opuscapita/fsm-workflow",
+  "private": true,
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "lerna": "2.8.0"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean",
+    "diff": "lerna diff",
+    "lint": "lerna run lint",
+    "postinstall": "npm run bootstrap",
+    "start": "lerna run start --parallel",
+    "updated": "lerna updated || exit 0",
+    "publish": "lerna publish --exact --cd-version patch --skip-git --yes",
+    "test": "lerna run test --parallel"
+  },
+  "engines": {
+    "node": ">= 8.x"
+  }
+}

@@ -33,15 +33,15 @@ The following things will be implemented later as extensions/helpers (separate s
 
 ### FSM (Core)
 
-FSM core could be found here [here](core/README.md)
+FSM core could be found here [here](packages/core/README.md)
 
 ### Task/Work Management
 
-Task management is implemented as additional library. You can find more detailed info [here](task-manager/README.md).
+Task management is implemented as additional library. You can find more detailed info [here](packages/task-manager/README.md).
 
 ### Workflow Transition History
 
-Workflow Transition History is implemented as separate library. You can find more information [here](workflow-transition-history/README.md).
+Workflow Transition History is implemented as separate library. You can find more information [here](packages/history/README.md).
 
 ### References
 
@@ -55,4 +55,3 @@ Workflow Transition History is implemented as separate library. You can find mor
 | <img src="https://avatars3.githubusercontent.com/u/24650360?v=3" width="100px;"/> | [**Daniel Zhitomirsky**](https://github.com/dzhitomirsky-sc) |
 
 Contributing are welcome. We need YOU! :metal:
-
