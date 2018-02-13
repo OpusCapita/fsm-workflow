@@ -284,7 +284,7 @@ describe('machine definition: findAvailableTransitions', function() {
               if (object.shouldFail) {
                 return reject(new Error("Invalid object"));
               }
-              return object.enabled ? resolve(true) : reject(false);
+              return object.enabled ? resolve(true) : resolve(false);
             })
           }
         }
@@ -314,8 +314,8 @@ describe('machine definition: findAvailableTransitions', function() {
       machineDefinition.findAvailableTransitions({
         from: 'a',
         object: {}
-      }).then(({ transitions }) => {
-        assert.equal(transitions.length, 0);
+      }).catch((e) => {
+        assert(e, 'Error is thrown as expected');
         done();
       })
     });
@@ -334,20 +334,20 @@ describe('machine definition: findAvailableTransitions', function() {
       machineDefinition.findAvailableTransitions({
         from: 'c',
         object: {}
-      }).then(({ transitions }) => {
-        assert.equal(transitions.length, 1);
+      }).catch((e) => {
+        assert(e, 'Error is thrown as expected');
         done();
-      })
+      });
     });
 
     it('find 0 transition when guard is rejected with error', (done) => {
       machineDefinition.findAvailableTransitions({
         from: 'a',
         object: { shouldFail: true }
-      }).then(({ transitions }) => {
-        assert.equal(transitions.length, 0);
+      }).catch((e) => {
+        assert(e, 'Error is thrown as expected');
         done();
-      })
+      });
     });
 
     it('is rejected with error in case of undefined guard ', (done) => {

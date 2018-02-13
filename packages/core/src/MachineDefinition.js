@@ -68,9 +68,9 @@ export default class MachineDefinition {
         // collecting conditions that belong to current transition
         const conditions = guards.map((guard, idx) => {
           if (!this.conditions[guards[idx].name]) {
+            // eslint-disable-next-line max-len
             throw new Error(
-              // eslint-disable-next-line max-len
-              new Error(`Guard '${guards[idx].name}' is specified in one the transitions but corresponding condition is not found/implemented!`)
+              `Guard '${guards[idx].name}' is specified in one the transitions but corresponding condition is not found/implemented!`
             )
           } else {
             return this.conditions[guards[idx].name];
@@ -93,12 +93,10 @@ export default class MachineDefinition {
               // additionally object, request and context are also passed
               // request should be used to pass params for some dynamic calculations f.e.
               // role dependent transitions and e.t.c
-              return guards[idx].negate ? resolve(!result) : resolve(!!result)
-            }).catch(_ => {
-              return guards[idx].negate ? resolve(true) : resolve(false)
+              return guards[idx].negate ? !result : !!result
             })
           })
-        ).then(executionResults => resolve(executionResults.every(result => !!result)))
+        ).then(executionResults => resolve(executionResults.every(result => !!result))).catch(e => reject(e))
       })
     };
 
