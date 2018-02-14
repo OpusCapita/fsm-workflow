@@ -77,7 +77,7 @@ jobs:
           name: lint
           command: npm run lint-fix
       - run:
-          name: lint
+          name: test
           command: npm run test
       - run:
           name: build-gh-pages
