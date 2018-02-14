@@ -110,43 +110,50 @@ export default class MachineDefinition {
      * @return {boolean}
      */
     const checkAutomatic = transition => {
-      const { from, to, event } = transition;
-      const automatic = transition['automatic'];
+      const { from, to, event, automatic } = transition;
 
       // automatic: true - checking for 'boolean' definition
       if (typeof automatic === 'boolean' && automatic) {
-        return true;
+        return this.promise.resolve(true);
       } else if (!automatic || automatic.length === 0) {
-        return false
+        // automatic also could be an array in the same way as guards
+        return this.promise.resolve(false);
       }
+
       // eslint-disable-next-line new-cap
       return new this.promise((resolve, reject) => {
-        // TODO: refactor in the same way as with guards
-        try {
-          for (let i = 0; i < automatic.length; i++) {
-            const condition = this.conditions[automatic[i].name];
-            // condition is referenced is defined in schema, but is not really defined -> error!!!
-            if (!condition) {
-              throw new Error(
-                // eslint-disable-next-line max-len
-                `Automatic condition '${automatic[i].name}' is specified in one the transitions but is not found/implemented!`
-              );
-            }
-            // if check return false, return false, e.g. transition is not available at the moment
-            // pass arguments specified in guard call (part of schema)
-            // additionally object and context are also passed
-            let conditionResult = condition({ ...automatic[i].arguments, from, to, event, object, context });
-            if (automatic[i].negate === true) {
-              conditionResult = !conditionResult;
-            }
-            if (!conditionResult) {
-              return resolve(false);
-            }
+        // collecting conditions that belong to current auto transition into list of functions
+        const automaticConditions = automatic.map((autoGuard, idx) => {
+          if (!this.conditions[automatic[idx].name]) {
+            // eslint-disable-next-line max-len
+            throw new Error(
+              // if no functions definition found - throw an error
+              `Automatic condition '${automatic[idx].name}' is specified in one the transitions but is not found/implemented!`
+            )
+          } else {
+            return this.conditions[automatic[idx].name];
           }
-          return resolve(true);
-        } catch (e) {
-          return reject(e)
-        }
+        });
+
+        // execute all checks asynchronously then collect & aggregate executions results
+        return this.promise.all(
+          automaticConditions.map((autoCondition, idx) => {
+            return this.promise.resolve(autoCondition({
+              ...automatic[idx].arguments,
+              from,
+              to,
+              event,
+              object,
+              request,
+              context
+            })).then(result => {
+              // if check return false, return false, e.g. transition is not available at the moment
+              // pass arguments specified in guard call (part of schema)
+              // additionally object and context are also passed
+              return automatic[idx].negate ? !result : !!result
+            })
+          })
+        ).then(executionResults => resolve(executionResults.every(result => !!result))).catch(e => reject(e));
       })
     };
 

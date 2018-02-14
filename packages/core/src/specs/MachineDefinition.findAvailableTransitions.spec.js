@@ -446,6 +446,20 @@ describe('machine definition: findAvailableTransitions', function() {
                   negate: true
                 }
               ]
+            },
+            {
+              from: 'h',
+              to: 'i',
+              event: 'h2i',
+              automatic: [
+                {
+                  name: 'h2i-auto-async-guard',
+                  arguments: {
+                    'one': 1,
+                    'two': 2
+                  },
+                }
+              ]
             }
           ]
         },
@@ -464,6 +478,10 @@ describe('machine definition: findAvailableTransitions', function() {
           },
           'g2h-auto-guard': ({ object }) => {
             return false
+          },
+          'h2i-auto-async-guard': ({ object }) => {
+            return new Promise((resolve, reject) => typeof object.enabled === 'boolean' ?
+              resolve(object.enabled) : reject(new Error()));
           }
         }
       });
@@ -525,6 +543,36 @@ describe('machine definition: findAvailableTransitions', function() {
         isAutomatic: true
       }).then((result) => {
         return assert.equal(result.transitions.length, 1)
+      });
+    });
+
+    it("async auto-guard permits transition", () => {
+      return machineDefinition.findAvailableTransitions({
+        from: 'h',
+        object: { enabled: true },
+        isAutomatic: true
+      }).then((result) => {
+        return assert.equal(result.transitions.length, 1)
+      });
+    });
+
+    it("async auto-guard rejects transition", () => {
+      return machineDefinition.findAvailableTransitions({
+        from: 'h',
+        object: { enabled: false },
+        isAutomatic: true
+      }).then((result) => {
+        return assert.equal(result.transitions.length, 0)
+      });
+    });
+
+    it("is rejected with error in case async auto-guard throws exceptions", () => {
+      return machineDefinition.findAvailableTransitions({
+        from: 'h',
+        object: {},
+        isAutomatic: true
+      }).catch((e) => {
+        assert(e, 'Error is thrown as expected')
       });
     });
   });
