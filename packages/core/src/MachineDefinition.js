@@ -68,8 +68,8 @@ export default class MachineDefinition {
         // collecting conditions that belong to current transition
         const conditions = guards.map((guard, idx) => {
           if (!this.conditions[guards[idx].name]) {
-            // eslint-disable-next-line max-len
             throw new Error(
+              // eslint-disable-next-line max-len
               `Guard '${guards[idx].name}' is specified in one the transitions but corresponding condition is not found/implemented!`
             )
           } else {
@@ -125,9 +125,9 @@ export default class MachineDefinition {
         // collecting conditions that belong to current auto transition into list of functions
         const automaticConditions = automatic.map((autoGuard, idx) => {
           if (!this.conditions[automatic[idx].name]) {
-            // eslint-disable-next-line max-len
             throw new Error(
               // if no functions definition found - throw an error
+              // eslint-disable-next-line max-len
               `Automatic condition '${automatic[idx].name}' is specified in one the transitions but is not found/implemented!`
             )
           } else {
