@@ -8,7 +8,6 @@ package-lock.json
 
 public
 .gh-pages-tmp
-.gh-pages-tmp-editor
 
 /resources/jcatalog/less/jquery-ui-bundle.css
 /resources/jcatalog/less/jcatalog-bootstrap-bundle.css

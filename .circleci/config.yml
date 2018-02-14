@@ -84,7 +84,7 @@ jobs:
           command: bash ./scripts/gh-pages/build.sh
       - run:
           name: deploy-gh-pages
-          command: bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp-editor
+          command: bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
 workflows:
   version: 2

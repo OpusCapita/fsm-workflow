@@ -17,7 +17,7 @@ module.exports = merge(common, {
     '../www/index-page.js'
   ],
   output: {
-    path: resolve(__dirname, '../.gh-pages-tmp-editor'),
+    path: resolve(__dirname, '../.gh-pages-tmp'),
     filename: 'bundle.js'
   },
   devServer: {

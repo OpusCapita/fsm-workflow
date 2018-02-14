@@ -8,6 +8,7 @@ test-results.xml
 .idea
 .nyc_output
 coverage
+.gh-pages-tmp
 
 packages/core/lib
 packages/gui/lib
