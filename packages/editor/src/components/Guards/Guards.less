@@ -1,0 +1,30 @@
+@editor-height: 200px;
+@editor-border: 1px solid #ddd;
+
+.guard-code .CodeMirror {
+  height: @editor-height;
+  border: @editor-border;
+}
+.guard-code .CodeMirror-empty {
+  color: #777
+}
+
+.output-code .CodeMirror {
+  height: @editor-height;
+  border: @editor-border;
+  background: #f7f7f7;
+}
+
+.example-object .CodeMirror {
+  height: 440px;
+  border: @editor-border;
+}
+
+.guards-table {
+  vertical-align: top;
+  table-layout: fixed;
+}
+
+.guards-table th {
+  vertical-align: middle !important
+}
