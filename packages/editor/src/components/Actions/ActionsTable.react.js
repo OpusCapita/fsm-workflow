@@ -28,7 +28,7 @@ export default class ActionsTable extends PureComponent {
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    objectConfig: PropTypes.object.isRequired,
+    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
@@ -85,7 +85,7 @@ export default class ActionsTable extends PureComponent {
 
   render() {
     const { i18n } = this.context;
-    const { title, actions, transition, objectConfig, componentsRegistry } = this.props;
+    const { title, actions, transition, objectConfiguration, componentsRegistry } = this.props;
     const { transitionActions, showEditor, currentActionIndex } = this.state;
 
     let editorModal;
@@ -101,7 +101,7 @@ export default class ActionsTable extends PureComponent {
         <ActionInvocationEditor
           action={action}
           actions={actions}
-          objectConfig={objectConfig}
+          objectConfiguration={objectConfiguration}
           transition={transition}
           componentsRegistry={componentsRegistry}
           onClose={this.handleCloseEditor}

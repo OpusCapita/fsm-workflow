@@ -199,9 +199,9 @@
           "name": "approvalRejected"
         }
       ],
-      objectConfig: {
-        objectStateFieldName: "status",
-        objectAlias: "invoice",
+      objectConfiguration: {
+        stateFieldName: "status",
+        alias: "invoice",
         schema: {
           type: "object",
           properties: {

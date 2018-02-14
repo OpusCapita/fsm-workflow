@@ -42,9 +42,9 @@ export default class WorkflowEditor extends PureComponent {
           actions: PropTypes.arrayOf(actionPropTypes)
         })),
         states: PropTypes.arrayOf(statePropTypes),
-        objectConfig: PropTypes.shape({
-          objectAlias: PropTypes.string,
-          objectStateFieldName: PropTypes.string,
+        objectConfiguration: PropTypes.shape({
+          alias: PropTypes.string,
+          stateFieldName: PropTypes.string,
           example: PropTypes.object.isRequired,
           schema: PropTypes.object
         }).isRequired,
@@ -78,11 +78,11 @@ export default class WorkflowEditor extends PureComponent {
     const ajv = new Ajv();
 
     // validate example object
-    const { objectConfig } = this.props.workflow.schema;
+    const { objectConfiguration } = this.props.workflow.schema;
 
     const valid = ajv.
-      addSchema(objectConfig.schema, 'objectSchema').
-      validate('objectSchema', objectConfig.example);
+      addSchema(objectConfiguration.schema, 'objectSchema').
+      validate('objectSchema', objectConfiguration.example);
 
     if (!valid) {
       const title = `objectInfo: Example object is not valid according to its schema!\n`;
@@ -342,7 +342,7 @@ export default class WorkflowEditor extends PureComponent {
                   onSaveGuards={this.handleSaveTransitionGuards}
                   onSaveActions={this.handleSaveTransitionActions}
                   actionsComponentRegistry={this.props.actionsComponentRegistry}
-                  objectConfig={schema.objectConfig}
+                  objectConfiguration={schema.objectConfiguration}
                 />
               </Tab>
             </Tabs>

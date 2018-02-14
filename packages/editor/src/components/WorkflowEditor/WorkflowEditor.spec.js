@@ -50,8 +50,8 @@ describe('<WorkflowEditor />', () => {
             { name: 'rejected' },
             { name: 'validated' }
           ],
-          objectConfig: {
-            objectAlias: 'invoice',
+          objectConfiguration: {
+            alias: 'invoice',
             example: {
               invoiceNo: "inv5566"
             },

@@ -28,7 +28,7 @@ export default class ActionInvocationEditor extends Component {
       event: PropTypes.string,
     }),
     onClose: PropTypes.func.isRequired,
-    objectConfig: PropTypes.object.isRequired,
+    objectConfiguration: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
@@ -37,7 +37,7 @@ export default class ActionInvocationEditor extends Component {
     name: '',
     params: [],
     ...(this.props.action || {}),
-    exampleObject: JSON.stringify(this.props.objectConfig.example, null, 2),
+    exampleObject: JSON.stringify(this.props.objectConfiguration.example, null, 2),
     invocationResults: null,
     autoplay: false,
     showExampleObject: false
