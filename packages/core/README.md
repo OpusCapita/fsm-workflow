@@ -137,7 +137,14 @@ Actions (action = function) are executed during transition (not while leaving/en
 
 #### Guard (conditions)
 
-Guards are used to protect transitions. Guard works as 'if' condition. Technically guard is defined the same way like as action, it is a function. The difference is that it should always return boolean value (true or false). Condition(function) result could be inverted if its property _negate_ is set to true.
+Guards are used to protect transitions. Guard works as 'if' condition. 
+Technically guard is defined the same way like as action, it is a function. 
+The difference is that it should always return boolean value (true or false). 
+Condition(function) result could be inverted if its property _negate_ is set to true.
+
+Guards could be also _sync_ and _async_ functions. In case you want to implement async guard, pay additional attention
+to the value resolved by a guard - it should be **only** boolean value. In case your guard rejects some value 
+(error or smth else) - it will be taken as an error and _findAvailableTransitions_ will be rejected with error. 
 
 Note: similar to [Spring State Machine Guards](http://docs.spring.io/spring-statemachine/docs/current/reference/htmlsingle/#configuring-guards)
 

@@ -2,8 +2,8 @@ import assert from 'assert';
 import Machine from '../Machine';
 
 // maybe it worth to write integration test
-describe('machine: availableAutomaticTransitions', function() {
-  it('arguments are correctly pased to machineDefinition.findAvailableTransitions', function() {
+describe('machine: availableAutomaticTransitions', () => {
+  it('arguments are correctly pased to machineDefinition.findAvailableTransitions', () => {
     // create object
     const object = {
       status: 'none'

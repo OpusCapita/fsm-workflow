@@ -1,0 +1,44 @@
+.fsm--toolbar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 6px 0;
+  border-bottom: 1px solid #aaa;
+  flex-wrap: wrap;
+  user-select: none;
+}
+
+.fsm--toolbar__button {
+  display: inline-flex;
+  padding: 2px;
+  margin: 0 2px !important;
+}
+
+.fsm--toolbar__button:last-child {
+  margin-right: 0;
+}
+
+.fsm--toolbar__button:first-child {
+  margin-left: 0;
+}
+
+.fsm--toolbar__divider {
+  border-right: 1px solid rgba(0, 0, 0, 0.45);
+  margin: 0 6px;
+}
+
+.fsm--toolbar__divider:last-child {
+  border: none;
+}
+
+.fsm--toolbar__controls-left {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fsm--toolbar__controls-right {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: auto;
+  padding-right: 12px;
+}
