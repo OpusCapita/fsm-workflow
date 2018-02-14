@@ -4,6 +4,7 @@ import statePropTypes from './statePropTypes';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import Radio from 'react-bootstrap/lib/Radio';
 import FormControl from 'react-bootstrap/lib/FormControl';
+import { formatLabel } from '../utils';
 
 // TODO maybe optimize communication between components to make it less coupled
 export default class DeleteStateDialogBody extends PureComponent {
@@ -34,9 +35,7 @@ export default class DeleteStateDialogBody extends PureComponent {
 
   render() {
     const { states, stateName } = this.props;
-
     const { alternativeState, selectedOptionIndex } = this.state;
-
     const otherStates = states.filter(({ name }) => stateName !== name);
 
     return (
@@ -64,7 +63,7 @@ export default class DeleteStateDialogBody extends PureComponent {
             >
               {
                 otherStates.map(({ name, description }, i) => (
-                  <option value={name} key={`${name}-${i}`}>{description}</option>
+                  <option value={name} key={`${name}-${i}`}>{description || formatLabel(name)}</option>
                 ))
               }
             </FormControl>
