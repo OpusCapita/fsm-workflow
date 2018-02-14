@@ -49,14 +49,53 @@ jobs:
           path: ./packages/history/test-results.xml
           prefix: history
 
+      - store_artifacts:
+          path: ./packages/editor/test-results.xml
+          prefix: editor
+
       - store_test_results:
           path: ./junit
+
+  build-editor:
+    docker:
+      - image: circleci/node:6
+    working_directory: ~/repo/packages/editor
+    steps:
+      - checkout:
+          path: ~/repo
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: install-dependencies
+          command: yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: lint
+          command: npm run lint-fix
+      - run:
+          name: lint
+          command: npm run test
+      - run:
+          name: build-gh-pages
+          command: bash ./scripts/gh-pages/build.sh
+      - run:
+          name: deploy-gh-pages
+          command: bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp-editor
 
 workflows:
   version: 2
   build-all:
     jobs:
       - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+      - build-editor:
           filters:
             branches:
               ignore:

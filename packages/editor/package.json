@@ -1,0 +1,102 @@
+{
+  "name": "@opuscapita/fsm-workflow-editor",
+  "version": "0.0.1",
+  "description": "Fsm workflow crud editor",
+  "main": "index.js",
+  "author": "Egor Stambakio",
+  "license": "Apache-2.0",
+  "repository": "opuscapita/fsm-workflow",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development showroom-scan ./src && webpack-dev-server --config config/webpack.config.showroom.js",
+    "build": "cross-env NODE_ENV=development showroom-scan ./src && webpack --config config/webpack.config.showroom.js",
+    "lint-fix": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc --fix",
+    "lint": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc",
+    "test": "rimraf ./.nyc_output ./coverage && cross-env nyc mocha --recursive \"src/**/*.spec.js\" --require ignore-styles"
+  },
+  "dependencies": {
+    "@opuscapita/react-dates": "0.4.0-beta.4",
+    "@opuscapita/react-select": "1.0.0-oc.0",
+    "ajv": "6.1.1",
+    "codemirror": "5.33.0",
+    "core-js": "2.5.3",
+    "kvolkovich-sc-react-codemirror": "1.0.1",
+    "lodash": "4.17.4",
+    "react-bootstrap": "0.32.0",
+    "react-inspector": "2.2.2",
+    "viz.js": "1.8.0"
+  },
+  "devDependencies": {
+    "@opuscapita/i18n": "1.1.0",
+    "@opuscapita/react-showroom-client": "1.3.0-beta.5",
+    "@opuscapita/react-showroom-server": "1.3.1",
+    "autoprefixer": "7.2.5",
+    "babel-core": "6.26.0",
+    "babel-eslint": "8.2.1",
+    "babel-loader": "7.1.2",
+    "babel-plugin-istanbul": "4.1.5",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-decorators-legacy": "1.3.4",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
+    "chai": "4.1.2",
+    "cross-env": "5.1.3",
+    "css-loader": "0.28.9",
+    "enzyme": "3.3.0",
+    "enzyme-adapter-react-15": "1.0.5",
+    "eslint": "4.16.0",
+    "eslint-config-opuscapita": "2.0.0",
+    "eslint-plugin-react": "7.5.1",
+    "html-webpack-plugin": "2.30.1",
+    "ignore-styles": "5.0.1",
+    "istanbul": "0.4.5",
+    "jsdom": "11.6.2",
+    "json-loader": "0.5.7",
+    "less": "2.7.3",
+    "less-loader": "4.0.5",
+    "lodash-webpack-plugin": "0.11.4",
+    "mocha": "5.0.0",
+    "mocha-junit-reporter": "1.17.0",
+    "nyc": "11.4.1",
+    "postcss-loader": "2.0.6",
+    "precss": "3.0.0",
+    "prop-types": "15.6.0",
+    "raw-loader": "0.5.1",
+    "react": "15.6.2",
+    "react-dom": "15.6.2",
+    "react-test-renderer": "15.6.2",
+    "rimraf": "2.6.2",
+    "sinon": "4.3.0",
+    "style-loader": "0.19.1",
+    "webpack": "3.4.1",
+    "webpack-bundle-analyzer": "2.9.2",
+    "webpack-dev-server": "2.9.2",
+    "webpack-merge": "4.1.1"
+  },
+  "peerDependencies": {
+    "react": "^15.6.2 || ^16.2.0",
+    "react-dom": "^15.6.2 || ^16.2.0"
+  },
+  "nyc": {
+    "sourceMap": false,
+    "instrument": false,
+    "exclude": [
+      "src/external_modules",
+      "node_modules",
+      "src/**/*.spec.js"
+    ],
+    "check-coverage": true,
+    "reporter": [
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "require": [
+      "./config/mocha-config.js"
+    ],
+    "statements": 0,
+    "branches": 0,
+    "functions": 0,
+    "lines": 0
+  }
+}
