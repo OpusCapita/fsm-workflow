@@ -33,7 +33,7 @@ describe('<TransitionsTable />', () => {
       onDeleteTransition: () => {},
       onSaveGuards: () => {},
       onSaveActions: () => {},
-      objectConfig: {}
+      objectConfiguration: {}
     };
 
     const wrapper = mount(<TransitionsTable {...props}/>);

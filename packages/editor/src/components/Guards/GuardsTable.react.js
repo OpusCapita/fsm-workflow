@@ -22,7 +22,7 @@ export default class GuardsTable extends PureComponent {
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    objectConfig: PropTypes.object.isRequired,
+    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
@@ -85,7 +85,7 @@ export default class GuardsTable extends PureComponent {
 
   render() {
     const { i18n } = this.context;
-    const { title, conditions, objectConfig, componentsRegistry } = this.props;
+    const { title, conditions, objectConfiguration, componentsRegistry } = this.props;
     const { guards, showEditor, currentGuardIndex } = this.state;
 
     let editorModal;
@@ -101,7 +101,7 @@ export default class GuardsTable extends PureComponent {
         <GuardEditor
           guard={guard}
           conditions={conditions}
-          objectConfig={objectConfig}
+          objectConfiguration={objectConfiguration}
           componentsRegistry={componentsRegistry}
           onClose={this.handleCloseEditor}
           onSave={this.handleSaveGuard(currentGuardIndex)}

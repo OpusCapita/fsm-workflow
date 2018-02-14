@@ -53,7 +53,7 @@ export default class GuardEditor extends PureComponent {
     conditions: PropTypes.shape({
       paramsSchema: PropTypes.object
     }),
-    objectConfig: PropTypes.object.isRequired,
+    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
@@ -61,7 +61,7 @@ export default class GuardEditor extends PureComponent {
 
   state = {
     guard: this.props.guard || {},
-    exampleObject: this.props.objectConfig.example,
+    exampleObject: this.props.objectConfiguration.example,
     autoplay: true,
     guardEditorSelectorPos: {
       line: 0,
@@ -92,7 +92,7 @@ export default class GuardEditor extends PureComponent {
   })
 
   handleObjectPropClick = ({ path }) => {
-    const { objectAlias } = this.props.objectConfig;
+    const { alias } = this.props.objectConfiguration;
     const {
       guardEditorSelectorPos: {
         line,
@@ -102,7 +102,7 @@ export default class GuardEditor extends PureComponent {
     } = this.state;
 
     const workablePath = path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('');
-    const injectedValue = `${objectAlias || 'object'}${workablePath}`
+    const injectedValue = `${alias || 'object'}${workablePath}`
 
     const { expression } = guard;
     const newGuardBody = (expression || '').split('\n').map(
@@ -133,7 +133,7 @@ export default class GuardEditor extends PureComponent {
   autoPlay = _ => this.state.autoplay && this.handleEvalCode()
 
   handleEvalCode = _ => {
-    const { objectAlias } = this.props.objectConfig;
+    const { alias } = this.props.objectConfiguration;
     const { expression: code } = this.state.guard;
     const object = this.state.exampleObject;
 
@@ -142,7 +142,7 @@ export default class GuardEditor extends PureComponent {
         code,
         arg: {
           object,
-          ...(objectAlias && { [objectAlias]: object })
+          ...(alias && { [alias]: object })
         }
       }) :
       null;
@@ -253,9 +253,7 @@ export default class GuardEditor extends PureComponent {
     } = this.state;
 
     const {
-      objectConfig: {
-        objectAlias
-      },
+      objectConfiguration: { alias },
       conditions = {},
       componentsRegistry = {}
     } = this.props;
@@ -407,7 +405,7 @@ export default class GuardEditor extends PureComponent {
                   </div>
                   <div>
                     <ObjectInspector
-                      name={formatLabel(objectAlias || 'object')}
+                      name={formatLabel(alias || 'object')}
                       object={exampleObject}
                       onClickPropName={this.handleObjectPropClick}
                     />
