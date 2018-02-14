@@ -38,13 +38,24 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
+  // implicit parameters that are used in actions/guards invocations enriched
+  // with 'object' alias that could be difined via schema.objectConfiguration.alias
+  static extendParamsWithObjectAlias(params, object, schema) {
+    const { objectConfiguration } = schema;
+    if (objectConfiguration && objectConfiguration.alias) {
+      return { ...params, [objectConfiguration.alias]: object };
+    }
+    return params;
+  }
+
   findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
     // if from is not specified, then no transition is available
     if (from === null || from === undefined) {
       // to do throw proper error
       return this.promise.reject(new Error("'from' is not defined"));
     }
-    const { transitions } = this.schema;
+    const { schema } = this;
+    const { transitions } = schema;
     // if not transitions, the return empty list
     if (!transitions) {
       return this.promise.resolve({ transitions: [] });
@@ -60,7 +71,6 @@ export default class MachineDefinition {
       }
       return transition.event === event;
     };
-
 
     const checkGuards = transition => {
       const { guards, from, to, event } = transition;
@@ -81,11 +91,17 @@ export default class MachineDefinition {
         // if guard return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
         // additionally object, request and context are also passed
-        // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and e.t.c
-        let conditionResult = condition({ ...guards[i].arguments, from, to, event, object, request, context });
+        // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and etc.
+        let params = { ...guards[i].arguments, from, to, event, object, request, context };
+        // add object alias (if specified)
+        params = MachineDefinition.extendParamsWithObjectAlias(params, object, schema)
+        // call condition function
+        let conditionResult = condition(params);
+        // negate resut (if required)
         if (guards[i].negate === true) {
           conditionResult = !conditionResult;
         }
+        // on first false result, exit and return false (skip other guards)
         if (!conditionResult) {
           return false;
         }
@@ -125,7 +141,11 @@ export default class MachineDefinition {
         // if check return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
         // additionally object and context are also passed
-        let conditionResult = condition({ ...automatic[i].arguments, from, to, event, object, context });
+        let params = { ...automatic[i].arguments, from, to, event, object, context };
+        // add object alias (if specified)
+        params = MachineDefinition.extendParamsWithObjectAlias(params, object, schema)
+        // call condition function
+        let conditionResult = condition(params);
         if (automatic[i].negate === true) {
           conditionResult = !conditionResult;
         }

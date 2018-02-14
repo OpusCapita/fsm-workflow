@@ -32,7 +32,45 @@ const machineDefinition = new MachineDefinition({
     name: "invoice approval",
     initialState: "open",
     finalStates: ["approved"],
-    objectStateFieldName: "status",
+    objectConfiguration: {
+      stateFieldName: "status",
+      alias: "invoice", 
+      example: {
+        "invoiceNo": "1111",
+        "customerId": "wefwefewfew",
+        "supplierId": "33333",
+        "netAmount": 1000,
+        "status": "reviewRequired"
+      },
+      schema: {
+        {
+          title: "Invoice",
+          type: "object",
+          properties: {
+            invoiceNo: {
+              type: "string"
+            },
+            customerId: {
+              type: "string"
+            },
+            supplierId: {
+              type: "string"
+            },
+            netAmount: {
+              type: "number"
+            },
+            status: {
+              type: "string"
+            }
+          },
+          required: ["invoiceNo"]
+        }
+      }
+    },
+    states: [
+      { name: "open", description: "Open" },
+      { name: "approved", description: "Approved" }
+    ],
     transitions: [
       {
           from: "open",

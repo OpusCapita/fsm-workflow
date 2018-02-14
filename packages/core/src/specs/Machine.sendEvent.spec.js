@@ -3,12 +3,13 @@ import bluebird from 'bluebird';
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
-let createMachine = ({ actions = {}, history } = {}) => {
+let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
   return new Machine(
     {
       machineDefinition: new MachineDefinition({
         schema: {
           initialState: 'started',
+          objectConfiguration: objectAlias && { alias: objectAlias },
           transitions: [
             {
               from: "started",
@@ -115,6 +116,28 @@ describe('machine: sendEvent', function() {
       assert.equal(actionExecutionResutls.length, 1);
       assert.equal(actionExecutionResutls[0]['name'], 'sendEmail');
       assert.equal(actionExecutionResutls[0]['result'], sendEmailResult);
+    });
+  });
+
+  it('action has access to configured object alias', function() {
+    const objectAlias = "car";
+    const actions = {
+      'sendEmail': (params) => {
+        return { [objectAlias]: params[objectAlias] };
+      }
+    };
+    const machine = createMachine({ actions, objectAlias });
+    const object = { status: 'first-stop' };
+    const expectedSendEventResults = { "car": object };
+
+    return machine.sendEvent({
+      object,
+      event: "move (action is defined)"
+    }).then(({ object, actionExecutionResutls }) => {
+      assert(actionExecutionResutls);
+      assert.equal(actionExecutionResutls.length, 1);
+      assert.equal(actionExecutionResutls[0]['name'], 'sendEmail');
+      assert.deepEqual(actionExecutionResutls[0]['result'], expectedSendEventResults);
     });
   });
 

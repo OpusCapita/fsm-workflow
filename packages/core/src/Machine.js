@@ -1,3 +1,5 @@
+import MachineDefinition from './MachineDefinition';
+
 export default class Machine {
   constructor({ machineDefinition, promise = Machine.defaultPromise(), context = {}, history } = {}) {
     if (!machineDefinition) {
@@ -116,7 +118,8 @@ export default class Machine {
   // @param request - event request data
   sendEvent({ object, event, user, description, request }) {
     const { machineDefinition } = this;
-    const { objectConfiguration, workflowName } = machineDefinition.schema;
+    const { schema } = machineDefinition;
+    const { objectConfiguration, workflowName } = schema;
     const { stateFieldName } = objectConfiguration;
     // calculate from state
     const from = this.currentState({ object });
@@ -178,8 +181,8 @@ export default class Machine {
               });
             }
 
-            // execute action
-            const actionResult = action({
+            // prepare params
+            let params = {
               ...actions[i].arguments,
               from,
               to,
@@ -188,7 +191,12 @@ export default class Machine {
               request,
               context,
               actionExecutionResutls
-            });
+            };
+            // add object alias (if specified)
+            params = MachineDefinition.extendParamsWithObjectAlias(params, object, schema)
+
+            // execute action
+            const actionResult = action(params);
             // store action execution result for passing it into the next action
             return {
               actionExecutionResutls: actionExecutionResutls.concat([
