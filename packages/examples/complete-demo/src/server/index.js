@@ -1,20 +1,22 @@
 import { resolve } from 'path';
 import express from 'express';
 import { Server } from 'http';
-import bundleRoute from './routes/bundle';
-
-// const { resolve } = require('path');
-// const app = require('express')();
-// const http = require('http').Server(app);
-// const bundleRoute = require('./routes/bundle');
+import timeout from 'connect-timeout';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackConfig from './webpack.config';
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
 
 const app = express();
 const server = Server(app);
+app.use(timeout(120000));
 
-app.use(bundleRoute);
+const compiler = webpack(webpackConfig);
+app.use(webpackDevMiddleware(compiler, {
+  publicPath: webpackConfig.output.publicPath
+}));
 
 app.get('*', function(req, res){
   res.sendFile(resolve(__dirname, '../client/index.html'));
