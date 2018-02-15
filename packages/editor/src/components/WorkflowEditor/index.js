@@ -1,3 +1,3 @@
-import SchemaEditor from './SchemaEditor.react';
+import WorkflowEditor from './WorkflowEditor.react';
 
-export default SchemaEditor;
+export default WorkflowEditor;

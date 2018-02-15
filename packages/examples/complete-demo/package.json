@@ -1,0 +1,33 @@
+{
+  "name": "complete-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "cross-env PORT=3020 nodemon --exec npm run babel-node --watch ./src ./src/server/index.js",
+    "babel-node": "node ./node_modules/babel-cli/bin/babel-node.js --presets=env"
+  },
+  "dependencies": {
+    "@opuscapita/fsm-workflow-core": "1.0.0",
+    "@opuscapita/fsm-workflow-editor": "1.0.0",
+    "express": "4.16.2",
+    "prop-types": "15.6.0",
+    "react": "15.6.2",
+    "react-dom": "15.6.2",
+    "socket.io": "2.0.4",
+    "socket.io-client": "2.0.4"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
+    "cross-env": "5.1.3",
+    "css-loader": "0.28.9",
+    "less-loader": "4.0.5",
+    "nodemon": "1.14.12",
+    "style-loader": "0.20.1",
+    "webpack": "3.11.0"
+  }
+}
