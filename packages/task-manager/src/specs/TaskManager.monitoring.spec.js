@@ -23,7 +23,12 @@ describe('Task manager:monitoring', function() {
           }
         ]
       }
-    })
+    }),
+    convertObjectToReference: (o) => {
+      return {
+        // ...we don't need it here
+      }
+    }
   });
 
   let object = {};

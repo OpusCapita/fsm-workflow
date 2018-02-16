@@ -2,15 +2,36 @@
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
 
 export default class MachineDefinition {
+
+  /**
+   * eslint-disable-next-line max-len
+   * Here schema has objectConfiguration. It is required by machine/engine and editor:
+   * {
+   *   stateFieldName,       // (String) object property that holds current object state
+   *   schema,               // (Object) object JSON schema, will be used by the
+   *                         //   editor to build expressions using object structure information
+   *   alias,                // (String) object alias that will be used in action/guard
+   *                         //   calls an implicit variable that is a reference to an object.
+   *                         //   For example for invoice approval object alias could be 'invoice',
+   *                         //   e.g. in guard expression user could type invoice.total < 1
+   *                         //   instead of object.total < 1
+   *   example,              // (Object) object example that is used in editor
+   *   getBusinessObjId      // function that accepts object as single argument (workflow process),
+   *                         //   it returns object unique identifier (String, examples: '123456')
+   *   getBusinessObjType    // function that accepts object as single argument (workflow process),
+   *                         //   it returns unique object type
+   *                         //   (String, examples: 'invoice', 'supplier', 'purchaseorder')
+   * }
+   */
   constructor({ schema = {}, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
     // todo validate schema
     if (!promise) {
-      throw new Error("promise is undefined");
+      throw new Error("'promise' is undefined");
     }
     // TODO: validate that name is passed (it wil be used by machine to write/read history)
-    // console.log(`schema '${JSON.stringify(schema)}'`);
 
     const { objectConfiguration, ...restSchema } = schema;
+
     this.schema = {
       objectConfiguration: {
         stateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),

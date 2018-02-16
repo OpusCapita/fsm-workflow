@@ -88,4 +88,10 @@ describe('machine: constructor', function() {
     w = createMachineCorrectly({ history });
     assert.equal(w.history, history);
   });
+
+  it('convertObjectToReference default implementation thows exception', () => {
+    assert.throws(() => {
+      createMachineCorrectly().convertObjectToReference();
+    }, /.*convertObjectToReference.*is.*not.*defined.*/);
+  });
 });

@@ -1,24 +1,35 @@
 import MachineDefinition from './MachineDefinition';
 
 export default class Machine {
-  constructor({ machineDefinition, promise = Machine.defaultPromise(), context = {}, history } = {}) {
+  constructor({
+      machineDefinition,
+      promise = Machine.defaultPromise(),
+      context = {},
+      history,
+      convertObjectToReference
+    } = {}) {
     if (!machineDefinition) {
       throw new Error("machineDefinition is undefined");
     }
+    this.machineDefinition = machineDefinition;
     if (!promise) {
       throw new Error("promise is undefined");
     }
-    this.machineDefinition = machineDefinition;
     this.promise = promise;
     // context is optional
     this.context = context;
-
+    // history is optional too
     if (history) {
       this.history = history;
     } else {
       // mock history
       // todo implement simple history storage in memory (if required)
       this.history = Machine.defaultHistory(promise);
+    }
+
+    // used in all method/functions that read/write hostory records
+    if (convertObjectToReference) {
+      this.convertObjectToReference = convertObjectToReference;
     }
   }
 
@@ -45,6 +56,20 @@ export default class Machine {
     }
   }
 
+  // default implementation will throw an exception which should inform
+  // developer that machine is not properly configured
+  convertObjectToReference() {
+    throw new Error(`'convertObjectToReference' is not defined
+It is expected to be a function like this:
+function(object) {
+return {
+businessObjectType: ...   // business object type/class (examples: 'invoice', 'supplier', 'purchase-order')
+businessObjectId: ...     // business object unique id (examples: '123456789')
+}
+}
+    `);
+  }
+
   // sets object initial state
   // @param object - stateful object
   // @param user - user name who initiated event/transition (this info will be writted into object wortkflow history)
@@ -53,6 +78,7 @@ export default class Machine {
   start({ object, user, description }) {
     const { name, initialState, objectConfiguration } = this.machineDefinition.schema;
     const { stateFieldName } = objectConfiguration;
+    const { convertObjectToReference } = this;
     // eslint-disable-next-line no-param-reassign
     object[stateFieldName] = initialState;
     // add history record
@@ -61,8 +87,7 @@ export default class Machine {
       to: initialState,
       event: '__START__',
       // TODO: add validation for type and id here???
-      businessObjType: object && object.businessObjType,
-      businessObjId: object && object.businessObjId,
+      ...convertObjectToReference(object),
       // TODO: add validation for user???
       user,
       description,
@@ -117,7 +142,7 @@ export default class Machine {
   // @param description - event/transition/object description (this info will be writted into object wortkflow history)
   // @param request - event request data
   sendEvent({ object, event, user, description, request }) {
-    const { machineDefinition } = this;
+    const { machineDefinition, convertObjectToReference } = this;
     const { schema } = machineDefinition;
     const { objectConfiguration, workflowName } = schema;
     const { stateFieldName } = objectConfiguration;
@@ -135,7 +160,7 @@ export default class Machine {
       return machineDefinition.actions[name];
     };
 
-    return this.machineDefinition.
+    return machineDefinition.
       findAvailableTransitions({
         from,
         event,
@@ -216,8 +241,7 @@ export default class Machine {
             to,
             event,
             // TODO: add validation for type and id here???
-            businessObjType: object && object.businessObjType,
-            businessObjId: object && object.businessObjId,
+            ...convertObjectToReference(object),
             // TODO: add validation for user???
             user,
             description,
@@ -286,8 +310,7 @@ export default class Machine {
   * Provides access to business object history records within the workflow
   *
   * @param {Object} searchParameters search parameters
-  * @param {string} searchParameters.object.businessObjType object type (examples: 'invoice', 'supplie')
-  * @param {string} searchParameters.object.businessObjId object identifier (examples: '1234567', 'SDZ-987d')
+  * @param {string} searchParameters.object business object (process)
   * @param {string} searchParameters.user user name initiated event (examles: 'Friedrich Wilhelm Viktor Albert')
   * @param {Object} searchParameters.finishedOn time when transition was completed
   * @param {Date} searchParameters.finishedOn.gt means that finishedOn should be greater than passed date
@@ -305,18 +328,16 @@ export default class Machine {
   *   event,
   *   from,
   *   to,
-  *   object: {
-  *     businessObjType
-  *     businessObjId,
-  *   },
+  *   object,
   *   user,
   *   description,
   *   finishedOn
   * }
   */
   getHistory({ object, user, finishedOn }, { max, offset }, { by, order }) {
+    const { convertObjectToReference } = this;
     return this.history.search({
-      object,
+      object: convertObjectToReference(object),
       user,
       finishedOn,
       workflowName: this.machineDefinition.schema.name

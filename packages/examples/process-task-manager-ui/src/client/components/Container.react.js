@@ -53,6 +53,11 @@ export default class Container extends PureComponent {
         sendNotification: ({ notification }) => {
           this._notificationSystem.addNotification(notification);
         }
+      },
+      convertObjectToReference: (o) => {
+        return {
+          //...we don't need it here
+        }
       }
     });
 

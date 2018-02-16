@@ -3,13 +3,25 @@ import bluebird from 'bluebird';
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
+const convertObjectToReference = (object) => {
+  return {
+    businessObjId: 'tesla',
+    businessObjType: 'car'
+  }
+};
+
 let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
+  const objectConfiguration = {};
+  if (objectAlias) {
+    objectConfiguration['alias'] = objectAlias;
+  }
+
   return new Machine(
     {
       machineDefinition: new MachineDefinition({
         schema: {
           initialState: 'started',
-          objectConfiguration: objectAlias && { alias: objectAlias },
+          objectConfiguration,
           transitions: [
             {
               from: "started",
@@ -44,7 +56,8 @@ let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
         },
         actions: actions || {}
       }),
-      history
+      history,
+      convertObjectToReference
     }
   );
 }
@@ -152,9 +165,7 @@ describe('machine: sendEvent', function() {
     const machine = createMachine({ history });
     const from = 'started';
     const object = {
-      status: from,
-      businessObjId: 'tesla',
-      businessObjType: 'car',
+      status: from
     };
     const user = 'johnny';
     const description = 'getoff!';
@@ -164,8 +175,7 @@ describe('machine: sendEvent', function() {
         from: from,
         to: object.status,
         event: event,
-        businessObjId: object.businessObjId,
-        businessObjType: object.businessObjType,
+        ...convertObjectToReference(object),
         workflowName: machine.machineDefinition.schema.name,
         user,
         description
