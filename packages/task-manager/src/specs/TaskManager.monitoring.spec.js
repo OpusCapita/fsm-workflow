@@ -11,7 +11,9 @@ describe('Task manager:monitoring', function() {
         "finalStates": [
           "finished"
         ],
-        "objectStateFieldName": "status",
+        "objectConfiguration": {
+          "stateFieldName": "status"
+        },
         "transitions": [
           {
             "from": "init",
@@ -21,7 +23,12 @@ describe('Task manager:monitoring', function() {
           }
         ]
       }
-    })
+    }),
+    convertObjectToReference: (o) => {
+      return {
+        // ...we don't need it here
+      }
+    }
   });
 
   let object = {};

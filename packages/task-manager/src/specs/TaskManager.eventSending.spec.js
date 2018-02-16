@@ -11,7 +11,9 @@ describe('Task manager:event sending', function() {
         "finalStates": [
           "finished"
         ],
-        "objectStateFieldName": "status",
+        "objectConfiguration": {
+          "stateFieldName": "status"
+        },
         "transitions": [
           {
             "from": "init",
@@ -20,7 +22,12 @@ describe('Task manager:event sending', function() {
           }
         ]
       }
-    })
+    }),
+    convertObjectToReference: (o) => {
+      return {
+        // ...we don't need it here
+      }
+    }
   });
 
   let object = {};

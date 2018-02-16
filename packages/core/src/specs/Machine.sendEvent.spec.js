@@ -4,12 +4,25 @@ const { Promise } = global;
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
-let createMachine = ({ actions = {}, history } = {}) => {
+const convertObjectToReference = (object) => {
+  return {
+    businessObjId: 'tesla',
+    businessObjType: 'car'
+  }
+};
+
+let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
+  const objectConfiguration = {};
+  if (objectAlias) {
+    objectConfiguration['alias'] = objectAlias;
+  }
+
   return new Machine(
     {
       machineDefinition: new MachineDefinition({
         schema: {
           initialState: 'started',
+          objectConfiguration,
           transitions: [
             {
               from: "started",
@@ -65,7 +78,8 @@ let createMachine = ({ actions = {}, history } = {}) => {
         },
         actions: actions || {}
       }),
-      history
+      history,
+      convertObjectToReference
     }
   );
 }
@@ -176,6 +190,28 @@ describe('machine: sendEvent', function() {
     });
   });
 
+  it('action has access to configured object alias', function() {
+    const objectAlias = "car";
+    const actions = {
+      'sendEmail': (params) => {
+        return { [objectAlias]: params[objectAlias] };
+      }
+    };
+    const machine = createMachine({ actions, objectAlias });
+    const object = { status: 'first-stop' };
+    const expectedSendEventResults = { "car": object };
+
+    return machine.sendEvent({
+      object,
+      event: "move (action is defined)"
+    }).then(({ object, actionExecutionResults }) => {
+      assert(actionExecutionResults);
+      assert.equal(actionExecutionResults.length, 1);
+      assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
+      assert.deepEqual(actionExecutionResults[0]['result'], expectedSendEventResults);
+    });
+  });
+
   it('creates correct history record', function() {
     let historyRecordUnderTest = null;
     const history = {
@@ -187,9 +223,7 @@ describe('machine: sendEvent', function() {
     const machine = createMachine({ history });
     const from = 'started';
     const object = {
-      status: from,
-      businessObjId: 'tesla',
-      businessObjType: 'car',
+      status: from
     };
     const user = 'johnny';
     const description = 'getoff!';
@@ -199,8 +233,7 @@ describe('machine: sendEvent', function() {
         from: from,
         to: object.status,
         event: event,
-        businessObjId: object.businessObjId,
-        businessObjType: object.businessObjType,
+        ...convertObjectToReference(object),
         workflowName: machine.machineDefinition.schema.name,
         user,
         description

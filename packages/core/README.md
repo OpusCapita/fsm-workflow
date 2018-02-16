@@ -32,7 +32,45 @@ const machineDefinition = new MachineDefinition({
     name: "invoice approval",
     initialState: "open",
     finalStates: ["approved"],
-    objectStateFieldName: "status",
+    objectConfiguration: {
+      stateFieldName: "status",
+      alias: "invoice",
+      example: {
+        "invoiceNo": "1111",
+        "customerId": "wefwefewfew",
+        "supplierId": "33333",
+        "netAmount": 1000,
+        "status": "reviewRequired"
+      },
+      schema: {
+        {
+          title: "Invoice",
+          type: "object",
+          properties: {
+            invoiceNo: {
+              type: "string"
+            },
+            customerId: {
+              type: "string"
+            },
+            supplierId: {
+              type: "string"
+            },
+            netAmount: {
+              type: "number"
+            },
+            status: {
+              type: "string"
+            }
+          },
+          required: ["invoiceNo"]
+        }
+      }
+    },
+    states: [
+      { name: "open", description: "Open" },
+      { name: "approved", description: "Approved" }
+    ],
     transitions: [
       {
           from: "open",
@@ -204,12 +242,6 @@ machine.sendEvent({ object, event, user, description})
 In both cases, new history records are created.
 Here
 - **object** (required) - business object of the following structure
-```javascript
-{
-  businessObjId,
-  businessObjType
-}
-```
 - **user** (required) - user identifier who initiated an event
 - **description** (optional) - custom text that describes transition/object
 All this info together is stored in workflow history.
@@ -228,10 +260,7 @@ where
   - **searchParameters**
   ```javascript
   {
-    object: {
-      businessObjectId,
-      businessObjectType     // example: 'invoice'
-    },
+    object,
     user,                    // example: 'john.miller'
     finishedOn: {
       gte,                   // example: Date("2018-03-05T21:00:00.000Z")
@@ -271,6 +300,11 @@ where
     finishedOn
   }
   ```
+
+**Note:** while writing workflow object history or searching history records by
+object machine uses configured **convertObjectToReference** callback to convert
+real business object into reference object that has the following structure
+**{businessObjType, businessObjId}**
 
 ## Machine
 ### API

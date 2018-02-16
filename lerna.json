@@ -2,6 +2,11 @@
   "version": "1.0.0",
   "lerna": "2.8.0",
   "packages": [
-    "packages/*"
+    "packages/core",
+    "packages/editor",
+    "packages/history",
+    "packages/task-manager",
+    "packages/examples/invoice-console",
+    "packages/examples/process-task-manager-ui"
   ]
 }
