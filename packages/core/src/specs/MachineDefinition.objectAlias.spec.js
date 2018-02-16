@@ -1,23 +1,29 @@
 import assert from 'assert';
 import MachineDefinition from '../MachineDefinition';
 
+const object = { brand: "tesla" };
+
 describe('machine definition: object alias', function() {
-  it('static method extendParamsWithObjectAlias', () => {
-    const params = {};
-    const object = { brand: "tesla" };
-    // objectConfiguration is not defined -> params stays unchanged
-    assert.equal(MachineDefinition.extendParamsWithObjectAlias(params, object, {}), params);
-    // objectConfiguration is defined, but alias is not defined -> params stays unchanged
-    assert.equal(MachineDefinition.extendParamsWithObjectAlias(params, object, { objectConfiguration: { } }), params);
-    // alias is defined -> params are extended with alias
-    assert.deepEqual(MachineDefinition.extendParamsWithObjectAlias(
-      params,
-      object,
-      {
+  it('prepareObjectAlias: objectConfiguration is not defined -> empty object is returned', () => {
+    const machineDefinition = new MachineDefinition();
+    assert.deepEqual(machineDefinition.prepareObjectAlias(object), {});
+  });
+
+  it('prepareObjectAlias: objectConfiguration is defined, but alias is not defined -> empty object is returned', () => {
+    const machineDefinition = new MachineDefinition({
+      schema: { objectConfiguration: { } }
+    });
+    assert.deepEqual(machineDefinition.prepareObjectAlias(object), {});
+  });
+
+  it('prepareObjectAlias: objectConfiguration.alias is defined -> {<alias>: object} is returned', () => {
+    const machineDefinition = new MachineDefinition({
+      schema: {
         objectConfiguration: {
           alias: "car"
         }
       }
-    ), { ...params, car: object });
+    });
+    assert.deepEqual(machineDefinition.prepareObjectAlias(object), { car: object });
   });
 });

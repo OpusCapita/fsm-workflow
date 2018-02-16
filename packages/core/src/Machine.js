@@ -206,8 +206,8 @@ businessObjectId: ...     // business object unique id (examples: '123456789')
               });
             }
 
-            // prepare params
-            let params = {
+            // execute action
+            const actionResult = action({
               ...actions[i].arguments,
               from,
               to,
@@ -215,13 +215,9 @@ businessObjectId: ...     // business object unique id (examples: '123456789')
               object,
               request,
               context,
+              ...machineDefinition.prepareObjectAlias(object),
               actionExecutionResutls
-            };
-            // add object alias (if specified)
-            params = MachineDefinition.extendParamsWithObjectAlias(params, object, schema)
-
-            // execute action
-            const actionResult = action(params);
+            });
             // store action execution result for passing it into the next action
             return {
               actionExecutionResutls: actionExecutionResutls.concat([

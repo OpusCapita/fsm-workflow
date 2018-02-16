@@ -59,14 +59,14 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
-  // implicit parameters that are used in actions/guards invocations enriched
-  // with 'object' alias that could be difined via schema.objectConfiguration.alias
-  static extendParamsWithObjectAlias(params, object, schema) {
-    const { objectConfiguration } = schema;
+  // if schema.objectConfiguration.alias is set up then
+  // JSON {<alias>: object} is returned otherwise empty JSON {}
+  prepareObjectAlias(object) {
+    const { objectConfiguration } = this.schema;
     if (objectConfiguration && objectConfiguration.alias) {
-      return { ...params, [objectConfiguration.alias]: object };
+      return { [objectConfiguration.alias]: object };
     }
-    return params;
+    return {};
   }
 
   findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
@@ -113,11 +113,16 @@ export default class MachineDefinition {
         // pass arguments specified in guard call (part of schema)
         // additionally object, request and context are also passed
         // request should be used to pass params for some dynamic calculations f.e. role dependent transitions and etc.
-        let params = { ...guards[i].arguments, from, to, event, object, request, context };
-        // add object alias (if specified)
-        params = MachineDefinition.extendParamsWithObjectAlias(params, object, schema)
-        // call condition function
-        let conditionResult = condition(params);
+        let conditionResult = condition({
+          ...guards[i].arguments,
+          from,
+          to,
+          event,
+          object,
+          ...this.prepareObjectAlias(object),
+          request,
+          context
+        });
         // negate resut (if required)
         if (guards[i].negate === true) {
           conditionResult = !conditionResult;
@@ -162,11 +167,15 @@ export default class MachineDefinition {
         // if check return false, return false, e.g. transition is not available at the moment
         // pass arguments specified in guard call (part of schema)
         // additionally object and context are also passed
-        let params = { ...automatic[i].arguments, from, to, event, object, context };
-        // add object alias (if specified)
-        params = MachineDefinition.extendParamsWithObjectAlias(params, object, schema)
-        // call condition function
-        let conditionResult = condition(params);
+        let conditionResult = condition({
+          ...automatic[i].arguments,
+          from,
+          to,
+          event,
+          object,
+          ...this.prepareObjectAlias(object),
+          context
+        });
         if (automatic[i].negate === true) {
           conditionResult = !conditionResult;
         }
