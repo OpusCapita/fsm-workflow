@@ -104,7 +104,7 @@ workflows:
             branches:
               ignore:
                 - gh-pages
-      - build-editor:
+      - deploy-editor-to-github-pages:
           filters:
             branches:
               ignore:
