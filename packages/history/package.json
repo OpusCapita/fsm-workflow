@@ -4,7 +4,9 @@
   "description": "Business-object history for FSM workflow",
   "repository": "https://github.com/OpusCapita/fsm/tree/master/packages/history",
   "main": "src/index.js",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "start": "node ./src/demo/server",
     "debug": "npm start -- --inspect",
@@ -39,9 +41,9 @@
     "mocha-junit-reporter": "1.13.0",
     "mysql2": "1.5.2",
     "nyc": "11.1.0",
+    "rimraf": "2.6.1",
     "sequelize": "4.33.1",
-    "sqlite3": "3.1.13",
-    "rimraf": "2.6.1"
+    "sqlite3": "3.1.13"
   },
   "nyc": {
     "per-file": true,

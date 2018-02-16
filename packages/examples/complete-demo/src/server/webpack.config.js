@@ -4,7 +4,7 @@ const config = {
   entry: path.resolve(__dirname, '../client/index.js'),
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, '../client/'),
+    path: path.resolve(__dirname, '../../www/'),
     publicPath: '/'
   },
   externals: {
@@ -12,7 +12,7 @@ const config = {
     'react-dom': 'ReactDOM'
   },
   devServer: {
-    contentBase: path.resolve(__dirname, '../client/')
+    contentBase: path.resolve(__dirname, '../../www/')
   },
   devtool: 'inline-source-map',
   module: {

@@ -22,7 +22,7 @@ class WorkflowEditorScope extends Component {
     return { i18n: this.i18n }
   }
 
-  componentRegistry = {
+  componentsRegistry = {
     fullName: FullName
   }
 

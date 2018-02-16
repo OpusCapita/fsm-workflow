@@ -381,7 +381,7 @@
     }
   }}
 
-  componentRegistry={_scope.componentRegistry}
+  componentsRegistry={_scope.componentsRegistry}
 
   onSave={v => console.log(JSON.stringify(v, null, 2))}
 />

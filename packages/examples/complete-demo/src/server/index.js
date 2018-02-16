@@ -1,7 +1,9 @@
+import fs from 'fs';
 import { resolve } from 'path';
 import express from 'express';
 import { Server } from 'http';
 import timeout from 'connect-timeout';
+import jsfaker from 'json-schema-faker';
 // import webpack from 'webpack';
 // import webpackDevMiddleware from 'webpack-dev-middleware';
 // import webpackConfig from './webpack.config';
@@ -22,9 +24,37 @@ app.use(bundleRoute)
 // }));
 
 app.get('*', function(req, res){
-  res.sendFile(resolve(__dirname, '../client/index.html'));
+  res.sendFile(resolve(__dirname, '../../www/index.html'));
 });
 
-server.listen(port, host, function(){
-  console.log(`server is listening on ${host}:${port}`);
+// read schema, generate objects
+
+// server state keeper
+// - schema
+// - businessObjects
+const keepster = {};
+
+fs.readFile(resolve(__dirname, './data/workflow-schema.json'), 'utf8', (err, data) => {
+  if (err) {
+    throw err
+  };
+
+  try {
+    keepster.schema = JSON.parse(data);
+  } catch (err) {
+    throw err
+  }
+
+  // generate objects
+  const numberOfObjects = 10;
+  keepster.businessObjects = [];
+  for (let i = 0; i < numberOfObjects; i++) {
+    const config = keepster.schema.objectConfiguration;
+    const object = jsfaker(config.schema);
+    keepster.businessObjects.push(object);
+  }
+
+  server.listen(port, host, function(){
+    console.log(`server is listening on ${host}:${port}`);
+  });
 });

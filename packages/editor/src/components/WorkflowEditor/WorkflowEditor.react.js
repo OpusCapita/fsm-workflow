@@ -56,7 +56,7 @@ export default class WorkflowEditor extends PureComponent {
         paramsSchema: PropTypes.object
       }))
     }).isRequired,
-    actionsComponentRegistry: PropTypes.objectOf(PropTypes.func)
+    componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
   static contextTypes = {
@@ -341,7 +341,7 @@ export default class WorkflowEditor extends PureComponent {
                   onDeleteTransition={this.handleDeleteTransition}
                   onSaveGuards={this.handleSaveTransitionGuards}
                   onSaveActions={this.handleSaveTransitionActions}
-                  actionsComponentRegistry={this.props.actionsComponentRegistry}
+                  componentsRegistry={this.props.componentsRegistry}
                   objectConfiguration={schema.objectConfiguration}
                 />
               </Tab>

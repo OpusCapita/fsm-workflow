@@ -26,7 +26,7 @@ router.get('/bundle.js', (req, res) => {
       }
 
       console.log('webpack compiled successfully; sending new bundle.js');
-      res.sendFile(path.resolve(__dirname, '../client/bundle.js'));
+      res.sendFile(path.resolve(__dirname, '../../www/bundle.js'));
     })
 
   })

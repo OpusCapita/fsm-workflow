@@ -28,7 +28,7 @@
     "codemirror": "5.33.0",
     "core-js": "2.5.3",
     "kvolkovich-sc-react-codemirror": "1.0.1",
-    "lodash": "4.17.4",
+    "lodash": "4.17.5",
     "react-bootstrap": "0.32.0",
     "react-inspector": "2.2.2",
     "viz.js": "1.8.0"
