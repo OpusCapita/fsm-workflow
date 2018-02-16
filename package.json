@@ -6,6 +6,7 @@
     "lerna": "2.8.0"
   },
   "scripts": {
+    "add-depenency": "lerna add",
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean",
     "diff": "lerna diff",
