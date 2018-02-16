@@ -126,102 +126,89 @@ export default class Machine {
       object[objectStateFieldName] = to;
     };
 
-    const actionByName = name => {
-      return machineDefinition.actions[name];
-    };
+    return this.machineDefinition.findAvailableTransitions({
+      from,
+      event,
+      object,
+      request,
+      context
+    }).then(({ transitions }) => {
+      if (!transitions || transitions.length === 0) {
+        // throw/return proper/sepecific error
+        return promise.reject({
+          object,
+          from,
+          event,
+          message: `Transition for 'from': '${from}' and 'event': '${event}' is not found`
+        });
+      }
+      /* istanbul ignore if */
+      if (transitions.length > 1) {
+        console.warn(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
+      }
+      // select first found transition and read its information
+      // using node destruct syntax to get 1st element and destruct it to {to, actions} object
+      const [{ to, actions = [] }] = transitions;
 
-    return this.machineDefinition.
-      findAvailableTransitions({
-        from,
-        event,
-        object,
-        request,
-        context
-      }).
-      then(({ transitions }) => {
-        if (!transitions || transitions.length === 0) {
-          // throw/return proper/sepecific error
-          return promise.reject({
+      // extracting actionDefinitions list from
+      let actionDefinitions = actions.map((action, idx) => {
+        if (!machineDefinition.actions[actions[idx].name]) {
+          // throwing an error will fail top reject promise
+          throw new Error({
+            action: actions[idx].name,
             object,
             from,
             event,
-            message: `Transition for 'from': '${from}' and 'event': '${event}' is not found`
-          });
-        }
-        /* istanbul ignore if */
-        if (transitions.length > 1) {
-          if (console) {
-            console.log(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
-          }
-        }
-        // select first found transition and read its information
-        const { to, actions = [] } = transitions[0];
-        // console.log(`Start transition for 'from': '${from}' and 'event': '${event}' to '${to}'`);
-
-        // todo: call onStartTransition handler
-        let result = promise.resolve({ actionExecutionResutls: [], object });
-        for (let i = 0; i < actions.length; i++) {
-          result = result.then(({ actionExecutionResutls, object }) => {
-            let action = actionByName(actions[i].name);
-            // action is defined in schema, but is not really defined -> error!!!
-            if (!action) {
-              // throw/return proper/sepecific error
-              return promise.reject({
-                action: actions[i].name,
-                object,
-                from,
-                event,
-                to,
-                message: `Action '${actions[i].name}' is specified in one the transitions but is not found/implemented!`
-              });
-            }
-
-            // execute action
-            const actionResult = action({
-              ...actions[i].arguments,
-              from,
-              to,
-              event,
-              object,
-              request,
-              context,
-              actionExecutionResutls
-            });
-            // store action execution result for passing it into the next action
-            return {
-              actionExecutionResutls: actionExecutionResutls.concat([
-                {
-                  name: actions[i].name,
-                  result: actionResult
-                }
-              ]),
-              object
-            };
-          });
-        }
-
-        return result.then(({ actionExecutionResutls, object }) => {
-          return this.history.add({
-            from,
             to,
-            event,
-            // TODO: add validation for type and id here???
-            businessObjType: object && object.businessObjType,
-            businessObjId: object && object.businessObjId,
-            // TODO: add validation for user???
-            user,
-            description,
-            workflowName
-          }).then(() => {
-            changeObjectState(to);
-            return {
-              actionExecutionResutls,
-              object
-            };
+            message: `Action '${actions[idx].name}' is specified in one the transitions but is not found/implemented!`
           });
-        });
-        // todo: call onFinishTransition handler
+        }
+        // wrapping action into a Promise to support both sync/async variants
+        return machineDefinition.actions[actions[idx].name];
       });
+
+      // reducing actionDefinitions to promise queue
+      return actionDefinitions.reduce((executionAccumulator, action, idx) => {
+        return executionAccumulator.then(({ actionExecutionResults, object }) => promise.resolve(action({
+          ...actions[idx].arguments,
+          from,
+          to,
+          event,
+          object,
+          request,
+          context,
+          actionExecutionResults
+        })).then(actionResult => promise.resolve({
+          actionExecutionResults: actionExecutionResults.concat([
+            {
+              name: actions[idx].name,
+              result: actionResult
+            }
+          ]),
+          object
+        })))
+      }, promise.resolve({ // initial object accumulator
+        actionExecutionResults: [],
+        object
+      })).then(({ actionExecutionResults, object }) => promise.resolve(changeObjectState(to)).then(_ => {
+        // first we promote object state to the next state and only then save history
+        return this.history.add({
+          from,
+          to,
+          event,
+          // TODO: add validation for type and id here???
+          businessObjType: object && object.businessObjType,
+          businessObjId: object && object.businessObjId,
+          // TODO: add validation for user???
+          user,
+          description,
+          workflowName
+        }).then(_ => promise.resolve({
+          actionExecutionResults,
+          object
+        }))
+      }));
+    });
   }
 
   /**
@@ -231,7 +218,7 @@ export default class Machine {
    */
   isRunning({ object }) {
     return this.availableStates().indexOf(this.currentState({ object })) !== -1 &&
-        !this.isInFinalState({ object })
+      !this.isInFinalState({ object })
   }
 
   /**
@@ -273,25 +260,25 @@ export default class Machine {
   }
 
   /**
-  * Provides access to business object history records within the workflow
-  *
-  * @param {Object} searchParameters search parameters
-  * @param {string} searchParameters.object.businessObjType object type (examples: 'invoice', 'supplie')
-  * @param {string} searchParameters.object.businessObjId object identifier (examples: '1234567', 'SDZ-987d')
-  * @param {string} searchParameters.user user name initiated event (examles: 'Friedrich Wilhelm Viktor Albert')
-  * @param {Object} searchParameters.finishedOn time when transition was completed
-  * @param {Date} searchParameters.finishedOn.gt means that finishedOn should be greater than passed date
+   * Provides access to business object history records within the workflow
+   *
+   * @param {Object} searchParameters search parameters
+   * @param {string} searchParameters.object.businessObjType object type (examples: 'invoice', 'supplie')
+   * @param {string} searchParameters.object.businessObjId object identifier (examples: '1234567', 'SDZ-987d')
+   * @param {string} searchParameters.user user name initiated event (examles: 'Friedrich Wilhelm Viktor Albert')
+   * @param {Object} searchParameters.finishedOn time when transition was completed
+   * @param {Date} searchParameters.finishedOn.gt means that finishedOn should be greater than passed date
    *  (example: Date("2018-03-05T21:00:00.000Z")
-  * @param {Date} searchParameters.finishedOn.gte greater than or equal
-  * @param {Date} searchParameters.finishedOn.lt lesser than
-  * @param {Date} searchParameters.finishedOn.lte lesser than or equal
-  * @param {Object} paging results paging parameters
-  * @param {Object} sorting results searchong parameters
-  *
-  * @returns Promise that is resolved into an array which contains found history records
-  *
-  * History record is an object with the following structure:
-  * {
+   * @param {Date} searchParameters.finishedOn.gte greater than or equal
+   * @param {Date} searchParameters.finishedOn.lt lesser than
+   * @param {Date} searchParameters.finishedOn.lte lesser than or equal
+   * @param {Object} paging results paging parameters
+   * @param {Object} sorting results searchong parameters
+   *
+   * @returns Promise that is resolved into an array which contains found history records
+   *
+   * History record is an object with the following structure:
+   * {
   *   event,
   *   from,
   *   to,
@@ -303,7 +290,7 @@ export default class Machine {
   *   description,
   *   finishedOn
   * }
-  */
+   */
   getHistory({ object, user, finishedOn }, { max, offset }, { by, order }) {
     return this.history.search({
       object,
