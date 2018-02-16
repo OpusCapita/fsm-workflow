@@ -1,5 +1,6 @@
 import assert from 'assert';
-import bluebird from 'bluebird';
+
+const { Promise } = global;
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
@@ -48,6 +49,27 @@ let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
                   arguments: {
                     first: 1,
                     second: '2'
+                  }
+                }
+              ]
+            },
+            {
+              from: "first-stop",
+              event: "doAsync",
+              to: "second-stop",
+              actions: [
+                {
+                  name: "doAsync0",
+                  arguments: {
+                    one: 1,
+                    two: 2
+                  }
+                },
+                {
+                  name: "doAsync1",
+                  arguments: {
+                    three: 3,
+                    four: 4
                   }
                 }
               ]
@@ -111,7 +133,7 @@ describe('machine: sendEvent', function() {
   });
 
   it('sends "move (action is defined)" that requires predefined action execution', () => {
-    const sendEmailResult = {};
+    const sendEmailResult = 'awesomeEmail';
     const actions = {
       'sendEmail': ({ first, second, object, from, to, event }) => {
         return sendEmailResult;
@@ -123,12 +145,48 @@ describe('machine: sendEvent', function() {
     return machine.sendEvent({
       object,
       event: "move (action is defined)"
-    }).then(({ object, actionExecutionResutls }) => {
+    }).then(({ object, actionExecutionResults }) => {
       assert.equal(object.status, 'second-stop');
-      assert(actionExecutionResutls);
-      assert.equal(actionExecutionResutls.length, 1);
-      assert.equal(actionExecutionResutls[0]['name'], 'sendEmail');
-      assert.equal(actionExecutionResutls[0]['result'], sendEmailResult);
+      assert(actionExecutionResults);
+      assert.equal(actionExecutionResults.length, 1);
+      assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
+      assert.equal(actionExecutionResults[0]['result'], sendEmailResult);
+    });
+  });
+
+  it('sends event that assumes ordered chain of async actions', () => {
+    const actions = {
+      'doAsync0': ({ one, two, object, from, to, event }) => {
+        return new Promise((resolve, reject) => {
+          return setTimeout(() => resolve(one + two, 50))
+        });
+      },
+      'doAsync1': ({ three, four, object, from, to, event, actionExecutionResults }) => {
+        if (actionExecutionResults.length === 0) {
+          throw new Error("Invalid execution order");
+        }
+        return new Promise((resolve, reject) => {
+          return setTimeout(() => resolve(three + four + actionExecutionResults[0].result, 10))
+        });
+      },
+    };
+
+    const machine = createMachine({ actions });
+    const object = { status: 'first-stop' };
+
+    return machine.sendEvent({
+      object,
+      event: "doAsync"
+    }).then(({ object, actionExecutionResults }) => {
+      assert.equal(object.status, 'second-stop');
+      const [doAsync0Result, doAsync1Result] = actionExecutionResults;
+      assert(doAsync0Result);
+      assert(doAsync1Result);
+      assert.equal(doAsync0Result.name, 'doAsync0');
+      assert.equal(doAsync0Result.result, 3);
+
+      assert.equal(doAsync1Result.name, 'doAsync1');
+      assert.equal(doAsync1Result.result, 10);
     });
   });
 
@@ -146,11 +204,11 @@ describe('machine: sendEvent', function() {
     return machine.sendEvent({
       object,
       event: "move (action is defined)"
-    }).then(({ object, actionExecutionResutls }) => {
-      assert(actionExecutionResutls);
-      assert.equal(actionExecutionResutls.length, 1);
-      assert.equal(actionExecutionResutls[0]['name'], 'sendEmail');
-      assert.deepEqual(actionExecutionResutls[0]['result'], expectedSendEventResults);
+    }).then(({ object, actionExecutionResults }) => {
+      assert(actionExecutionResults);
+      assert.equal(actionExecutionResults.length, 1);
+      assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
+      assert.deepEqual(actionExecutionResults[0]['result'], expectedSendEventResults);
     });
   });
 
@@ -159,7 +217,7 @@ describe('machine: sendEvent', function() {
     const history = {
       add(passedData) {
         historyRecordUnderTest = passedData;
-        return bluebird.Promise.resolve(historyRecordUnderTest);
+        return Promise.resolve(historyRecordUnderTest);
       }
     };
     const machine = createMachine({ history });
