@@ -48,11 +48,11 @@ jobs:
             npm test
 
       - run:
-          name: build-gh-pages
-          command: bash ./scripts/gh-pages/build.sh
-      - run:
-          name: deploy-gh-pages
-          command: bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+          name: build-and-deploy-gh-pages
+          command:
+            - bash cd packages/editor
+            - bash ./scripts/gh-pages/build.sh
+            - bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - store_artifacts:
           path: ./packages/core/test-results.xml
