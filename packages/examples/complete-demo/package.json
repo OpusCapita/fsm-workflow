@@ -7,7 +7,7 @@
     "start": "cross-env PORT=8082 node ./node_modules/babel-cli/bin/babel-node.js ./src/server/index.js --presets=env",
     "start2": "webpack-dev-server --config src/server/webpack.config.js",
     "build": "webpack --config src/server/webpack.config.js",
-    "add-dependency": "cd ../../../ && npm run add-dependency --scope=@opuscapita/fsm-workflow-demo --"
+    "add-dependency": "cd ../../../ && npm run add-dependency -- --scope=@opuscapita/fsm-workflow-demo"
   },
   "dependencies": {
     "@opuscapita/fsm-workflow-core": "1.0.0",
@@ -17,7 +17,6 @@
     "connect-timeout": "1.9.0",
     "express": "4.16.2",
     "json-schema-faker": "0.4.7",
-    "lodash": "^4.17.5",
     "prop-types": "15.6.0",
     "react-bootstrap": "0.32.1"
   },
