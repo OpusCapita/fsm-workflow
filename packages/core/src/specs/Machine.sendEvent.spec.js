@@ -46,10 +46,16 @@ let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
               actions: [
                 {
                   name: 'sendEmail',
-                  arguments: {
-                    first: 1,
-                    second: '2'
-                  }
+                  params: [
+                    {
+                      name: 'first',
+                      value: 1
+                    },
+                    {
+                      name: 'second',
+                      value: '2'
+                    }
+                  ]
                 }
               ]
             },
@@ -60,17 +66,29 @@ let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
               actions: [
                 {
                   name: "doAsync0",
-                  arguments: {
-                    one: 1,
-                    two: 2
-                  }
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
                 },
                 {
                   name: "doAsync1",
-                  arguments: {
-                    three: 3,
-                    four: 4
-                  }
+                  params: [
+                    {
+                      name: 'three',
+                      value: 3
+                    },
+                    {
+                      name: 'four',
+                      value: 4
+                    }
+                  ]
                 }
               ]
             }

@@ -104,10 +104,16 @@ describe('machine definition: findAvailableTransitions', function() {
               guards: [
                 {
                   name: 'a-to-b',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  }
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
                 }
               ]
             },
@@ -128,9 +134,12 @@ describe('machine definition: findAvailableTransitions', function() {
               guards: [
                 {
                   name: 'less-than-max',
-                  arguments: {
-                    max: 10
-                  }
+                  params: [
+                    {
+                      name: 'max',
+                      value: 10
+                    }
+                  ]
                 }
               ]
             },
@@ -141,9 +150,12 @@ describe('machine definition: findAvailableTransitions', function() {
               guards: [
                 {
                   name: 'less-than-max',
-                  arguments: {
-                    max: 10
-                  },
+                  params: [
+                    {
+                      name: 'max',
+                      value: 10
+                    }
+                  ],
                   negate: true
                 }
               ]
@@ -372,19 +384,31 @@ describe('machine definition: findAvailableTransitions', function() {
               guards: [
                 {
                   name: 'a2b-guard',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  }
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
                 }
               ],
               automatic: [
                 {
                   name: 'a2b-auto-guard',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  }
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
                 }
               ]
             },
@@ -395,19 +419,31 @@ describe('machine definition: findAvailableTransitions', function() {
               guards: [
                 {
                   name: 'b2c-guard',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  }
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
                 }
               ],
               automatic: [
                 {
                   name: 'b2c-auto-guard',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  }
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
                 }
               ]
             },
@@ -439,10 +475,16 @@ describe('machine definition: findAvailableTransitions', function() {
               automatic: [
                 {
                   name: 'g2h-auto-guard',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  },
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ],
                   negate: true
                 }
               ]
@@ -454,10 +496,16 @@ describe('machine definition: findAvailableTransitions', function() {
               automatic: [
                 {
                   name: 'h2i-auto-async-guard',
-                  arguments: {
-                    'one': 1,
-                    'two': 2
-                  },
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
                 }
               ]
             }
