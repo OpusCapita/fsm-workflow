@@ -25,8 +25,11 @@ jobs:
           paths:
             - node_modules
             - packages/core/node_modules
+            - packages/editor/node_modules
             - packages/history/node_modules
             - packages/task-manager/node_modules
+            - packages/examples/invoice-console/node_modules
+            - packages/examples/process-task-manager-ui/node_modules
 
       - run:
           name: lint
@@ -42,6 +45,10 @@ jobs:
           prefix: core
 
       - store_artifacts:
+          path: ./packages/editor/test-results.xml
+          prefix: editor
+
+      - store_artifacts:
           path: ./packages/task-manager/test-results.xml
           prefix: task-manager
 
@@ -49,36 +56,38 @@ jobs:
           path: ./packages/history/test-results.xml
           prefix: history
 
-      - store_artifacts:
-          path: ./packages/editor/test-results.xml
-          prefix: editor
-
       - store_test_results:
           path: ./junit
 
-  build-editor:
+  deploy-editor-to-github-pages:
     docker:
       - image: circleci/node:6
     working_directory: ~/repo/packages/editor
     steps:
       - checkout:
           path: ~/repo
+      - run:
+          name: save-cache-checksum
+          command: find -name "package.json" | xargs cat > /tmp/cache-checksum
+
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
       - run:
           name: install-dependencies
-          command: yarn install
+          command: npm install
       - save_cache:
+          key: v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
           paths:
-            - ./node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: lint
-          command: npm run lint-fix
-      - run:
-          name: test
-          command: npm run test
+            - node_modules
+            - packages/core/node_modules
+            - packages/editor/node_modules
+            - packages/history/node_modules
+            - packages/task-manager/node_modules
+            - packages/examples/invoice-console/node_modules
+            - packages/examples/process-task-manager-ui/node_modules
       - run:
           name: build-gh-pages
           command: bash ./scripts/gh-pages/build.sh
