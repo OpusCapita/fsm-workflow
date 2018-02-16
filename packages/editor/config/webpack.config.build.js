@@ -2,7 +2,7 @@ const { resolve } = require('path');
 // const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.config.common');
-const nodeExternals = require('webpack-node-externals');
+// const nodeExternals = require('webpack-node-externals');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(common, {

@@ -4,8 +4,8 @@
   "packages": [
     "packages/core",
     "packages/task-manager",
-    "packages/editor",
     "packages/history",
+    "packages/editor",
     "packages/examples/complete-demo"
   ]
 }
