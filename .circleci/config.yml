@@ -44,12 +44,11 @@ jobs:
 
       - run:
           name: test
-          command: |
-            npm test
+          command: npm test
 
       - run:
           name: build-and-deploy-gh-pages
-          command:
+          command: |
             - bash cd packages/editor
             - bash ./scripts/gh-pages/build.sh
             - bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
