@@ -15,12 +15,21 @@ const machineDefinition = new MachineDefinition({
         from: 'b',
         to: 'x'
       },
+    ],
+    states: [
+      { name: 'a' },
+      { name: 'b' },
+      { name: 'x' },
+      { name: 'y' },
+      { name: 'm' },
+      { name: 'n' },
+      { name: 'z' },
     ]
   }
 });
 
 describe("machine: getAvailableStates", function() {
-  it("returns decalred states", () =>
-    assert.deepEqual(machineDefinition.getAvailableStates(), ['a', 'b', 'x', 'y', 'z'])
+  it("returns declared states", () =>
+    assert.deepEqual(machineDefinition.getAvailableStates(), ['a', 'b', 'm', 'n', 'x', 'y', 'z'])
   );
 });

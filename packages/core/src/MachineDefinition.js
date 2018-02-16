@@ -215,15 +215,9 @@ export default class MachineDefinition {
    * @return Array
    */
   getAvailableStates() {
-    const result = this.schema.transitions.reduce(
-      // gather all states from transitions
-      (accumulator, t) => {
-        return accumulator.concat(t.from, t.to)
-      },
-      // initial and final states
-      [this.schema.initialState, ...this.schema.finalStates]
-    );
-
+    // TBD do we need to throw if this.schema.states not defined?
+    // or this is a matter of validation and doewsn't belong here?
+    const result = this.schema.states.map(state => state.name);
     return toUnique(result).sort();
   }
 
