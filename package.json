@@ -7,7 +7,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "clean": "lerna clean",
+    "clean": "lerna clean --yes",
     "diff": "lerna diff",
     "lint": "lerna run lint",
     "postinstall": "npm run bootstrap",

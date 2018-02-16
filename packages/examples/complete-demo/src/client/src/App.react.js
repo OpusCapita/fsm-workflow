@@ -7,6 +7,7 @@ import schema from './demo-data/workflow-schema.json';
 import actions from './demo-data/actions';
 import conditions from './demo-data/conditions';
 import componentsRegistry from './demo-data/components';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 export default class App extends PureComponent {
   static childContextTypes = {
@@ -34,6 +35,11 @@ export default class App extends PureComponent {
           workflow={workflow}
           componentsRegistry={componentsRegistry}
         />
+        <Grid>
+          <Row>
+            <Col>jdhasfldsl</Col>
+          </Row>
+        </Grid>
       </div>
     )
   }

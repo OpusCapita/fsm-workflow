@@ -1,4 +1,4 @@
-import path from 'path';
+const path = require('path');
 
 const config = {
   entry: path.resolve(__dirname, '../client/index.js'),
@@ -7,19 +7,22 @@ const config = {
     path: path.resolve(__dirname, '../client/'),
     publicPath: '/'
   },
-  externals: {
-    react: {
-      root: 'React',
-      commonjs2: 'react',
-      commonjs: 'react',
-      amd: 'react'
-    },
-    'react-dom': {
-      root: 'ReactDOM',
-      commonjs2: 'react-dom',
-      commonjs: 'react-dom',
-      amd: 'react-dom'
-    }
+  // externals: {
+  //   react: {
+  //     root: 'React',
+  //     // commonjs2: 'react',
+  //     // commonjs: 'react',
+  //     // amd: 'react'
+  //   },
+  //   'react-dom': {
+  //     root: 'ReactDOM',
+  //     // commonjs2: 'react-dom',
+  //     // commonjs: 'react-dom',
+  //     // amd: 'react-dom'
+  //   }
+  // },
+  devServer: {
+    contentBase: path.resolve(__dirname, '../client/')
   },
   devtool: 'inline-source-map',
   module: {
@@ -54,4 +57,4 @@ const config = {
   }
 }
 
-export default config;
+module.exports = config;

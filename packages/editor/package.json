@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-editor",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Fsm workflow crud editor",
   "main": "lib/index.js",
   "files": [
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development showroom-scan ./src && webpack-dev-server --config config/webpack.config.showroom.js",
-    "build": "cross-env NODE_ENV=development showroom-scan ./src && webpack --config config/webpack.config.build.js",
+    "build": "cross-env NODE_ENV=development rimraf lib && webpack --config config/webpack.config.build.js",
     "lint-fix": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc --fix",
     "lint": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc",
     "test": "rimraf ./.nyc_output ./coverage && cross-env nyc mocha --recursive \"src/**/*.spec.js\" --require ignore-styles",
@@ -25,7 +25,6 @@
   "dependencies": {
     "@opuscapita/react-dates": "0.4.0-beta.4",
     "@opuscapita/react-select": "1.0.0-oc.0",
-    "ajv": "6.1.1",
     "codemirror": "5.33.0",
     "core-js": "2.5.3",
     "kvolkovich-sc-react-codemirror": "1.0.1",
@@ -80,7 +79,8 @@
     "webpack": "3.4.1",
     "webpack-bundle-analyzer": "2.9.2",
     "webpack-dev-server": "2.9.2",
-    "webpack-merge": "4.1.1"
+    "webpack-merge": "4.1.1",
+    "webpack-node-externals": "1.6.0"
   },
   "peerDependencies": {
     "react": "^15.6.2 || ^16.2.0",

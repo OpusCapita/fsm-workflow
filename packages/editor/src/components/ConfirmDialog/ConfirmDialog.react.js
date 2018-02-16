@@ -37,7 +37,9 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
   };
 
   componentWillUnmount = _ => {
-    ReactDOM.unmountComponentAtNode(this._mountNode);
+    if (this._mountNode) {
+      ReactDOM.unmountComponentAtNode(this._mountNode);
+    }
     this._mountNode = null;
   };
 
