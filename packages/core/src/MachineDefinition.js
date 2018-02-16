@@ -1,4 +1,4 @@
-import { flattenParams } from './utils';
+import { flattenParams, evaluateGuard } from './utils';
 
 // return new array that contains unique values from original array
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
@@ -100,28 +100,42 @@ export default class MachineDefinition {
       return new this.promise((resolve, reject) => {
         // collecting conditions that belong to current transition
         const conditions = guards.map((guard, idx) => {
+          if (typeof guard === 'string') { // guard is an inline expression
+            return guard
+          }
           if (!this.conditions[guards[idx].name]) {
             throw new Error(
               // eslint-disable-next-line max-len
-              `Guard '${guards[idx].name}' is specified in one the transitions but corresponding condition is not found/implemented!`
+              `Guard '${guards[idx].name}' is specified in one of transitions but corresponding condition is not found/implemented!`
             )
-          } else {
-            return this.conditions[guards[idx].name];
           }
+          return this.conditions[guards[idx].name];
         });
+
+        const implicitParams = {
+          from,
+          to,
+          event,
+          object,
+          ...this.prepareObjectAlias(object),
+          request,
+          context
+        }
 
         return this.promise.all(
           conditions.map((condition, idx) => {
-            return this.promise.resolve(condition({
-              ...flattenParams(guards[idx].params),
-              from,
-              to,
-              event,
-              object,
-              ...this.prepareObjectAlias(object),
-              request,
-              context
-            })).then(result => {
+            return this.promise.resolve(typeof condition === 'string' ?
+              // guard is an inline expression
+              evaluateGuard({
+                guard: condition,
+                params: implicitParams
+              }) :
+              // guard is an actual function
+              condition({
+                ...flattenParams(guards[idx].params),
+                ...implicitParams
+              })
+            ).then(result => {
               // if guard is resolve with false or is rejected, e.g. transition is not available at the moment
               // pass arguments specified in guard call (part of schema)
               // additionally object, request and context are also passed

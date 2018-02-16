@@ -96,6 +96,9 @@ describe('machine definition: findAvailableTransitions', function() {
     const machineDefinition = new MachineDefinition(
       {
         schema: {
+          objectConfiguration: {
+            alias: 'invoice'
+          },
           transitions: [
             {
               from: 'a',
@@ -158,6 +161,30 @@ describe('machine definition: findAvailableTransitions', function() {
                   ],
                   negate: true
                 }
+              ]
+            },
+            {
+              from: 'f',
+              to: 'g',
+              event: 'f->g',
+              guards: [
+                "object.enabled === true"
+              ]
+            },
+            {
+              from: 'g',
+              to: 'h',
+              event: 'g->h',
+              guards: [
+                "invoice.enabled === true"
+              ]
+            },
+            {
+              from: 'h',
+              to: 'i',
+              event: 'h->i',
+              guards: [
+                "not a valid expression"
               ]
             }
           ]
@@ -243,6 +270,42 @@ describe('machine definition: findAvailableTransitions', function() {
         }
       }).then(({ transitions }) => {
         assert.equal(transitions.length, 1);
+        done();
+      })
+    });
+
+    // check guards expressions
+    it('expression guard evaluates properly', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'f',
+        object: {
+          enabled: true
+        }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
+        done();
+      })
+    });
+
+    it('expression guard has access to object alias', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'g',
+        object: {
+          enabled: true
+        }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
+        done();
+      })
+    });
+
+    // TBD seems opinionated, isn't it?
+    it('expression guard forbids transition if expression throws an error', (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'h',
+        object: {}
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 0);
         done();
       })
     });
