@@ -1,7 +1,6 @@
 import assert from "assert";
 import MachineDefinition from "../MachineDefinition";
 
-// TODO rewrite to get data from 'states' prop in schema
 const machineDefinition = new MachineDefinition({
   schema: {
     initialState: "a",
