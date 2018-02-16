@@ -1,5 +1,3 @@
-import MachineDefinition from './MachineDefinition';
-
 export default class Machine {
   constructor({
       machineDefinition,
