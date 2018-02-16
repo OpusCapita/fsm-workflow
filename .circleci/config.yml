@@ -49,7 +49,7 @@ jobs:
       - run:
           name: build-and-deploy-gh-pages
           command: |
-            bash cd packages/editor
+            cd packages/editor
             bash ./scripts/gh-pages/build.sh
             bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
