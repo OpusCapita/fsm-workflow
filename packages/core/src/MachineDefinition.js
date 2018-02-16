@@ -1,8 +1,9 @@
+import { flattenParams } from './utils';
+
 // return new array that contains unique values from original array
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
 
 export default class MachineDefinition {
-
   /**
    * eslint-disable-next-line max-len
    * Here schema has objectConfiguration. It is required by machine/engine and editor:
@@ -112,7 +113,7 @@ export default class MachineDefinition {
         return this.promise.all(
           conditions.map((condition, idx) => {
             return this.promise.resolve(condition({
-              ...guards[idx].arguments,
+              ...flattenParams(guards[idx].params),
               from,
               to,
               event,
@@ -172,7 +173,7 @@ export default class MachineDefinition {
         return this.promise.all(
           automaticConditions.map((autoCondition, idx) => {
             return this.promise.resolve(autoCondition({
-              ...automatic[idx].arguments,
+              ...flattenParams(automatic[idx].params),
               from,
               to,
               event,
