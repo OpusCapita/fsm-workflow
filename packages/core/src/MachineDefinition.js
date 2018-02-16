@@ -199,11 +199,11 @@ export default class MachineDefinition {
         isAutomatic ? checkAutomatic(transition) : this.promise.resolve(true)
       ]).then(checkResults => {
         if (checkResults.every(result => !!result)) {
-          return this.promise.resolve(transition);
+          return transition;
         } else {
-          return this.promise.resolve(null);
+          return null;
         }
-      }))).then(foundTransitions => this.promise.resolve({
+      }))).then(foundTransitions => ({
         transitions: foundTransitions.filter(foundTransitions => !!foundTransitions)
       })
     );
