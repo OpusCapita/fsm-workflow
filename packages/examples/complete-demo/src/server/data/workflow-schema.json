@@ -125,11 +125,6 @@
     },
     {
       "from": "approvalRequired",
-      "to": "inspClrRequired",
-      "event": "sendToClarification"
-    },
-    {
-      "from": "approvalRequired",
       "to": "approvalRejected",
       "event": "rejectApproval"
     },

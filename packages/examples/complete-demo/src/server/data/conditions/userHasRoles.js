@@ -1,5 +1,6 @@
 const condition = args => {
-  console.log('condition "userHasRoles" received args: ', args)
+  console.log('condition "userHasRoles" received args: ', args);
+  return true
 }
 
 condition.paramsSchema = {

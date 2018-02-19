@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import WorkflowEditor from '@opuscapita/fsm-workflow-editor';
 import schema from '../../server/data/workflow-schema.json';
 import actions from '../../server/data/actions';
@@ -19,6 +18,7 @@ export default class Editor extends PureComponent {
       <WorkflowEditor
         workflow={workflow}
         componentsRegistry={componentsRegistry}
+        onSave={console.log}
       />
     )
   }

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { I18nManager } from '@opuscapita/i18n';
-import { Menu, MenuIcon } from '@opuscapita/react-navigation';
+import { Menu } from '@opuscapita/react-navigation';
 import HomePage from './HomePage.react';
 import Editor from './Editor.react';
 
@@ -10,18 +10,23 @@ export default class App extends PureComponent {
     i18n: PropTypes.object.isRequired
   }
 
-  state = {
-    currentPage: 0
+  constructor(...args) {
+    super(...args);
+
+    this.state = {
+      currentPage: 0
+    }
+
+    this.i18n = new I18nManager();
   }
 
-  handleNavigate = page => _ => this.setState({ currentPage: page })
-
-  i18n = new I18nManager();
   getChildContext() {
     return {
       i18n: this.i18n
     }
   }
+
+  handleNavigate = page => _ => this.setState({ currentPage: page })
 
   render() {
     const { currentPage } = this.state;
