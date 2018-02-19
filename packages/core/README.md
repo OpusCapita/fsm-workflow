@@ -88,7 +88,9 @@ const machineDefinition = new MachineDefinition({
                   "value": "value2"
                 }
               ]
-            }
+            },
+            // guards can also be simple expressions
+            "invoice.netAmount < 10000"
           ],
           to: "approved",
           actions: [
