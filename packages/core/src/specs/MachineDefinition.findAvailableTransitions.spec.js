@@ -168,7 +168,9 @@ describe('machine definition: findAvailableTransitions', function() {
               to: 'g',
               event: 'f->g',
               guards: [
-                "object.enabled === true"
+                {
+                  expression: "object.enabled === true"
+                }
               ]
             },
             {
@@ -176,7 +178,9 @@ describe('machine definition: findAvailableTransitions', function() {
               to: 'h',
               event: 'g->h',
               guards: [
-                "invoice.enabled === true"
+                {
+                  expression: "invoice.enabled === true"
+                }
               ]
             },
             {
@@ -184,7 +188,9 @@ describe('machine definition: findAvailableTransitions', function() {
               to: 'i',
               event: 'h->i',
               guards: [
-                "not a valid expression"
+                {
+                  expression: "not a valid expression"
+                }
               ]
             }
           ]
