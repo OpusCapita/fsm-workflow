@@ -75,7 +75,7 @@ export default class Machine {
     return object[objectStateFieldName];
   }
 
-  // returns a lits of events (names) that are available at current object state
+  // returns a list of events (names) that are available at current object state
   // event is optional, it is required only if you search for transitions with the event
   availableTransitions({ object, event, request }) {
     // calculate from state

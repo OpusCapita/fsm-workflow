@@ -29,7 +29,8 @@ const config = {
               require('babel-plugin-transform-object-rest-spread')
             ]
           }
-        }
+        },
+        exclude: /node_modules/
       },
       {
         test: /\.css$/,

@@ -219,7 +219,16 @@
           "type": "string"
         },
         "status": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "inspectionRequired",
+            "approvalRequired",
+            "inspClrRequired",
+            "inspectionRejected",
+            "approved",
+            "appClrRequired",
+            "approvalRejected"
+          ]
         }
       },
       "required": [
