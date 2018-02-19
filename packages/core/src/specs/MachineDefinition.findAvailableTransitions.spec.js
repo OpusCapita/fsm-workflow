@@ -299,14 +299,13 @@ describe('machine definition: findAvailableTransitions', function() {
       })
     });
 
-    // TBD seems opinionated, isn't it?
     it('expression guard forbids transition if expression throws an error', (done) => {
       machineDefinition.findAvailableTransitions({
         from: 'h',
         object: {}
-      }).then(({ transitions }) => {
-        assert.equal(transitions.length, 0);
-        done();
+      }).catch(err => {
+        assert.ok(true)
+        done()
       })
     });
   });

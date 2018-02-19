@@ -1,4 +1,4 @@
-import { flattenParams, evaluateGuard } from './utils';
+import { flattenParams } from './utils';
 
 // return new array that contains unique values from original array
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
@@ -53,6 +53,21 @@ export default class MachineDefinition {
     }
     // otherwise using bluebird implementation
     return require("bluebird").Promise;
+  }
+
+  static evaluateGuard({ guard, params }) {
+    try {
+      return !!eval( // eslint-disable-line no-eval
+        `
+          (function(arg) {
+            ${Object.keys(params).map(key => `var ${key} = arg[${JSON.stringify(key)}];`).join('\n')}
+            return (${guard})
+          })
+        `
+      )(params)
+    } catch (err) {
+      throw err
+    }
   }
 
   // if schema.objectConfiguration.alias is set up then
@@ -126,7 +141,7 @@ export default class MachineDefinition {
           conditions.map((condition, idx) => {
             return this.promise.resolve(typeof condition === 'string' ?
               // guard is an inline expression
-              evaluateGuard({
+              MachineDefinition.evaluateGuard({
                 guard: condition,
                 params: implicitParams
               }) :
@@ -160,8 +175,8 @@ export default class MachineDefinition {
     const checkAutomatic = transition => {
       const { from, to, event, automatic } = transition;
 
-      // automatic: true - checking for 'boolean' definition
-      if (typeof automatic === 'boolean' && automatic) {
+      // automatic: checking for boolean 'true'
+      if (automatic === true) {
         return this.promise.resolve(true);
       } else if (!automatic || automatic.length === 0) {
         // automatic also could be an array in the same way as guards
