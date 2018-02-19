@@ -5,7 +5,7 @@ yarn.lock
 package-lock.json
 *.log
 test-results.xml
-merged-test-results.xml
+test-results/report.xml
 .idea
 .nyc_output
 coverage

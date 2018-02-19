@@ -3,8 +3,9 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
+    "junit-merge": "1.2.3",
     "lerna": "2.8.0",
-    "junit-merge": "1.2.3"
+    "mkdirp": "0.5.1"
   },
   "scripts": {
     "add-depenency": "lerna add",
@@ -16,7 +17,7 @@
     "start": "lerna run start --parallel",
     "updated": "lerna updated || exit 0",
     "publish": "lerna publish --exact --cd-version patch --skip-git --yes",
-    "test": "lerna run test --parallel && junit-merge -r packages/**/test-results.xml",
+    "test": "lerna run test --parallel && mkdir test-results && junit-merge -r packages/**/test-results.xml -o test-results/report.xml",
     "publish-release": "lerna publish --exact --cd-version patch --yes --skip-git"
   },
   "engines": {
