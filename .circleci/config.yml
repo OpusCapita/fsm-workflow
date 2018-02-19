@@ -61,10 +61,10 @@ jobs:
             bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - store_artifacts:
-          path: ./merged-test-results.xml
+          path: ./test-results
 
       - store_test_results:
-          path: ./merged-test-results.xml
+          path: ./test-results
 
   # deploy-editor-to-github-pages:
   #   docker:
