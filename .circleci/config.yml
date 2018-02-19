@@ -8,6 +8,9 @@ jobs:
   build:
     <<: *defaults
     steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh    
       - checkout
       - run:
           name: save-cache-checksum
