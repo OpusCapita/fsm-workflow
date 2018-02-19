@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<testsuites>
+<testsuite name="Root Suite" timestamp="2018-02-19T19:11:10" tests="0" failures="0" time="0"></testsuite>
+<testsuite name="machine: availableAutomaticTransitions" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.availableAutomaticTransitions.spec.js" failures="0" time="0.001">
+  
+  <testcase name="machine: availableAutomaticTransitions arguments are correctly pased to machineDefinition.findAvailableTransitions" time="0.001" classname="arguments are correctly pased to machineDefinition.findAvailableTransitions"></testcase>
+  
+</testsuite>
+<testsuite name="machine: availableStates" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.availableStates.spec.js" failures="0" time="0">
+  
+  <testcase name="machine: availableStates arguments are correctly pased to machineDefinition.findAvailableTransitions" time="0" classname="arguments are correctly pased to machineDefinition.findAvailableTransitions"></testcase>
+  
+</testsuite>
+<testsuite name="machine: availableTransitions" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.availableTransitions.spec.js" failures="0" time="0.001">
+  
+  <testcase name="machine: availableTransitions arguments are correctly pased to machineDefinition.getAvailableStates" time="0.001" classname="arguments are correctly pased to machineDefinition.getAvailableStates"></testcase>
+  
+</testsuite>
+<testsuite name="machine: can" timestamp="2018-02-19T19:11:10" tests="2" file="/root/build/packages/core/src/specs/Machine.can-and-cannot.spec.js" failures="0" time="0.003">
+  
+  <testcase name="machine: can returns true" time="0.003" classname="returns true"></testcase>
+  
+  <testcase name="machine: can returns false" time="0" classname="returns false"></testcase>
+  
+</testsuite>
+<testsuite name="machine: cannot" timestamp="2018-02-19T19:11:10" tests="2" file="/root/build/packages/core/src/specs/Machine.can-and-cannot.spec.js" failures="0" time="0.001">
+  
+  <testcase name="machine: cannot returns true" time="0.001" classname="returns true"></testcase>
+  
+  <testcase name="machine: cannot returns false" time="0" classname="returns false"></testcase>
+  
+</testsuite>
+<testsuite name="machine: constructor" timestamp="2018-02-19T19:11:10" tests="10" file="/root/build/packages/core/src/specs/Machine.constructor.spec.js" failures="0" time="0">
+  
+  <testcase name="machine: constructor should throw Error as machineDefinitionProvider is not defined" time="0" classname="should throw Error as machineDefinitionProvider is not defined"></testcase>
+  
+  <testcase name="machine: constructor should throw Error as machine name is not defined" time="0" classname="should throw Error as machine name is not defined"></testcase>
+  
+  <testcase name="machine: constructor should throw Error as machine definition is not found" time="0" classname="should throw Error as machine definition is not found"></testcase>
+  
+  <testcase name="machine: constructor should not throw Error as Worklfow should be correctly created" time="0" classname="should not throw Error as Worklfow should be correctly created"></testcase>
+  
+  <testcase name="machine: constructor check default machine promise" time="0" classname="check default machine promise"></testcase>
+  
+  <testcase name="machine: constructor check passed machine promise" time="0" classname="check passed machine promise"></testcase>
+  
+  <testcase name="machine: constructor promise = &apos;null&apos; in constructor is no acceptable" time="0" classname="promise = &apos;null&apos; in constructor is no acceptable"></testcase>
+  
+  <testcase name="machine: constructor if library is used outside node (e.g. browser) then &apos;bluebird&apos; should be used as default Promise implementation" time="0" classname="if library is used outside node (e.g. browser) then &apos;bluebird&apos; should be used as default Promise implementation"></testcase>
+  
+  <testcase name="machine: constructor check default machine history" time="0" classname="check default machine history"></testcase>
+  
+  <testcase name="machine: constructor convertObjectToReference default implementation thows exception" time="0" classname="convertObjectToReference default implementation thows exception"></testcase>
+  
+</testsuite>
+<testsuite name="machine: currentState" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.currentState.spec.js" failures="0" time="0.001">
+  
+  <testcase name="machine: currentState returns correct value" time="0.001" classname="returns correct value"></testcase>
+  
+</testsuite>
+<testsuite name="machine: getHistory" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.getHistory.spec.js" failures="0" time="0.004">
+  
+  <testcase name="machine: getHistory history.search is called with correct parameters and returns provided results" time="0.004" classname="history.search is called with correct parameters and returns provided results"></testcase>
+  
+</testsuite>
+<testsuite name="machine: is" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.is.spec.js" failures="0" time="0">
+  
+  <testcase name="machine: is returns correct value" time="0" classname="returns correct value"></testcase>
+  
+</testsuite>
+<testsuite name="machine: isInFinalState" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.isInFinalState.spec.js" failures="0" time="0.001">
+  
+  <testcase name="machine: isInFinalState returns correct value" time="0.001" classname="returns correct value"></testcase>
+  
+</testsuite>
+<testsuite name="machine: isRunning" timestamp="2018-02-19T19:11:10" tests="1" file="/root/build/packages/core/src/specs/Machine.isRunning.spec.js" failures="0" time="0">
+  
+  <testcase name="machine: isRunning returns correct values" time="0" classname="returns correct values"></testcase>
+  
+</testsuite>
+<testsuite name="machine: sendEvent" timestamp="2018-02-19T19:11:10" tests="7" file="/root/build/packages/core/src/specs/Machine.sendEvent.spec.js" failures="0" time="0.008">
+  
+  <testcase name="machine: sendEvent sends &quot;move&quot; event that moves object to the next state correctly" time="0.002" classname="sends &quot;move&quot; event that moves object to the next state correctly"></testcase>
+  
+  <testcase name="machine: sendEvent sends &quot;step-back&quot; event that does not exist" time="0" classname="sends &quot;step-back&quot; event that does not exist"></testcase>
+  
+  <testcase name="machine: sendEvent sends &quot;move (action is not defined)&quot; that requires action execution, but action is not defined/implemented" time="0" classname="sends &quot;move (action is not defined)&quot; that requires action execution, but action is not defined/implemented"></testcase>
+  
+  <testcase name="machine: sendEvent sends &quot;move (action is defined)&quot; that requires predefined action execution" time="0.001" classname="sends &quot;move (action is defined)&quot; that requires predefined action execution"></testcase>
+  
+  <testcase name="machine: sendEvent sends event that assumes ordered chain of async actions" time="0.004" classname="sends event that assumes ordered chain of async actions"></testcase>
+  
+  <testcase name="machine: sendEvent action has access to configured object alias" time="0" classname="action has access to configured object alias"></testcase>
+  
+  <testcase name="machine: sendEvent creates correct history record" time="0.001" classname="creates correct history record"></testcase>
+  
+</testsuite>
+<testsuite name="machine: start" timestamp="2018-02-19T19:11:10" tests="3" file="/root/build/packages/core/src/specs/Machine.start.spec.js" failures="0" time="0">
+  
+  <testcase name="machine: start returns promise" time="0" classname="returns promise"></testcase>
+  
+  <testcase name="machine: start sets correctly initial state" time="0" classname="sets correctly initial state"></testcase>
+  
+  <testcase name="machine: start creates correct history record" time="0" classname="creates correct history record"></testcase>
+  
+</testsuite>
+<testsuite name="machine: getAvailableStates" timestamp="2018-02-19T19:11:10" tests="4" file="/root/build/packages/core/src/specs/MachineDefinition.availableStates.spec.js" failures="0" time="0.001">
+  
+  <testcase name="machine: getAvailableStates returns declared states" time="0.001" classname="returns declared states"></testcase>
+  
+  <testcase name="machine: getAvailableStates returns declared states: empty transitions" time="0" classname="returns declared states: empty transitions"></testcase>
+  
+  <testcase name="machine: getAvailableStates returns declared states: empty states" time="0" classname="returns declared states: empty states"></testcase>
+  
+  <testcase name="machine: getAvailableStates returns declared states: no states and transitions" time="0" classname="returns declared states: no states and transitions"></testcase>
+  
+</testsuite>
+<testsuite name="machine definition: constructor" timestamp="2018-02-19T19:11:10" tests="3" file="/root/build/packages/core/src/specs/MachineDefinition.contructor.spec.js" failures="0" time="0.001">
+  
+  <testcase name="machine definition: constructor uses correct default object state field name if not specified" time="0" classname="uses correct default object state field name if not specified"></testcase>
+  
+  <testcase name="machine definition: constructor promise = &apos;null&apos; in constructor is no acceptable" time="0.001" classname="promise = &apos;null&apos; in constructor is no acceptable"></testcase>
+  
+  <testcase name="machine definition: constructor if library is used outside node (e.g. browser) then &apos;bluebird&apos; should be used as default Promise implementation" time="0" classname="if library is used outside node (e.g. browser) then &apos;bluebird&apos; should be used as default Promise implementation"></testcase>
+  
+</testsuite>
+<testsuite name="machine definition: findAvailableTransitions" timestamp="2018-02-19T19:11:10" tests="3" file="/root/build/packages/core/src/specs/MachineDefinition.findAvailableTransitions.spec.js" failures="0" time="0.002">
+  
+  <testcase name="machine definition: findAvailableTransitions throws an error if &apos;from&apos; is not specified" time="0" classname="throws an error if &apos;from&apos; is not specified"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions returns empty list if transition are not defined in machine schema" time="0" classname="returns empty list if transition are not defined in machine schema"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions finds appropriate transitions for specified &apos;from&apos; and &apos;event&apos;" time="0.002" classname="finds appropriate transitions for specified &apos;from&apos; and &apos;event&apos;"></testcase>
+  
+</testsuite>
+<testsuite name="&apos;guarded&apos; transitions" timestamp="2018-02-19T19:11:10" tests="9" file="/root/build/packages/core/src/specs/MachineDefinition.findAvailableTransitions.spec.js" failures="0" time="0.003">
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions guard forbids transition" time="0.001" classname="guard forbids transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions guard permits transition" time="0" classname="guard permits transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions transition has reference to non declared guard(condition)" time="0" classname="transition has reference to non declared guard(condition)"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions check passing guard with passing request" time="0" classname="check passing guard with passing request"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions check rejecting guard with passing request" time="0" classname="check rejecting guard with passing request"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions negate guard permits transition" time="0.001" classname="negate guard permits transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions expression guard evaluates properly" time="0" classname="expression guard evaluates properly"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions expression guard has access to object alias" time="0.001" classname="expression guard has access to object alias"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;guarded&apos; transitions expression guard forbids transition if expression throws an error" time="0" classname="expression guard forbids transition if expression throws an error"></testcase>
+  
+</testsuite>
+<testsuite name="transitions with async &apos;guards&apos;" timestamp="2018-02-19T19:11:10" tests="7" file="/root/build/packages/core/src/specs/MachineDefinition.findAvailableTransitions.spec.js" failures="0" time="0.002">
+  
+  <testcase name="machine definition: findAvailableTransitions transitions with async &apos;guards&apos; find transition with async resolved guard" time="0" classname="find transition with async resolved guard"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions transitions with async &apos;guards&apos; find 0 transition with rejected guard" time="0.001" classname="find 0 transition with rejected guard"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions transitions with async &apos;guards&apos; find 0 transition with failing guard" time="0" classname="find 0 transition with failing guard"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions transitions with async &apos;guards&apos; find transition with negated not passing guard" time="0" classname="find transition with negated not passing guard"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions transitions with async &apos;guards&apos; find transition with negated failing guard" time="0" classname="find transition with negated failing guard"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions transitions with async &apos;guards&apos; find 0 transition when guard is rejected with error" time="0.001" classname="find 0 transition when guard is rejected with error"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions transitions with async &apos;guards&apos; is rejected with error in case of undefined guard " time="0" classname="is rejected with error in case of undefined guard "></testcase>
+  
+</testsuite>
+<testsuite name="&apos;automatic&apos; transitions" timestamp="2018-02-19T19:11:10" tests="9" file="/root/build/packages/core/src/specs/MachineDefinition.findAvailableTransitions.spec.js" failures="0" time="0.003">
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions auto-guard permits transition" time="0.001" classname="auto-guard permits transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions guard-free check" time="0" classname="guard-free check"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions auto-guard forbids transition" time="0.001" classname="auto-guard forbids transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions no transition is defined as automatic" time="0" classname="no transition is defined as automatic"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions transition has reference to non declared automatic conditions" time="0" classname="transition has reference to non declared automatic conditions"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions negate auto-guard permits transition" time="0.001" classname="negate auto-guard permits transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions async auto-guard permits transition" time="0" classname="async auto-guard permits transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions async auto-guard rejects transition" time="0" classname="async auto-guard rejects transition"></testcase>
+  
+  <testcase name="machine definition: findAvailableTransitions &apos;automatic&apos; transitions is rejected with error in case async auto-guard throws exceptions" time="0" classname="is rejected with error in case async auto-guard throws exceptions"></testcase>
+  
+</testsuite>
+<testsuite name="machine definition: object alias" timestamp="2018-02-19T19:11:10" tests="3" file="/root/build/packages/core/src/specs/MachineDefinition.objectAlias.spec.js" failures="0" time="0">
+  
+  <testcase name="machine definition: object alias prepareObjectAlias: objectConfiguration is not defined -&gt; empty object is returned" time="0" classname="prepareObjectAlias: objectConfiguration is not defined -&gt; empty object is returned"></testcase>
+  
+  <testcase name="machine definition: object alias prepareObjectAlias: objectConfiguration is defined, but alias is not defined -&gt; empty object is returned" time="0" classname="prepareObjectAlias: objectConfiguration is defined, but alias is not defined -&gt; empty object is returned"></testcase>
+  
+  <testcase name="machine definition: object alias prepareObjectAlias: objectConfiguration.alias is defined -&gt; {&lt;alias&gt;: object} is returned" time="0" classname="prepareObjectAlias: objectConfiguration.alias is defined -&gt; {&lt;alias&gt;: object} is returned"></testcase>
+  
+</testsuite>
+<testsuite name="utils" timestamp="2018-02-19T19:11:10" tests="0" file="/root/build/packages/core/src/specs/utils.spec.js" failures="0" time="0"></testsuite>
+<testsuite name="flattenParams()" timestamp="2018-02-19T19:11:10" tests="2" file="/root/build/packages/core/src/specs/utils.spec.js" failures="0" time="0">
+  
+  <testcase name="utils flattenParams() returns [] for empty arg" time="0" classname="returns [] for empty arg"></testcase>
+  
+  <testcase name="utils flattenParams() maps params to flat object" time="0" classname="maps params to flat object"></testcase>
+  
+</testsuite>
+
+<testsuite name="Root Suite" timestamp="2018-02-19T19:11:07" tests="0" failures="0" time="0"></testsuite>
+<testsuite name="history" timestamp="2018-02-19T19:11:07" tests="0" file="/root/build/packages/history/src/models/interfaces/workflowTransitionHistory.spec.js" failures="0" time="0"></testsuite>
+<testsuite name=".add()" timestamp="2018-02-19T19:11:07" tests="4" file="/root/build/packages/history/src/models/interfaces/workflowTransitionHistory.spec.js" failures="0" time="0.039">
+  
+  <testcase name="history .add() should add history record with description" time="0.019" classname="should add history record with description"></testcase>
+  
+  <testcase name="history .add() should add history record without description" time="0.004" classname="should add history record without description"></testcase>
+  
+  <testcase name="history .add() should search for all history records" time="0.011" classname="should search for all history records"></testcase>
+  
+  <testcase name="history .add() should search for some history records" time="0.005" classname="should search for some history records"></testcase>
+  
+</testsuite>
+
+</testsuites>
