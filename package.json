@@ -3,7 +3,8 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "lerna": "2.8.0"
+    "lerna": "2.8.0",
+    "junit-merge": "1.2.3"
   },
   "scripts": {
     "add-depenency": "lerna add",
@@ -20,8 +21,5 @@
   },
   "engines": {
     "node": ">= 8.x"
-  },
-  "devDependencies": {
-    "junit-merge": "1.2.3"
   }
 }
