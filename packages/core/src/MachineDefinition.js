@@ -55,13 +55,13 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
-  static evaluateGuard({ guard, params }) {
+  static evaluateExpression({ expression, params }) {
     try {
       return !!eval( // eslint-disable-line no-eval
         `
           (function(arg) {
             ${Object.keys(params).map(key => `var ${key} = arg[${JSON.stringify(key)}];`).join('\n')}
-            return (${guard})
+            return (${expression})
           })
         `
       )(params)
@@ -115,16 +115,16 @@ export default class MachineDefinition {
       return new this.promise((resolve, reject) => {
         // collecting conditions that belong to current transition
         const conditions = guards.map((guard, idx) => {
-          if (typeof guard === 'string') { // guard is an inline expression
+          if (guard.expression) { // guard is an object with inline JS expression
             return guard
           }
-          if (!this.conditions[guards[idx].name]) {
+          if (!this.conditions[guard.name]) {
             throw new Error(
               // eslint-disable-next-line max-len
-              `Guard '${guards[idx].name}' is specified in one of transitions but corresponding condition is not found/implemented!`
+              `Guard '${guard.name}' is specified in one of transitions but corresponding condition is not found/implemented!`
             )
           }
-          return this.conditions[guards[idx].name];
+          return this.conditions[guard.name];
         });
 
         const implicitParams = {
@@ -139,10 +139,10 @@ export default class MachineDefinition {
 
         return this.promise.all(
           conditions.map((condition, idx) => {
-            return this.promise.resolve(typeof condition === 'string' ?
+            return this.promise.resolve(condition.expression ?
               // guard is an inline expression
-              MachineDefinition.evaluateGuard({
-                guard: condition,
+              MachineDefinition.evaluateExpression({
+                expression: condition.expression,
                 params: implicitParams
               }) :
               // guard is an actual function

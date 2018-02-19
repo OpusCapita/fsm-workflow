@@ -90,7 +90,9 @@ const machineDefinition = new MachineDefinition({
               ]
             },
             // guards can also be simple expressions
-            "invoice.netAmount < 10000"
+            {
+              "expression": "invoice.netAmount < 10000"
+            }
           ],
           to: "approved",
           actions: [
