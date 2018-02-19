@@ -24,7 +24,8 @@ jobs:
 
       - run:
           name: bootstrap (install dependencies)
-          command: npm install
+          # we use --unsafe-perm as current build using root user which fails
+          command: npm install --unsafe-perm
 
       - save_cache:
           key: dependencies-{{ checksum "/tmp/cache-checksum" }}
@@ -142,7 +143,8 @@ jobs:
 
       - run:
           name: bootstrap (install dependencies)
-          command: npm install
+          # we use --unsafe-perm as current build using root user which fails
+          command: npm install --unsafe-perm
 
       - save_cache:
           key: dependencies-{{ checksum "/tmp/cache-checksum" }}
