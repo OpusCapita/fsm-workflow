@@ -1,14 +1,28 @@
 import assert from 'assert';
-import bluebird from 'bluebird';
+
+const { Promise } = global;
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
-let createMachine = ({ actions = {}, history } = {}) => {
+const convertObjectToReference = (object) => {
+  return {
+    businessObjId: 'tesla',
+    businessObjType: 'car'
+  }
+};
+
+let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
+  const objectConfiguration = {};
+  if (objectAlias) {
+    objectConfiguration['alias'] = objectAlias;
+  }
+
   return new Machine(
     {
       machineDefinition: new MachineDefinition({
         schema: {
           initialState: 'started',
+          objectConfiguration,
           transitions: [
             {
               from: "started",
@@ -32,10 +46,49 @@ let createMachine = ({ actions = {}, history } = {}) => {
               actions: [
                 {
                   name: 'sendEmail',
-                  arguments: {
-                    first: 1,
-                    second: '2'
-                  }
+                  params: [
+                    {
+                      name: 'first',
+                      value: 1
+                    },
+                    {
+                      name: 'second',
+                      value: '2'
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              from: "first-stop",
+              event: "doAsync",
+              to: "second-stop",
+              actions: [
+                {
+                  name: "doAsync0",
+                  params: [
+                    {
+                      name: 'one',
+                      value: 1
+                    },
+                    {
+                      name: 'two',
+                      value: 2
+                    }
+                  ]
+                },
+                {
+                  name: "doAsync1",
+                  params: [
+                    {
+                      name: 'three',
+                      value: 3
+                    },
+                    {
+                      name: 'four',
+                      value: 4
+                    }
+                  ]
                 }
               ]
             }
@@ -43,7 +96,8 @@ let createMachine = ({ actions = {}, history } = {}) => {
         },
         actions: actions || {}
       }),
-      history
+      history,
+      convertObjectToReference
     }
   );
 }
@@ -97,7 +151,7 @@ describe('machine: sendEvent', function() {
   });
 
   it('sends "move (action is defined)" that requires predefined action execution', () => {
-    const sendEmailResult = {};
+    const sendEmailResult = 'awesomeEmail';
     const actions = {
       'sendEmail': ({ first, second, object, from, to, event }) => {
         return sendEmailResult;
@@ -109,12 +163,70 @@ describe('machine: sendEvent', function() {
     return machine.sendEvent({
       object,
       event: "move (action is defined)"
-    }).then(({ object, actionExecutionResutls }) => {
+    }).then(({ object, actionExecutionResults }) => {
       assert.equal(object.status, 'second-stop');
-      assert(actionExecutionResutls);
-      assert.equal(actionExecutionResutls.length, 1);
-      assert.equal(actionExecutionResutls[0]['name'], 'sendEmail');
-      assert.equal(actionExecutionResutls[0]['result'], sendEmailResult);
+      assert(actionExecutionResults);
+      assert.equal(actionExecutionResults.length, 1);
+      assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
+      assert.equal(actionExecutionResults[0]['result'], sendEmailResult);
+    });
+  });
+
+  it('sends event that assumes ordered chain of async actions', () => {
+    const actions = {
+      'doAsync0': ({ one, two, object, from, to, event }) => {
+        return new Promise((resolve, reject) => {
+          return setTimeout(() => resolve(one + two, 50))
+        });
+      },
+      'doAsync1': ({ three, four, object, from, to, event, actionExecutionResults }) => {
+        if (actionExecutionResults.length === 0) {
+          throw new Error("Invalid execution order");
+        }
+        return new Promise((resolve, reject) => {
+          return setTimeout(() => resolve(three + four + actionExecutionResults[0].result, 10))
+        });
+      },
+    };
+
+    const machine = createMachine({ actions });
+    const object = { status: 'first-stop' };
+
+    return machine.sendEvent({
+      object,
+      event: "doAsync"
+    }).then(({ object, actionExecutionResults }) => {
+      assert.equal(object.status, 'second-stop');
+      const [doAsync0Result, doAsync1Result] = actionExecutionResults;
+      assert(doAsync0Result);
+      assert(doAsync1Result);
+      assert.equal(doAsync0Result.name, 'doAsync0');
+      assert.equal(doAsync0Result.result, 3);
+
+      assert.equal(doAsync1Result.name, 'doAsync1');
+      assert.equal(doAsync1Result.result, 10);
+    });
+  });
+
+  it('action has access to configured object alias', function() {
+    const objectAlias = "car";
+    const actions = {
+      'sendEmail': (params) => {
+        return { [objectAlias]: params[objectAlias] };
+      }
+    };
+    const machine = createMachine({ actions, objectAlias });
+    const object = { status: 'first-stop' };
+    const expectedSendEventResults = { "car": object };
+
+    return machine.sendEvent({
+      object,
+      event: "move (action is defined)"
+    }).then(({ object, actionExecutionResults }) => {
+      assert(actionExecutionResults);
+      assert.equal(actionExecutionResults.length, 1);
+      assert.equal(actionExecutionResults[0]['name'], 'sendEmail');
+      assert.deepEqual(actionExecutionResults[0]['result'], expectedSendEventResults);
     });
   });
 
@@ -123,15 +235,13 @@ describe('machine: sendEvent', function() {
     const history = {
       add(passedData) {
         historyRecordUnderTest = passedData;
-        return bluebird.Promise.resolve(historyRecordUnderTest);
+        return Promise.resolve(historyRecordUnderTest);
       }
     };
     const machine = createMachine({ history });
     const from = 'started';
     const object = {
-      status: from,
-      businessObjId: 'tesla',
-      businessObjType: 'car',
+      status: from
     };
     const user = 'johnny';
     const description = 'getoff!';
@@ -141,8 +251,7 @@ describe('machine: sendEvent', function() {
         from: from,
         to: object.status,
         event: event,
-        businessObjId: object.businessObjId,
-        businessObjType: object.businessObjType,
+        ...convertObjectToReference(object),
         workflowName: machine.machineDefinition.schema.name,
         user,
         description

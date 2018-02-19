@@ -1,18 +1,40 @@
+import { flattenParams } from './utils';
+
 // return new array that contains unique values from original array
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
 
 export default class MachineDefinition {
-  constructor({ schema, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
+  /**
+   * eslint-disable-next-line max-len
+   * Here schema has objectConfiguration. It is required by machine/engine and editor:
+   * {
+   *   stateFieldName,       // (String) object property that holds current object state
+   *   schema,               // (Object) object JSON schema, will be used by the
+   *                         //   editor to build expressions using object structure information
+   *   alias,                // (String) object alias that will be used in action/guard
+   *                         //   calls an implicit variable that is a reference to an object.
+   *                         //   For example for invoice approval object alias could be 'invoice',
+   *                         //   e.g. in guard expression user could type invoice.total < 1
+   *                         //   instead of object.total < 1
+   *   example              // (Object) object example that is used in editor
+   * }
+   */
+  constructor({ schema = {}, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
     // todo validate schema
     if (!promise) {
-      throw new Error("promise is undefined");
+      throw new Error("'promise' is undefined");
     }
     // TODO: validate that name is passed (it wil be used by machine to write/read history)
-    // console.log(`schema '${JSON.stringify(schema)}'`);
+
+    const { objectConfiguration, ...restSchema } = schema;
+
     this.schema = {
-      objectStateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
+      objectConfiguration: {
+        stateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
+        ...objectConfiguration
+      },
       finalStates: [],
-      ...schema
+      ...restSchema
     };
     // condition is an object, where each property name is condition name and
     // value is condition implentation (function)
@@ -33,13 +55,39 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
+  static evaluateGuard({ guard, params }) {
+    try {
+      return !!eval( // eslint-disable-line no-eval
+        `
+          (function(arg) {
+            ${Object.keys(params).map(key => `var ${key} = arg[${JSON.stringify(key)}];`).join('\n')}
+            return (${guard})
+          })
+        `
+      )(params)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // if schema.objectConfiguration.alias is set up then
+  // JSON {<alias>: object} is returned otherwise empty JSON {}
+  prepareObjectAlias(object) {
+    const { objectConfiguration } = this.schema;
+    if (objectConfiguration && objectConfiguration.alias) {
+      return { [objectConfiguration.alias]: object };
+    }
+    return {};
+  }
+
   findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
     // if from is not specified, then no transition is available
     if (from === null || from === undefined) {
       // to do throw proper error
       return this.promise.reject(new Error("'from' is not defined"));
     }
-    const { transitions } = this.schema;
+    const { schema } = this;
+    const { transitions } = schema;
     // if not transitions, the return empty list
     if (!transitions) {
       return this.promise.resolve({ transitions: [] });
@@ -67,27 +115,42 @@ export default class MachineDefinition {
       return new this.promise((resolve, reject) => {
         // collecting conditions that belong to current transition
         const conditions = guards.map((guard, idx) => {
+          if (typeof guard === 'string') { // guard is an inline expression
+            return guard
+          }
           if (!this.conditions[guards[idx].name]) {
             throw new Error(
               // eslint-disable-next-line max-len
-              `Guard '${guards[idx].name}' is specified in one the transitions but corresponding condition is not found/implemented!`
+              `Guard '${guards[idx].name}' is specified in one of transitions but corresponding condition is not found/implemented!`
             )
-          } else {
-            return this.conditions[guards[idx].name];
           }
+          return this.conditions[guards[idx].name];
         });
+
+        const implicitParams = {
+          from,
+          to,
+          event,
+          object,
+          ...this.prepareObjectAlias(object),
+          request,
+          context
+        }
 
         return this.promise.all(
           conditions.map((condition, idx) => {
-            return this.promise.resolve(condition({
-              ...guards[idx].arguments,
-              from,
-              to,
-              event,
-              object,
-              request,
-              context
-            })).then(result => {
+            return this.promise.resolve(typeof condition === 'string' ?
+              // guard is an inline expression
+              MachineDefinition.evaluateGuard({
+                guard: condition,
+                params: implicitParams
+              }) :
+              // guard is an actual function
+              condition({
+                ...flattenParams(guards[idx].params),
+                ...implicitParams
+              })
+            ).then(result => {
               // if guard is resolve with false or is rejected, e.g. transition is not available at the moment
               // pass arguments specified in guard call (part of schema)
               // additionally object, request and context are also passed
@@ -112,8 +175,8 @@ export default class MachineDefinition {
     const checkAutomatic = transition => {
       const { from, to, event, automatic } = transition;
 
-      // automatic: true - checking for 'boolean' definition
-      if (typeof automatic === 'boolean' && automatic) {
+      // automatic: checking for boolean 'true'
+      if (automatic === true) {
         return this.promise.resolve(true);
       } else if (!automatic || automatic.length === 0) {
         // automatic also could be an array in the same way as guards
@@ -139,12 +202,13 @@ export default class MachineDefinition {
         return this.promise.all(
           automaticConditions.map((autoCondition, idx) => {
             return this.promise.resolve(autoCondition({
-              ...automatic[idx].arguments,
+              ...flattenParams(automatic[idx].params),
               from,
               to,
               event,
               object,
               request,
+              ...this.prepareObjectAlias(object),
               context
             })).then(result => {
               // if check return false, return false, e.g. transition is not available at the moment
@@ -164,11 +228,11 @@ export default class MachineDefinition {
         isAutomatic ? checkAutomatic(transition) : this.promise.resolve(true)
       ]).then(checkResults => {
         if (checkResults.every(result => !!result)) {
-          return this.promise.resolve(transition);
+          return transition;
         } else {
-          return this.promise.resolve(null);
+          return null;
         }
-      }))).then(foundTransitions => this.promise.resolve({
+      }))).then(foundTransitions => ({
         transitions: foundTransitions.filter(foundTransitions => !!foundTransitions)
       })
     );
@@ -180,14 +244,21 @@ export default class MachineDefinition {
    * @return Array
    */
   getAvailableStates() {
-    const result = this.schema.transitions.reduce(
-      // gather all states from transitions
-      (accumulator, t) => {
-        return accumulator.concat(t.from, t.to)
-      },
-      // initial and final states
-      [this.schema.initialState, ...this.schema.finalStates]
-    );
+    // TBD do we need to throw if this.schema.states not defined?
+    // or this is a matter of validation and doewsn't belong here?
+    let result = [this.schema.initialState, ...this.schema.finalStates];
+    if (this.schema.states && this.schema.states.length > 0) {
+      result = result.concat(this.schema.states.map(state => state.name));
+    }
+    if (this.schema.transitions && this.schema.transitions.length > 0) {
+      result = result.concat(this.schema.transitions.reduce(
+          // gather all states from transitions
+          (accumulator, t) => {
+            return accumulator.concat(t.from, t.to)
+          },
+          []
+        ));
+    }
 
     return toUnique(result).sort();
   }

@@ -11,8 +11,7 @@
     "start": "node ./src/demo/server",
     "debug": "npm start -- --inspect",
     "lint": "eslint src",
-    "lint-tab": "eslint src --rule '\"indent\": [2, \"tab\", { \"SwitchCase\": 1, \"VariableDeclarator\": 1 }]'",
-    "test": "rimraf ./.nyc_output ./coverage && nyc --reporter=lcov --reporter=text mocha --reporter=mocha-junit-reporter --recursive 'src/**/*.spec.js'"
+    "test": "rimraf ./.nyc_output ./coverage && nyc --reporter=lcov --reporter=text mocha --reporter=mocha-junit-reporter --recursive \"src/**/*.spec.js\""
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

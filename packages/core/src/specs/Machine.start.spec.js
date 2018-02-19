@@ -3,6 +3,13 @@ import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 import bluebird from 'bluebird';
 
+const convertObjectToReference = (object) => {
+  return {
+    businessObjId: 'tesla',
+    businessObjType: 'car'
+  }
+};
+
 const createMachine = ({ history } = {}) => {
   return new Machine(
     {
@@ -12,7 +19,8 @@ const createMachine = ({ history } = {}) => {
           initialState: 'started'
         }
       }),
-      history
+      history,
+      convertObjectToReference
     }
   );
 }
@@ -49,9 +57,7 @@ describe('machine: start', function() {
     };
     const machine = createMachine({ history });
     const object = {
-      status: 'none',
-      businessObjId: 'tesla',
-      businessObjType: 'car',
+      status: 'none'
     };
     const user = 'johnny';
     const description = 'getoff!';
@@ -60,8 +66,7 @@ describe('machine: start', function() {
         from: 'NULL',
         to: object.status,
         event: '__START__',
-        businessObjId: object.businessObjId,
-        businessObjType: object.businessObjType,
+        ...convertObjectToReference(object),
         workflowName: machine.machineDefinition.schema.name,
         user,
         description

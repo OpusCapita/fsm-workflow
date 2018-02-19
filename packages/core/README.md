@@ -32,7 +32,45 @@ const machineDefinition = new MachineDefinition({
     name: "invoice approval",
     initialState: "open",
     finalStates: ["approved"],
-    objectStateFieldName: "status",
+    objectConfiguration: {
+      stateFieldName: "status",
+      alias: "invoice",
+      example: {
+        "invoiceNo": "1111",
+        "customerId": "wefwefewfew",
+        "supplierId": "33333",
+        "netAmount": 1000,
+        "status": "reviewRequired"
+      },
+      schema: {
+        {
+          title: "Invoice",
+          type: "object",
+          properties: {
+            invoiceNo: {
+              type: "string"
+            },
+            customerId: {
+              type: "string"
+            },
+            supplierId: {
+              type: "string"
+            },
+            netAmount: {
+              type: "number"
+            },
+            status: {
+              type: "string"
+            }
+          },
+          required: ["invoiceNo"]
+        }
+      }
+    },
+    states: [
+      { name: "open", description: "Open" },
+      { name: "approved", description: "Approved" }
+    ],
     transitions: [
       {
           from: "open",
@@ -40,29 +78,49 @@ const machineDefinition = new MachineDefinition({
           guards: [
             {
               "name": "validate",
-              "arguments": {
-                "argument1": "value1",
-                "argument2": "value2"
-              }
-            }
+              "params": [
+                {
+                  "name": "param1",
+                  "value": "value1"
+                },
+                {
+                  "name": "param2",
+                  "value": "value2"
+                }
+              ]
+            },
+            // guards can also be simple expressions
+            "invoice.netAmount < 10000"
           ],
           to: "approved",
           actions: [
             {
               "name": "archive",
-              "arguments": {
-                "argument1": "value1",
-                "argument2": "value2"
-              }
+              "params": [
+                {
+                  "name": "param1",
+                  "value": "value1"
+                },
+                {
+                  "name": "param2",
+                  "value": "value2"
+                }
+              ]
             }
           ],
           automatic: [
             {
                 "name": "lastlyUpdatedMoreThan24hAgo",
-                "arguments": {
-                  "argument1": "value1",
-                  "argument2": "value2"
-                },
+                "params": [
+                  {
+                    "name": "param1",
+                    "value": "value1"
+                  },
+                  {
+                    "name": "param2",
+                    "value": "value2"
+                  }
+                ],
                 "negate": true
             }
           ]
@@ -70,11 +128,11 @@ const machineDefinition = new MachineDefinition({
     ]
   },
   actions: {
-    archive: function({argument1, argument2}) {}
+    archive: function({ param1, param2 }) {}
   },
   conditions: {
-    validate: function({argument1, argument2}) {},
-    lastlyUpdatedMoreThan24hAgo: function({argument1, argument2}) {}
+    validate: function({ param1, param2 }) {},
+    lastlyUpdatedMoreThan24hAgo: function({ param1, param2 }) {}
   }
 });
 ```
@@ -95,16 +153,16 @@ You can define the initial state by setting the _initialState_ property:
 var machineDefinition = new MachineDefinition({
   schema: {
     name: 'sprint'
-    initial: 'start'
+    initialState: 'start'
     transitions: [
-      {from: 'start', event: 'run', to: 'finish'}
+      { from: 'start', event: 'run', to: 'finish' }
     ]
   }
 });
 
-const machine = new Machine({machineDefinition});
-machine.start(object).then(({status: 'none'}) => {
-  console.log(machine.currentState({object}));
+const machine = new Machine({ machineDefinition });
+machine.start({ object }).then(({ status: 'none' }) => {
+  console.log(machine.currentState({ object }));
   // start
 });
 ```
@@ -118,7 +176,7 @@ You can define the final states (one or many) by setting the _finalStates_ prope
 ```javascript
 var machineDefinition = new MachineDefinition({
   schema: {
-    initial: 'start',
+    initialState: 'start',
     finalStates: ['finish'],
     transitions: [
       {from: 'start', event: 'run', to: 'finish'}
@@ -133,7 +191,7 @@ var machineDefinition = new MachineDefinition({
 
 #### Action
 
-Actions (action = function) are executed during transition (not while leaving/entering state). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit arguments like _object_, _from_, _to_, etc. During transition machine executes each action in defined order. Each action gets _actionExecutionResutls_ argument which serves as an accumulator from perviously called actions, where each property is an action name and value is value returned by action.
+Actions (action = function) are executed during transition (not while leaving/entering state). Action references specific function by name. Action implemented separately from schema. Each action accepts named arguments explicitly defined in transition and implicit arguments like _object_, _from_, _to_, etc. During transition machine executes each action in defined order. Each action gets _actionExecutionResults_ argument which serves as an accumulator from perviously called actions, where each property is an action name and value is value returned by action.
 
 #### Guard (conditions)
 
@@ -164,22 +222,22 @@ Machine does not have own state, all the transitions are performed over object w
 ```javascript
 var machineDefinition = new MachineDefinition({
   schema: {
-    initial: 'start'
+    initialState: 'start'
     finalStates: ['finish'],
     transitions: [
-      {from: 'start', event: 'run', to: 'finish'}
+      { from: 'start', event: 'run', to: 'finish' }
     ]
   }
 });
 
-const object = {status: 'none'};
+const object = { status: 'none' };
 const machine = new Machine(machineDefinition);
-machine.start(object).then(({object}) => {
-  console.log(machine.currentState({object}));
+machine.start({ object }).then(({ object }) => {
+  console.log(machine.currentState({ object }));
   // start
-  return machine.sendEvent({object, event: 'start'})
-}).then(({object}) => {
-  console.log(machine.currentState({object}));
+  return machine.sendEvent({ object, event: 'start' })
+}).then(({ object }) => {
+  console.log(machine.currentState({ object }));
   // finish
 });
 ```
@@ -188,28 +246,22 @@ machine.start(object).then(({object}) => {
 
 Machine configuration
 ```
-var machine = new Machine({history, ...});
+var machine = new Machine({ history, ... });
 ```
 **history** is a DAO that provides a possibility to create and read object workflow history records. You can find its API (and DB specific implementation) [here](https://github.com/OpusCapita/fsm-workflow/tree/master/history).
 
 Machine writes history records for all object transitions within the workflow.
 It happens when you start workflow
 ```
-machine.start({object, user, description})
+machine.start({ object, user, description })
 ```
 or you send an event
 ```
-machine.sendEvent({ object, event, user, description})
+machine.sendEvent({ object, event, user, description })
 ```
 In both cases, new history records are created.
 Here
 - **object** (required) - business object of the following structure
-```javascript
-{
-  businessObjId,
-  businessObjType
-}
-```
 - **user** (required) - user identifier who initiated an event
 - **description** (optional) - custom text that describes transition/object
 All this info together is stored in workflow history.
@@ -228,10 +280,7 @@ where
   - **searchParameters**
   ```javascript
   {
-    object: {
-      businessObjectId,
-      businessObjectType     // example: 'invoice'
-    },
+    object,
     user,                    // example: 'john.miller'
     finishedOn: {
       gte,                   // example: Date("2018-03-05T21:00:00.000Z")
@@ -272,21 +321,26 @@ where
   }
   ```
 
+**Note:** while writing workflow object history or searching history records by
+object machine uses configured **convertObjectToReference** callback to convert
+real business object into reference object that has the following structure
+**{businessObjType, businessObjId}**
+
 ## Machine
 ### API
 
 ```javascript
-var machineDefinition = new MachineDefinition({schema, conditions, actions})
+var machineDefinition = new MachineDefinition({ schema, conditions, actions })
 // register workflow
 var machine = new Machine(machineDefinition, context);
 
 // start/initialize machine/workflow
-machine.start({object})
+machine.start({ object })
 
 // returns a list of available transitions: {event, from, to, request..}, e.g. event
 // request is used to pass parameters to guards for some dynamic calculation, e.g. when event availability depends
 // on current user information as roles and etc.
-machine.availableTransitions({object})
+machine.availableTransitions({ object })
 // returns a list of available automatic transitions: {event, from, to, ..}, e.g. event
 // if machine schema is adequate then there should be not more than 1 such transition
 machine.availableAutomaticTransitions({})

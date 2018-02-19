@@ -3,9 +3,11 @@
   "lerna": "2.8.0",
   "packages": [
     "packages/core",
-    "packages/task-manager",
-    "packages/history",
     "packages/editor",
+    "packages/history",
+    "packages/task-manager",
+    "packages/examples/invoice-console",
+    "packages/examples/process-task-manager-ui",
     "packages/examples/complete-demo"
   ]
 }

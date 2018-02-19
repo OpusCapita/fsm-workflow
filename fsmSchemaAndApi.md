@@ -1,11 +1,16 @@
 ### Machine Schema
 
-```
+```javascript
 {
-  "name": "invoice approval",                // workflow name
-  "initialState": "open",                   // init state
-  "finalStates": ["authorized", "canceled"],  // final states
-  "objectStateFieldName": "status",           // object field where state is stored
+  "name": "invoice approval",             // workflow name
+  "initialState": "open",                 // init state
+  "finalStates": [                        // final states
+    "authorized",
+    "canceled"
+  ],
+  "objectConfiguration": {
+    "stateFieldName": "status"            // object field where state is stored
+  },
   "transitions": [
     {
         "from": "new",                    // from state (required)

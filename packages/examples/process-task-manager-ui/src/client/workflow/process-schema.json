@@ -4,7 +4,9 @@
   "finalStates": [
     "finished"
   ],
-  "objectStateFieldName": "status",
+  "objectConfiguration": {
+    "stateFieldName": "status"
+  },
   "transitions": [
     {
       "from": "started",

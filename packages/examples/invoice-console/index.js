@@ -10,7 +10,14 @@ let machineDefinition = new MachineDefinition({
   schema: JSON.parse(machineSchemaAsText)
 });
 
-let invoiceMachine = new Machine({ machineDefinition });
+let invoiceMachine = new Machine({
+  machineDefinition,
+  convertObjectToReference: (o) => {
+    return {
+      //...we don't need it here
+    }
+  }
+});
 
 let invoice = {
   status: "none"

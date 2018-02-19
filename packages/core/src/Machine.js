@@ -1,22 +1,35 @@
+import { flattenParams } from './utils';
+
 export default class Machine {
-  constructor({ machineDefinition, promise = Machine.defaultPromise(), context = {}, history } = {}) {
+  constructor({
+      machineDefinition,
+      promise = Machine.defaultPromise(),
+      context = {},
+      history,
+      convertObjectToReference
+    } = {}) {
     if (!machineDefinition) {
       throw new Error("machineDefinition is undefined");
     }
+    this.machineDefinition = machineDefinition;
     if (!promise) {
       throw new Error("promise is undefined");
     }
-    this.machineDefinition = machineDefinition;
     this.promise = promise;
     // context is optional
     this.context = context;
-
+    // history is optional too
     if (history) {
       this.history = history;
     } else {
       // mock history
       // todo implement simple history storage in memory (if required)
       this.history = Machine.defaultHistory(promise);
+    }
+
+    // used in all method/functions that read/write hostory records
+    if (convertObjectToReference) {
+      this.convertObjectToReference = convertObjectToReference;
     }
   }
 
@@ -43,23 +56,38 @@ export default class Machine {
     }
   }
 
+  // default implementation will throw an exception which should inform
+  // developer that machine is not properly configured
+  convertObjectToReference() {
+    throw new Error(`'convertObjectToReference' is not defined
+It is expected to be a function like this:
+function(object) {
+return {
+businessObjectType: ...   // business object type/class (examples: 'invoice', 'supplier', 'purchase-order')
+businessObjectId: ...     // business object unique id (examples: '123456789')
+}
+}
+    `);
+  }
+
   // sets object initial state
   // @param object - stateful object
   // @param user - user name who initiated event/transition (this info will be writted into object wortkflow history)
   // @param description - event/transition/object description (this info will be writted into object wortkflow history)
   // N!B!: history record fields 'from' is set to ''NULL' value and 'event' to '__START__' value
   start({ object, user, description }) {
-    const { name, objectStateFieldName, initialState } = this.machineDefinition.schema;
+    const { name, initialState, objectConfiguration } = this.machineDefinition.schema;
+    const { stateFieldName } = objectConfiguration;
+    const { convertObjectToReference } = this;
     // eslint-disable-next-line no-param-reassign
-    object[objectStateFieldName] = initialState;
+    object[stateFieldName] = initialState;
     // add history record
     return this.history.add({
       from: 'NULL',
       to: initialState,
       event: '__START__',
       // TODO: add validation for type and id here???
-      businessObjType: object && object.businessObjType,
-      businessObjId: object && object.businessObjId,
+      ...convertObjectToReference(object),
       // TODO: add validation for user???
       user,
       description,
@@ -71,8 +99,8 @@ export default class Machine {
 
   // returns current object state
   currentState({ object }) {
-    const { objectStateFieldName } = this.machineDefinition.schema;
-    return object[objectStateFieldName];
+    const { stateFieldName } = this.machineDefinition.schema.objectConfiguration;
+    return object[stateFieldName];
   }
 
   // returns a list of events (names) that are available at current object state
@@ -114,8 +142,10 @@ export default class Machine {
   // @param description - event/transition/object description (this info will be writted into object wortkflow history)
   // @param request - event request data
   sendEvent({ object, event, user, description, request }) {
-    const { machineDefinition } = this;
-    const { objectStateFieldName, workflowName } = machineDefinition.schema;
+    const { machineDefinition, convertObjectToReference } = this;
+    const { schema } = machineDefinition;
+    const { objectConfiguration, workflowName } = schema;
+    const { stateFieldName } = objectConfiguration;
     // calculate from state
     const from = this.currentState({ object });
     // get context
@@ -123,105 +153,93 @@ export default class Machine {
     //
     const changeObjectState = to => {
       // eslint-disable-next-line no-param-reassign
-      object[objectStateFieldName] = to;
+      object[stateFieldName] = to;
     };
 
-    const actionByName = name => {
-      return machineDefinition.actions[name];
-    };
+    return this.machineDefinition.findAvailableTransitions({
+      from,
+      event,
+      object,
+      ...machineDefinition.prepareObjectAlias(object),
+      request,
+      context
+    }).then(({ transitions }) => {
+      if (!transitions || transitions.length === 0) {
+        // throw/return proper/sepecific error
+        return promise.reject({
+          object,
+          from,
+          event,
+          message: `Transition for 'from': '${from}' and 'event': '${event}' is not found`
+        });
+      }
+      /* istanbul ignore if */
+      if (transitions.length > 1) {
+        console.warn(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
+      }
+        // select first found transition and read its information
+      // using node destruct syntax to get 1st element and destruct it to {to, actions} object
+      const [{ to, actions = [] }] = transitions;
 
-    return this.machineDefinition.
-      findAvailableTransitions({
-        from,
-        event,
-        object,
-        request,
-        context
-      }).
-      then(({ transitions }) => {
-        if (!transitions || transitions.length === 0) {
-          // throw/return proper/sepecific error
-          return promise.reject({
+      // extracting actionDefinitions list from
+      let actionDefinitions = actions.map((action, idx) => {
+        if (!machineDefinition.actions[actions[idx].name]) {
+          // throwing an error will fail top reject promise
+          throw new Error({
+            action: actions[idx].name,
             object,
             from,
             event,
-            message: `Transition for 'from': '${from}' and 'event': '${event}' is not found`
-          });
-        }
-        /* istanbul ignore if */
-        if (transitions.length > 1) {
-          if (console) {
-            console.log(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
-          }
-        }
-        // select first found transition and read its information
-        const { to, actions = [] } = transitions[0];
-        // console.log(`Start transition for 'from': '${from}' and 'event': '${event}' to '${to}'`);
-
-        // todo: call onStartTransition handler
-        let result = promise.resolve({ actionExecutionResutls: [], object });
-        for (let i = 0; i < actions.length; i++) {
-          result = result.then(({ actionExecutionResutls, object }) => {
-            let action = actionByName(actions[i].name);
-            // action is defined in schema, but is not really defined -> error!!!
-            if (!action) {
-              // throw/return proper/sepecific error
-              return promise.reject({
-                action: actions[i].name,
-                object,
-                from,
-                event,
-                to,
-                message: `Action '${actions[i].name}' is specified in one the transitions but is not found/implemented!`
-              });
-            }
-
-            // execute action
-            const actionResult = action({
-              ...actions[i].arguments,
-              from,
-              to,
-              event,
-              object,
-              request,
-              context,
-              actionExecutionResutls
-            });
-            // store action execution result for passing it into the next action
-            return {
-              actionExecutionResutls: actionExecutionResutls.concat([
-                {
-                  name: actions[i].name,
-                  result: actionResult
-                }
-              ]),
-              object
-            };
-          });
-        }
-
-        return result.then(({ actionExecutionResutls, object }) => {
-          return this.history.add({
-            from,
             to,
-            event,
-            // TODO: add validation for type and id here???
-            businessObjType: object && object.businessObjType,
-            businessObjId: object && object.businessObjId,
-            // TODO: add validation for user???
-            user,
-            description,
-            workflowName
-          }).then(() => {
-            changeObjectState(to);
-            return {
-              actionExecutionResutls,
-              object
-            };
+            message: `Action '${actions[idx].name}' is specified in one the transitions but is not found/implemented!`
           });
-        });
-        // todo: call onFinishTransition handler
+        }
+        // wrapping action into a Promise to support both sync/async variants
+        return machineDefinition.actions[actions[idx].name];
       });
+
+      // reducing actionDefinitions to promise queue
+      return actionDefinitions.reduce((executionAccumulator, action, idx) => {
+        return executionAccumulator.then(({ actionExecutionResults, object }) => promise.resolve(action({
+          ...flattenParams(actions[idx].params),
+          from,
+          to,
+          event,
+          object,
+          ...machineDefinition.prepareObjectAlias(object),
+          request,
+          context,
+          actionExecutionResults
+        })).then(actionResult => promise.resolve({
+          actionExecutionResults: actionExecutionResults.concat([
+            {
+              name: actions[idx].name,
+              result: actionResult
+            }
+          ]),
+          object
+        })))
+      }, promise.resolve({ // initial object accumulator
+        actionExecutionResults: [],
+        object
+      })).then(({ actionExecutionResults, object }) => promise.resolve(changeObjectState(to)).then(_ => {
+        // first we promote object state to the next state and only then save history
+        return this.history.add({
+          from,
+          to,
+          event,
+          // TODO: add validation for type and id here???
+          ...convertObjectToReference(object),
+          // TODO: add validation for user???
+          user,
+          description,
+          workflowName
+        }).then(_ => promise.resolve({
+          actionExecutionResults,
+          object
+        }))
+      }));
+    });
   }
 
   /**
@@ -231,7 +249,7 @@ export default class Machine {
    */
   isRunning({ object }) {
     return this.availableStates().indexOf(this.currentState({ object })) !== -1 &&
-        !this.isInFinalState({ object })
+      !this.isInFinalState({ object })
   }
 
   /**
@@ -276,8 +294,7 @@ export default class Machine {
   * Provides access to business object history records within the workflow
   *
   * @param {Object} searchParameters search parameters
-  * @param {string} searchParameters.object.businessObjType object type (examples: 'invoice', 'supplie')
-  * @param {string} searchParameters.object.businessObjId object identifier (examples: '1234567', 'SDZ-987d')
+  * @param {string} searchParameters.object business object (process)
   * @param {string} searchParameters.user user name initiated event (examles: 'Friedrich Wilhelm Viktor Albert')
   * @param {Object} searchParameters.finishedOn time when transition was completed
   * @param {Date} searchParameters.finishedOn.gt means that finishedOn should be greater than passed date
@@ -295,18 +312,16 @@ export default class Machine {
   *   event,
   *   from,
   *   to,
-  *   object: {
-  *     businessObjType
-  *     businessObjId,
-  *   },
+  *   object,
   *   user,
   *   description,
   *   finishedOn
   * }
   */
   getHistory({ object, user, finishedOn }, { max, offset }, { by, order }) {
+    const { convertObjectToReference } = this;
     return this.history.search({
-      object,
+      object: convertObjectToReference(object),
       user,
       finishedOn,
       workflowName: this.machineDefinition.schema.name
