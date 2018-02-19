@@ -15,10 +15,13 @@
     "start": "lerna run start --parallel",
     "updated": "lerna updated || exit 0",
     "publish": "lerna publish --exact --cd-version patch --skip-git --yes",
-    "test": "lerna run test --parallel",
+    "test": "lerna run test --parallel && junit-merge -r packages/**/test-results.xml",
     "publish-release": "lerna publish --exact --cd-version patch --yes --skip-git"
   },
   "engines": {
     "node": ">= 8.x"
+  },
+  "devDependencies": {
+    "junit-merge": "1.2.3"
   }
 }
