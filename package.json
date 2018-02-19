@@ -15,7 +15,7 @@
     "start": "lerna run start --parallel",
     "updated": "lerna updated || exit 0",
     "publish": "lerna publish --exact --cd-version patch --skip-git --yes",
-    "test": "lerna run test --parallel"
+    "test": "lerna run test --parallel",
     "publish-release": "lerna publish --exact --cd-version patch --yes"
   },
   "engines": {
