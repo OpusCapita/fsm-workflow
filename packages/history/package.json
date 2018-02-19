@@ -9,7 +9,7 @@
     "start": "node ./src/demo/server",
     "debug": "npm start -- --inspect",
     "lint": "eslint src",
-    "test": "rimraf ./.nyc_output ./coverage && nyc --reporter=lcov --reporter=text mocha --reporter=mocha-junit-reporter --recursive 'src/**/*.spec.js'"
+    "test": "rimraf ./.nyc_output ./coverage && nyc --reporter=lcov --reporter=text mocha --reporter=mocha-junit-reporter --recursive \"src/**/*.spec.js\""
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
