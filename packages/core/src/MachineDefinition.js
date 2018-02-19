@@ -243,7 +243,7 @@ export default class MachineDefinition {
           },
           []
         ));
-      }
+    }
 
     return toUnique(result).sort();
   }
