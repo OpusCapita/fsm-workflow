@@ -44,6 +44,10 @@ fs.readFile(resolve(__dirname, './data/workflow-schema.json'), 'utf8', (err, dat
       schema,
       actions,
       conditions
+    }),
+    convertObjectToReference: object => ({
+      businessObjectType: 'invoice',
+      businessObjectId: object[objectIdProp]
     })
   })
 
