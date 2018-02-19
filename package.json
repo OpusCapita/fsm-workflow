@@ -16,7 +16,7 @@
     "updated": "lerna updated || exit 0",
     "publish": "lerna publish --exact --cd-version patch --skip-git --yes",
     "test": "lerna run test --parallel",
-    "publish-release": "lerna publish --exact --cd-version patch --yes"
+    "publish-release": "lerna publish --exact --cd-version patch --yes --skip-git"
   },
   "engines": {
     "node": ">= 8.x"
