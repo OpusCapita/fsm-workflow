@@ -6,9 +6,7 @@ defaults: &defaults
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/repo
+    <<: *defaults
     steps:
       - checkout
       - run:
