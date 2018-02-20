@@ -1,6 +1,6 @@
 {
   "name": "process-task-manager-ui",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,8 @@
   "author": "Daniel Zhitomirsky <dzhitomirsky@scand.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@opuscapita/fsm-workflow-core": "1.0.2",
-    "@opuscapita/fsm-workflow-task-manager": "1.0.2",
+    "@opuscapita/fsm-workflow-core": "1.0.3",
+    "@opuscapita/fsm-workflow-task-manager": "1.0.3",
     "babel-cli": "7.0.0-alpha.12",
     "babel-core": "7.0.0-alpha.12",
     "babel-loader": "7.0.0",
