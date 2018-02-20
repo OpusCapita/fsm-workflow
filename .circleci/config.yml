@@ -246,14 +246,14 @@ jobs:
       - run:
           name: deploy-docker-demo-image
           command: |
-            ./.circleci/scripts/deploy-docker-demo-image.js
+            node ./.circleci/scripts/deploy-docker-demo-image.js
       - run:
           name: azure-create-web-app
           command: |
-            ./.circleci/scripts/azure-create-webapp.js
+            node ./.circleci/scripts/azure-create-webapp.js
       - run:
           name: update-github-commit-status
-          command: ./.circleci/scripts/update-github-commit-status.js
+          command: node ./.circleci/scripts/update-github-commit-status.js
 
 workflows:
   version: 2
@@ -282,6 +282,7 @@ workflows:
               ignore: /.*/
       - deploy-demo:
           requires:
+            - build
 
   nightly:
     triggers:
