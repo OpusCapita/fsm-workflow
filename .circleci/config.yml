@@ -203,6 +203,58 @@ jobs:
           name: Executing release scrtipt.
           command: .circleci/release.sh
 
+  azure-maintenance:
+    docker:
+      - image: opuscapita/ci-node8:latest
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: init-ci-container
+          command: /ci-scripts/init.sh
+
+      - run:
+          name: azure-cleanup
+          command: ./.circleci/scripts/azure-cleanup.js
+
+  deploy-demo:
+    docker:
+      - image: opuscapita/ci-node8:latest
+
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: save-cache-checksum
+          command: find -name "package.json" | xargs cat > /tmp/cache-checksum
+
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "/tmp/cache-checksum" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-
+
+      - run:
+          name: init-ci-container
+          command: /ci-scripts/init.sh
+      - run:
+          name: deploy-docker-demo-image
+          command: |
+            ./.circleci/scripts/deploy-docker-demo-image.js
+      - run:
+          name: azure-create-web-app
+          command: |
+            ./.circleci/scripts/azure-create-webapp.js
+      - run:
+          name: update-github-commit-status
+          command: ./.circleci/scripts/update-github-commit-status.js
+
 workflows:
   version: 2
   release-and-build-all:
@@ -228,3 +280,17 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
+      - deploy-demo:
+          requires:
+            - build
+
+  nightly:
+    triggers:
+      - schedule:
+        cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - azure-maintenance
