@@ -1,14 +1,20 @@
 # Docker context should be "<repo-root>"
 
-FROM node:6.9.3
-MAINTAINER OpusCapita
+FROM node:8.9.4
+LABEL maintainer="OpusCapita"
 
 RUN mkdir /demo
 
-COPY ./packages/examples/complete-demo /demo
-
-RUN cd demo
+COPY ./ /demo
 
 WORKDIR /demo
+
+RUN npm i --unsafe-perm && \
+  cd ./packages/examples/complete-demo && \
+  npm run build:client
+
+WORKDIR /demo/packages/examples/complete-demo
+
+CMD ["npm", "run", "start:prod"]
 
 EXPOSE 3020
