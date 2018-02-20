@@ -188,6 +188,7 @@ jobs:
       - run:
           name: "Publish release."
           command: npm run publish-release
+          working_directory: ~/build
 
   release:
     <<: *defaults
