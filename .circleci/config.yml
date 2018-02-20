@@ -6,10 +6,11 @@ defaults: &defaults
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/repo
+    <<: *defaults
     steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh
       - checkout
       - run:
           name: save-cache-checksum
@@ -17,16 +18,17 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+            - dependencies-{{ checksum "/tmp/cache-checksum" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - dependencies-
 
       - run:
           name: bootstrap (install dependencies)
-          command: npm install
+          # we use --unsafe-perm as current build using root user which fails
+          command: npm install --unsafe-perm
 
       - save_cache:
-          key: v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+          key: dependencies-{{ checksum "/tmp/cache-checksum" }}
           paths:
             - ./package-lock.json
             - ./node_modules
@@ -59,23 +61,10 @@ jobs:
             bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - store_artifacts:
-          path: ./packages/core/test-results.xml
-          prefix: core
-
-      - store_artifacts:
-          path: ./packages/editor/test-results.xml
-          prefix: editor
-
-      - store_artifacts:
-          path: ./packages/task-manager/test-results.xml
-          prefix: task-manager
-
-      - store_artifacts:
-          path: ./packages/history/test-results.xml
-          prefix: history
+          path: ./test-results
 
       - store_test_results:
-          path: ./junit
+          path: ./test-results
 
   # deploy-editor-to-github-pages:
   #   docker:
@@ -136,15 +125,16 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
-            - v1-dependencies-
+            - dependencies-{{ checksum "/tmp/cache-checksum" }}
+            - dependencies-
 
       - run:
           name: bootstrap (install dependencies)
-          command: npm install
+          # we use --unsafe-perm as current build using root user which fails
+          command: npm install --unsafe-perm
 
       - save_cache:
-          key: v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+          key: dependencies-{{ checksum "/tmp/cache-checksum" }}
           paths:
             - ./package-lock.json
             - ./node_modules
@@ -170,11 +160,8 @@ jobs:
           command: npm test
 
       - run:
-          name: build-and-deploy-gh-pages
-          command: |
-            cd packages/editor
-            bash ./scripts/gh-pages/build.sh
-            bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+          name: "Publish release."
+          command: npm run publish-release
 
       - store_artifacts:
           path: ./packages/core/test-results.xml
@@ -194,10 +181,6 @@ jobs:
 
       - store_test_results:
           path: ./junit
-
-      - run:
-          name: "Publish release."
-          command: npm run publish-release
 
   release:
     <<: *defaults
