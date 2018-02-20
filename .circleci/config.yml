@@ -222,6 +222,7 @@ workflows:
             branches:
               ignore:
                 - gh-pages
+                - release
       # - deploy-editor-to-github-pages:
       #     filters:
       #       branches:
