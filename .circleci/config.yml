@@ -160,6 +160,10 @@ jobs:
           command: npm test
 
       - run:
+          name: "Publish release."
+          command: npm run publish-release
+
+      - run:
           name: build-and-deploy-gh-pages
           command: |
             cd packages/editor
@@ -184,11 +188,6 @@ jobs:
 
       - store_test_results:
           path: ./junit
-
-      - run:
-          name: "Publish release."
-          command: npm run publish-release
-          working_directory: ~/build
 
   release:
     <<: *defaults
