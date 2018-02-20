@@ -34,6 +34,7 @@ node_version() {
     find . -type f -name "lerna.json" -exec sed -i 's|\"version.*\"|\"version\": \"'$1'\"|g' {} \;
     find . -type f -name "package.json" -exec sed -i 's|\"version.*\"|\"version\": \"'$1'\"|g' {} \;
     find . -type f -name "package.json" -exec sed -i 's|\"@opuscapita/fsm-workflow-core\".*\"|\"@opuscapita/fsm-workflow-core\": \"'$1'\"|g' {} \;
+    find . -type f -name "package.json" -exec sed -i 's|\"@opuscapita/fsm-workflow-task-manager\".*\"|\"@opuscapita/fsm-workflow-task-manager\": \"'$1'\"|g' {} \;
     git --no-pager diff --color
 }
 
