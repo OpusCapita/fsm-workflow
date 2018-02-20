@@ -6,18 +6,19 @@
   "scripts": {
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
-    "start": "cross-env PORT=8082 node ./node_modules/babel-cli/bin/babel-node.js ./src/server/index.js --presets=env --plugins=transform-object-rest-spread",
+    "start": "cross-env PORT=3020 NODE_ENV=development node ./node_modules/babel-cli/bin/babel-node.js ./src/server/index.js --presets=env --plugins=transform-object-rest-spread",
+    "start:prod": "cross-env PORT=3020 NODE_ENV=production node ./node_modules/babel-cli/bin/babel-node.js ./src/server/index.js --presets=env --plugins=transform-object-rest-spread",
     "start2": "webpack-dev-server --config src/server/webpack.config.js",
-    "build": "webpack --config src/server/webpack.config.js",
-    "add-dependency": "cd ../../../ && npm run add-dependency -- --scope=@opuscapita/fsm-workflow-demo"
+    "add-dependency": "cd ../../../ && npm run add-dependency -- --scope=@opuscapita/fsm-workflow-demo",
+    "build:client": "cross-env NODE_ENV=production webpack --config src/server/webpack.config.js"
   },
   "dependencies": {
-    "@opuscapita/fsm-workflow-core": "1.0.0",
-    "@opuscapita/fsm-workflow-editor": "1.0.0",
+    "@opuscapita/fsm-workflow-core": "file:../../packages/core",
+    "@opuscapita/fsm-workflow-editor": "file:../../packages/editor",
     "@opuscapita/i18n": "1.1.1",
     "@opuscapita/react-navigation": "0.1.2",
-    "babel-eslint": "^8.2.1",
-    "body-parser": "^1.18.2",
+    "babel-eslint": "8.2.1",
+    "body-parser": "1.18.2",
     "connect-timeout": "1.9.0",
     "express": "4.16.2",
     "json-schema-faker": "0.4.7",

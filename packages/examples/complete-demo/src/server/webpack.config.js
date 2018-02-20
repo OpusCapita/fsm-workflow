@@ -1,6 +1,14 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+const plugins = [];
+
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(new UglifyJsPlugin())
+}
 
 const config = {
+  plugins,
   entry: path.resolve(__dirname, '../client/index.js'),
   output: {
     filename: 'bundle.js',

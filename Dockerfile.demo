@@ -1,0 +1,14 @@
+# Docker context should be "<repo-root>"
+
+FROM node:6.9.3
+MAINTAINER OpusCapita
+
+RUN mkdir /demo
+
+COPY ./packages/examples/complete-demo /demo
+
+RUN cd demo
+
+WORKDIR /demo
+
+EXPOSE 3020
