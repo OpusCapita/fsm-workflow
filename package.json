@@ -18,7 +18,7 @@
     "updated": "lerna updated || exit 0",
     "publish": "lerna publish --exact --cd-version patch --skip-git --yes",
     "test": "lerna run test --parallel && mkdir test-results && junit-merge -r packages/**/test-results.xml -o test-results/report.xml",
-    "publish-release": "lerna publish --exact --cd-version patch --yes --skip-git"
+    "publish-release": "lerna publish --exact --cd-version patch --yes --skip-git --force-publish=*"
   },
   "engines": {
     "node": ">= 8.x"
