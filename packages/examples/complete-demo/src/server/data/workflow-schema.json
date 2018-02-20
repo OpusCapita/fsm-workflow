@@ -211,7 +211,8 @@
           "minimum": 0
         },
         "currencyId": {
-          "type": "string"
+          "type": "string",
+          "enum": ["EUR", "USD", "RUB", "CHF", "HKD", "JPY", "AUD", "CAD"]
         },
         "status": {
           "type": "string",

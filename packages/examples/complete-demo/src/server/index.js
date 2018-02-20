@@ -4,16 +4,16 @@ import express from 'express';
 import { Server } from 'http';
 import timeout from 'connect-timeout';
 import bodyParser from 'body-parser';
-import { Machine, MachineDefinition } from '@opuscapita/fsm-workflow-core';
 import bundleRoute from './routes/bundle';
 import objectRoutes from './routes/objects';
 import sendEventRoute from './routes/sendEvent';
 import transitionsRoute from './routes/availableTransitions';
+import editorDataRoute from './routes/editorData';
+import statesRoute from './routes/states';
 import storage from './storage';
 import { generateObjects } from './utils';
-import actions from './data/actions';
-import conditions from './data/conditions';
 import { objectIdProp } from '../common';
+import createMachine from './createMachine';
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
@@ -25,6 +25,8 @@ app.use(bundleRoute)
 app.use(objectRoutes)
 app.use(sendEventRoute)
 app.use(transitionsRoute)
+app.use(editorDataRoute)
+app.use(statesRoute)
 
 app.get('*', function(req, res) {
   res.sendFile(resolve(__dirname, '../../www/index.html'));
@@ -43,17 +45,7 @@ fs.readFile(resolve(__dirname, './data/workflow-schema.json'), 'utf8', (err, dat
     throw err
   }
 
-  const machine = new Machine({
-    machineDefinition: new MachineDefinition({
-      schema,
-      actions,
-      conditions
-    }),
-    convertObjectToReference: object => ({
-      businessObjectType: 'invoice',
-      businessObjectId: object[objectIdProp]
-    })
-  })
+  const machine = createMachine({ schema });
 
   const businessObjects = generateObjects({ schema, objectIdProp })
   businessObjects.forEach(object => machine.start({ object }))

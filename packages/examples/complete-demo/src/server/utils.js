@@ -9,3 +9,10 @@ export const generateObjects = ({ schema, quantity = 10, objectIdProp = 'id' }) 
   }
   return businessObjects
 }
+
+export const mapFuncsToParamsSchema = funcsObj => Object.keys(funcsObj).reduce((res, name) => ({
+  ...res,
+  [name]: {
+    paramsSchema: funcsObj[name].paramsSchema
+  }
+}), {});
