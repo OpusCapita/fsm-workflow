@@ -259,30 +259,30 @@ workflows:
   version: 2
   release-and-build-all:
     jobs:
-      - build:
-          filters:
-            branches:
-              ignore:
-                - gh-pages
-                - release
+    #   - build:
+    #       filters:
+    #         branches:
+    #           ignore:
+    #             - gh-pages
+    #             - release
       # - deploy-editor-to-github-pages:
       #     filters:
       #       branches:
       #         ignore:
       #           - gh-pages
-      - release:
-          filters:
-            branches:
-              only: release
-      - build_release:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-      - deploy-demo:
-          requires:
-            - build
+    #   - release:
+    #       filters:
+    #         branches:
+    #           only: release
+    #   - build_release:
+    #       filters:
+    #         tags:
+    #           only: /.*/
+    #         branches:
+    #           ignore: /.*/
+      - deploy-demo
+        #   requires:
+        #     - build
 
   nightly:
     triggers:
