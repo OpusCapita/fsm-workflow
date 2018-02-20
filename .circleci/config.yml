@@ -163,13 +163,6 @@ jobs:
           name: "Publish release."
           command: npm run publish-release
 
-      - run:
-          name: build-and-deploy-gh-pages
-          command: |
-            cd packages/editor
-            bash ./scripts/gh-pages/build.sh
-            bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
-
       - store_artifacts:
           path: ./packages/core/test-results.xml
           prefix: core
