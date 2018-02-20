@@ -1,10 +1,16 @@
+defaults: &defaults
+  docker:
+    - image: opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u131-nodejs-8.9.4-maven-3.3.9
+  working_directory: ~/build
+
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/repo
+    <<: *defaults
     steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh
       - checkout
       - run:
           name: save-cache-checksum
@@ -12,16 +18,17 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+            - dependencies-{{ checksum "/tmp/cache-checksum" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+            - dependencies-
 
       - run:
           name: bootstrap (install dependencies)
-          command: npm install
+          # we use --unsafe-perm as current build using root user which fails
+          command: npm install --unsafe-perm
 
       - save_cache:
-          key: v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
+          key: dependencies-{{ checksum "/tmp/cache-checksum" }}
           paths:
             - ./package-lock.json
             - ./node_modules
@@ -54,23 +61,10 @@ jobs:
             bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - store_artifacts:
-          path: ./packages/core/test-results.xml
-          prefix: core
-
-      - store_artifacts:
-          path: ./packages/editor/test-results.xml
-          prefix: editor
-
-      - store_artifacts:
-          path: ./packages/task-manager/test-results.xml
-          prefix: task-manager
-
-      - store_artifacts:
-          path: ./packages/history/test-results.xml
-          prefix: history
+          path: ./test-results
 
       - store_test_results:
-          path: ./junit
+          path: ./test-results
 
   # deploy-editor-to-github-pages:
   #   docker:
@@ -117,17 +111,120 @@ jobs:
   #         name: deploy-gh-pages
   #         command: bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
+  build_release:
+    <<: *defaults
+    steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh
+
+      - checkout
+      - run:
+          name: save-cache-checksum
+          command: find -name "package.json" | xargs cat > /tmp/cache-checksum
+
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "/tmp/cache-checksum" }}
+            - dependencies-
+
+      - run:
+          name: bootstrap (install dependencies)
+          # we use --unsafe-perm as current build using root user which fails
+          command: npm install --unsafe-perm
+
+      - save_cache:
+          key: dependencies-{{ checksum "/tmp/cache-checksum" }}
+          paths:
+            - ./package-lock.json
+            - ./node_modules
+            - ./packages/core/package-lock.json
+            - ./packages/core/node_modules
+            - ./packages/editor/package-lock.json
+            - ./packages/editor/node_modules
+            - ./packages/history/package-lock.json
+            - ./packages/history/node_modules
+            - ./packages/task-manager/package-lock.json
+            - ./packages/task-manager/node_modules
+            - ./packages/examples/invoice-console/package-lock.json
+            - ./packages/examples/invoice-console/node_modules
+            - ./packages/examples/process-task-manager-ui/package-lock.json
+            - ./packages/examples/process-task-manager-ui/node_modules
+
+      - run:
+          name: lint
+          command: npm run lint
+
+      - run:
+          name: test
+          command: npm test
+
+      - run:
+          name: "Publish release."
+          command: npm run publish-release
+
+      - run:
+          name: build-and-deploy-gh-pages
+          command: |
+            cd packages/editor
+            bash ./scripts/gh-pages/build.sh
+            bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+
+      - store_artifacts:
+          path: ./packages/core/test-results.xml
+          prefix: core
+
+      - store_artifacts:
+          path: ./packages/editor/test-results.xml
+          prefix: editor
+
+      - store_artifacts:
+          path: ./packages/task-manager/test-results.xml
+          prefix: task-manager
+
+      - store_artifacts:
+          path: ./packages/history/test-results.xml
+          prefix: history
+
+      - store_test_results:
+          path: ./junit
+
+  release:
+    <<: *defaults
+    steps:
+
+      - run:
+          name: Environment inject
+          command: env_inject.sh
+
+      - checkout
+
+      - run:
+          name: Executing release scrtipt.
+          command: .circleci/release.sh
+
 workflows:
   version: 2
-  build-all:
+  release-and-build-all:
     jobs:
       - build:
           filters:
             branches:
               ignore:
                 - gh-pages
+                - release
       # - deploy-editor-to-github-pages:
       #     filters:
       #       branches:
       #         ignore:
       #           - gh-pages
+      - release:
+          filters:
+            branches:
+              only: release
+      - build_release:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
