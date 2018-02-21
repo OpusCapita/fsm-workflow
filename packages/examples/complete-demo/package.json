@@ -15,6 +15,7 @@
   "dependencies": {
     "@opuscapita/fsm-workflow-core": "1.0.3",
     "@opuscapita/fsm-workflow-editor": "1.0.3",
+    "@opuscapita/fsm-workflow-history": "1.0.3",
     "@opuscapita/i18n": "1.1.1",
     "@opuscapita/react-navigation": "0.1.2",
     "body-parser": "1.18.2",

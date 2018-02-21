@@ -1,3 +1,4 @@
 www
 !www/index.html
 src/server/storage/demo.sqlite
+src/server/storage/workflow-schema.json

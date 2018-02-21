@@ -86,7 +86,7 @@ class Storage {
 
   setSchema = async function(schema) {
     this.createMachine({ schema });
-    return writeFile(schemaFilePath, JSON.stringify(schema))
+    return writeFile(schemaFilePath, JSON.stringify(schema, null, 2))
   }
 
   getAllObjects = async function() {
