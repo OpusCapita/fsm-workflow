@@ -144,7 +144,7 @@ businessObjectId: ...     // business object unique id (examples: '123456789')
   sendEvent({ object, event, user, description, request }) {
     const { machineDefinition, convertObjectToReference } = this;
     const { schema } = machineDefinition;
-    const { objectConfiguration, workflowName } = schema;
+    const { objectConfiguration, name: workflowName } = schema;
     const { stateFieldName } = objectConfiguration;
     // calculate from state
     const from = this.currentState({ object });

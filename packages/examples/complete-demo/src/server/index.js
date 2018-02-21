@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { resolve } from 'path';
 import express from 'express';
 import { Server } from 'http';
@@ -11,9 +10,6 @@ import transitionsRoute from './routes/availableTransitions';
 import editorDataRoute from './routes/editorData';
 import statesRoute from './routes/states';
 import storage from './storage';
-import { generateObjects } from './utils';
-import { objectIdProp } from '../common';
-import createMachine from './createMachine';
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
@@ -32,32 +28,8 @@ app.get('*', function(req, res) {
   res.sendFile(resolve(__dirname, '../../www/index.html'));
 });
 
-storage.init().then(_ => console.log('INIT SUCCESS')).catch(err => console.log('INIT FAILED', err))
-
-// read schema, generate objects
-fs.readFile(resolve(__dirname, './data/workflow-schema.json'), 'utf8', (err, data) => {
-  if (err) {
-    throw err
-  }
-
-  let schema;
-  try {
-    schema = JSON.parse(data)
-  } catch (err) {
-    throw err
-  }
-
-  const machine = createMachine({ schema });
-
-  const businessObjects = generateObjects({ schema, objectIdProp })
-  businessObjects.forEach(object => machine.start({ object }))
-
-  storage.set({
-    schema,
-    machine,
-    businessObjects,
-    objectIdProp
-  })
-
-  server.listen(port, host, _ => console.log(`server is listening on ${host}:${port}`));
-});
+storage.init().
+  then(_ => {
+    server.listen(port, host, _ => console.log(`server is listening on ${host}:${port}`));
+  }).
+  catch(err => console.log('INIT FAILED', err));

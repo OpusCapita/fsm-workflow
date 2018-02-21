@@ -3,12 +3,11 @@ import storage from '../storage';
 import { mapFuncsToParamsSchema } from '../utils';
 import actions from '../data/actions';
 import conditions from '../data/conditions';
-import createMachine from '../createMachine';
 
 const router = express.Router();
 
-router.get('/editordata', (req, res) => {
-  const schema = storage.get('schema');
+router.get('/editordata', async(req, res) => {
+  const schema = await storage.getSchema();
   res.send({
     schema,
     actions: mapFuncsToParamsSchema(actions),
@@ -16,11 +15,11 @@ router.get('/editordata', (req, res) => {
   })
 })
 
-router.post('/editordata', (req, res) => {
+router.post('/editordata', async(req, res) => {
   const { schema } = req.body;
   if (schema) {
-    const machine = createMachine({ schema });
-    storage.set({ schema, machine });
+    console.log('new schema >>>>>>>>>\n', schema)
+    await storage.setSchema(schema);
     res.send({ status: 'OK', schema })
   } else {
     res.status(400).send({ error: 'Schema in undefined' })

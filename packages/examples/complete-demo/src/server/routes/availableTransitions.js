@@ -4,14 +4,13 @@ import { objectIdProp } from '../../common';
 
 const router = express.Router();
 
-router.post('/transitions', (req, res) => {
+router.post('/transitions', async(req, res) => {
   const { objectId } = req.body;
-  const machine = storage.get('machine');
-  const object = storage.get('businessObjects').find(obj => obj[objectIdProp] === objectId);
-  console.log('/transitions', object, objectId)
+  const machine = storage.machine;
+  const objects = await storage.getAllObjects();
+  const object = objects.find(obj => obj[objectIdProp] === objectId);
   machine.availableTransitions({ object }).
     then(result => {
-      console.log('success', result)
       res.send(result)
     }).
     catch(err => {

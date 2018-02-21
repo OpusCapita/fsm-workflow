@@ -4,13 +4,11 @@ import { eventsProp } from '../../common'
 
 const router = express.Router();
 
-router.get('/objects', (req, res) => {
-  const businessObjects = storage.get('businessObjects');
-  const machine = storage.get('machine');
+router.get('/objects', async(req, res) => {
+  const businessObjects = await storage.getAllObjects();
+  const machine = storage.machine;
 
-  Promise.all(
-    businessObjects.map(object => machine.availableTransitions({ object }))
-  ).
+  Promise.all(businessObjects.map(object => machine.availableTransitions({ object }))).
     then(result => {
       res.send(businessObjects.map((object, index) => ({
         ...object,
