@@ -49,9 +49,13 @@ const config = {
         use: ['style-loader', 'css-loader', 'less-loader']
       },
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-        loader: 'url-loader?limit=100000'
-      }
+        test: /\.(png|woff|woff2|eot|ttf)$/,
+        loader: ['file-loader']
+      },
+      {
+        test: /\.(svg)(\?[a-z0-9=&.]+)?$/,
+        use: ['raw-loader']
+      },
     ]
   }
 }

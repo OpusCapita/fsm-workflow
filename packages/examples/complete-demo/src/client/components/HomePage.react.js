@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import startCase from 'lodash/startCase';
 import find from 'lodash/find';
@@ -10,14 +11,20 @@ import Button from 'react-bootstrap/lib/Button';
 import Table from 'react-bootstrap/lib/Table';
 import SplitButton from 'react-bootstrap/lib/SplitButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import { notificationError } from '../constants';
 
 export default class HomePage extends PureComponent {
+  static contextTypes = {
+    uiMessageNotifications: PropTypes.object.isRequired
+  }
+
   state = {
     businessObjects: null,
     loading: {}
   }
 
   componentDidMount() {
+    const { uiMessageNotifications } = this.context;
     const self = this;
 
     superagent.
@@ -27,8 +34,11 @@ export default class HomePage extends PureComponent {
         self.setState(prevState => ({ businessObjects: res.body }))
       }).
       catch(err => {
-        console.log('Failed to load objects')
-        throw err
+        console.log(err)
+        uiMessageNotifications.error({
+          id: notificationError,
+          message: 'Failed to load invoices: ' + err.message
+        });
       })
 
     superagent.
@@ -38,8 +48,11 @@ export default class HomePage extends PureComponent {
         self.setState(prevState => ({ states: res.body.states }))
       }).
       catch(err => {
-        console.log('Failed to load states')
-        throw err
+        console.log(err)
+        uiMessageNotifications.error({
+          id: notificationError,
+          message: 'Failed to load states: ' + err.message
+        });
       })
   }
 
@@ -47,6 +60,7 @@ export default class HomePage extends PureComponent {
     startCase(stateName);
 
   sendEvent = ({ objectId, event }) => _ => {
+    const { uiMessageNotifications } = this.context;
     this.setState(prevState => ({ loading: { ...prevState.loading, [objectId]: true } }));
     const self = this;
     return event &&
@@ -74,20 +88,26 @@ export default class HomePage extends PureComponent {
             })
         }).
         catch(err => {
-          console.log('err sending event', err);
-          throw err
+          console.log(err);
+          uiMessageNotifications.error({
+            id: notificationError,
+            message: 'Failed to send event: ' + err.message
+          });
         })
   }
 
   getAvailableTransitions = object => {
+    const { uiMessageNotifications } = this.context;
     return superagent.
       post('/transitions').
       send({ objectId: object[objectIdProp] }).
       then(({ body }) => body).
       catch(err => {
-        console.log('failed to get transitions')
         console.log(err)
-        throw err
+        uiMessageNotifications.error({
+          id: notificationError,
+          message: 'Failed to get available transitions: ' + err.message
+        });
       })
   }
 
