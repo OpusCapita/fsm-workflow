@@ -141,7 +141,7 @@ export default class HomePage extends PureComponent {
                             loading[object[objectIdProp]] &&
                             (
                               <span style={{ marginRight: '10px' }}>
-                                <i className="fa fa-spinner"></i>
+                                <i className="fa fa-spinner fa-spin"></i>
                               </span>
                             )
                           }

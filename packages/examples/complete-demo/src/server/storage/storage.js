@@ -12,6 +12,7 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const schemaFilePath = resolve(__dirname, './workflow-schema.json');
 const defaultSchemaFilePath = resolve(__dirname, '../data/workflow-schema.json');
+const sqlitePath = resolve(__dirname, './demo.sqlite');
 
 class Storage {
   sequelize = null;
@@ -32,7 +33,7 @@ class Storage {
   init = async function() {
     this.sequelize = new Sequelize('mainDB', null, null, {
       dialect: "sqlite",
-      storage: './demo.sqlite',
+      storage: sqlitePath,
       define: {
         charset: 'utf8',
         dialectOptions: {
