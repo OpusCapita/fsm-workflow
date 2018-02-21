@@ -105,8 +105,7 @@ export default class HomePage extends PureComponent {
                   <th style={{ width: '50px' }}>#</th>
                   <th>Invoice No</th>
                   <th>Current Status</th>
-                  <th>Available Events</th>
-                  <th style={{ width: '30px' }}></th>
+                  <th className="text-right">Available Events</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,7 +116,15 @@ export default class HomePage extends PureComponent {
                         <td>{index}</td>
                         <td>{object[objectIdProp]}</td>
                         <td>{this.stateLabel(object.status)}</td>
-                        <td>
+                        <td className="text-right">
+                          {
+                            loading[object[objectIdProp]] &&
+                            (
+                              <span style={{ marginRight: '10px' }}>
+                                <i className="fa fa-spinner"></i>
+                              </span>
+                            )
+                          }
                           {
                             object[eventsProp] &&
                             (
@@ -155,12 +162,6 @@ export default class HomePage extends PureComponent {
                                   </SplitButton>
                                 )
                             )
-                          }
-                        </td>
-                        <td>
-                          {
-                            loading[object[objectIdProp]] &&
-                            (<i className="fa fa-spinner"></i>)
                           }
                         </td>
                       </tr>

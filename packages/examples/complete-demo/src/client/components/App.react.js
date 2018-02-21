@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { I18nManager } from '@opuscapita/i18n';
-import { Menu } from '@opuscapita/react-navigation';
+import Menu from './Menu.react';
 import HomePage from './HomePage.react';
 import Editor from './Editor.react';
 
@@ -34,19 +34,8 @@ export default class App extends PureComponent {
     return (
       <div>
         <Menu
-          appName="Workflow Demo Application"
-          className="oc-menu--opuscapita-dark-theme"
-          logoSrc='https://develop.businessnetwork.opuscapita.com/invoice/static/img/oc-logo-white.svg'
-          logoHref="http://opuscapita.com"
-          labelText="powered by "
-          labelLinkText="OpusCapita"
-          showSearch={false}
-          activeItem={currentPage}
-          navigationItems={[
-            { children: 'Business Objects', onClick: this.handleNavigate(0) },
-            { children: 'Worflow Editor', onClick: this.handleNavigate(1) },
-            { children: 'Github', href: 'https://github.com/OpusCapita/fsm-workflow', target: '_blank' }
-          ]}
+          currentPage={currentPage}
+          onNavigate={this.handleNavigate}
         />
         {
           currentPage === 0 ?
