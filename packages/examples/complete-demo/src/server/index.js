@@ -32,6 +32,8 @@ app.get('*', function(req, res) {
   res.sendFile(resolve(__dirname, '../../www/index.html'));
 });
 
+storage.init().then(_ => console.log('INIT SUCCESS')).catch(err => console.log('INIT FAILED', err))
+
 // read schema, generate objects
 fs.readFile(resolve(__dirname, './data/workflow-schema.json'), 'utf8', (err, data) => {
   if (err) {
