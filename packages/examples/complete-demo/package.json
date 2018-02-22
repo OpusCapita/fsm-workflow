@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-demo",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "main": "index.js",
   "license": "MIT",
   "scripts": {

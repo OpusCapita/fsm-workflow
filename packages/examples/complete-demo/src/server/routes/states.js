@@ -1,10 +1,10 @@
 import express from 'express'
-import fsm from '../fsm';
+import schema from '../schema';
 
 const router = express.Router();
 
 router.get('/states', async(req, res) => {
-  const { states } = await fsm.getSchema();
+  const { states } = await schema.getSchema();
   res.send({ states })
 })
 

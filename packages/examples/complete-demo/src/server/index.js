@@ -1,6 +1,9 @@
 import { resolve } from 'path';
 import express from 'express';
 import { Server } from 'http';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import config from '../../config/webpack.config';
 import bodyParser from 'body-parser';
 import objectRoutes from './routes/objects';
 import sendEventRoute from './routes/sendEvent';
@@ -9,8 +12,8 @@ import editorDataRoute from './routes/editorData';
 import statesRoute from './routes/states';
 import storage from './storage';
 import fsm from './fsm';
-import webpack from 'webpack';
-import config from './webpack.config';
+import schema from './schema';
+import { generateObjects } from './utils';
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
@@ -27,7 +30,7 @@ app.use(statesRoute)
 const compiler = webpack(config);
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(require('webpack-dev-middleware')(compiler, {
+  app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
     publicPath: config.output.publicPath
   }))
@@ -41,9 +44,20 @@ app.get('/', function(req, res) {
   res.sendFile(resolve(__dirname, '../../www/index.html'));
 });
 
+// initialize data and start server
+
 (async function() {
-  await fsm.init();
-  await storage.init(fsm);
+  await schema.init();
+  await storage.init();
+  await fsm.init(storage.sequelize);
+
+  // generate invoices based on schema
+  const invoices = generateObjects({ schema: schema.getSchema() })
+  const { machine } = fsm;
+  return Promise.all(invoices.map(invoice => {
+    machine.start({ object: invoice });
+    return storage.addObject(invoice)
+  }))
 }()).
   then(_ => {
     server.listen(port, host, _ => console.log(`server is listening on ${host}:${port}`));

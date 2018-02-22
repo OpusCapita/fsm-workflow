@@ -8,11 +8,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const config = {
+  context: path.resolve(__dirname, '../'),
   plugins,
-  entry: path.resolve(__dirname, '../client/index.js'),
+  entry: path.resolve(__dirname, '../src/client/index.js'),
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, '../../www/'),
+    path: path.resolve(__dirname, '../www'),
     publicPath: '/'
   },
   externals: {
@@ -20,14 +21,14 @@ const config = {
     'react-dom': 'ReactDOM'
   },
   devServer: {
-    contentBase: path.resolve(__dirname, '../../www/')
+    contentBase: path.resolve(__dirname, '../www')
   },
   devtool: 'inline-source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
-        include: path.resolve(__dirname, '../client'),
+        include: path.resolve(__dirname, '../src/client'),
         use: {
           loader: 'babel-loader',
           options: {

@@ -2,14 +2,16 @@ import express from 'express'
 import fsm from '../fsm';
 import storage from '../storage';
 import { objectIdProp } from '../../common';
+import { extractObject } from '../utils';
 
 const router = express.Router();
 
 router.post('/transitions', async(req, res) => {
   const { objectId } = req.body;
-  const objects = await storage.getAllObjects();
+  const objects = (await storage.getAllObjects()).map(extractObject);
   const object = objects.find(obj => obj[objectIdProp] === objectId);
-  fsm.machine.availableTransitions({ object }).
+  const { machine } = fsm;
+  machine.availableTransitions({ object }).
     then(result => {
       res.send(result)
     }).
