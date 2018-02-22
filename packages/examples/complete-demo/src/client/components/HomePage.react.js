@@ -12,11 +12,11 @@ import Table from 'react-bootstrap/lib/Table';
 import SplitButton from 'react-bootstrap/lib/SplitButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { notificationError } from '../constants';
+import History from './History.react';
 
 export default class HomePage extends PureComponent {
   static contextTypes = {
-    uiMessageNotifications: PropTypes.object.isRequired,
-    i18n: PropTypes.object.isRequired
+    uiMessageNotifications: PropTypes.object.isRequired
   }
 
   state = {
@@ -118,7 +118,6 @@ export default class HomePage extends PureComponent {
     return superagent.
       get('/history').
       then(({ body: { history } }) => {
-        console.log('received history: ', history)
         this.setState(prevState => ({ history }))
       }).
       catch(err => {
@@ -131,7 +130,6 @@ export default class HomePage extends PureComponent {
   }
 
   render() {
-    const { i18n } = this.context;
     const { businessObjects, loading, history } = this.state;
 
     return (
@@ -210,39 +208,7 @@ export default class HomePage extends PureComponent {
                 }
               </tbody>
             </Table>
-            <h2>Workflow History</h2>
-            <Table style={{ tableLayout: 'fixed' }}>
-              <thead>
-                <tr>
-                  <th>Invoice No</th>
-                  <th>From</th>
-                  <th>Event</th>
-                  <th>To</th>
-                  <th>Finished</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  history.length ?
-                    history.map(({ businessObjId, from, to, event, finishedOn }, i) => (
-                      <tr key={i}>
-                        <td>{businessObjId}</td>
-                        <td>{this.stateLabel(from)}</td>
-                        <td>{startCase(event)}</td>
-                        <td>{this.stateLabel(to)}</td>
-                        <td>{i18n.formatDate(new Date(finishedOn))}</td>
-                      </tr>
-                    )) :
-                    (
-                      <tr>
-                        <td colSpan={5} style={{ textAlign: 'center' }}>
-                          There's no history yet. Come on, do something!
-                        </td>
-                      </tr>
-                    )
-                }
-              </tbody>
-            </Table>
+            <History history={history} stateLabel={this.stateLabel} />
           </Col>
         </Row>
       </Grid>

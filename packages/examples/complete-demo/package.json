@@ -21,7 +21,7 @@
     "json-schema-faker": "0.4.7",
     "lodash": "4.17.5",
     "prop-types": "15.6.0",
-    "react-bootstrap": "0.32.1",
+    "react-bootstrap": "0.31.5",
     "react-notifications": "1.4.3",
     "sequelize": "4.33.4",
     "sequelizer": "1.1.3",
