@@ -63,8 +63,8 @@ export default class Machine {
 It is expected to be a function like this:
 function(object) {
 return {
-businessObjectType: ...   // business object type/class (examples: 'invoice', 'supplier', 'purchase-order')
-businessObjectId: ...     // business object unique id (examples: '123456789')
+businessObjType: ...   // business object type/class (examples: 'invoice', 'supplier', 'purchase-order')
+businessObjId: ...     // business object unique id (examples: '123456789')
 }
 }
     `);
@@ -332,7 +332,7 @@ businessObjectId: ...     // business object unique id (examples: '123456789')
       by,
       order
     }).then((historyRecords) => {
-      // map businessObjId, businessObjType to obect
+      // map businessObjId, businessObjType to object
       return historyRecords.map(({ businessObjType, businessObjId, ...otherProperties }) => {
         return {
           object: {

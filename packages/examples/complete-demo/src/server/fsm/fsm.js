@@ -1,5 +1,5 @@
 import { Machine, MachineDefinition } from '@opuscapita/fsm-workflow-core';
-// import history from '@opuscapita/fsm-workflow-history';
+import history from '@opuscapita/fsm-workflow-history';
 import actions from '../data/actions';
 import conditions from '../data/conditions';
 import { objectIdProp } from '../../common';
@@ -7,8 +7,7 @@ import schema from '../schema';
 
 class FSM {
   init = async function(sequelize) {
-    console.log('\nFSM init\n')
-    // this.history = await history(sequelize)
+    this.history = await history(sequelize)
   }
 
   get machine() {
@@ -19,8 +18,8 @@ class FSM {
         conditions
       }),
       convertObjectToReference: object => ({
-        businessObjectType: 'invoice',
-        businessObjectId: object[objectIdProp]
+        businessObjType: 'invoice',
+        businessObjId: object[objectIdProp]
       }),
       // history: this.history
     })

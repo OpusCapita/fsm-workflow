@@ -1,5 +1,5 @@
 const action = args => {
-  console.log('action "updateProcessedBy" received args: ', args)
+  console.log('action "updateProcessedBy" executed')
 }
 
 action.paramsSchema = {

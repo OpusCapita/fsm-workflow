@@ -1,5 +1,5 @@
 const action = args => {
-  console.log('action "sendMail" received args: ', args)
+  console.log('action "sendMail" executed')
 }
 
 action.paramsSchema = {

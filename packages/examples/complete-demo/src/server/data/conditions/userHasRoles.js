@@ -1,5 +1,5 @@
 const condition = args => {
-  console.log('condition "userHasRoles" received args: ', args);
+  console.log('condition "userHasRoles" executed');
   return true
 }
 
