@@ -2,14 +2,14 @@ import fs from 'fs';
 import { resolve } from 'path';
 import { promisify } from 'util';
 import { Machine, MachineDefinition } from '@opuscapita/fsm-workflow-core';
-import actions from './data/actions';
-import conditions from './data/conditions';
-import { objectIdProp } from '../common';
+import actions from '../data/actions';
+import conditions from '../data/conditions';
+import { objectIdProp } from '../../common';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
-const schemaFilePath = resolve(__dirname, './storage/workflow-schema.json');
-const defaultSchemaFilePath = resolve(__dirname, './data/workflow-schema.json');
+const schemaFilePath = resolve(__dirname, './workflow-schema.json');
+const defaultSchemaFilePath = resolve(__dirname, '../data/workflow-schema.json');
 
 class FSM {
   init = async function() {
