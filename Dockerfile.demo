@@ -11,10 +11,10 @@ WORKDIR /demo
 
 RUN npm i --unsafe-perm && \
   cd ./packages/examples/complete-demo && \
-  npm run build:client
+  npm run demo:build
 
 WORKDIR /demo/packages/examples/complete-demo
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "demo:start"]
 
 EXPOSE 3020
