@@ -77,7 +77,7 @@ creating_github_release(){
     echo "[INFO] ================================================================================================="
 
     GITHUB_RELEASE=$(curl -sS --user "$GH_NAME:$GH_TOKEN" -X POST -w "%{http_code}" -o /dev/null --data \
-    '{"tag_name": "v'${RELEASE_VERSION}'","name": "'${RELEASE_VERSION}'","body": "'${DRAFT_BODY}'","draft": true}' \
+    '{"tag_name": "v'${RELEASE_VERSION}'","name": "'${RELEASE_VERSION}'","body": "'${DRAFT_BODY}'"}' \
     $REPO_URL)
 
     if [ $GITHUB_RELEASE == 201 ]; then
@@ -85,9 +85,9 @@ creating_github_release(){
     else
         printf "[ERROR] Failed to create draft for release: \"$RELEASE_VERSION\".\n"
         curl -sS --user "$GH_NAME:$GH_TOKEN" -X POST -w "%{http_code}" --data \
-        '{"tag_name": "v'${RELEASE_VERSION}'","name": "v'${RELEASE_VERSION}'","draft": true}' $REPO_URL
+        '{"tag_name": "v'${RELEASE_VERSION}'","name": "v'${RELEASE_VERSION}'"}' $REPO_URL
         echo "[INFO] Json request: {"tag_name": v"${RELEASE_VERSION}","name": "${RELEASE_VERSION}", \
-"body": "${DRAFT_BODY}","draft": true}"
+"body": "${DRAFT_BODY}"}"
     fi
 
 }
@@ -150,11 +150,11 @@ if [ "$?" != 0 ]; then
   exit 1
 fi
 
+push
+
 creating_milestone
 
 creating_github_release
-
-push
 
 node_version ${SNAPSHOT_VERSION}
 echo -e "\n[INFO] ================================================================================================="
