@@ -1,36 +1,20 @@
-import fs from 'fs';
 import { resolve } from 'path';
-import { promisify } from 'util';
 import Sequelize from 'sequelize';
 import Sequelizer from 'sequelizer';
 import pick from 'lodash/pick';
 import { objectIdProp } from '../../common';
-import createMachine from '../createMachine';
 import { generateObjects } from '../utils';
 
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-const schemaFilePath = resolve(__dirname, './workflow-schema.json');
-const defaultSchemaFilePath = resolve(__dirname, '../data/workflow-schema.json');
 const sqlitePath = resolve(__dirname, './demo.sqlite');
 
 class Storage {
   sequelize = null;
-  machine = null;
   invoiceModel = null;
 
-  static readJSONFromFile = async function(filePath) {
-    const data = await readFile(filePath, 'utf8');
-    let object;
-    try {
-      object = JSON.parse(data)
-    } catch (err) {
-      throw err
-    }
-    return object
-  }
+  init = async function(fsm) {
+    // save reference for future usage
+    this._getSchema = fsm.getSchema;
 
-  init = async function() {
     this.sequelize = new Sequelize('mainDB', null, null, {
       dialect: "sqlite",
       storage: sqlitePath,
@@ -43,11 +27,8 @@ class Storage {
       sync: { force: true }
     });
 
-    const schema = await this.getSchema();
-
-    this.createMachine({ schema });
-
     // create Invoice model from JSON schema
+    const schema = await this._getSchema()
     const definition = Sequelizer.fromJsonSchema(schema.objectConfiguration.schema, 'InvoiceSchema', {
       uniqueFields: [objectIdProp]
     });
@@ -61,43 +42,22 @@ class Storage {
 
     // TODO maybe change to bulkCreate
     return Promise.all(invoices.map(invoice => {
-      this.machine.start({ object: invoice })
+      fsm.machine.start({ object: invoice })
       return this.invoiceModel.create(invoice) // insert into database
     }))
   }
 
-  createMachine = ({ schema }) => {
-    this.machine = createMachine({ schema })
-  }
-
-  getSchema = async function() {
-    if (this.machine) {
-      return this.machine.machineDefinition.schema
-    }
-    return Storage.readJSONFromFile(schemaFilePath).
-      catch(err => {
-        if (err.code === 'ENOENT') {
-          // 'schemaFilePath' file does not exist yet -> read default schema
-          return Storage.readJSONFromFile(defaultSchemaFilePath)
-        }
-        throw err
-      })
-  }
-
-  setSchema = async function(schema) {
-    this.createMachine({ schema });
-    return writeFile(schemaFilePath, JSON.stringify(schema, null, 2))
-  }
-
   getAllObjects = async function() {
     const data = await this.invoiceModel.findAll();
-    const objects = data.map(this.extractObject);
+    const schema = await this._getSchema();
+    const objects = data.map(object => this.extractObject(object, schema));
     return objects
   }
 
   getObjectById = async function(id) {
     const data = await this.invoiceModel.findOne({ where: { [objectIdProp]: id } });
-    return this.extractObject(data)
+    const schema = await this._getSchema();
+    return this.extractObject(data, schema)
   }
 
   updateObject = async function(object) {
@@ -109,9 +69,8 @@ class Storage {
   }
 
   // take sequelize query output and return clean object
-  extractObject = sequelizeOutput => {
+  extractObject = (sequelizeOutput, schema) => {
     const { dataValues } = sequelizeOutput;
-    const { schema } = this.machine.machineDefinition;
     const objectProps = Object.keys(schema.objectConfiguration.schema.properties);
     return pick(dataValues, objectProps);
   }

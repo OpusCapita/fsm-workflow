@@ -10,6 +10,7 @@ import transitionsRoute from './routes/availableTransitions';
 import editorDataRoute from './routes/editorData';
 import statesRoute from './routes/states';
 import storage from './storage';
+import fsm from './fsm';
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
@@ -28,8 +29,12 @@ app.get('*', function(req, res) {
   res.sendFile(resolve(__dirname, '../../www/index.html'));
 });
 
-storage.init().
+(async function() {
+  await fsm.init();
+  await storage.init(fsm);
+}()).
   then(_ => {
     server.listen(port, host, _ => console.log(`server is listening on ${host}:${port}`));
   }).
   catch(err => console.log('INIT FAILED', err));
+

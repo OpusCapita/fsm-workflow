@@ -1,5 +1,5 @@
 import express from 'express'
-import storage from '../storage';
+import fsm from '../fsm';
 import { mapFuncsToParamsSchema } from '../utils';
 import actions from '../data/actions';
 import conditions from '../data/conditions';
@@ -7,7 +7,7 @@ import conditions from '../data/conditions';
 const router = express.Router();
 
 router.get('/editordata', async(req, res) => {
-  const schema = await storage.getSchema();
+  const schema = await fsm.getSchema();
   res.send({
     schema,
     actions: mapFuncsToParamsSchema(actions),
@@ -18,8 +18,7 @@ router.get('/editordata', async(req, res) => {
 router.post('/editordata', async(req, res) => {
   const { schema } = req.body;
   if (schema) {
-    console.log('new schema >>>>>>>>>\n', schema)
-    await storage.setSchema(schema);
+    await fsm.setSchema(schema);
     res.send({ status: 'OK', schema })
   } else {
     res.status(400).send({ error: 'Schema in undefined' })

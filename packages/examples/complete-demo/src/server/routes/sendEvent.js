@@ -1,13 +1,13 @@
 import express from 'express'
+import fsm from '../fsm';
 import storage from '../storage';
 
 const router = express.Router();
 
 router.post('/event', async(req, res) => {
   const { objectId, event } = req.body;
-  const machine = storage.machine;
   const object = await storage.getObjectById(objectId);
-  machine.sendEvent({ object, event }).
+  fsm.machine.sendEvent({ object, event }).
     then(async(result) => {
       await storage.updateObject(result.object)
       res.send(result)
