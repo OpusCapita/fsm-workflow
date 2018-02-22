@@ -15,23 +15,24 @@ import { notificationError } from '../constants';
 
 export default class HomePage extends PureComponent {
   static contextTypes = {
-    uiMessageNotifications: PropTypes.object.isRequired
+    uiMessageNotifications: PropTypes.object.isRequired,
+    i18n: PropTypes.object.isRequired
   }
 
   state = {
     businessObjects: null,
-    loading: {}
+    loading: {},
+    history: []
   }
 
   componentDidMount() {
     const { uiMessageNotifications } = this.context;
-    const self = this;
 
     superagent.
       get('/objects').
       accept('application/json').
       then(res => {
-        self.setState(prevState => ({ businessObjects: res.body }))
+        this.setState(prevState => ({ businessObjects: res.body }))
       }).
       catch(err => {
         console.log(err)
@@ -45,7 +46,7 @@ export default class HomePage extends PureComponent {
       get('/states').
       accept('application/json').
       then(res => {
-        self.setState(prevState => ({ states: res.body.states }))
+        this.setState(prevState => ({ states: res.body.states }))
       }).
       catch(err => {
         console.log(err)
@@ -54,6 +55,8 @@ export default class HomePage extends PureComponent {
           message: 'Failed to load states: ' + err.message
         });
       })
+
+    this.getHistory()
   }
 
   stateLabel = stateName => (find(this.state.states, ({ name }) => name === stateName) || {}).description ||
@@ -62,7 +65,6 @@ export default class HomePage extends PureComponent {
   sendEvent = ({ objectId, event }) => _ => {
     const { uiMessageNotifications } = this.context;
     this.setState(prevState => ({ loading: { ...prevState.loading, [objectId]: true } }));
-    const self = this;
     return event &&
       superagent.
         post('/event').
@@ -71,7 +73,7 @@ export default class HomePage extends PureComponent {
           const { object } = response.body;
           return this.getAvailableTransitions(object).
             then(data => {
-              self.setState(prevState => ({
+              this.setState(prevState => ({
                 businessObjects: prevState.businessObjects.map(
                   stateObj => stateObj[objectIdProp] === object[objectIdProp] ?
                     ({
@@ -84,7 +86,7 @@ export default class HomePage extends PureComponent {
                   ...prevState.loading,
                   [objectId]: false
                 }
-              }))
+              }), _ => this.getHistory())
             })
         }).
         catch(err => {
@@ -111,8 +113,26 @@ export default class HomePage extends PureComponent {
       })
   }
 
+  getHistory = _ => {
+    const { uiMessageNotifications } = this.context;
+    return superagent.
+      get('/history').
+      then(({ body: { history } }) => {
+        console.log('received history: ', history)
+        this.setState(prevState => ({ history }))
+      }).
+      catch(err => {
+        console.log(err)
+        uiMessageNotifications.error({
+          id: notificationError,
+          message: 'Failed to get history: ' + err.message
+        });
+      })
+  }
+
   render() {
-    const { businessObjects, loading } = this.state;
+    const { i18n } = this.context;
+    const { businessObjects, loading, history } = this.state;
 
     return (
       <Grid>
@@ -122,7 +142,6 @@ export default class HomePage extends PureComponent {
             <Table style={{ tableLayout: 'fixed' }}>
               <thead>
                 <tr>
-                  <th style={{ width: '50px' }}>#</th>
                   <th>Invoice No</th>
                   <th>Current Status</th>
                   <th className="text-right">Available Events</th>
@@ -133,7 +152,6 @@ export default class HomePage extends PureComponent {
                   businessObjects ?
                     businessObjects.map((object, index) => (
                       <tr key={object[objectIdProp]}>
-                        <td>{index}</td>
                         <td>{object[objectIdProp]}</td>
                         <td>{this.stateLabel(object.status)}</td>
                         <td className="text-right">
@@ -188,6 +206,39 @@ export default class HomePage extends PureComponent {
                     )) :
                     (
                       <tr><td colSpan={4}>No business objects found</td></tr>
+                    )
+                }
+              </tbody>
+            </Table>
+            <h2>Workflow History</h2>
+            <Table style={{ tableLayout: 'fixed' }}>
+              <thead>
+                <tr>
+                  <th>Invoice No</th>
+                  <th>From</th>
+                  <th>Event</th>
+                  <th>To</th>
+                  <th>Finished</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  history.length ?
+                    history.map(({ businessObjId, from, to, event, finishedOn }, i) => (
+                      <tr key={i}>
+                        <td>{businessObjId}</td>
+                        <td>{this.stateLabel(from)}</td>
+                        <td>{startCase(event)}</td>
+                        <td>{this.stateLabel(to)}</td>
+                        <td>{i18n.formatDate(new Date(finishedOn))}</td>
+                      </tr>
+                    )) :
+                    (
+                      <tr>
+                        <td colSpan={5} style={{ textAlign: 'center' }}>
+                          There's no history yet. Come on, do something!
+                        </td>
+                      </tr>
                     )
                 }
               </tbody>

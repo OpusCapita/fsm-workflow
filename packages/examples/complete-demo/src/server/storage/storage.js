@@ -35,7 +35,6 @@ class Storage {
   }
 
   getAllObjects = async function() {
-    console.log('getAllObjects')
     return this.invoiceModel.findAll();
   }
 

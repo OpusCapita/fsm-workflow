@@ -21,7 +21,7 @@ class FSM {
         businessObjType: 'invoice',
         businessObjId: object[objectIdProp]
       }),
-      // history: this.history
+      history: this.history
     })
   }
 }

@@ -10,6 +10,7 @@ import sendEventRoute from './routes/sendEvent';
 import transitionsRoute from './routes/availableTransitions';
 import editorDataRoute from './routes/editorData';
 import statesRoute from './routes/states';
+import historyRoute from './routes/history';
 import storage from './storage';
 import fsm from './fsm';
 import schema from './schema';
@@ -26,6 +27,7 @@ app.use(sendEventRoute)
 app.use(transitionsRoute)
 app.use(editorDataRoute)
 app.use(statesRoute)
+app.use(historyRoute)
 
 const compiler = webpack(config);
 
@@ -55,7 +57,7 @@ app.get('/', function(req, res) {
   const invoices = generateObjects({ schema: schema.getSchema() })
   const { machine } = fsm;
   return Promise.all(invoices.map(invoice => {
-    machine.start({ object: invoice });
+    machine.start({ object: invoice, user: 'demouser' });
     return storage.addObject(invoice)
   }))
 }()).

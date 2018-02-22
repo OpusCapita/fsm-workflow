@@ -4,8 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src",
-    "lint-fix": "eslint src --fix",
+    "lint": "rimraf src/compiled-server && eslint src",
     "add-dependency": "cd ../../../ && npm run add-dependency -- --scope=@opuscapita/fsm-workflow-demo",
     "start": "rimraf src/compiled-server && babel src/server -s -D -d src/compiled-server && cross-env PORT=3020 NODE_ENV=development node src/compiled-server/index.js",
     "demo:build": "cross-env NODE_ENV=production webpack --config config/webpack.config.js && rimraf src/compiled-server && babel src/server -s -D -d src/compiled-server",
