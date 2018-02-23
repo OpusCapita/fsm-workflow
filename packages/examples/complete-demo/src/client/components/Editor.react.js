@@ -20,7 +20,7 @@ export default class Editor extends PureComponent {
     const { uiMessageNotifications } = this.context;
     const self = this;
     superagent.
-      get('/editordata').
+      get('/api/editordata').
       then(res => {
         self.setState(prevState => ({ ...res.body }))
       }).
@@ -36,7 +36,7 @@ export default class Editor extends PureComponent {
   handleSave = data => {
     const { uiMessageNotifications } = this.context;
     superagent.
-      post('/editordata').
+      post('/api/editordata').
       send(data).
       then(res => {
         uiMessageNotifications.success({

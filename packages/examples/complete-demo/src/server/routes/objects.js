@@ -6,7 +6,7 @@ import { extractObject } from '../utils';
 
 const router = express.Router();
 
-router.get('/objects', async(req, res) => {
+router.get('/api/objects', async(req, res) => {
   const objects = await storage.getAllObjects();
   const businessObjects = objects.map(extractObject);
   const { machine } = fsm;
@@ -19,7 +19,7 @@ router.get('/objects', async(req, res) => {
     }).
     catch(err => {
       console.log(err)
-      res.status(500).send(err.message)
+      res.status(500).send({ error: err.message })
       throw err
     })
 })

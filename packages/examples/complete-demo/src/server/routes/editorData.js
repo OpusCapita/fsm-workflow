@@ -6,7 +6,7 @@ import conditions from '../data/conditions';
 
 const router = express.Router();
 
-router.get('/editordata', async(req, res) => {
+router.get('/api/editordata', async(req, res) => {
   const schema = await currentSchema.getSchema();
   res.send({
     schema,
@@ -15,7 +15,7 @@ router.get('/editordata', async(req, res) => {
   })
 })
 
-router.post('/editordata', async(req, res) => {
+router.post('/api/editordata', async(req, res) => {
   const { schema } = req.body;
   if (schema) {
     await currentSchema.setSchema(schema);

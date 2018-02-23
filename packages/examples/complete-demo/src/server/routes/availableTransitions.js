@@ -6,7 +6,7 @@ import { extractObject } from '../utils';
 
 const router = express.Router();
 
-router.post('/transitions', async(req, res) => {
+router.post('/api/transitions', async(req, res) => {
   const { objectId } = req.body;
   const objects = (await storage.getAllObjects()).map(extractObject);
   const object = objects.find(obj => obj[objectIdProp] === objectId);
@@ -18,7 +18,7 @@ router.post('/transitions', async(req, res) => {
     catch(err => {
       console.log('getAvailableTransitions failed')
       console.log(err)
-      res.status(500).send('Get transitions failed!')
+      res.status(500).send({ error: 'Get transitions failed!' })
     })
 })
 

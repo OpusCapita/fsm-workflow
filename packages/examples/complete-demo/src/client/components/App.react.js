@@ -1,11 +1,18 @@
 import React, { PureComponent } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  withRouter
+} from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { I18nManager } from '@opuscapita/i18n';
 import { uiMessageNotifications } from '../uiGlobalComponents'
 import Menu from './Menu.react';
 import HomePage from './HomePage.react';
 import Editor from './Editor.react';
+import WorkflowHistory from './History.react';
 import { notificationSuccess, notificationError } from '../constants';
+import './styles.css';
 
 export default class App extends PureComponent {
   static childContextTypes = {
@@ -15,11 +22,6 @@ export default class App extends PureComponent {
 
   constructor(...args) {
     super(...args);
-
-    this.state = {
-      currentPage: 0
-    }
-
     this.i18n = new I18nManager();
   }
 
@@ -35,25 +37,18 @@ export default class App extends PureComponent {
     uiMessageNotifications.remove({ id: notificationError })
   }
 
-  handleNavigate = page => _ => this.setState({ currentPage: page })
-
   render() {
-    const { currentPage } = this.state;
+    const MyMenu = withRouter(Menu)
 
     return (
-      <div>
-        <Menu
-          currentPage={currentPage}
-          onNavigate={this.handleNavigate}
-        />
-        {
-          currentPage === 0 ?
-            <HomePage /> :
-            currentPage === 1 ?
-              <Editor /> :
-              null
-        }
-      </div>
+      <Router>
+        <div>
+          <MyMenu/>
+          <Route exact={true} path='/' component={HomePage}/>
+          <Route exact={true} path='/editor' component={Editor}/>
+          <Route path='/invoice/:objectId' component={WorkflowHistory}/>
+        </div>
+      </Router>
     )
   }
 }

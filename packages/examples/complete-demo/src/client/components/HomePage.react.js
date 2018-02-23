@@ -12,9 +12,14 @@ import Table from 'react-bootstrap/lib/Table';
 import SplitButton from 'react-bootstrap/lib/SplitButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { notificationError } from '../constants';
-import History from './History.react';
 
 export default class HomePage extends PureComponent {
+  static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    })
+  }
+
   static contextTypes = {
     uiMessageNotifications: PropTypes.object.isRequired
   }
@@ -29,7 +34,7 @@ export default class HomePage extends PureComponent {
     const { uiMessageNotifications } = this.context;
 
     superagent.
-      get('/objects').
+      get('/api/objects').
       accept('application/json').
       then(res => {
         this.setState(prevState => ({ businessObjects: res.body }))
@@ -43,7 +48,7 @@ export default class HomePage extends PureComponent {
       })
 
     superagent.
-      get('/states').
+      get('/api/states').
       accept('application/json').
       then(res => {
         this.setState(prevState => ({ states: res.body.states }))
@@ -55,8 +60,6 @@ export default class HomePage extends PureComponent {
           message: 'Failed to load states: ' + err.message
         });
       })
-
-    this.getHistory()
   }
 
   stateLabel = stateName => (find(this.state.states, ({ name }) => name === stateName) || {}).description ||
@@ -67,7 +70,7 @@ export default class HomePage extends PureComponent {
     this.setState(prevState => ({ loading: { ...prevState.loading, [objectId]: true } }));
     return event &&
       superagent.
-        post('/event').
+        post('/api/event').
         send({ objectId, event }).
         then(response => {
           const { object } = response.body;
@@ -86,7 +89,7 @@ export default class HomePage extends PureComponent {
                   ...prevState.loading,
                   [objectId]: false
                 }
-              }), _ => this.getHistory())
+              }))
             })
         }).
         catch(err => {
@@ -101,7 +104,7 @@ export default class HomePage extends PureComponent {
   getAvailableTransitions = object => {
     const { uiMessageNotifications } = this.context;
     return superagent.
-      post('/transitions').
+      post('/api/transitions').
       send({ objectId: object[objectIdProp] }).
       then(({ body }) => body).
       catch(err => {
@@ -116,7 +119,7 @@ export default class HomePage extends PureComponent {
   getHistory = _ => {
     const { uiMessageNotifications } = this.context;
     return superagent.
-      get('/history').
+      get('/api/history').
       then(({ body: { history } }) => {
         this.setState(prevState => ({ history }))
       }).
@@ -129,9 +132,10 @@ export default class HomePage extends PureComponent {
       })
   }
 
-  render() {
-    const { businessObjects, loading, history } = this.state;
+  handleHistory = objectId => _ => this.props.history.push(`/invoice/${objectId}`);
 
+  render() {
+    const { businessObjects, loading } = this.state;
     return (
       <Grid>
         <Row>
@@ -143,6 +147,7 @@ export default class HomePage extends PureComponent {
                   <th>Invoice No</th>
                   <th>Current Status</th>
                   <th className="text-right">Available Events</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -171,22 +176,26 @@ export default class HomePage extends PureComponent {
                                       objectId: object[objectIdProp],
                                       event: object[eventsProp][0]
                                     })}
+                                    bsSize='sm'
                                   >
                                     {startCase(object[eventsProp][0])}
                                   </Button>
                                 ) :
                                 (
                                   <SplitButton
+                                    bsSize='sm'
                                     title={startCase(object[eventsProp][0])}
                                     id={`split-button-basic-${index}`}
                                     onClick={this.sendEvent({
                                       objectId: object[objectIdProp],
                                       event: object[eventsProp][0]
                                     })}
+                                    pullRight={true}
                                   >
                                     {
                                       object[eventsProp].slice(1).map((event, i) => (
                                         <MenuItem
+                                          bsSize='sm'
                                           key={event}
                                           eventKey={event}
                                           onClick={this.sendEvent({ objectId: object[objectIdProp], event })}
@@ -200,6 +209,14 @@ export default class HomePage extends PureComponent {
                             )
                           }
                         </td>
+                        <td className="text-right">
+                          <Button
+                            bsSize='sm'
+                            onClick={this.handleHistory(object[objectIdProp])}
+                          >
+                            History
+                          </Button>
+                        </td>
                       </tr>
                     )) :
                     (
@@ -208,7 +225,6 @@ export default class HomePage extends PureComponent {
                 }
               </tbody>
             </Table>
-            <History history={history} stateLabel={this.stateLabel} />
           </Col>
         </Row>
       </Grid>

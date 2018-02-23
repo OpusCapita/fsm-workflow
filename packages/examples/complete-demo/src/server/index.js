@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-app.get('/', function(req, res) {
+app.get('*', function(req, res) {
   res.sendFile(resolve(__dirname, '../../www/index.html'));
 });
 
