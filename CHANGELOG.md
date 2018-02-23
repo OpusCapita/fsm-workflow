@@ -1,4 +1,21 @@
 
+Release 1.0.5 Fri Feb 23 2018 08:52:41 GMT+0000 (UTC)
+=======================================================
+
+- Fixed editor build (Egor Stambakio stambakio@scand.com, 2018-02-23 11:48:21 +0300)
+
+Release 1.0.4 Fri Feb 23 2018 07:10:31 GMT+0000 (UTC)
+=======================================================
+
+- Fixing editor package publishing (Alexey Sergeev sab@scand.com, 2018-02-23 10:05:20 +0300)
+
+Release 1.0.3 Thu Feb 22 2018 14:13:18 GMT+0000 (UTC)
+=======================================================
+
+- Merge pull request #50 from OpusCapita/core-hotfix (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-02-21 15:58:00 +0300)
+- Fixed a bug (Egor Stambakio stambakio@scand.com, 2018-02-21 15:52:57 +0300)
+- Updated build config. [ci skip] (Dmitry Shienok dshienok@scand.com, 2018-02-20 14:45:45 +0300)
+
 Release 1.0.2 Tue Feb 20 2018 11:37:18 GMT+0000 (UTC)
 =======================================================
 

@@ -1,12 +1,12 @@
 {
   "name": "@opuscapita/fsm-workflow-editor",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Fsm workflow crud editor",
   "main": "lib/index.js",
   "files": [
     "lib"
   ],
-  "author": "Egor Stambakio <stambakio@scand.com>",
+  "author": "Egor Stambakio <egor.stambakio@opuscapita.com>",
   "license": "Apache-2.0",
   "repository": "https://github.com/OpusCapita/fsm/tree/master/packages/editor",
   "publishConfig": {
