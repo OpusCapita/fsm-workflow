@@ -25,15 +25,5 @@ module.exports = merge(common, {
       commonjs: 'react-dom',
       amd: 'react-dom'
     }
-<<<<<<< HEAD
-  },
-  // externals: [
-  //   nodeExternals({
-  //     modulesFromFile: true
-  //   }),
-  // ]
-});
-=======
   }
 });
->>>>>>> master

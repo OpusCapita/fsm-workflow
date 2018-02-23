@@ -34,7 +34,7 @@ export default function AppMenu({ history, location }) {
       labelText="powered by "
       labelLinkText="OpusCapita"
       showSearch={false}
-      activeItem={activeItem}
+      activeItem={activeItem !== -1 ? activeItem : 0}
       navigationItems={navigationItems}
       iconsBarItems={[
         (

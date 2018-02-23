@@ -10,6 +10,17 @@ import superagent from 'superagent';
 import { notificationError } from '../constants';
 
 export default class History extends PureComponent {
+  static propTypes = {
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        objectId: PropTypes.string.isRequired
+      })
+    }),
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    })
+  }
+
   static contextTypes = {
     i18n: PropTypes.object.isRequired,
     uiMessageNotifications: PropTypes.object.isRequired
@@ -22,6 +33,11 @@ export default class History extends PureComponent {
   }
 
   componentDidMount() {
+    this.getHistory();
+    this.getStates();
+  }
+
+  getStates = _ => {
     const { uiMessageNotifications } = this.context;
     superagent.
       get('/api/states').
@@ -38,26 +54,51 @@ export default class History extends PureComponent {
       })
   }
 
+  getHistory = _ => {
+    const { uiMessageNotifications } = this.context;
+    const { match: { params: { objectId } } } = this.props;
+    return superagent.
+      get(`/api/history/${objectId}`).
+      then(({ body: { history } }) => {
+        this.setState(prevState => ({ history }))
+      }).
+      catch(err => {
+        console.log(err)
+        uiMessageNotifications.error({
+          id: notificationError,
+          message: 'Failed to get history: ' + err.message
+        });
+      })
+  }
+
   stateLabel = stateName => (find(this.state.states, ({ name }) => name === stateName) || {}).description ||
     startCase(stateName);
 
   handleSelect = page => this.setState({ activePage: page })
 
   render() {
-    console.log(this.props)
     const { i18n } = this.context;
+    const { match: { params: { objectId } } } = this.props;
     const { activePage, history } = this.state;
     const max = 10;
+    const pages = Math.ceil(history.length / max);
 
     return (
       <Grid>
         <Row>
           <Col>
-            <h1>Invoices / </h1>
+            <h1>
+              <a
+                style={{ cursor: 'pointer' }}
+                onClick={_ => this.props.history.push('/')}
+              >
+                Invoices
+              </a>
+              <small> / {objectId}</small>
+            </h1>
             <Table style={{ tableLayout: 'fixed' }}>
               <thead>
                 <tr>
-                  <th>Invoice No</th>
                   <th>From</th>
                   <th>Event</th>
                   <th>To</th>
@@ -71,7 +112,6 @@ export default class History extends PureComponent {
                       slice((activePage - 1) * max, activePage * max).
                       map(({ businessObjId, from, to, event, finishedOn }, i) => (
                         <tr key={i}>
-                          <td>{businessObjId}</td>
                           <td>{this.stateLabel(from)}</td>
                           <td>{startCase(event)}</td>
                           <td>{this.stateLabel(to)}</td>
@@ -88,17 +128,22 @@ export default class History extends PureComponent {
                 }
               </tbody>
             </Table>
-            <div style={{ width: '100%', textAlign: 'right' }}>
-              <Pagination
-                activePage={activePage}
-                onSelect={this.handleSelect}
-                items={Math.ceil(history.length / max)}
-                maxButtons={5}
-                boundaryLinks={true}
-                prev={true}
-                next={true}
-              />
-            </div>
+            {
+              pages > 1 && (
+                <div style={{ width: '100%', textAlign: 'right' }}>
+                  <Pagination
+                    activePage={activePage}
+                    onSelect={this.handleSelect}
+                    items={Math.ceil(history.length / max)}
+                    maxButtons={5}
+                    boundaryLinks={true}
+                    prev={true}
+                    next={true}
+                  />
+                </div>
+              )
+            }
+
           </Col>
         </Row>
       </Grid>

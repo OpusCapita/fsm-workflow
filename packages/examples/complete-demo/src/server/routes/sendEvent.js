@@ -12,7 +12,6 @@ router.post('/api/event', async(req, res) => {
   machine.sendEvent({ object: extractObject(object), event, user: 'demouser' }).
     then(async(result) => {
       await storage.updateObject(result.object)
-      const historyData = await fsm.history.search();
       res.send(result)
     }).
     catch(err => {

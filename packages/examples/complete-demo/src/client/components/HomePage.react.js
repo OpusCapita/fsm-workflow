@@ -26,8 +26,7 @@ export default class HomePage extends PureComponent {
 
   state = {
     businessObjects: null,
-    loading: {},
-    history: []
+    loading: {}
   }
 
   componentDidMount() {
@@ -112,22 +111,6 @@ export default class HomePage extends PureComponent {
         uiMessageNotifications.error({
           id: notificationError,
           message: 'Failed to get available transitions: ' + err.message
-        });
-      })
-  }
-
-  getHistory = _ => {
-    const { uiMessageNotifications } = this.context;
-    return superagent.
-      get('/api/history').
-      then(({ body: { history } }) => {
-        this.setState(prevState => ({ history }))
-      }).
-      catch(err => {
-        console.log(err)
-        uiMessageNotifications.error({
-          id: notificationError,
-          message: 'Failed to get history: ' + err.message
         });
       })
   }
