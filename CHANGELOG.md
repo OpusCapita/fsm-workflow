@@ -1,4 +1,9 @@
 
+Release 1.0.4 Fri Feb 23 2018 07:10:31 GMT+0000 (UTC)
+=======================================================
+
+- Fixing editor package publishing (Alexey Sergeev sab@scand.com, 2018-02-23 10:05:20 +0300)
+
 Release 1.0.3 Thu Feb 22 2018 14:13:18 GMT+0000 (UTC)
 =======================================================
 
