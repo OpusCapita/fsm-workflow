@@ -94,15 +94,16 @@ export default class History extends PureComponent {
               >
                 Invoices
               </a>
-              <small> / {objectId}</small>
+              <small> / {objectId} history</small>
             </h1>
             <Table style={{ tableLayout: 'fixed' }}>
               <thead>
                 <tr>
+                  <th>On</th>
                   <th>From</th>
-                  <th>Event</th>
                   <th>To</th>
-                  <th>Finished</th>
+                  <th>User</th>
+                  <th>Finished On</th>
                 </tr>
               </thead>
               <tbody>
@@ -110,11 +111,12 @@ export default class History extends PureComponent {
                   history.length ?
                     history.
                       slice((activePage - 1) * max, activePage * max).
-                      map(({ businessObjId, from, to, event, finishedOn }, i) => (
+                      map(({ from, to, event, finishedOn, user }, i) => (
                         <tr key={i}>
-                          <td>{this.stateLabel(from)}</td>
                           <td>{startCase(event)}</td>
+                          <td>{this.stateLabel(from)}</td>
                           <td>{this.stateLabel(to)}</td>
+                          <td>{user}</td>
                           <td>{i18n.formatDateTime(new Date(finishedOn))}</td>
                         </tr>
                       )) :

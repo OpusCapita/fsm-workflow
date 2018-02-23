@@ -8,6 +8,7 @@ import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Button from 'react-bootstrap/lib/Button';
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Table from 'react-bootstrap/lib/Table';
 import SplitButton from 'react-bootstrap/lib/SplitButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
@@ -129,7 +130,6 @@ export default class HomePage extends PureComponent {
                 <tr>
                   <th>Invoice No</th>
                   <th>Current Status</th>
-                  <th className="text-right">Available Events</th>
                   <th></th>
                 </tr>
               </thead>
@@ -149,56 +149,56 @@ export default class HomePage extends PureComponent {
                               </span>
                             )
                           }
-                          {
-                            object[eventsProp] &&
-                            (
-                              object[eventsProp].length === 1 ?
-                                (
-                                  <Button
-                                    onClick={this.sendEvent({
-                                      objectId: object[objectIdProp],
-                                      event: object[eventsProp][0]
-                                    })}
-                                    bsSize='sm'
-                                  >
-                                    {startCase(object[eventsProp][0])}
-                                  </Button>
-                                ) :
-                                (
-                                  <SplitButton
-                                    bsSize='sm'
-                                    title={startCase(object[eventsProp][0])}
-                                    id={`split-button-basic-${index}`}
-                                    onClick={this.sendEvent({
-                                      objectId: object[objectIdProp],
-                                      event: object[eventsProp][0]
-                                    })}
-                                    pullRight={true}
-                                  >
-                                    {
-                                      object[eventsProp].slice(1).map((event, i) => (
-                                        <MenuItem
-                                          bsSize='sm'
-                                          key={event}
-                                          eventKey={event}
-                                          onClick={this.sendEvent({ objectId: object[objectIdProp], event })}
-                                        >
-                                          {startCase(event)}
-                                        </MenuItem>
-                                      ))
-                                    }
-                                  </SplitButton>
-                                )
-                            )
-                          }
-                        </td>
-                        <td className="text-right">
-                          <Button
-                            bsSize='sm'
-                            onClick={this.handleHistory(object[objectIdProp])}
-                          >
-                            History
-                          </Button>
+                          <ButtonGroup>
+                            {
+                              object[eventsProp] &&
+                              (
+                                object[eventsProp].length === 1 ?
+                                  (
+                                    <Button
+                                      onClick={this.sendEvent({
+                                        objectId: object[objectIdProp],
+                                        event: object[eventsProp][0]
+                                      })}
+                                      bsSize='sm'
+                                    >
+                                      {startCase(object[eventsProp][0])}
+                                    </Button>
+                                  ) :
+                                  (
+                                    <SplitButton
+                                      bsSize='sm'
+                                      title={startCase(object[eventsProp][0])}
+                                      id={`split-button-basic-${index}`}
+                                      onClick={this.sendEvent({
+                                        objectId: object[objectIdProp],
+                                        event: object[eventsProp][0]
+                                      })}
+                                      pullRight={true}
+                                    >
+                                      {
+                                        object[eventsProp].slice(1).map((event, i) => (
+                                          <MenuItem
+                                            bsSize='sm'
+                                            key={event}
+                                            eventKey={event}
+                                            onClick={this.sendEvent({ objectId: object[objectIdProp], event })}
+                                          >
+                                            {startCase(event)}
+                                          </MenuItem>
+                                        ))
+                                      }
+                                    </SplitButton>
+                                  )
+                              )
+                            }
+                            <Button
+                              bsSize='sm'
+                              onClick={this.handleHistory(object[objectIdProp])}
+                            >
+                              History
+                            </Button>
+                          </ButtonGroup>
                         </td>
                       </tr>
                     )) :
