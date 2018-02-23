@@ -9,7 +9,7 @@ import Tab from 'react-bootstrap/lib/Tab';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
 import startCase from 'lodash/startCase';
-import Ajv from 'ajv';
+// import Ajv from 'ajv';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
@@ -74,49 +74,49 @@ export default class WorkflowEditor extends PureComponent {
       ...this.stateFromProps(this.props)
     }
 
-    // validate input schemas and objects
-    const ajv = new Ajv();
+    // // validate input schemas and objects
+    // const ajv = new Ajv();
 
-    // validate example object
-    const { objectConfiguration } = this.props.workflow.schema;
+    // // validate example object
+    // const { objectConfiguration } = this.props.workflow.schema;
 
-    const valid = ajv.
-      addSchema(objectConfiguration.schema, 'objectSchema').
-      validate('objectSchema', objectConfiguration.example);
+    // const valid = ajv.
+    //   addSchema(objectConfiguration.schema, 'objectSchema').
+    //   validate('objectSchema', objectConfiguration.example);
 
-    if (!valid) {
-      const title = `objectInfo: Example object is not valid according to its schema!\n`;
-      const message = ajv.errorsText();
-      console.error(`${title}${message}`)
-    }
+    // if (!valid) {
+    //   const title = `objectInfo: Example object is not valid according to its schema!\n`;
+    //   const message = ajv.errorsText();
+    //   console.error(`${title}${message}`)
+    // }
 
-    //
-    // validate action invocations
-    //
-    const invocations = this.props.workflow.schema.transitions.reduce(
-      (invs, { actions, from, to, event }) => invs.concat(
-        (actions || []).map(({ params = [], ...rest }) => ({
-          ...rest,
-          transition: { from, to, event },
-          params: params.reduce((obj, { name, value }) => ({
-            ...obj,
-            [name]: value
-          }), {})
-        }))
-      ), []
-    )
+    // //
+    // // validate action invocations
+    // //
+    // const invocations = this.props.workflow.schema.transitions.reduce(
+    //   (invs, { actions, from, to, event }) => invs.concat(
+    //     (actions || []).map(({ params = [], ...rest }) => ({
+    //       ...rest,
+    //       transition: { from, to, event },
+    //       params: params.reduce((obj, { name, value }) => ({
+    //         ...obj,
+    //         [name]: value
+    //       }), {})
+    //     }))
+    //   ), []
+    // )
 
-    invocations.forEach(({ name, params, transition: { from, to, event } }) => {
-      const valid = ajv.
-        addSchema(this.props.workflow.actions[name].paramsSchema, name).
-        validate(name, params);
+    // invocations.forEach(({ name, params, transition: { from, to, event } }) => {
+    //   const valid = ajv.
+    //     addSchema(this.props.workflow.actions[name].paramsSchema, name).
+    //     validate(name, params);
 
-      if (!valid) {
-        const title = `Not valid action invocation in transition from "${from}" to "${to}" on "${event}"!\n`;
-        const message = ajv.errorsText();
-        console.error(`${title}${message}`)
-      }
-    })
+    //   if (!valid) {
+    //     const title = `Not valid action invocation in transition from "${from}" to "${to}" on "${event}"!\n`;
+    //     const message = ajv.errorsText();
+    //     console.error(`${title}${message}`)
+    //   }
+    // })
   }
 
   componentWillReceiveProps(nextProps) {

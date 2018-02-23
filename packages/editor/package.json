@@ -12,10 +12,12 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development showroom-scan ./src && webpack-dev-server --config config/webpack.config.showroom.js",
-    "build": "cross-env NODE_ENV=development showroom-scan ./src && webpack --config config/webpack.config.showroom.js",
+    "build": "cross-env NODE_ENV=development showroom-scan ./src && webpack --config config/webpack.config.build.js",
     "lint-fix": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc --fix",
     "lint": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc",
-    "test": "rimraf ./.nyc_output ./coverage && cross-env nyc mocha --recursive \"src/**/*.spec.js\" --require ignore-styles"
+    "test": "rimraf ./.nyc_output ./coverage && cross-env nyc mocha --recursive \"src/**/*.spec.js\" --require ignore-styles",
+    "prepare": "npm run build",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@opuscapita/react-dates": "0.4.0-beta.4",
