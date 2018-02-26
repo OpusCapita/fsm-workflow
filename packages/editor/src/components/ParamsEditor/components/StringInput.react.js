@@ -5,8 +5,9 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 export default function StringInput({ value, onChange, ...props }) {
   return (
     <FormControl
-      {...props}
+      placeholder="Enter value"
       type='text'
+      {...props}
       value={value || ''}
       onChange={({ target: { value } }) => onChange(value)}
     />

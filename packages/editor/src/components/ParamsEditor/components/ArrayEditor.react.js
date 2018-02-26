@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { formatLabel } from '../../utils';
 import getParamComponent from './';
 import './ArrayEditor.less';
 
 export default class ArrayEditor extends PureComponent {
   static propTypes = {
-    name: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
     value: PropTypes.arrayOf(PropTypes.any),
     schema: PropTypes.object,
     onChange: PropTypes.func.isRequired
@@ -23,7 +22,7 @@ export default class ArrayEditor extends PureComponent {
   ])
 
   render() {
-    const { name, value, schema } = this.props;
+    const { label, value, schema } = this.props;
 
     return (
       <div className='form-group'>
@@ -31,7 +30,7 @@ export default class ArrayEditor extends PureComponent {
           <thead>
             <tr>
               <th>
-                <label htmlFor={name} className="control-label">{formatLabel(name)}</label>
+                <label className="control-label">{label}</label>
               </th>
               <th className='text-right'>
                 <i
@@ -46,7 +45,7 @@ export default class ArrayEditor extends PureComponent {
             {
               (
                 Component => (value || []).map((v, i) => (
-                  <tr key={i}>
+                  <tr key={`${i}-${v}`}>
                     <td>
                       {
                         <Component

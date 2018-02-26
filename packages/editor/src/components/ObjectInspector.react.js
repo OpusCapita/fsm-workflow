@@ -14,11 +14,13 @@ export default class ExampleObjectInspector extends PureComponent {
   static propTypes = {
     name: PropTypes.string,
     object: PropTypes.object,
-    onClickPropName: PropTypes.func
+    onClickPropName: PropTypes.func,
+    hideValues: PropTypes.bool
   }
 
   static defaultProps = {
-    object: {}
+    object: {},
+    hideValues: false
   }
 
   handleClickPropName = propData => _ => this.props.onClickPropName(propData);

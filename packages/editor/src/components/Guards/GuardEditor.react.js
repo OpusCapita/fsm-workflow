@@ -17,7 +17,7 @@ import guardPropTypes from './guardPropTypes';
 import withConfirmDialog from '../ConfirmDialog';
 import CodeEditor from '../CodeEditor';
 import ErrorLabel from '../ErrorLabel.react';
-import ObjectInspector from './ObjectInspector.react';
+import ObjectInspector from '../ObjectInspector.react';
 import ParamsEditor from '../ParamsEditor';
 import { formatLabel, isDef } from '../utils';
 
