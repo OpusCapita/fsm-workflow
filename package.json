@@ -8,9 +8,9 @@
     "mkdirp": "0.5.1"
   },
   "scripts": {
-    "add-depenency": "lerna add",
+    "add-dependency": "lerna add",
     "bootstrap": "lerna bootstrap",
-    "clean": "lerna clean",
+    "clean": "lerna clean --yes",
     "diff": "lerna diff",
     "lint": "lerna run lint",
     "postinstall": "npm run bootstrap",

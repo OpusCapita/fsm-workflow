@@ -35,7 +35,7 @@ export default class TransitionsTable extends PureComponent {
     onSaveGuards: PropTypes.func.isRequired,
     onSaveActions: PropTypes.func.isRequired,
     objectConfiguration: PropTypes.object.isRequired,
-    actionsComponentRegistry: PropTypes.objectOf(PropTypes.func)
+    componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
   state = {
@@ -168,7 +168,7 @@ export default class TransitionsTable extends PureComponent {
               onClose={this.handleCloseModal}
               onSave={this.handleSaveActions(currentTransition)}
               objectConfiguration={objectConfiguration}
-              componentsRegistry={this.props.actionsComponentRegistry}
+              componentsRegistry={this.props.componentsRegistry}
             />
           );
           break;

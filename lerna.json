@@ -7,6 +7,7 @@
     "packages/history",
     "packages/task-manager",
     "packages/examples/invoice-console",
-    "packages/examples/process-task-manager-ui"
+    "packages/examples/process-task-manager-ui",
+    "packages/examples/complete-demo"
   ]
 }
