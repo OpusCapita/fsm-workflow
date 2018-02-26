@@ -73,10 +73,6 @@
               name: 'updateProcessedBy',
               params: [
                 {
-                  name: 'someArray',
-                  value: ['one', 'two']
-                },
-                {
                   name: 'processedByFieldName',
                   value: "customerId"
                 }

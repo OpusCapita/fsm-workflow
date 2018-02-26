@@ -7,18 +7,22 @@ import { formatLabel } from '../../../utils';
 
 export default class ExpressionEditor extends PureComponent {
   static propTypes = {
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired
   }
 
   static contextTypes = {
     objectConfiguration: PropTypes.object.isRequired
   }
 
+  handleClick = ({ path }) => this.props.onSelect(
+    path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('')
+  )
+
   render() {
     const {
       objectConfiguration: {
-        alias,
-        // schema,
+        alias = 'object',
         example
       }
     } = this.context;
@@ -32,12 +36,12 @@ export default class ExpressionEditor extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            Choose property
+            Choose property of {alias}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <ObjectInspector
-            name={formatLabel(alias || 'object')}
+            name={formatLabel(alias)}
             object={example}
             onClickPropName={this.handleClick}
           />

@@ -6,6 +6,8 @@ import withExpressionInput from './PathExpressionInputInjector';
 
 @withExpressionInput
 export default class GenericInput extends PureComponent {
+  handleChange = value => this.props.onChange({ value })
+
   render() {
     const { id, label, component: Component, ...props } = this.props;
 
@@ -19,7 +21,7 @@ export default class GenericInput extends PureComponent {
     return (
       <FormGroup controlId={id}>
         <ControlLabel>{renderLabel}</ControlLabel>
-        <Component {...props}/>
+        <Component {...props} onChange={this.handleChange}/>
       </FormGroup>
     )
   }

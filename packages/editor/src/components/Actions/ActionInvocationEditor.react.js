@@ -79,7 +79,7 @@ export default class ActionInvocationEditor extends Component {
     }), this.state.autoplay && this.handleInvoke)
   })(value)
 
-  handleChangeParam = param => value => this.setState(prevState => ({
+  handleChangeParam = param => ({ value, expression }) => this.setState(prevState => ({
     params: (
       // either change existing param or add a new one
       params => find(params, ({ name }) => name === param) ? params : params.concat({ name: param })
@@ -90,7 +90,8 @@ export default class ActionInvocationEditor extends Component {
         ...(param === name && {
           value: (this.getParamSchema(param) || {}).type === 'boolean' ? // toggle boolean values
             !(find(prevState.params, ({ name: n }) => n === name) || {}).value :
-            value
+            value,
+          expression
         })
       })
     )
@@ -157,7 +158,7 @@ export default class ActionInvocationEditor extends Component {
     }
   })
 
-  getParamValue = name => (find(this.state.params, ({ name: paramName }) => paramName === name) || {}).value
+  getParam = name => find(this.state.params, ({ name: paramName }) => paramName === name) || {}
 
   getParamSchema = param => getParamSchema({
     actions: this.props.actions,
@@ -252,9 +253,9 @@ export default class ActionInvocationEditor extends Component {
                     (
                       <ParamsEditor
                         paramsSchema={actions[actionName].paramsSchema}
-                        values={
+                        params={
                           Object.keys(actions[actionName].paramsSchema.properties).reduce(
-                            (acc, cur) => ({ ...acc, [cur]: this.getParamValue(cur) }), {}
+                            (acc, cur) => ({ ...acc, [cur]: this.getParam(cur) }), {}
                           )
                         }
                         onChangeParam={this.handleChangeParam}

@@ -163,12 +163,12 @@ export default class GuardEditor extends PureComponent {
     guard: { ...prevState.guard, expression: '' }
   }), this.autoPlay)
 
-  getParamValue = name => (find(
+  getParamValue = name => find(
     (this.state.guard.params || []),
     ({ name: paramName }) => paramName === name
-  ) || {}).value;
+  ) || {};
 
-  handleChangeParam = param => value => this.setState(prevState => ({
+  handleChangeParam = param => ({ value }) => this.setState(prevState => ({
     guard: {
       ...prevState.guard,
       params: (
@@ -314,9 +314,9 @@ export default class GuardEditor extends PureComponent {
                         (
                           <ParamsEditor
                             paramsSchema={conditions[guard.name].paramsSchema}
-                            values={
+                            params={
                               Object.keys(conditions[guard.name].paramsSchema.properties).reduce(
-                                (acc, cur) => ({ ...acc, [cur]: this.getParamValue(cur) }), {}
+                                (acc, cur) => ({ ...acc, [cur]: this.getParam(cur) }), {}
                               )
                             }
                             onChangeParam={this.handleChangeParam}

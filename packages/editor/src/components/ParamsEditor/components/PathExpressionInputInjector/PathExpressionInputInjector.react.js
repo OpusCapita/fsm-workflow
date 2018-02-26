@@ -6,18 +6,31 @@ import ExpressionEditor from './ExpressionEditor.react';
 
 export default WrappedComponent => class WithPathExpressionInput extends PureComponent {
   static propTypes = {
-    label: PropTypes.string.isRequired
+    label: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    expression: PropTypes.string
   }
 
   state = {
-    expression: false,
+    expression: !!this.props.expression,
     showDialog: false
   }
 
-  handleChange = _ => this.setState(prevState => ({
+  handleChange = ({ value, ...rest }) => this.props.onChange({
+    value,
+    ...rest,
+    ...(this.state.expression && { expression: 'path' })
+  })
+
+  handleSelectProp = path => {
+    this.handleChange({ value: path })
+    this.handleClose()
+  }
+
+  handleToggleMode = _ => this.setState(prevState => ({
     expression: !prevState.expression,
     ...(!prevState.expression && { showDialog: true })
-  }))
+  }), _ => this.handleChange({ value: null }))
 
   handleEdit = _ => this.setState({ showDialog: true })
 
@@ -28,13 +41,15 @@ export default WrappedComponent => class WithPathExpressionInput extends PureCom
     const { expression, showDialog } = this.state;
 
     const newProps = {
+      ...props,
       label: _ => (
         <ExpressionSwitcher
           label={label}
           expression={expression}
-          onChange={this.handleChange}
+          onClick={this.handleToggleMode}
         />
-      )
+      ),
+      onChange: this.handleChange
     }
 
     if (expression) {
@@ -46,13 +61,16 @@ export default WrappedComponent => class WithPathExpressionInput extends PureCom
       )
     }
 
+    delete newProps.expression;
+
     return (
       <div>
-        <WrappedComponent {...props} {...newProps}/>
+        <WrappedComponent {...newProps}/>
         {
           showDialog && (
             <ExpressionEditor
               onClose={this.handleClose}
+              onSelect={this.handleSelectProp}
             />
           )
         }

@@ -13,12 +13,12 @@ export default class GenericEditor extends PureComponent {
     paramsSchema: PropTypes.shape({
       properties: PropTypes.objectOf.isRequired
     }),
-    values: PropTypes.object,
+    params: PropTypes.object,
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
     onChangeParam: PropTypes.func.isRequired
   }
 
-  getParamValue = name => (this.props.values || {})[name];
+  getParam = name => (this.props.params || {})[name] || {};
 
   render() {
     const { onChangeParam, componentsRegistry } = this.props;
@@ -26,7 +26,7 @@ export default class GenericEditor extends PureComponent {
 
     const inputs = Object.keys(params).map((name, i) => {
       const paramSchema = params[name];
-      const paramValue = this.getParamValue(name);
+      const { value: paramValue, expression } = this.getParam(name);
       const type = (paramSchema || {}).type;
       const customComponentName = (paramSchema || {}).uiComponent;
       const CustomComponent = (componentsRegistry || {})[customComponentName];
@@ -71,6 +71,7 @@ export default class GenericEditor extends PureComponent {
               onChange={handleChange}
               placeholder="Enter value"
               value={paramValue}
+              expression={expression}
             />
           )
     });

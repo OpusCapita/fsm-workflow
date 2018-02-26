@@ -5,7 +5,11 @@ export default class ExpressionSwitcher extends PureComponent {
   static propTypes = {
     label: PropTypes.string.isRequired,
     expression: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired
+  }
+
+  static contextTypes = {
+    objectConfiguration: PropTypes.object.isRequired
   }
 
   componentDidMount() {
@@ -18,11 +22,12 @@ export default class ExpressionSwitcher extends PureComponent {
     }
   }
 
-  handleChange = this.props.onChange
+  handleChange = this.props.onClick
 
   handleRef = el => this.ref = el; // eslint-disable-line no-return-assign
 
   render() {
+    const { objectConfiguration: { alias = 'object' } } = this.context;
     const { label, expression } = this.props;
 
     return (
@@ -36,7 +41,7 @@ export default class ExpressionSwitcher extends PureComponent {
             {
               expression ?
                 `Switch to regular value` :
-                `Choose property`
+                `Choose property of ${alias}`
             }
           </a>
         </span>
