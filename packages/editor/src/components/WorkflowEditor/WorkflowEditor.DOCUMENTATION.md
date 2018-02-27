@@ -236,7 +236,16 @@
           "grossAmount": 1200,
           "vatAmount": 200,
           "currencyId": "EUR",
-          "status": "reviewRequired"
+          "status": "reviewRequired",
+          "secondaryObject": {
+            "number": 5675756,
+            "text": "WHoa im text",
+            "stringArray": ["first", "second", "boogaloo"],
+            "thirdLevel": {
+              "secretProp": "Secret indeed.",
+              "someOtherProp": "23423432"
+            }
+          }
         }
       }
     },

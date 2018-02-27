@@ -19,7 +19,7 @@ import CodeEditor from '../CodeEditor';
 import ErrorLabel from '../ErrorLabel.react';
 import ObjectInspector from '../ObjectInspector.react';
 import ParamsEditor from '../ParamsEditor';
-import { formatLabel, isDef } from '../utils';
+import { formatLabel, isDef, unifyPath } from '../utils';
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -104,7 +104,7 @@ export default class GuardEditor extends PureComponent {
       guard
     } = this.state;
 
-    const workablePath = path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('');
+    const workablePath = unifyPath(path);
     const injectedValue = `${alias || 'object'}${workablePath}`
 
     const { expression } = guard;
@@ -410,7 +410,7 @@ export default class GuardEditor extends PureComponent {
                   </div>
                   <div>
                     <ObjectInspector
-                      name={formatLabel(alias || 'object')}
+                      name={alias || 'object'}
                       object={exampleObject}
                       onClickPropName={this.handleObjectPropClick}
                     />

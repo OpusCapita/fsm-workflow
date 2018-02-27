@@ -6,6 +6,8 @@ export const isDef = v => v !== undefined && v !== null;
 
 export const formatLabel = str => startCase(str);
 
+export const unifyPath = path => path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('');
+
 export const formatArg = ({ i18n, schema = {}, value, expression }) => {
   if (expression) {
     return (<span><span className="badge badge-secondary">Expression</span>{`\u2000${value}`}</span>)

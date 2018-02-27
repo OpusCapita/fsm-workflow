@@ -3,21 +3,20 @@ import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 import ObjectInspector from '../../../ObjectInspector.react';
-import { formatLabel } from '../../../utils';
+import { unifyPath } from '../../../utils';
 
 export default class ExpressionEditor extends PureComponent {
   static propTypes = {
     onClose: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired
+    onSelect: PropTypes.func.isRequired,
+    currentPath: PropTypes.string
   }
 
   static contextTypes = {
     objectConfiguration: PropTypes.object.isRequired
   }
 
-  handleClick = ({ path }) => this.props.onSelect(
-    path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('')
-  )
+  handleClick = ({ path }) => this.props.onSelect(unifyPath(path))
 
   render() {
     const {
@@ -26,6 +25,8 @@ export default class ExpressionEditor extends PureComponent {
         example
       }
     } = this.context;
+
+    const { currentPath } = this.props;
 
     return (
       <Modal
@@ -41,9 +42,11 @@ export default class ExpressionEditor extends PureComponent {
         </Modal.Header>
         <Modal.Body>
           <ObjectInspector
-            name={formatLabel(alias)}
+            name={alias}
             object={example}
             onClickPropName={this.handleClick}
+            showValues={false}
+            currentPath={currentPath}
           />
         </Modal.Body>
         <Modal.Footer>

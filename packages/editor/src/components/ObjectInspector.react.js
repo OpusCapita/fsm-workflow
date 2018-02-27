@@ -9,29 +9,31 @@ import {
   ObjectValue,
   chromeLight
 } from 'react-inspector';
+import { unifyPath } from './utils';
 
 export default class ExampleObjectInspector extends PureComponent {
   static propTypes = {
     name: PropTypes.string,
     object: PropTypes.object,
     onClickPropName: PropTypes.func,
-    hideValues: PropTypes.bool
+    showValues: PropTypes.bool,
+    currentPath: PropTypes.string
   }
 
   static defaultProps = {
     object: {},
-    hideValues: false
+    showValues: true
   }
 
   handleClickPropName = propData => _ => this.props.onClickPropName(propData);
 
   exampleObjectNodeRenderer = ({ depth, name, data, isNonenumerable, path }) => {
-    const { onClickPropName } = this.props;
+    const { onClickPropName, showValues, currentPath } = this.props;
 
     return depth === 0 ?
       (
         <span>
-          <ObjectName name={name}/>:
+          <ObjectName name={name} styles={{ fontWeight: 'bold' }}/>
         </span>
       ) :
       (
@@ -47,10 +49,20 @@ export default class ExampleObjectInspector extends PureComponent {
             <ObjectName
               name={name}
               dimmed={isNonenumerable}
+              styles={{
+                padding: '3px',
+                ...(currentPath === unifyPath(path) && {
+                  background: '#337ab7',
+                  color: 'white'
+                })
+              }}
             />
           </span>
-          <span>: </span>
-          <ObjectValue object={data}/>
+          {
+            showValues && (
+              <span style={{ marginLeft: '10px' }}><ObjectValue object={data}/></span>
+            )
+          }
         </span>
       )
   }
@@ -65,7 +77,12 @@ export default class ExampleObjectInspector extends PureComponent {
         name={name}
         theme={{ ...chromeLight, ...({
           TREENODE_FONT_SIZE: '14px',
-          TREENODE_LINE_HEIGHT: '24px'
+          TREENODE_LINE_HEIGHT: '24px',
+          BASE_FONT_FAMILY: `"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif`,
+          TREENODE_FONT_FAMILY: `"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif`,
+          OBJECT_NAME_COLOR: 'black',
+          ARROW_COLOR: 'black',
+          ARROW_FONT_SIZE: 14
         }) }}
         nodeRenderer={this.exampleObjectNodeRenderer}
       />

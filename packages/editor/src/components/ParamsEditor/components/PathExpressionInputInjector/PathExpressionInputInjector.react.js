@@ -47,7 +47,7 @@ export default WrappedComponent => class WithPathExpressionInput extends PureCom
 
   handleClose = ({ selected } = {}) => this.setState(prevState => ({
     showDialog: false,
-    ...(!selected && { expression: false })
+    ...(!selected && !this.props.param.value && { expression: false })
   }))
 
   render() {
@@ -84,6 +84,7 @@ export default WrappedComponent => class WithPathExpressionInput extends PureCom
             <ExpressionEditor
               onClose={this.handleClose}
               onSelect={this.handleSelectProp}
+              {...(param.expression && { currentPath: param.value })}
             />
           )
         }
