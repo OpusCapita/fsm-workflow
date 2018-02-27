@@ -273,7 +273,9 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-      - deploy-demo
+      - deploy-demo:
+          requires:
+            - build
 
   nightly:
     triggers:
