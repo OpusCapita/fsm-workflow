@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
-import getParamComponent from './';
 import './ArrayEditor.less';
 import withExpressionInput from './PathExpressionInputInjector';
 
@@ -13,7 +11,7 @@ export default class ArrayEditor extends PureComponent {
       PropTypes.arrayOf(PropTypes.any),
       PropTypes.string
     ]),
-    schema: PropTypes.object,
+    itemComponent: PropTypes.func,
     onChange: PropTypes.func.isRequired,
     component: PropTypes.func
   }
@@ -29,7 +27,7 @@ export default class ArrayEditor extends PureComponent {
   )
 
   render() {
-    const { label, value, schema, component: Component } = this.props;
+    const { label, value, itemComponent: ItemComponent, component: CustomComponent } = this.props;
 
     let renderLabel = label;
 
@@ -47,7 +45,7 @@ export default class ArrayEditor extends PureComponent {
                 <label className="control-label">{renderLabel}</label>
               </th>
               {
-                !Component && (
+                !CustomComponent && (
                   <th className='text-right'>
                     <i
                       className='fa fa-plus'
@@ -61,24 +59,19 @@ export default class ArrayEditor extends PureComponent {
           </thead>
           <tbody>
             {
-              Component ?
+              CustomComponent ?
                 (
                   <tr>
                     <td>
-                      <Component value={value} onChange={this.props.onChange}/>
+                      <CustomComponent value={value} onChange={this.props.onChange}/>
                     </td>
                   </tr>
                 ) :
                 (
-                  Component => (Array.isArray(value) ? value : []).map((v, i) => (
+                  (Array.isArray(value) ? value : []).map((v, i) => (
                     <tr key={`${i}`}>
                       <td>
-                        {
-                          <Component
-                            value={v}
-                            onChange={this.handleChange(i)}
-                          />
-                        }
+                        <ItemComponent value={v} onChange={this.handleChange(i)}/>
                       </td>
                       <td className='text-right'>
                         <i
@@ -89,7 +82,7 @@ export default class ArrayEditor extends PureComponent {
                       </td>
                     </tr>
                   ))
-                )(getParamComponent(schema.items))
+                )
             }
           </tbody>
         </table>

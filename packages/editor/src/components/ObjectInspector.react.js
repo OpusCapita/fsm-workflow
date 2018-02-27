@@ -50,7 +50,7 @@ export default class ExampleObjectInspector extends PureComponent {
               name={name}
               dimmed={isNonenumerable}
               styles={{
-                padding: '3px',
+                padding: '5px',
                 ...(currentPath === unifyPath(path) && {
                   background: '#337ab7',
                   color: 'white'

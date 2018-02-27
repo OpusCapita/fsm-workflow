@@ -12,6 +12,11 @@ import guardPropTypes from './guardPropTypes';
 import GuardEditor from './GuardEditor.react';
 import './Guards.less';
 
+const removeEmptyParams = ({ params, ...rest }) => {
+  const newParams = params.filter(({ value }) => isDef(value));
+  return { ...rest, ...(newParams.length && { params: newParams }) }
+}
+
 @withConfirmDialog
 export default class GuardsTable extends PureComponent {
   static propTypes = {
@@ -70,13 +75,14 @@ export default class GuardsTable extends PureComponent {
   handleSaveGuard = index => guard => this.setState(prevState => {
     const guardIsDefined = ('expression' in guard && !!guard.expression) ||
       Object.keys(guard).filter(k => k !== 'expression').length > 0;
+    const cleanGuard = removeEmptyParams(guard);
     let newGuards;
     if (isDef(index)) {
       newGuards = guardIsDefined ?
-        prevState.guards.map((g, i) => i === index ? guard : g) :
+        prevState.guards.map((g, i) => i === index ? cleanGuard : g) :
         prevState.guards.filter((_, i) => i !== index)
     } else {
-      newGuards = guardIsDefined && prevState.guards.concat(guard)
+      newGuards = guardIsDefined && prevState.guards.concat(cleanGuard)
     }
     return newGuards ? { guards: newGuards } : {}
   }, this.handleCloseEditor);
@@ -176,9 +182,11 @@ export default class GuardsTable extends PureComponent {
                                   </tbody>
                                 </table>
                               ) :
-                              (
-                                <pre>{expression}</pre>
-                              )
+                              expression ?
+                                (
+                                  <pre>{expression}</pre>
+                                ) :
+                                null
                           }
                         </td>
                         <td className='text-right'>

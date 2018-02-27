@@ -29,7 +29,7 @@ export const formatArg = ({ i18n, schema = {}, value, expression }) => {
       return (
         <ol style={{ paddingLeft: '20px' }}>
           {
-            value.map((v, i) => (
+            (value || []).map((v, i) => (
               <li key={i}>{formatArg({ i18n, schema: schema.items, value: v })}</li>
             ))
           }

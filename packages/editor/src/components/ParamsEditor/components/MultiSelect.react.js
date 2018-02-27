@@ -23,7 +23,11 @@ export default class MultiSelect extends PureComponent {
     onChange: PropTypes.func.isRequired,
     id: PropTypes.string.isRequired,
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
-    schema: PropTypes.object,
+    schema: PropTypes.shape({
+      items: PropTypes.shape({
+        enum: PropTypes.array.isRequired
+      })
+    }).isRequired,
     component: PropTypes.func
   }
 
@@ -33,7 +37,7 @@ export default class MultiSelect extends PureComponent {
 
   value2rs = value => value2rs({
     i18n: this.context.i18n,
-    schema: (this.props.schema || {}).items,
+    schema: this.props.schema.items,
     value
   })
 
@@ -42,7 +46,7 @@ export default class MultiSelect extends PureComponent {
   render() {
     const { id, label, value, schema, component: Component } = this.props;
     const rs2value = (Array.isArray(value) ? value : []).map(this.value2rs);
-    const options = (((schema || {}).items || {}).enum || []).map(this.value2rs);
+    const options = schema.items.enum.map(this.value2rs);
 
     let renderLabel = label;
 

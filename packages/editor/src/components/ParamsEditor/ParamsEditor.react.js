@@ -49,9 +49,9 @@ export default class GenericEditor extends PureComponent {
             <ArrayEditor
               key={name}
               label={formatLabel(name)}
-              schema={paramSchema}
               param={param}
               onChange={handleChange}
+              itemComponent={getParamComponent(paramSchema.items)}
             />
           ) :
         // not an array

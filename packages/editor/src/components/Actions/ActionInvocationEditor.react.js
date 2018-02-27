@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import isEqual from 'lodash/isEqual';
+import omit from 'lodash/omit';
 import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
 import Table from 'react-bootstrap/lib/Table';
@@ -49,7 +50,10 @@ export default class ActionInvocationEditor extends Component {
   hasUnsavedChanges = _ => {
     const { name: pName = '', params: pArgs = [] } = this.props.action || {};
     const { name: sName, params: sArgs } = this.state;
-    const result = !isEqual({ name: pName, params: pArgs }, { name: sName, params: sArgs });
+    const result = !isEqual(
+      { name: pName, params: pArgs },
+      { name: sName, params: sArgs.map(p => omit(p, ['expression'])).filter(({ value }) => isDef(value)) }
+    );
     return result
   }
 

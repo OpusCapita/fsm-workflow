@@ -40,8 +40,8 @@ export default class ExpressionSwitcher extends PureComponent {
           >
             {
               expression ?
-                `Switch to regular value` :
-                `Choose property of ${alias}`
+                `Switch to regular input` :
+                `Select property of ${alias}`
             }
           </a>
         </span>

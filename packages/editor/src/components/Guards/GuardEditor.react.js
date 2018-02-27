@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
+import omit from 'lodash/omit';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 import Tabs from 'react-bootstrap/lib/Tabs';
@@ -79,9 +80,19 @@ export default class GuardEditor extends PureComponent {
     }
   }
 
-  hasUnsavedChanges = _ => this.props.guard ?
-    !isEqual(this.state.guard, this.props.guard) :
-    Object.keys(this.state.guard).length
+  hasUnsavedChanges = _ => {
+    const params = this.state.guard.params.
+      map(p => omit(p, ['expression'])).
+      filter(({ value }) => isDef(value));
+    const cmpStateGuard = { ...this.state.guard };
+    delete cmpStateGuard.params;
+    if (params.length) {
+      cmpStateGuard.params = params
+    }
+    return this.props.guard ?
+      !isEqual(cmpStateGuard, this.props.guard) :
+      Object.keys(this.state.guard).length
+  }
 
   handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,

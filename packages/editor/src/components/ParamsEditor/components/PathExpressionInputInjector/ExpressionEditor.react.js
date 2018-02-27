@@ -37,7 +37,7 @@ export default class ExpressionEditor extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            Choose property of {alias}
+            Select property of {alias}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
