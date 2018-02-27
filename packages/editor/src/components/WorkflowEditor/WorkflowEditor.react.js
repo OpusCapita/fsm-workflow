@@ -314,7 +314,6 @@ export default class WorkflowEditor extends PureComponent {
                   onSaveGuards={this.handleSaveTransitionGuards}
                   onSaveActions={this.handleSaveTransitionActions}
                   componentsRegistry={this.props.componentsRegistry}
-                  objectConfiguration={schema.objectConfiguration}
                 />
               </Tab>
             </Tabs>

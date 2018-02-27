@@ -28,16 +28,19 @@ export default class ActionInvocationEditor extends Component {
       event: PropTypes.string,
     }),
     onClose: PropTypes.func.isRequired,
-    objectConfiguration: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
+  }
+
+  static contextTypes = {
+    objectConfiguration: PropTypes.object.isRequired
   }
 
   state = {
     name: '',
     params: [],
     ...(this.props.action || {}),
-    exampleObject: JSON.stringify(this.props.objectConfiguration.example, null, 2),
+    exampleObject: JSON.stringify(this.context.objectConfiguration.example, null, 2),
     invocationResults: null,
     autoplay: false,
     showExampleObject: false
@@ -88,7 +91,7 @@ export default class ActionInvocationEditor extends Component {
         name,
         ...rest,
         ...(param === name && {
-          value: (this.getParamSchema(param) || {}).type === 'boolean' ? // toggle boolean values
+          value: (this.getParamSchema(param) || {}).type === 'boolean' && !expression ? // toggle boolean values
             !(find(prevState.params, ({ name: n }) => n === name) || {}).value :
             value,
           expression

@@ -25,13 +25,14 @@ export default class GenericEditor extends PureComponent {
     const { properties: params } = this.props.paramsSchema;
 
     const inputs = Object.keys(params).map((name, i) => {
+      const param = this.getParam(name);
       const paramSchema = params[name];
-      const { value: paramValue, expression } = this.getParam(name);
       const type = (paramSchema || {}).type;
       const customComponentName = (paramSchema || {}).uiComponent;
       const CustomComponent = (componentsRegistry || {})[customComponentName];
       const handleChange = onChangeParam(name);
 
+      // TODO maybe unify components API / create a common wrapper to abstract param/component logic
       return type === 'array' ?
         ((paramSchema || {}).items || {}).enum ?
           (
@@ -39,7 +40,7 @@ export default class GenericEditor extends PureComponent {
               key={name}
               id={`${name}-${i}`}
               label={formatLabel(name)}
-              value={paramValue}
+              param={param}
               schema={paramSchema}
               onChange={handleChange}
             />
@@ -49,7 +50,7 @@ export default class GenericEditor extends PureComponent {
               key={name}
               label={formatLabel(name)}
               schema={paramSchema}
-              value={paramValue}
+              param={param}
               onChange={handleChange}
             />
           ) :
@@ -58,7 +59,7 @@ export default class GenericEditor extends PureComponent {
           (
             <CustomComponent
               label={formatLabel(name)}
-              value={paramValue}
+              param={param}
               onChange={handleChange}
             />
           ) :
@@ -69,9 +70,7 @@ export default class GenericEditor extends PureComponent {
               label={formatLabel(name)}
               component={getParamComponent(paramSchema)}
               onChange={handleChange}
-              placeholder="Enter value"
-              value={paramValue}
-              expression={expression}
+              param={param}
             />
           )
     });
@@ -93,12 +92,6 @@ export default class GenericEditor extends PureComponent {
       }
     }
 
-    return (
-      <div>
-        {
-          grid
-        }
-      </div>
-    )
+    return (<div>{grid}</div>)
   }
 }

@@ -53,15 +53,18 @@ export default class GuardEditor extends PureComponent {
     conditions: PropTypes.shape({
       paramsSchema: PropTypes.object
     }),
-    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
   }
 
+  static contextTypes = {
+    objectConfiguration: PropTypes.object.isRequired
+  }
+
   state = {
     guard: this.props.guard || {},
-    exampleObject: this.props.objectConfiguration.example,
+    exampleObject: this.context.objectConfiguration.example,
     autoplay: true,
     guardEditorSelectorPos: {
       line: 0,
@@ -92,7 +95,7 @@ export default class GuardEditor extends PureComponent {
   })
 
   handleObjectPropClick = ({ path }) => {
-    const { alias } = this.props.objectConfiguration;
+    const { alias } = this.context.objectConfiguration;
     const {
       guardEditorSelectorPos: {
         line,
@@ -133,7 +136,7 @@ export default class GuardEditor extends PureComponent {
   autoPlay = _ => this.state.autoplay && this.handleEvalCode()
 
   handleEvalCode = _ => {
-    const { alias } = this.props.objectConfiguration;
+    const { alias } = this.context.objectConfiguration;
     const { expression: code } = this.state.guard;
     const object = this.state.exampleObject;
 
@@ -163,12 +166,12 @@ export default class GuardEditor extends PureComponent {
     guard: { ...prevState.guard, expression: '' }
   }), this.autoPlay)
 
-  getParamValue = name => find(
+  getParam = name => find(
     (this.state.guard.params || []),
     ({ name: paramName }) => paramName === name
   ) || {};
 
-  handleChangeParam = param => ({ value }) => this.setState(prevState => ({
+  handleChangeParam = param => ({ value, expression }) => this.setState(prevState => ({
     guard: {
       ...prevState.guard,
       params: (
@@ -179,9 +182,10 @@ export default class GuardEditor extends PureComponent {
           name,
           ...rest,
           ...(param === name && {
-            value: (this.props.conditions[this.state.guard.name] || {}).type === 'boolean' ? // toggle boolean values
+            value: (this.props.conditions[this.state.guard.name] || {}).type === 'boolean' && !expression ?
               !(find((prevState.guard.params || []), ({ name: n }) => n === name) || {}).value :
-              value
+              value,
+            expression
           })
         })
       )
@@ -243,6 +247,13 @@ export default class GuardEditor extends PureComponent {
   })(nextTab)
 
   render() {
+    const { objectConfiguration: { alias } } = this.context;
+
+    const {
+      conditions = {},
+      componentsRegistry = {}
+    } = this.props;
+
     const {
       guard,
       autoplay,
@@ -251,12 +262,6 @@ export default class GuardEditor extends PureComponent {
       result,
       activeTab
     } = this.state;
-
-    const {
-      objectConfiguration: { alias },
-      conditions = {},
-      componentsRegistry = {}
-    } = this.props;
 
     return (
       <Modal

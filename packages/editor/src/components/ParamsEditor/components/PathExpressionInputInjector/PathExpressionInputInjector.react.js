@@ -8,40 +8,55 @@ export default WrappedComponent => class WithPathExpressionInput extends PureCom
   static propTypes = {
     label: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    expression: PropTypes.string
+    param: PropTypes.shape({
+      value: PropTypes.any,
+      expression: PropTypes.string
+    })
   }
 
   state = {
-    expression: !!this.props.expression,
-    showDialog: false
+    expression: !!this.props.param.expression,
+    showDialog: false,
+    isSwitching: false
   }
 
-  handleChange = ({ value, ...rest }) => this.props.onChange({
+  // waiting for null value to come back from outside after switching back from expression to regular value
+  componentWillReceiveProps({ param: { value } }) {
+    const { expression, isSwitching } = this.state;
+    if (!expression && isSwitching) {
+      this.setState({ isSwitching: false })
+    }
+  }
+
+  handleChange = value => this.props.onChange({
     value,
-    ...rest,
-    ...(this.state.expression && { expression: 'path' })
+    expression: this.state.expression ? 'path' : null
   })
 
   handleSelectProp = path => {
-    this.handleChange({ value: path })
-    this.handleClose()
+    this.handleChange(path)
+    this.handleClose({ selected: true })
   }
 
   handleToggleMode = _ => this.setState(prevState => ({
     expression: !prevState.expression,
-    ...(!prevState.expression && { showDialog: true })
-  }), _ => this.handleChange({ value: null }))
+    ...(prevState.expression ? { isSwitching: true } : { showDialog: true })
+  }), _ => !this.state.expression && this.handleChange(null))
 
   handleEdit = _ => this.setState({ showDialog: true })
 
-  handleClose = _ => this.setState({ showDialog: false })
+  handleClose = ({ selected } = {}) => this.setState(prevState => ({
+    showDialog: false,
+    ...(!selected && { expression: false })
+  }))
 
   render() {
-    const { label, ...props } = this.props;
-    const { expression, showDialog } = this.state;
+    const { label, param, ...props } = this.props;
+    const { expression, showDialog, isSwitching } = this.state;
 
     const newProps = {
       ...props,
+      value: param.value,
       label: _ => (
         <ExpressionSwitcher
           label={label}
@@ -52,16 +67,14 @@ export default WrappedComponent => class WithPathExpressionInput extends PureCom
       onChange: this.handleChange
     }
 
-    if (expression) {
+    if (expression || isSwitching) {
       newProps.component = _ => (
         <ExpressionInput
-          value={props.value}
+          value={param.value}
           onClick={this.handleEdit}
         />
       )
     }
-
-    delete newProps.expression;
 
     return (
       <div>

@@ -13,13 +13,15 @@ const splitFullName = (str = '') => {
 export default class FullName extends PureComponent {
   static propTypes = {
     label: PropTypes.string.isRequired,
-    value: PropTypes.string,
+    param: PropTypes.shape({
+      value: PropTypes.string
+    }).isRequired,
     onChange: PropTypes.func.isRequired
   }
 
   constructor(...args) {
     super(...args);
-    const [first, last] = splitFullName(this.props.value);
+    const [first, last] = splitFullName(this.props.param.value);
 
     this.state = {
       first,
@@ -27,16 +29,14 @@ export default class FullName extends PureComponent {
     }
   }
 
-  componentWillReceiveProps({ value }) {
+  componentWillReceiveProps({ param: { value } = {} }) {
     const [first, last] = splitFullName(value);
-    this.setState({
-      first, last
-    })
+    this.setState({ first, last })
   }
 
   handleChange = _ => {
     const { first, last } = this.state;
-    this.props.onChange(first + ' ' + last)
+    this.props.onChange({ value: first + ' ' + last })
   }
 
   handleChangeFirstName = ({ target: { value } }) => this.setState({

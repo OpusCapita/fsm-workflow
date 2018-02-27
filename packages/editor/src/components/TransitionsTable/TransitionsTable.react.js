@@ -34,7 +34,6 @@ export default class TransitionsTable extends PureComponent {
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
     onSaveActions: PropTypes.func.isRequired,
-    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
@@ -77,7 +76,7 @@ export default class TransitionsTable extends PureComponent {
   }
 
   render() {
-    const { transitions, states, getStateLabel, actions, objectConfiguration, conditions } = this.props;
+    const { transitions, states, getStateLabel, actions, conditions } = this.props;
     const { showModal, currentTransition, modalType } = this.state;
 
     const rows = transitions.map(({ from, to, event }, index) => (
@@ -148,7 +147,6 @@ export default class TransitionsTable extends PureComponent {
               }"`}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveGuards(currentTransition)}
-              objectConfiguration={objectConfiguration}
             />
           );
           break;
@@ -167,7 +165,6 @@ export default class TransitionsTable extends PureComponent {
               getStateLabel={getStateLabel}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveActions(currentTransition)}
-              objectConfiguration={objectConfiguration}
               componentsRegistry={this.props.componentsRegistry}
             />
           );

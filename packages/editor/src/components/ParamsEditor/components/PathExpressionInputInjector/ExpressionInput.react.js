@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default class ExpressionInput extends PureComponent {
   static propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.any,
     onClick: PropTypes.func.isRequired
   }
 
@@ -20,7 +20,7 @@ export default class ExpressionInput extends PureComponent {
         }}
         onClick={this.props.onClick}
       >
-        {value || ''}
+        {typeof value === 'string' ? value : '\u2000'}
       </button>
     )
   }
