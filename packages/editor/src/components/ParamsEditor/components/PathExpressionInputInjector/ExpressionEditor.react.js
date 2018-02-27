@@ -16,7 +16,10 @@ export default class ExpressionEditor extends PureComponent {
     objectConfiguration: PropTypes.object.isRequired
   }
 
-  handleClick = ({ path }) => this.props.onSelect(unifyPath(path))
+  handleClick = ({ path }) => {
+    const { objectConfiguration: { alias = 'object' } } = this.context;
+    this.props.onSelect(`${alias}${unifyPath(path)}`)
+  }
 
   render() {
     const {

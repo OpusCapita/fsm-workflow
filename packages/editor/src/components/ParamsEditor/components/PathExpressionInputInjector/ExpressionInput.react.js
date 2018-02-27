@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { formatArg } from '../../../utils';
 
 export default class ExpressionInput extends PureComponent {
   static propTypes = {
@@ -14,13 +15,14 @@ export default class ExpressionInput extends PureComponent {
         type="button"
         className="btn btn-link"
         style={{
-          width: '100%',
           textAlign: 'left',
-          border: '1px solid #cccccc'
+          paddingLeft: 0,
+          textDecoration: 'none',
+          fontWeight: 'bold'
         }}
         onClick={this.props.onClick}
       >
-        {typeof value === 'string' ? value : '\u2000'}
+        {typeof value === 'string' ? formatArg({ value, expression: true }) : '\u2000'}
       </button>
     )
   }

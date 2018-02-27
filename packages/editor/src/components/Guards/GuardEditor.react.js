@@ -81,12 +81,12 @@ export default class GuardEditor extends PureComponent {
   }
 
   hasUnsavedChanges = _ => {
-    const params = this.state.guard.params.
+    const params = (this.state.guard.params || []).
       map(p => omit(p, ['expression'])).
       filter(({ value }) => isDef(value));
     const cmpStateGuard = { ...this.state.guard };
     delete cmpStateGuard.params;
-    if (params.length) {
+    if (params && params.length) {
       cmpStateGuard.params = params
     }
     return this.props.guard ?

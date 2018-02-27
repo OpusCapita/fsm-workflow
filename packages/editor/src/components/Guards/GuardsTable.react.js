@@ -12,7 +12,7 @@ import guardPropTypes from './guardPropTypes';
 import GuardEditor from './GuardEditor.react';
 import './Guards.less';
 
-const removeEmptyParams = ({ params, ...rest }) => {
+const removeEmptyParams = ({ params = [], ...rest }) => {
   const newParams = params.filter(({ value }) => isDef(value));
   return { ...rest, ...(newParams.length && { params: newParams }) }
 }

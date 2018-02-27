@@ -8,10 +8,6 @@ export default class ExpressionSwitcher extends PureComponent {
     onClick: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    objectConfiguration: PropTypes.object.isRequired
-  }
-
   componentDidMount() {
     // adjust label width
     if (this.ref) {
@@ -27,23 +23,22 @@ export default class ExpressionSwitcher extends PureComponent {
   handleRef = el => this.ref = el; // eslint-disable-line no-return-assign
 
   render() {
-    const { objectConfiguration: { alias = 'object' } } = this.context;
     const { label, expression } = this.props;
 
     return (
       <div ref={this.handleRef}>
         <span>{label}</span>
-        <span style={{ float: 'right' }}>
-          <a
-            style={{ marginLeft: '3px', cursor: 'pointer' }}
+        <span style={{ margin: '0 6px' }}>
+          (<a
+            style={{ margin: '0 3px', cursor: 'pointer' }}
             onClick={this.handleChange}
           >
             {
               expression ?
-                `Switch to regular input` :
-                `Select property of ${alias}`
+                `Enter value` :
+                `Define expression`
             }
-          </a>
+          </a>)
         </span>
       </div>
     )
