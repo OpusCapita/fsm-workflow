@@ -1,4 +1,4 @@
-import { flattenParams } from './utils';
+import getProperty from 'lodash.get';
 
 // return new array that contains unique values from original array
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
@@ -147,7 +147,7 @@ export default class MachineDefinition {
               }) :
               // guard is an actual function
               condition({
-                ...flattenParams(guards[idx].params),
+                ...this.prepareParams({ params: guards[idx].params, object }),
                 ...implicitParams
               })
             ).then(result => {
@@ -202,7 +202,7 @@ export default class MachineDefinition {
         return this.promise.all(
           automaticConditions.map((autoCondition, idx) => {
             return this.promise.resolve(autoCondition({
-              ...flattenParams(automatic[idx].params),
+              ...this.prepareParams({ params: automatic[idx].params, object }),
               from,
               to,
               event,
@@ -265,5 +265,27 @@ export default class MachineDefinition {
 
   static getDefaultObjectStateFieldName() {
     return "status";
+  }
+
+  prepareParams({ params = [], object }) {
+    const objectAlias = this.schema.objectConfiguration.alias;
+    return params.reduce((preparedParams, { name, value, expression }) => {
+      let paramValue = value;
+      if (expression === 'path') {
+        let path;
+        if (value.indexOf('object') === 0) {
+          path = value.slice('object'.length)
+        } else if (objectAlias && value.indexOf(objectAlias) === 0) {
+          path = value.slice(objectAlias.length)
+        } else {
+          throw new Error(`Invalid path ${value} supplied to param ${name}`)
+        }
+        paramValue = getProperty(object, path);
+      }
+      return {
+        ...preparedParams,
+        [name]: paramValue
+      }
+    }, {})
   }
 }
