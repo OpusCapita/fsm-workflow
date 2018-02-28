@@ -1,5 +1,6 @@
 const action = args => {
-  console.log('action "sendMail" executed')
+  console.log('action "sendMail" executed with args')
+  console.log(JSON.stringify(args, null, 2))
 }
 
 action.paramsSchema = {

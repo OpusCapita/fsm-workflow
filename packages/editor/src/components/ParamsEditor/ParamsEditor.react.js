@@ -32,7 +32,7 @@ export default class GenericEditor extends PureComponent {
       const CustomComponent = (componentsRegistry || {})[customComponentName];
       const handleChange = onChangeParam(name);
 
-      // TODO maybe unify components API / create a common wrapper to abstract param/component logic
+      // TODO maybe unify components API / create a common wrapper to abstract param/component props logic
       return type === 'array' ?
         ((paramSchema || {}).items || {}).enum ?
           (
