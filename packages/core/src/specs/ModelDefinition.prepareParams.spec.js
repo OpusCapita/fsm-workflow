@@ -28,25 +28,34 @@ describe('path expressions', function() {
     }
   })
 
+  const implicitParams = {
+    object,
+    ...machineDefinition.prepareObjectAlias(object)
+  }
+
   it('return evaluated path expressions', () => {
-    const newParams = machineDefinition.prepareParams({ params, object });
+    const newParams = machineDefinition.prepareParams({
+      explicitParams: params,
+      implicitParams
+    });
     assert.deepEqual({
       one: object.numberProp,
-      two: object.stringProp
+      two: object.stringProp,
+      ...implicitParams
     }, newParams)
   })
 
   it('throw for invalid path', () => {
     try {
       const newParams = machineDefinition.prepareParams({
-        params: [
+        explicitParams: [
           {
             name: 'three',
             expression: 'path',
             value: '["numberProp"]' // not prefixed -> error
           }
         ],
-        object
+        implicitParams
       });
       assert.fail(`Did not throw for invalid path; returned: ${newParams}`)
     } catch (err) {

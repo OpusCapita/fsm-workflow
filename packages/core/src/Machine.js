@@ -196,17 +196,20 @@ businessObjId: ...     // business object unique id (examples: '123456789')
         return machineDefinition.actions[actions[idx].name];
       });
 
+      const implicitParams = {
+        from,
+        to,
+        event,
+        object,
+        ...machineDefinition.prepareObjectAlias(object),
+        request,
+        context
+      }
+
       // reducing actionDefinitions to promise queue
       return actionDefinitions.reduce((executionAccumulator, action, idx) => {
         return executionAccumulator.then(({ actionExecutionResults, object }) => promise.resolve(action({
-          ...this.machineDefinition.prepareParams({ params: actions[idx].params, object }),
-          from,
-          to,
-          event,
-          object,
-          ...machineDefinition.prepareObjectAlias(object),
-          request,
-          context,
+          ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
           actionExecutionResults
         })).then(actionResult => promise.resolve({
           actionExecutionResults: actionExecutionResults.concat([
