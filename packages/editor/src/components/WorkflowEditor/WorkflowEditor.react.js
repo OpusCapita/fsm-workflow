@@ -40,20 +40,20 @@ export default class WorkflowEditor extends PureComponent {
           guards: PropTypes.arrayOf(guardPropTypes),
           actions: PropTypes.arrayOf(actionPropTypes)
         })),
-        states: PropTypes.arrayOf(statePropTypes),
-        objectConfiguration: PropTypes.shape({
-          alias: PropTypes.string,
-          stateFieldName: PropTypes.string,
-          example: PropTypes.object.isRequired,
-          schema: PropTypes.object
-        }).isRequired,
+        states: PropTypes.arrayOf(statePropTypes)
       }).isRequired,
       actions: PropTypes.objectOf(PropTypes.shape({
         paramsSchema: PropTypes.object
       })),
       conditions: PropTypes.objectOf(PropTypes.shape({
         paramsSchema: PropTypes.object
-      }))
+      })),
+      objectConfiguration: PropTypes.shape({
+        alias: PropTypes.string,
+        stateFieldName: PropTypes.string,
+        example: PropTypes.object.isRequired,
+        schema: PropTypes.object
+      }).isRequired,
     }).isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
@@ -235,7 +235,7 @@ export default class WorkflowEditor extends PureComponent {
 
   render() {
     const { schema } = this.state;
-    const { title, workflow: { actions, conditions } } = this.props;
+    const { title, workflow: { actions, conditions, objectConfiguration } } = this.props;
 
     return (
       <Grid>
@@ -297,7 +297,7 @@ export default class WorkflowEditor extends PureComponent {
                   onSaveGuards={this.handleSaveTransitionGuards}
                   onSaveActions={this.handleSaveTransitionActions}
                   componentsRegistry={this.props.componentsRegistry}
-                  objectConfiguration={schema.objectConfiguration}
+                  objectConfiguration={objectConfiguration}
                 />
               </Tab>
             </Tabs>

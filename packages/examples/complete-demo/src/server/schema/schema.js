@@ -1,30 +1,19 @@
 import fs from 'fs';
 import { resolve } from 'path';
 import { promisify } from 'util';
+import { readJSONFromFile } from '../utils';
 
-const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const schemaFilePath = resolve(__dirname, './workflow-schema.json');
 const defaultSchemaFilePath = resolve(__dirname, './default-schema.json');
 
 class Schema {
-  static readJSONFromFile = async function(filePath) {
-    const data = await readFile(filePath, 'utf8');
-    let object;
-    try {
-      object = JSON.parse(data)
-    } catch (err) {
-      throw err
-    }
-    return object
-  }
-
   init = async function() {
-    this.schema = await Schema.readJSONFromFile(schemaFilePath).
+    this.schema = await readJSONFromFile(schemaFilePath).
       catch(err => {
         if (err.code === 'ENOENT') {
           // 'schemaFilePath' file does not exist yet -> read default schema
-          return Schema.readJSONFromFile(defaultSchemaFilePath)
+          return readJSONFromFile(defaultSchemaFilePath)
         }
         throw err
       })
