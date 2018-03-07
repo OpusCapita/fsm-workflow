@@ -1,8 +1,0 @@
-:host = localhost
-:port = 3020
-
-GET http://:host::port/machine
-
-#
-
-GET http://:host::port/machines/machine1

@@ -1,0 +1,25 @@
+@editor-height: 200px;
+@editor-border: 1px solid #ddd;
+
+.oc-fsm-crud-editor--modal-actions-object {
+  height: 0;
+  opacity: 0;
+  transition: all .1s ease-in-out;
+}
+
+.oc-fsm-crud-editor--modal-actions-object.visible-object {
+  height: @editor-height;
+  opacity: 1;
+  transition: all .1s ease-in-out;
+}
+
+.oc-fsm-crud-editor--modal-actions-object .CodeMirror {
+  height:@editor-height;
+  border: @editor-border;
+}
+
+.oc-fsm-crud-editor--modal-actions-results .CodeMirror {
+  height:@editor-height;
+  border: @editor-border;
+  background: #f7f7f7;
+}

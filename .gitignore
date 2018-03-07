@@ -1,15 +1,17 @@
 .*.swp
 node_modules
-npm-debug.log
+.log
 yarn.lock
 package-lock.json
-yarn-error.log
+*.log
 test-results.xml
+test-results/report.xml
 .idea
 .nyc_output
 coverage
+.gh-pages-tmp
 
-core/lib
-gui/lib
-task-manager/lib
-business-object-history/.sequelizerc
+packages/core/lib
+packages/gui/lib
+packages/task-manager/lib
+packages/business-object-history/.sequelizerc
