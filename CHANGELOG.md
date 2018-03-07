@@ -1,4 +1,11 @@
 
+Release 1.0.10 Wed Mar 07 2018 08:14:48 GMT+0000 (UTC)
+=======================================================
+
+- Fix [#56](https://github.com/OpusCapita/fsm-workflow/issues/56) ([#57](https://github.com/OpusCapita/fsm-workflow/issues/57)) (GitHub amourzenkov-sc@users.noreply.github.com, 2018-03-07 09:20:18 +0300)
+- ESLINT fixes (Andrei Mourzenkov mourzenkov@scand.com, 2018-03-07 09:10:12 +0300)
+- Run "chmod +x" for ".circleci/scripts/*" (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-03-05 11:52:44 +0300)
+
 Release 1.0.9 Mon Feb 26 2018 08:19:38 GMT+0000 (UTC)
 =======================================================
 
