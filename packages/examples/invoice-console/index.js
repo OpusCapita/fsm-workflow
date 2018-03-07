@@ -7,7 +7,10 @@ let {MachineDefinition, Machine} = require("@opuscapita/fsm-workflow-core");
 let machineSchemaAsText = fs.readFileSync("./machine-schema.json", "utf8");
 
 let machineDefinition = new MachineDefinition({
-  schema: JSON.parse(machineSchemaAsText)
+  schema: JSON.parse(machineSchemaAsText),
+  objectConfiguration: {
+    stateFieldName: "status"
+  },
 });
 
 let invoiceMachine = new Machine({

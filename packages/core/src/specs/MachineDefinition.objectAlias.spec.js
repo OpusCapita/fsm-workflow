@@ -11,17 +11,15 @@ describe('machine definition: object alias', function() {
 
   it('prepareObjectAlias: objectConfiguration is defined, but alias is not defined -> empty object is returned', () => {
     const machineDefinition = new MachineDefinition({
-      schema: { objectConfiguration: { } }
+      objectConfiguration: {}
     });
     assert.deepEqual(machineDefinition.prepareObjectAlias(object), {});
   });
 
   it('prepareObjectAlias: objectConfiguration.alias is defined -> {<alias>: object} is returned', () => {
     const machineDefinition = new MachineDefinition({
-      schema: {
-        objectConfiguration: {
-          alias: "car"
-        }
+      objectConfiguration: {
+        alias: "car"
       }
     });
     assert.deepEqual(machineDefinition.prepareObjectAlias(object), { car: object });

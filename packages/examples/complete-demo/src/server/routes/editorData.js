@@ -1,5 +1,6 @@
 import express from 'express'
 import currentSchema from '../schema';
+import objectConfig from '../objectConfig';
 import { mapFuncsToParamsSchema } from '../utils';
 import actions from '../data/actions';
 import conditions from '../data/conditions';
@@ -7,11 +8,13 @@ import conditions from '../data/conditions';
 const router = express.Router();
 
 router.get('/api/editordata', async(req, res) => {
-  const schema = await currentSchema.getSchema();
+  const schema = currentSchema.getSchema();
+  const objectConfiguration = objectConfig.getConfig();
   res.send({
     schema,
     actions: mapFuncsToParamsSchema(actions),
-    conditions: mapFuncsToParamsSchema(conditions)
+    conditions: mapFuncsToParamsSchema(conditions),
+    objectConfiguration
   })
 })
 

@@ -22,7 +22,7 @@ export default class Editor extends PureComponent {
     superagent.
       get('/api/editordata').
       then(res => {
-        self.setState(prevState => ({ ...res.body }))
+        self.setState({ ...res.body })
       }).
       catch(err => {
         console.log(err);
@@ -54,13 +54,14 @@ export default class Editor extends PureComponent {
   }
 
   render() {
-    const { schema, actions, conditions } = this.state;
+    const { schema, actions, conditions, objectConfiguration } = this.state;
 
     const props = {
       workflow: {
         schema,
         actions,
-        conditions
+        conditions,
+        objectConfiguration
       },
       componentsRegistry,
       onSave: this.handleSave
