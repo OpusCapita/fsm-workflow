@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-task-manager",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Task manager for FSM workflow",
   "main": "./lib/index.js",
   "files": [
@@ -30,7 +30,7 @@
     "sequelizer": "^1.1.3"
   },
   "devDependencies": {
-    "@opuscapita/fsm-workflow-core": "1.0.10",
+    "@opuscapita/fsm-workflow-core": "1.0.11",
     "@opuscapita/npm-scripts": "2.0.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
