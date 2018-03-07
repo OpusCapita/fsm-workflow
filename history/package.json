@@ -12,7 +12,6 @@
     "start": "node ./src/demo/server",
     "debug": "npm start -- --inspect",
     "lint": "eslint .",
-    "lint-tab": "eslint . --rule '\"indent\": [2, \"tab\", { \"SwitchCase\": 1, \"VariableDeclarator\": 1 }]'",
     "test": "cross-env NODE_ENV=test mocha --reporter dot --recursive 'src/**/*.spec.js'",
     "npm-publish": "update-changelog -- --all && npm-publish",
     "publish-release": "npm run npm-publish -- --release"
