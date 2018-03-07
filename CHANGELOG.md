@@ -1,4 +1,9 @@
 
+Release 2.0.0 Wed Mar 07 2018 11:54:57 GMT+0000 (UTC)
+=======================================================
+
+- Moved objectConfiguration away from schema  ([#55](https://github.com/OpusCapita/fsm-workflow/issues/55)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-07 14:43:51 +0300)
+
 Release 1.0.10 Wed Mar 07 2018 08:14:48 GMT+0000 (UTC)
 =======================================================
 

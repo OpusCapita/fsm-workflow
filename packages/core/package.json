@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-core",
-  "version": "1.0.11",
+  "version": "2.0.0",
   "description": "FSM workflow (for Node.js)",
   "main": "lib/index.js",
   "files": [
