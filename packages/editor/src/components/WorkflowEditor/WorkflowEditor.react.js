@@ -252,7 +252,7 @@ export default class WorkflowEditor extends PureComponent {
 
   render() {
     const { schema } = this.state;
-    const { title, workflow: { actions, conditions, objectConfiguration } } = this.props;
+    const { title, workflow: { actions, conditions } } = this.props;
 
     return (
       <Grid>
