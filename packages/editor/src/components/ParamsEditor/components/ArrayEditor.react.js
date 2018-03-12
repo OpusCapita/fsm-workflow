@@ -18,21 +18,13 @@ export default class ArrayEditor extends PureComponent {
 
   handleAdd = _ => this.props.onChange((this.props.value || []).concat(null))
 
-  handleChange = index => newValue => {
-    const result = [...this.props.value.slice(0, index), newValue, ...this.props.value.slice(index + 1)];
-    console.log('change', this.props.value, { result })
-    this.props.onChange(
-      result
-    )
-  }
+  handleChange = index => newValue => this.props.onChange(
+    [...this.props.value.slice(0, index), newValue, ...this.props.value.slice(index + 1)]
+  )
 
-  handleDelete = index => _ => {
-    const result = [...this.props.value.slice(0, index), ...this.props.value.slice(index + 1)];
-    console.log('delete', this.props.value, { result })
-    this.props.onChange(
-      result
-    )
-  }
+  handleDelete = index => _ => this.props.onChange(
+    [...this.props.value.slice(0, index), ...this.props.value.slice(index + 1)]
+  )
 
   render() {
     const { label, value, itemComponent: ItemComponent, component: CustomComponent } = this.props;
