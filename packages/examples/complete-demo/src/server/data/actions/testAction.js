@@ -49,7 +49,7 @@ action.paramsSchema = {
         "type": "integer"
       }
     },
-    montlyInterestHistory: {
+    monthlyInterestHistory: {
       "type": "array",
       "items": {
         "type": "number"

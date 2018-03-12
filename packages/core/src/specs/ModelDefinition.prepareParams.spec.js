@@ -21,10 +21,8 @@ describe('path expressions', function() {
   ]
 
   const machineDefinition = new MachineDefinition({
-    schema: {
-      objectConfiguration: {
-        alias: 'invoice'
-      }
+    objectConfiguration: {
+      alias: 'invoice'
     }
   })
 
