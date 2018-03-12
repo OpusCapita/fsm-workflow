@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
 import omit from 'lodash/omit';
+import cloneDeep from 'lodash/cloneDeep';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 import Tabs from 'react-bootstrap/lib/Tabs';
@@ -81,17 +82,19 @@ export default class GuardEditor extends PureComponent {
   }
 
   hasUnsavedChanges = _ => {
-    const params = (this.state.guard.params || []).
+    const { guard, activeTab } = this.state;
+    const params = (guard.params || []).
       map(p => omit(p, ['expression'])).
       filter(({ value }) => isDef(value));
-    const cmpStateGuard = { ...this.state.guard };
+    const cmpStateGuard = { ...guard };
     delete cmpStateGuard.params;
     if (params && params.length) {
       cmpStateGuard.params = params
     }
     return this.props.guard ?
-      !isEqual(cmpStateGuard, this.props.guard) :
-      Object.keys(this.state.guard).length
+      !isEqual(cmpStateGuard, this.props.guard) &&
+      !(activeTab === 1 && !guard.name && this.props.guard.expression) :
+      Object.keys(guard).length
   }
 
   handleClose = this._triggerDialog({
@@ -149,7 +152,7 @@ export default class GuardEditor extends PureComponent {
   handleEvalCode = _ => {
     const { alias } = this.context.objectConfiguration;
     const { expression: code } = this.state.guard;
-    const object = this.state.exampleObject;
+    const object = cloneDeep(this.state.exampleObject);
 
     const result = code ?
       evaluateCode({

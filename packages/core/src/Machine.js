@@ -74,8 +74,10 @@ businessObjId: ...     // business object unique id (examples: '123456789')
   // @param description - event/transition/object description (this info will be writted into object wortkflow history)
   // N!B!: history record fields 'from' is set to ''NULL' value and 'event' to '__START__' value
   start({ object, user, description }) {
-    const { name, initialState, objectConfiguration } = this.machineDefinition.schema;
-    const { stateFieldName } = objectConfiguration;
+    const {
+      schema: { name, initialState },
+      objectConfiguration: { stateFieldName }
+    } = this.machineDefinition;
     const { convertObjectToReference } = this;
     // eslint-disable-next-line no-param-reassign
     object[stateFieldName] = initialState;
@@ -97,7 +99,7 @@ businessObjId: ...     // business object unique id (examples: '123456789')
 
   // returns current object state
   currentState({ object }) {
-    const { stateFieldName } = this.machineDefinition.schema.objectConfiguration;
+    const { stateFieldName } = this.machineDefinition.objectConfiguration;
     return object[stateFieldName];
   }
 
@@ -141,9 +143,10 @@ businessObjId: ...     // business object unique id (examples: '123456789')
   // @param request - event request data
   sendEvent({ object, event, user, description, request }) {
     const { machineDefinition, convertObjectToReference } = this;
-    const { schema } = machineDefinition;
-    const { objectConfiguration, name: workflowName } = schema;
-    const { stateFieldName } = objectConfiguration;
+    const {
+      schema: { name: workflowName },
+      objectConfiguration: { stateFieldName }
+    } = machineDefinition;
     // calculate from state
     const from = this.currentState({ object });
     // get context

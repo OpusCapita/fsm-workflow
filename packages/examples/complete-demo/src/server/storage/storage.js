@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import Sequelize from 'sequelize';
 import Sequelizer from 'sequelizer';
 import { objectIdProp } from '../../common';
-import currentSchema from '../schema';
+import objectConfig from '../objectConfig';
 
 const sqlitePath = resolve(__dirname, './demo.sqlite');
 
@@ -24,8 +24,8 @@ class Storage {
     });
 
     // create Invoice model from JSON schema
-    const schema = currentSchema.getSchema();
-    const definition = Sequelizer.fromJsonSchema(schema.objectConfiguration.schema, 'InvoiceSchema', {
+    const objectSchema = objectConfig.getConfig().schema;
+    const definition = Sequelizer.fromJsonSchema(objectSchema, 'InvoiceSchema', {
       uniqueFields: [objectIdProp]
     });
 

@@ -14,6 +14,7 @@ import historyRoute from './routes/history';
 import storage from './storage';
 import fsm from './fsm';
 import schema from './schema';
+import objectConfig from './objectConfig';
 import { generateObjects } from './utils';
 
 const port = process.env.PORT || 3000;
@@ -50,11 +51,13 @@ app.get('*', function(req, res) {
 
 (async function() {
   await schema.init();
+  await objectConfig.init();
   await storage.init();
   await fsm.init(storage.sequelize);
 
   // generate invoices based on schema
-  const invoices = generateObjects({ schema: schema.getSchema() })
+  const objectConfiguration = objectConfig.getConfig();
+  const invoices = generateObjects({ objectConfiguration })
   const { machine } = fsm;
   return Promise.all(invoices.map(invoice => {
     machine.start({ object: invoice, user: 'demouser' });

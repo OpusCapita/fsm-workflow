@@ -8,10 +8,10 @@ describe('machine: isRunning', function() {
         machineDefinition: {
           getAvailableStates: () => ['started', 'finished'],
           schema: {
-            finalStates: ['finished'],
-            objectConfiguration: {
-              stateFieldName: 'status'
-            }
+            finalStates: ['finished']
+          },
+          objectConfiguration: {
+            stateFieldName: 'status'
           }
         }
       }

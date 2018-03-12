@@ -2,9 +2,6 @@
   "name": "invoice approval",
   "initialState": "open",
   "finalStates": ["approved"],
-  "objectConfiguration": {
-    "stateFieldName": "status"
-  },
   "transitions": [{
     "from": "open",
     "event": "registration",

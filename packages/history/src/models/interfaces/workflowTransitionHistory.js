@@ -20,25 +20,25 @@ const search = model => {
 
   return (
     {
-      searchParameters: {
-        object: { businessObjId, businessObjType } = {},
-        user,
-        finishedOn = {}
-      } = {},
-      paging: {
-        max = 25,
-        offset = 0
-      } = {},
-      sorting: {
-        by = 'finishedOn',
-        order = 'desc'
-      } = {}
+      object: { businessObjId, businessObjType } = {},
+      user,
+      workflowName,
+      finishedOn = {}
+    } = {},
+    {
+      max = 25,
+      offset = 0
+    } = {},
+    {
+      by = 'finishedOn',
+      order = 'desc'
     } = {}
   ) => model.findAll({
     where: {
       ...(businessObjId && { businessObjId }),
       ...(businessObjType && { businessObjType }),
       ...(user && { user }),
+      ...(workflowName && { workflowName }),
       ...(Object.keys(finishedOn).length && {
         finishedOn: {
           ...(finishedOn.gt && { [gt]: finishedOn.gt }),

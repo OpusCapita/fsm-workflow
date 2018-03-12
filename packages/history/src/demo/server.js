@@ -48,6 +48,7 @@ workflowTransitionHistory(sequelize).
         businessObjType,
         businessObjId,
         user,
+        workflowName,
         finishedOnGt,
         finishedOnGte,
         finishedOnLt,
@@ -66,22 +67,19 @@ workflowTransitionHistory(sequelize).
       };
 
       return search({
-        searchParameters: {
-          object: {
-            businessObjType,
-            businessObjId
-          },
-          user,
-          finishedOn
+        object: {
+          businessObjType,
+          businessObjId
         },
-        paging: {
-          max: max ? Number(max) : undefined,
-          offset: offset ? Number(offset) : undefined
-        },
-        sorting: {
-          by,
-          order
-        }
+        user,
+        workflowName,
+        finishedOn
+      }, {
+        max: max ? Number(max) : undefined,
+        offset: offset ? Number(offset) : undefined
+      }, {
+        by,
+        order
       }).
         then(entries => res.json(entries));
     });

@@ -2,37 +2,22 @@
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
 
 export default class MachineDefinition {
-  /**
-   * eslint-disable-next-line max-len
-   * Here schema has objectConfiguration. It is required by machine/engine and editor:
-   * {
-   *   stateFieldName,       // (String) object property that holds current object state
-   *   schema,               // (Object) object JSON schema, will be used by the
-   *                         //   editor to build expressions using object structure information
-   *   alias,                // (String) object alias that will be used in action/guard
-   *                         //   calls an implicit variable that is a reference to an object.
-   *                         //   For example for invoice approval object alias could be 'invoice',
-   *                         //   e.g. in guard expression user could type invoice.total < 1
-   *                         //   instead of object.total < 1
-   *   example              // (Object) object example that is used in editor
-   * }
-   */
-  constructor({ schema = {}, conditions = {}, actions = {}, promise = MachineDefinition.defaultPromise() } = {}) {
+  constructor({
+    schema = {},
+    conditions = {},
+    actions = {},
+    objectConfiguration = {},
+    promise = MachineDefinition.defaultPromise()
+  } = {}) {
     // todo validate schema
     if (!promise) {
       throw new Error("'promise' is undefined");
     }
     // TODO: validate that name is passed (it wil be used by machine to write/read history)
 
-    const { objectConfiguration, ...restSchema } = schema;
-
     this.schema = {
-      objectConfiguration: {
-        stateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
-        ...objectConfiguration
-      },
       finalStates: [],
-      ...restSchema
+      ...schema
     };
     // condition is an object, where each property name is condition name and
     // value is condition implentation (function)
@@ -40,6 +25,24 @@ export default class MachineDefinition {
     // actions is an object, where each property is implemented action name and
     // value is action(function) itself
     this.actions = actions;
+    /*
+     * objectConfiguration is required by machine/engine and editor:
+     * {
+     *   stateFieldName,       // (String) object property that holds current object state
+     *   schema,               // (Object) object JSON schema, will be used by the
+     *                         //   editor to build expressions using object structure information
+     *   alias,                // (String) object alias that will be used in action/guard
+     *                         //   calls an implicit variable that is a reference to an object.
+     *                         //   For example for invoice approval object alias could be 'invoice',
+     *                         //   e.g. in guard expression user could type invoice.total < 1
+     *                         //   instead of object.total < 1
+     *   example              // (Object) object example that is used in editor
+     * }
+     */
+    this.objectConfiguration = {
+      stateFieldName: MachineDefinition.getDefaultObjectStateFieldName(),
+      ...objectConfiguration
+    };
     this.promise = promise;
   }
 
@@ -72,14 +75,11 @@ export default class MachineDefinition {
     }
   }
 
-  // if schema.objectConfiguration.alias is set up then
+  // if objectConfiguration.alias is set up then
   // JSON {<alias>: object} is returned otherwise empty JSON {}
   prepareObjectAlias(object) {
-    const { objectConfiguration } = this.schema;
-    if (objectConfiguration && objectConfiguration.alias) {
-      return { [objectConfiguration.alias]: object };
-    }
-    return {};
+    const { alias } = this.objectConfiguration;
+    return alias ? { [alias]: object } : {};
   }
 
   // evaluate explicit params and combine with implicit params

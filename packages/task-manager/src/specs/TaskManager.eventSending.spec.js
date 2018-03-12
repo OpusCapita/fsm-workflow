@@ -5,15 +5,15 @@ import TaskManager from '../TaskManager';
 describe('Task manager:event sending', function() {
   const machine = new Machine({
     machineDefinition: new MachineDefinition({
+      objectConfiguration: {
+        "stateFieldName": "status"
+      },
       schema: {
         "name": "test",
         "initialState": "init",
         "finalStates": [
           "finished"
         ],
-        "objectConfiguration": {
-          "stateFieldName": "status"
-        },
         "transitions": [
           {
             "from": "init",

@@ -46,6 +46,7 @@ export default class Container extends PureComponent {
     this.processMachine = new Machine({
       machineDefinition: new MachineDefinition({
         schema: require('../workflow/process-schema.json'),
+        objectConfiguration: require('../workflow/objectConfiguration.json'),
         actions: require('../workflow/actions').default,
         conditions: require('../workflow/conditions').default
       }),

@@ -1,4 +1,74 @@
 
+Release 2.0.0 Wed Mar 07 2018 11:54:57 GMT+0000 (UTC)
+=======================================================
+
+- Moved objectConfiguration away from schema  ([#55](https://github.com/OpusCapita/fsm-workflow/issues/55)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-07 14:43:51 +0300)
+
+Release 1.0.10 Wed Mar 07 2018 08:14:48 GMT+0000 (UTC)
+=======================================================
+
+- Fix [#56](https://github.com/OpusCapita/fsm-workflow/issues/56) ([#57](https://github.com/OpusCapita/fsm-workflow/issues/57)) (GitHub amourzenkov-sc@users.noreply.github.com, 2018-03-07 09:20:18 +0300)
+- ESLINT fixes (Andrei Mourzenkov mourzenkov@scand.com, 2018-03-07 09:10:12 +0300)
+- Run "chmod +x" for ".circleci/scripts/*" (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-03-05 11:52:44 +0300)
+
+Release 1.0.9 Mon Feb 26 2018 08:19:38 GMT+0000 (UTC)
+=======================================================
+
+
+Release 1.0.8 Mon Feb 26 2018 08:16:00 GMT+0000 (UTC)
+=======================================================
+
+
+Release 1.0.7 Mon Feb 26 2018 08:07:40 GMT+0000 (UTC)
+=======================================================
+
+- Include all steps into build. (Egor Stambakio stambakio@scand.com, 2018-02-26 10:09:09 +0300)
+- Merge pull request #51 from OpusCapita/issue-45/demo-app (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-02-26 09:46:29 +0300)
+- Pre-merge (Egor Stambakio stambakio@scand.com, 2018-02-26 09:26:13 +0300)
+- Merge branch 'master' into issue-45/demo-app (Egor Stambakio stambakio@scand.com, 2018-02-26 08:59:22 +0300)
+- Minor UI changes (Egor Stambakio stambakio@scand.com, 2018-02-23 14:46:56 +0300)
+- Added separate history page. (Egor Stambakio stambakio@scand.com, 2018-02-23 13:18:20 +0300)
+- Merged master [ci skip] (Egor Stambakio stambakio@scand.com, 2018-02-23 11:57:40 +0300)
+- Added router [ci skip] (Egor Stambakio stambakio@scand.com, 2018-02-23 11:36:41 +0300)
+- Added pagination to history table. (Egor Stambakio stambakio@scand.com, 2018-02-22 16:50:54 +0300)
+- Added history output on demo app main page. (Egor Stambakio stambakio@scand.com, 2018-02-22 16:01:11 +0300)
+- History is getting created on start up (Egor Stambakio stambakio@scand.com, 2018-02-22 14:47:48 +0300)
+- Improved build process for dev and prod environments. (Egor Stambakio stambakio@scand.com, 2018-02-22 14:20:27 +0300)
+- Splitted storage, schema and machine. (Egor Stambakio stambakio@scand.com, 2018-02-22 13:08:18 +0300)
+- Set up proper bundling (Egor Stambakio stambakio@scand.com, 2018-02-22 10:41:02 +0300)
+- Refactored folders (Egor Stambakio stambakio@scand.com, 2018-02-22 10:15:39 +0300)
+- Splitted fsm and storage setup into separate classes. (Egor Stambakio stambakio@scand.com, 2018-02-22 10:03:45 +0300)
+- Minor fixes (Egor Stambakio stambakio@scand.com, 2018-02-21 16:58:25 +0300)
+- Cleanup (Egor Stambakio stambakio@scand.com, 2018-02-21 16:33:21 +0300)
+- Adjusted packages versions to make lerna happy. (Egor Stambakio stambakio@scand.com, 2018-02-21 16:05:46 +0300)
+- Merge branch 'master' into issue-45/demo-app (Egor Stambakio stambakio@scand.com, 2018-02-21 16:00:13 +0300)
+- Demo app: implemented storage for objects using sqlite and sequelize. (Egor Stambakio stambakio@scand.com, 2018-02-21 15:50:57 +0300)
+- ..... (Egor Stambakio stambakio@scand.com, 2018-02-21 13:16:59 +0300)
+- Added floating notifications for successful save and failed fethes. (Egor Stambakio stambakio@scand.com, 2018-02-21 10:34:17 +0300)
+- Changed layout in demo app. (Egor Stambakio stambakio@scand.com, 2018-02-21 09:11:25 +0300)
+- ..... (Egor Stambakio stambakio@scand.com, 2018-02-20 16:56:22 +0300)
+- ... (Egor Stambakio stambakio@scand.com, 2018-02-20 16:50:15 +0300)
+- Skip needless work for now. (Egor Stambakio stambakio@scand.com, 2018-02-20 16:46:51 +0300)
+- Hooked up fsm editor in demo app. (Egor Stambakio stambakio@scand.com, 2018-02-20 16:44:51 +0300)
+- Explicit node call (Egor Stambakio stambakio@scand.com, 2018-02-20 14:21:39 +0300)
+- ...2 (Egor Stambakio stambakio@scand.com, 2018-02-20 14:18:20 +0300)
+- ... (Egor Stambakio stambakio@scand.com, 2018-02-20 14:16:00 +0300)
+- Trying a build. (Egor Stambakio stambakio@scand.com, 2018-02-20 14:12:35 +0300)
+- Merge branch 'master' into issue-45/demo-app (Egor Stambakio stambakio@scand.com, 2018-02-20 13:57:46 +0300)
+- Docker builds correctly. (Egor Stambakio stambakio@scand.com, 2018-02-20 13:53:39 +0300)
+- Starting docker build process. (Egor Stambakio stambakio@scand.com, 2018-02-20 11:24:57 +0300)
+- Implemented basic demo; editor not hooked up yet. (Egor Stambakio stambakio@scand.com, 2018-02-19 16:51:09 +0300)
+- Merge branch 'guards-hotfix' into issue-45/demo-app (Egor Stambakio stambakio@scand.com, 2018-02-19 14:00:51 +0300)
+- ... (Egor Stambakio stambakio@scand.com, 2018-02-19 13:40:46 +0300)
+- Merged master (Egor Stambakio stambakio@scand.com, 2018-02-19 13:31:55 +0300)
+- Pre-merge (Egor Stambakio stambakio@scand.com, 2018-02-19 12:10:57 +0300)
+- Basic skeleton done; server generates example objects [ci skip]. (Egor Stambakio stambakio@scand.com, 2018-02-16 15:19:54 +0300)
+- ... [ci skip] (Egor Stambakio stambakio@scand.com, 2018-02-16 15:03:36 +0300)
+- App found React in globals, hooray. Starting actual development. [ci skip] (Egor Stambakio stambakio@scand.com, 2018-02-16 11:25:11 +0300)
+- Broken React imports [ci skip] (Egor Stambakio stambakio@scand.com, 2018-02-16 09:55:38 +0300)
+- App is broken ) [ci skip] (Egor Stambakio stambakio@scand.com, 2018-02-15 15:43:01 +0300)
+- Started. [ci skip] (Egor Stambakio stambakio@scand.com, 2018-02-15 10:25:46 +0300)
+
 Release 1.0.6 Fri Feb 23 2018 09:01:00 GMT+0000 (UTC)
 =======================================================
 

@@ -95,10 +95,10 @@ describe('machine definition: findAvailableTransitions', function() {
   describe("'guarded' transitions", function() {
     const machineDefinition = new MachineDefinition(
       {
+        objectConfiguration: {
+          alias: 'invoice'
+        },
         schema: {
-          objectConfiguration: {
-            alias: 'invoice'
-          },
           transitions: [
             {
               from: 'a',

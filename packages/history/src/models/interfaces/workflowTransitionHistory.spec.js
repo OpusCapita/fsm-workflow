@@ -103,24 +103,21 @@ describe('history', () => {
 
     it('should search for some history records', async () => {
       const records = (await search({
-        searchParameters: {
-          object: {
-            businessObjType: 'invoice',
-            businessObjId: '428-wb71'
-          },
-          user: 'Andy Smith',
-          finishedOn: {
-            gt: new Date('2018-01-02T12:04:05.000Z')
-          }
+        object: {
+          businessObjType: 'invoice',
+          businessObjId: '428-wb71'
         },
-        paging: {
-          max: 4,
-          offset: 1
-        },
-        sorting: {
-          by: 'businessObjType',
-          order: 'asc'
+        user: 'Andy Smith',
+        workflowName: 'test workflow',
+        finishedOn: {
+          gt: new Date('2018-01-02T12:04:05.000Z')
         }
+      }, {
+        max: 4,
+        offset: 1
+      }, {
+        by: 'businessObjType',
+        order: 'asc'
       })).map(raw => {
         const record = raw.get();
         delete record.finishedOn;

@@ -20,9 +20,9 @@ let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
   return new Machine(
     {
       machineDefinition: new MachineDefinition({
+        objectConfiguration,
         schema: {
           initialState: 'started',
-          objectConfiguration,
           transitions: [
             {
               from: "started",

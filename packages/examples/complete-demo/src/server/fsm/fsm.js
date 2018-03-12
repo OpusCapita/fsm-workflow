@@ -4,6 +4,7 @@ import actions from '../data/actions';
 import conditions from '../data/conditions';
 import { objectIdProp } from '../../common';
 import schema from '../schema';
+import objectConfig from '../objectConfig';
 
 class FSM {
   init = async function(sequelize) {
@@ -15,7 +16,8 @@ class FSM {
       machineDefinition: new MachineDefinition({
         schema: schema.getSchema(),
         actions,
-        conditions
+        conditions,
+        objectConfiguration: objectConfig.getConfig()
       }),
       convertObjectToReference: object => ({
         businessObjType: 'invoice',

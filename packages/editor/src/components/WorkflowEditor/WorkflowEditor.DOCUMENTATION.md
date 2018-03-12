@@ -17,6 +17,59 @@
   title="Invoice"
 
   workflow={{
+    objectConfiguration: {
+      stateFieldName: "status",
+      alias: "invoice",
+      schema: {
+        type: "object",
+        properties: {
+          invoiceNo: {
+            type: "string"
+          },
+          customerId: {
+            type: "string"
+          },
+          supplierId: {
+            type: "string"
+          },
+          netAmount: {
+            type: "integer"
+          },
+          grossAmount: {
+            type: "integer"
+          },
+          vatAmount: {
+            type: "integer"
+          },
+          currencyId: {
+            type: "string"
+          },
+          status: {
+            type: "string"
+          },
+        },
+        required: ["invoiceNo"]
+      },
+      example: {
+        "invoiceNo": "1111",
+        "customerId": "wefwefewfew",
+        "supplierId": "33333",
+        "netAmount": 1000,
+        "grossAmount": 1200,
+        "vatAmount": 200,
+        "currencyId": "EUR",
+        "status": "reviewRequired",
+        "secondaryObject": {
+          "number": 5675756,
+          "text": "WHoa im text",
+          "stringArray": ["first", "second", "boogaloo"],
+          "thirdLevel": {
+            "secretProp": "Secret indeed.",
+            "someOtherProp": "23423432"
+          }
+        }
+      }
+    },
     "schema": {
       "name": "InvoiceApproval",
       "initialState": "inspectionRequired",
@@ -194,60 +247,7 @@
         {
           "name": "approvalRejected"
         }
-      ],
-      objectConfiguration: {
-        stateFieldName: "status",
-        alias: "invoice",
-        schema: {
-          type: "object",
-          properties: {
-            invoiceNo: {
-              type: "string"
-            },
-            customerId: {
-              type: "string"
-            },
-            supplierId: {
-              type: "string"
-            },
-            netAmount: {
-              type: "integer"
-            },
-            grossAmount: {
-              type: "integer"
-            },
-            vatAmount: {
-              type: "integer"
-            },
-            currencyId: {
-              type: "string"
-            },
-            status: {
-              type: "string"
-            },
-          },
-          required: ["invoiceNo"]
-        },
-        example: {
-          "invoiceNo": "1111",
-          "customerId": "wefwefewfew",
-          "supplierId": "33333",
-          "netAmount": 1000,
-          "grossAmount": 1200,
-          "vatAmount": 200,
-          "currencyId": "EUR",
-          "status": "reviewRequired",
-          "secondaryObject": {
-            "number": 5675756,
-            "text": "WHoa im text",
-            "stringArray": ["first", "second", "boogaloo"],
-            "thirdLevel": {
-              "secretProp": "Secret indeed.",
-              "someOtherProp": "23423432"
-            }
-          }
-        }
-      }
+      ]
     },
     actions: {
       testAction: {
