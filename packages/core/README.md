@@ -32,41 +32,6 @@ const machineDefinition = new MachineDefinition({
     name: "invoice approval",
     initialState: "open",
     finalStates: ["approved"],
-    objectConfiguration: {
-      stateFieldName: "status",
-      alias: "invoice",
-      example: {
-        "invoiceNo": "1111",
-        "customerId": "wefwefewfew",
-        "supplierId": "33333",
-        "netAmount": 1000,
-        "status": "reviewRequired"
-      },
-      schema: {
-        {
-          title: "Invoice",
-          type: "object",
-          properties: {
-            invoiceNo: {
-              type: "string"
-            },
-            customerId: {
-              type: "string"
-            },
-            supplierId: {
-              type: "string"
-            },
-            netAmount: {
-              type: "number"
-            },
-            status: {
-              type: "string"
-            }
-          },
-          required: ["invoiceNo"]
-        }
-      }
-    },
     states: [
       { name: "open", description: "Open" },
       { name: "approved", description: "Approved" }
@@ -135,6 +100,41 @@ const machineDefinition = new MachineDefinition({
   conditions: {
     validate: function({ param1, param2 }) {},
     lastlyUpdatedMoreThan24hAgo: function({ param1, param2 }) {}
+  },
+  objectConfiguration: {
+    stateFieldName: "status",
+    alias: "invoice",
+    example: {
+      "invoiceNo": "1111",
+      "customerId": "wefwefewfew",
+      "supplierId": "33333",
+      "netAmount": 1000,
+      "status": "reviewRequired"
+    },
+    schema: {
+      {
+        title: "Invoice",
+        type: "object",
+        properties: {
+          invoiceNo: {
+            type: "string"
+          },
+          customerId: {
+            type: "string"
+          },
+          supplierId: {
+            type: "string"
+          },
+          netAmount: {
+            type: "number"
+          },
+          status: {
+            type: "string"
+          }
+        },
+        required: ["invoiceNo"]
+      }
+    }
   }
 });
 ```
