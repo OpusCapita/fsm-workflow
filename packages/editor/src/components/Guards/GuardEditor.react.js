@@ -92,7 +92,7 @@ export default class GuardEditor extends PureComponent {
     }
     const cmpPropsGuard = {
       ...this.props.guard,
-      ...(this.props.guard.params && { params: this.props.guard.params.map(omitIfEmpty('expression')) })
+      ...((this.props.guard || {}).params && { params: this.props.guard.params.map(omitIfEmpty('expression')) })
     }
     return this.props.guard ?
       !isEqual(cmpStateGuard, cmpPropsGuard) &&
