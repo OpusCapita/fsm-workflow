@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
-import omit from 'lodash/omit';
 import cloneDeep from 'lodash/cloneDeep';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
@@ -21,7 +20,7 @@ import CodeEditor from '../CodeEditor';
 import ErrorLabel from '../ErrorLabel.react';
 import ObjectInspector from '../ObjectInspector.react';
 import ParamsEditor from '../ParamsEditor';
-import { formatLabel, isDef, unifyPath } from '../utils';
+import { formatLabel, isDef, unifyPath, omitIfEmpty } from '../utils';
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -84,15 +83,19 @@ export default class GuardEditor extends PureComponent {
   hasUnsavedChanges = _ => {
     const { guard, activeTab } = this.state;
     const params = (guard.params || []).
-      map(p => omit(p, ['expression'])).
+      map(omitIfEmpty('expression')).
       filter(({ value }) => isDef(value));
     const cmpStateGuard = { ...guard };
     delete cmpStateGuard.params;
     if (params && params.length) {
-      cmpStateGuard.params = params
+      cmpStateGuard.params = params;
+    }
+    const cmpPropsGuard = {
+      ...this.props.guard,
+      ...(this.props.guard.params && { params: this.props.guard.params.map(omitIfEmpty('expression')) })
     }
     return this.props.guard ?
-      !isEqual(cmpStateGuard, this.props.guard) &&
+      !isEqual(cmpStateGuard, cmpPropsGuard) &&
       !(activeTab === 1 && !guard.name && this.props.guard.expression) :
       Object.keys(guard).length
   }

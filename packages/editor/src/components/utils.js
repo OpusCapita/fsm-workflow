@@ -4,6 +4,11 @@ import startCase from 'lodash/startCase';
 
 export const isDef = v => v !== undefined && v !== null;
 
+export const omitIfEmpty = propName => obj => Object.keys(obj).reduce((acc, key) => ({
+  ...acc,
+  ...((key !== propName || isDef(obj[propName])) && { [key]: obj[key] })
+}), {})
+
 export const formatLabel = str => startCase(str);
 
 export const unifyPath = path => path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('');

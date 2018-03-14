@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import isEqual from 'lodash/isEqual';
-import omit from 'lodash/omit';
 import Button from 'react-bootstrap/lib/Button';
 import Modal from 'react-bootstrap/lib/Modal';
 import Table from 'react-bootstrap/lib/Table';
@@ -12,7 +11,7 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import withConfirmDialog from '../ConfirmDialog';
 // import CodeEditor from '../CodeEditor';
 import { invokeAction, getParamSchema } from './utils';
-import { isDef, formatLabel } from '../utils';
+import { isDef, formatLabel, omitIfEmpty } from '../utils';
 import './ActionInvocationEditor.less';
 import ParamsEditor from '../ParamsEditor';
 
@@ -51,8 +50,14 @@ export default class ActionInvocationEditor extends Component {
     const { name: pName = '', params: pArgs = [] } = this.props.action || {};
     const { name: sName, params: sArgs } = this.state;
     const result = !isEqual(
-      { name: pName, params: pArgs },
-      { name: sName, params: sArgs.map(p => omit(p, ['expression'])).filter(({ value }) => isDef(value)) }
+      {
+        name: pName,
+        params: pArgs.map(omitIfEmpty('expression'))
+      },
+      {
+        name: sName,
+        params: sArgs.map(omitIfEmpty('expression')).filter(({ value }) => isDef(value))
+      }
     );
     return result
   }
