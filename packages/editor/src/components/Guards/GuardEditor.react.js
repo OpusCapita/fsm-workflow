@@ -131,16 +131,21 @@ export default class GuardEditor extends PureComponent {
         bodyLine
     ).join('\n');
 
-    this.handleChangeExpression(newGuardBody)
+    const callback = _ => {
+      // handle codemirror focus and cursor position
+      const cm = this._editor.getCodeMirror();
+      cm.focus();
+      // focus resets cursor to 0; fix it
+      const int = setInterval(_ => { // eslint-disable-line no-undef
+        const hasFocus = cm.hasFocus()
+        if (hasFocus) {
+          cm.setCursor(line, ch + injectedValue.length)
+          clearInterval(int) // eslint-disable-line no-undef
+        }
+      }, 10)
+    }
 
-    // handle codemirror focus and cursor position
-    const cm = this._editor.getCodeMirror();
-    // focus resets cursor to 0; fix it
-    cm.focus();
-    setTimeout( // eslint-disable-line no-undef
-      _ => cm.setCursor(line, ch + injectedValue.length
-      ), 10
-    );
+    this.handleChangeExpression(newGuardBody, callback);
   }
 
   _editor;
@@ -175,9 +180,14 @@ export default class GuardEditor extends PureComponent {
     }))
   }
 
-  handleChangeExpression = value => this.setState(prevState => ({
+  handleChangeExpression = (value, callback) => this.setState(prevState => ({
     guard: { ...prevState.guard, expression: value }
-  }), this.autoPlay)
+  }), _ => {
+    if (callback) {
+      callback()
+    }
+    this.autoPlay()
+  })
 
   handleCleanExpression = _ => this.setState(prevState => ({
     guard: { ...prevState.guard, expression: '' }
