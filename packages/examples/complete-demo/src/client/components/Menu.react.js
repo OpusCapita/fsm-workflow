@@ -38,14 +38,12 @@ export default function AppMenu({ history, location }) {
       navigationItems={navigationItems}
       iconsBarItems={[
         (
-          <MenuIcon
-            key={0}
-            onClick={_ => {
-              window.open('https://github.com/OpusCapita/fsm-workflow')
-            }}
-            svg={githubSVG}
-            title="Github"
-          />
+          <a href='https://github.com/OpusCapita/fsm-workflow' target='_blank' key={0}>
+            <MenuIcon
+              svg={githubSVG}
+              title="Github"
+            />
+          </a>
         )
       ]}
     />
