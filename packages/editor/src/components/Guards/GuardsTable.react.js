@@ -52,7 +52,9 @@ export default class GuardsTable extends PureComponent {
 
   handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
-    confirmHandler: this.props.onClose
+    confirmHandler: this.props.onClose,
+    title: 'Confirmation',
+    message: 'You have made changes. Closing this editor will lose these changes.'
   })
 
   handleDelete = index => this._triggerDialog({
