@@ -11,7 +11,7 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import withConfirmDialog from '../ConfirmDialog';
 // import CodeEditor from '../CodeEditor';
 import { invokeAction, getParamSchema } from './utils';
-import { isDef, formatLabel } from '../utils';
+import { isDef, formatLabel, omitIfEmpty } from '../utils';
 import './ActionInvocationEditor.less';
 import ParamsEditor from '../ParamsEditor';
 
@@ -28,16 +28,19 @@ export default class ActionInvocationEditor extends Component {
       event: PropTypes.string,
     }),
     onClose: PropTypes.func.isRequired,
-    objectConfiguration: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
+  }
+
+  static contextTypes = {
+    objectConfiguration: PropTypes.object.isRequired
   }
 
   state = {
     name: '',
     params: [],
     ...(this.props.action || {}),
-    exampleObject: JSON.stringify(this.props.objectConfiguration.example, null, 2),
+    exampleObject: JSON.stringify(this.context.objectConfiguration.example, null, 2),
     invocationResults: null,
     autoplay: false,
     showExampleObject: false
@@ -46,7 +49,16 @@ export default class ActionInvocationEditor extends Component {
   hasUnsavedChanges = _ => {
     const { name: pName = '', params: pArgs = [] } = this.props.action || {};
     const { name: sName, params: sArgs } = this.state;
-    const result = !isEqual({ name: pName, params: pArgs }, { name: sName, params: sArgs });
+    const result = !isEqual(
+      {
+        name: pName,
+        params: pArgs.map(omitIfEmpty('expression'))
+      },
+      {
+        name: sName,
+        params: sArgs.map(omitIfEmpty('expression')).filter(({ value }) => isDef(value))
+      }
+    );
     return result
   }
 
@@ -79,7 +91,7 @@ export default class ActionInvocationEditor extends Component {
     }), this.state.autoplay && this.handleInvoke)
   })(value)
 
-  handleChangeParam = param => value => this.setState(prevState => ({
+  handleChangeParam = param => ({ value, expression }) => this.setState(prevState => ({
     params: (
       // either change existing param or add a new one
       params => find(params, ({ name }) => name === param) ? params : params.concat({ name: param })
@@ -88,9 +100,10 @@ export default class ActionInvocationEditor extends Component {
         name,
         ...rest,
         ...(param === name && {
-          value: (this.getParamSchema(param) || {}).type === 'boolean' ? // toggle boolean values
+          value: (this.getParamSchema(param) || {}).type === 'boolean' && !expression ? // toggle boolean values
             !(find(prevState.params, ({ name: n }) => n === name) || {}).value :
-            value
+            value,
+          expression
         })
       })
     )
@@ -157,7 +170,7 @@ export default class ActionInvocationEditor extends Component {
     }
   })
 
-  getParamValue = name => (find(this.state.params, ({ name: paramName }) => paramName === name) || {}).value
+  getParam = name => find(this.state.params, ({ name: paramName }) => paramName === name) || {}
 
   getParamSchema = param => getParamSchema({
     actions: this.props.actions,
@@ -252,9 +265,9 @@ export default class ActionInvocationEditor extends Component {
                     (
                       <ParamsEditor
                         paramsSchema={actions[actionName].paramsSchema}
-                        values={
+                        params={
                           Object.keys(actions[actionName].paramsSchema.properties).reduce(
-                            (acc, cur) => ({ ...acc, [cur]: this.getParamValue(cur) }), {}
+                            (acc, cur) => ({ ...acc, [cur]: this.getParam(cur) }), {}
                           )
                         }
                         onChangeParam={this.handleChangeParam}

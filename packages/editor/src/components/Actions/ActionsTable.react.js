@@ -28,7 +28,6 @@ export default class ActionsTable extends PureComponent {
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
@@ -85,7 +84,7 @@ export default class ActionsTable extends PureComponent {
 
   render() {
     const { i18n } = this.context;
-    const { title, actions, transition, objectConfiguration, componentsRegistry } = this.props;
+    const { title, actions, transition, componentsRegistry } = this.props;
     const { transitionActions, showEditor, currentActionIndex } = this.state;
 
     let editorModal;
@@ -101,7 +100,6 @@ export default class ActionsTable extends PureComponent {
         <ActionInvocationEditor
           action={action}
           actions={actions}
-          objectConfiguration={objectConfiguration}
           transition={transition}
           componentsRegistry={componentsRegistry}
           onClose={this.handleCloseEditor}
@@ -152,7 +150,7 @@ export default class ActionsTable extends PureComponent {
                             <table className="oc-fsm-crud-editor--table-actions-parameters">
                               <tbody>
                                 {
-                                  params.map(({ name, value }, i) => {
+                                  params.map(({ name, value, expression }, i) => {
                                     return (
                                       <tr key={`${i}-${name}`}>
                                         <td>{formatLabel(name)}</td>
@@ -165,7 +163,8 @@ export default class ActionsTable extends PureComponent {
                                                 action: actionName,
                                                 param: name
                                               }),
-                                              value
+                                              value,
+                                              expression
                                             })
                                           }
                                         </td>

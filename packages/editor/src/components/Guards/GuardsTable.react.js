@@ -12,6 +12,11 @@ import guardPropTypes from './guardPropTypes';
 import GuardEditor from './GuardEditor.react';
 import './Guards.less';
 
+const removeEmptyParams = ({ params = [], ...rest }) => {
+  const newParams = params.filter(({ value }) => isDef(value));
+  return { ...rest, ...(newParams.length && { params: newParams }) }
+}
+
 @withConfirmDialog
 export default class GuardsTable extends PureComponent {
   static propTypes = {
@@ -22,7 +27,6 @@ export default class GuardsTable extends PureComponent {
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
@@ -48,7 +52,9 @@ export default class GuardsTable extends PureComponent {
 
   handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
-    confirmHandler: this.props.onClose
+    confirmHandler: this.props.onClose,
+    title: 'Confirmation',
+    message: 'You have made changes. Closing this editor will lose these changes.'
   })
 
   handleDelete = index => this._triggerDialog({
@@ -71,13 +77,14 @@ export default class GuardsTable extends PureComponent {
   handleSaveGuard = index => guard => this.setState(prevState => {
     const guardIsDefined = ('expression' in guard && !!guard.expression) ||
       Object.keys(guard).filter(k => k !== 'expression').length > 0;
+    const cleanGuard = removeEmptyParams(guard);
     let newGuards;
     if (isDef(index)) {
       newGuards = guardIsDefined ?
-        prevState.guards.map((g, i) => i === index ? guard : g) :
+        prevState.guards.map((g, i) => i === index ? cleanGuard : g) :
         prevState.guards.filter((_, i) => i !== index)
     } else {
-      newGuards = guardIsDefined && prevState.guards.concat(guard)
+      newGuards = guardIsDefined && prevState.guards.concat(cleanGuard)
     }
     return newGuards ? { guards: newGuards } : {}
   }, this.handleCloseEditor);
@@ -85,7 +92,7 @@ export default class GuardsTable extends PureComponent {
 
   render() {
     const { i18n } = this.context;
-    const { title, conditions, objectConfiguration, componentsRegistry } = this.props;
+    const { title, conditions, componentsRegistry } = this.props;
     const { guards, showEditor, currentGuardIndex } = this.state;
 
     let editorModal;
@@ -101,7 +108,6 @@ export default class GuardsTable extends PureComponent {
         <GuardEditor
           guard={guard}
           conditions={conditions}
-          objectConfiguration={objectConfiguration}
           componentsRegistry={componentsRegistry}
           onClose={this.handleCloseEditor}
           onSave={this.handleSaveGuard(currentGuardIndex)}
@@ -157,7 +163,7 @@ export default class GuardsTable extends PureComponent {
                                 <table className="oc-fsm-crud-editor--table-actions-parameters">
                                   <tbody>
                                     {
-                                      params.map(({ name, value }, i) => {
+                                      params.map(({ name, value, expression }, i) => {
                                         return (
                                           <tr key={`${i}-${name}`}>
                                             <td>{formatLabel(name)}</td>
@@ -166,7 +172,8 @@ export default class GuardsTable extends PureComponent {
                                                 formatArg({
                                                   i18n,
                                                   schema: conditions[guardName].paramsSchema.properties[name],
-                                                  value
+                                                  value,
+                                                  expression
                                                 })
                                               }
                                             </td>
@@ -177,9 +184,11 @@ export default class GuardsTable extends PureComponent {
                                   </tbody>
                                 </table>
                               ) :
-                              (
-                                <pre>{expression}</pre>
-                              )
+                              expression ?
+                                (
+                                  <pre>{expression}</pre>
+                                ) :
+                                null
                           }
                         </td>
                         <td className='text-right'>

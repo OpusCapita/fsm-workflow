@@ -1,5 +1,3 @@
-import { flattenParams } from './utils';
-
 // return new array that contains unique values from original array
 const toUnique = original => original.filter((v, i, a) => a.indexOf(v) === i);
 
@@ -58,9 +56,13 @@ export default class MachineDefinition {
     return require("bluebird").Promise;
   }
 
+  static getDefaultObjectStateFieldName() {
+    return "status";
+  }
+
   static evaluateExpression({ expression, params }) {
     try {
-      return !!eval( // eslint-disable-line no-eval
+      return eval( // eslint-disable-line no-eval
         `
           (function(arg) {
             ${Object.keys(params).map(key => `var ${key} = arg[${JSON.stringify(key)}];`).join('\n')}
@@ -78,6 +80,22 @@ export default class MachineDefinition {
   prepareObjectAlias(object) {
     const { alias } = this.objectConfiguration;
     return alias ? { [alias]: object } : {};
+  }
+
+  // evaluate explicit params and combine with implicit params
+  prepareParams({ explicitParams = [], implicitParams }) {
+    return {
+      ...explicitParams.reduce((params, { name, value, expression }) => ({
+        ...params,
+        [name]: expression ?
+          MachineDefinition.evaluateExpression({
+            expression: value,
+            params: implicitParams
+          }) :
+          value
+      }), {}),
+      ...implicitParams
+    }
   }
 
   findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
@@ -141,15 +159,13 @@ export default class MachineDefinition {
           conditions.map((condition, idx) => {
             return this.promise.resolve(condition.expression ?
               // guard is an inline expression
-              MachineDefinition.evaluateExpression({
+              // we cast eval result to boolean because guard can only return boolean by design
+              !!MachineDefinition.evaluateExpression({
                 expression: condition.expression,
                 params: implicitParams
               }) :
               // guard is an actual function
-              condition({
-                ...flattenParams(guards[idx].params),
-                ...implicitParams
-              })
+              condition(this.prepareParams({ explicitParams: guards[idx].params, implicitParams }))
             ).then(result => {
               // if guard is resolve with false or is rejected, e.g. transition is not available at the moment
               // pass arguments specified in guard call (part of schema)
@@ -198,19 +214,22 @@ export default class MachineDefinition {
           }
         });
 
+        const implicitParams = {
+          from,
+          to,
+          event,
+          object,
+          ...this.prepareObjectAlias(object),
+          request,
+          context
+        }
+
         // execute all checks asynchronously then collect & aggregate executions results
         return this.promise.all(
           automaticConditions.map((autoCondition, idx) => {
-            return this.promise.resolve(autoCondition({
-              ...flattenParams(automatic[idx].params),
-              from,
-              to,
-              event,
-              object,
-              request,
-              ...this.prepareObjectAlias(object),
-              context
-            })).then(result => {
+            return this.promise.resolve(
+              autoCondition(this.prepareParams({ explicitParams: automatic[idx].params, implicitParams }))
+            ).then(result => {
               // if check return false, return false, e.g. transition is not available at the moment
               // pass arguments specified in guard call (part of schema)
               // additionally object and context are also passed
@@ -261,9 +280,5 @@ export default class MachineDefinition {
     }
 
     return toUnique(result).sort();
-  }
-
-  static getDefaultObjectStateFieldName() {
-    return "status";
   }
 }

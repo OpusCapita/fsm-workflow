@@ -44,6 +44,8 @@ jobs:
             - ./packages/examples/invoice-console/node_modules
             - ./packages/examples/process-task-manager-ui/package-lock.json
             - ./packages/examples/process-task-manager-ui/node_modules
+            - ./packages/examples/complete-demo/package-lock.json
+            - ./packages/examples/complete-demo/node_modules
 
       - run:
           name: lint
@@ -273,7 +275,9 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-      - deploy-demo
+      - deploy-demo:
+          requires:
+            - build
 
   nightly:
     triggers:

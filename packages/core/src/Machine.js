@@ -1,5 +1,3 @@
-import { flattenParams } from './utils';
-
 export default class Machine {
   constructor({
       machineDefinition,
@@ -201,17 +199,20 @@ businessObjId: ...     // business object unique id (examples: '123456789')
         return machineDefinition.actions[actions[idx].name];
       });
 
+      const implicitParams = {
+        from,
+        to,
+        event,
+        object,
+        ...machineDefinition.prepareObjectAlias(object),
+        request,
+        context
+      }
+
       // reducing actionDefinitions to promise queue
       return actionDefinitions.reduce((executionAccumulator, action, idx) => {
         return executionAccumulator.then(({ actionExecutionResults, object }) => promise.resolve(action({
-          ...flattenParams(actions[idx].params),
-          from,
-          to,
-          event,
-          object,
-          ...machineDefinition.prepareObjectAlias(object),
-          request,
-          context,
+          ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
           actionExecutionResults
         })).then(actionResult => promise.resolve({
           actionExecutionResults: actionExecutionResults.concat([

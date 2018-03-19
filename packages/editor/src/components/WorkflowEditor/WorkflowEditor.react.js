@@ -62,6 +62,16 @@ export default class WorkflowEditor extends PureComponent {
     i18n: PropTypes.object.isRequired
   }
 
+  static childContextTypes = {
+    i18n: PropTypes.object.isRequired,
+    objectConfiguration: PropTypes.shape({
+      alias: PropTypes.string,
+      stateFieldName: PropTypes.string,
+      example: PropTypes.object.isRequired,
+      schema: PropTypes.object
+    }).isRequired
+  }
+
   static defaultProps = {
     onSave: _ => {}
   }
@@ -71,6 +81,13 @@ export default class WorkflowEditor extends PureComponent {
 
     this.state = {
       ...this.stateFromProps(this.props)
+    }
+  }
+
+  getChildContext() {
+    return {
+      ...this.context,
+      objectConfiguration: this.props.workflow.objectConfiguration
     }
   }
 
@@ -235,7 +252,7 @@ export default class WorkflowEditor extends PureComponent {
 
   render() {
     const { schema } = this.state;
-    const { title, workflow: { actions, conditions, objectConfiguration } } = this.props;
+    const { title, workflow: { actions, conditions } } = this.props;
 
     return (
       <Grid>
@@ -297,7 +314,6 @@ export default class WorkflowEditor extends PureComponent {
                   onSaveGuards={this.handleSaveTransitionGuards}
                   onSaveActions={this.handleSaveTransitionActions}
                   componentsRegistry={this.props.componentsRegistry}
-                  objectConfiguration={objectConfiguration}
                 />
               </Tab>
             </Tabs>

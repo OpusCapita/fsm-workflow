@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
+import cloneDeep from 'lodash/cloneDeep';
 import Modal from 'react-bootstrap/lib/Modal';
 import Button from 'react-bootstrap/lib/Button';
 import Tabs from 'react-bootstrap/lib/Tabs';
@@ -17,9 +18,9 @@ import guardPropTypes from './guardPropTypes';
 import withConfirmDialog from '../ConfirmDialog';
 import CodeEditor from '../CodeEditor';
 import ErrorLabel from '../ErrorLabel.react';
-import ObjectInspector from './ObjectInspector.react';
+import ObjectInspector from '../ObjectInspector.react';
 import ParamsEditor from '../ParamsEditor';
-import { formatLabel, isDef } from '../utils';
+import { formatLabel, isDef, unifyPath, omitIfEmpty } from '../utils';
 
 const evaluateCode = ({ code, arg }) => {
   try {
@@ -53,15 +54,18 @@ export default class GuardEditor extends PureComponent {
     conditions: PropTypes.shape({
       paramsSchema: PropTypes.object
     }),
-    objectConfiguration: PropTypes.object.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
   }
 
+  static contextTypes = {
+    objectConfiguration: PropTypes.object.isRequired
+  }
+
   state = {
     guard: this.props.guard || {},
-    exampleObject: this.props.objectConfiguration.example,
+    exampleObject: this.context.objectConfiguration.example,
     autoplay: true,
     guardEditorSelectorPos: {
       line: 0,
@@ -76,9 +80,25 @@ export default class GuardEditor extends PureComponent {
     }
   }
 
-  hasUnsavedChanges = _ => this.props.guard ?
-    !isEqual(this.state.guard, this.props.guard) :
-    Object.keys(this.state.guard).length
+  hasUnsavedChanges = _ => {
+    const { guard, activeTab } = this.state;
+    const params = (guard.params || []).
+      map(omitIfEmpty('expression')).
+      filter(({ value }) => isDef(value));
+    const cmpStateGuard = { ...guard };
+    delete cmpStateGuard.params;
+    if (params && params.length) {
+      cmpStateGuard.params = params;
+    }
+    const cmpPropsGuard = {
+      ...this.props.guard,
+      ...((this.props.guard || {}).params && { params: this.props.guard.params.map(omitIfEmpty('expression')) })
+    }
+    return this.props.guard ?
+      !isEqual(cmpStateGuard, cmpPropsGuard) &&
+      !(activeTab === 1 && !guard.name && this.props.guard.expression) :
+      Object.keys(guard).length
+  }
 
   handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
@@ -92,7 +112,7 @@ export default class GuardEditor extends PureComponent {
   })
 
   handleObjectPropClick = ({ path }) => {
-    const { alias } = this.props.objectConfiguration;
+    const { alias } = this.context.objectConfiguration;
     const {
       guardEditorSelectorPos: {
         line,
@@ -101,7 +121,7 @@ export default class GuardEditor extends PureComponent {
       guard
     } = this.state;
 
-    const workablePath = path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('');
+    const workablePath = unifyPath(path);
     const injectedValue = `${alias || 'object'}${workablePath}`
 
     const { expression } = guard;
@@ -111,16 +131,25 @@ export default class GuardEditor extends PureComponent {
         bodyLine
     ).join('\n');
 
-    this.handleChangeExpression(newGuardBody)
-
-    // handle codemirror focus and cursor position
-    const cm = this._editor.getCodeMirror();
-    // focus resets cursor to 0; fix it
-    cm.focus();
-    setTimeout( // eslint-disable-line no-undef
-      _ => cm.setCursor(line, ch + injectedValue.length
-      ), 10
-    );
+    // this.handleChangeExpression(newGuardBody, callback);
+    this.setState(prevState => ({
+      guard: { ...prevState.guard, expression: newGuardBody }
+    }), _ => {
+      this.autoPlay();
+      // handle codemirror focus and cursor position
+      const cm = this._editor.getCodeMirror();
+      cm.focus();
+      // focus resets cursor to 0; fix it
+      const int = setInterval(_ => { // eslint-disable-line no-undef
+        const hasFocus = cm.hasFocus()
+        if (hasFocus) {
+          const newCh = ch + injectedValue.length;
+          cm.setCursor(line, newCh);
+          this.setState({ guardEditorSelectorPos: { line, ch: newCh } });
+          clearInterval(int) // eslint-disable-line no-undef
+        }
+      }, 10)
+    })
   }
 
   _editor;
@@ -133,9 +162,9 @@ export default class GuardEditor extends PureComponent {
   autoPlay = _ => this.state.autoplay && this.handleEvalCode()
 
   handleEvalCode = _ => {
-    const { alias } = this.props.objectConfiguration;
+    const { alias } = this.context.objectConfiguration;
     const { expression: code } = this.state.guard;
-    const object = this.state.exampleObject;
+    const object = cloneDeep(this.state.exampleObject);
 
     const result = code ?
       evaluateCode({
@@ -163,12 +192,12 @@ export default class GuardEditor extends PureComponent {
     guard: { ...prevState.guard, expression: '' }
   }), this.autoPlay)
 
-  getParamValue = name => (find(
+  getParam = name => find(
     (this.state.guard.params || []),
     ({ name: paramName }) => paramName === name
-  ) || {}).value;
+  ) || {};
 
-  handleChangeParam = param => value => this.setState(prevState => ({
+  handleChangeParam = param => ({ value, expression }) => this.setState(prevState => ({
     guard: {
       ...prevState.guard,
       params: (
@@ -179,9 +208,10 @@ export default class GuardEditor extends PureComponent {
           name,
           ...rest,
           ...(param === name && {
-            value: (this.props.conditions[this.state.guard.name] || {}).type === 'boolean' ? // toggle boolean values
+            value: (this.props.conditions[this.state.guard.name] || {}).type === 'boolean' && !expression ?
               !(find((prevState.guard.params || []), ({ name: n }) => n === name) || {}).value :
-              value
+              value,
+            expression
           })
         })
       )
@@ -243,6 +273,13 @@ export default class GuardEditor extends PureComponent {
   })(nextTab)
 
   render() {
+    const { objectConfiguration: { alias } } = this.context;
+
+    const {
+      conditions = {},
+      componentsRegistry = {}
+    } = this.props;
+
     const {
       guard,
       autoplay,
@@ -251,12 +288,6 @@ export default class GuardEditor extends PureComponent {
       result,
       activeTab
     } = this.state;
-
-    const {
-      objectConfiguration: { alias },
-      conditions = {},
-      componentsRegistry = {}
-    } = this.props;
 
     return (
       <Modal
@@ -314,9 +345,9 @@ export default class GuardEditor extends PureComponent {
                         (
                           <ParamsEditor
                             paramsSchema={conditions[guard.name].paramsSchema}
-                            values={
+                            params={
                               Object.keys(conditions[guard.name].paramsSchema.properties).reduce(
-                                (acc, cur) => ({ ...acc, [cur]: this.getParamValue(cur) }), {}
+                                (acc, cur) => ({ ...acc, [cur]: this.getParam(cur) }), {}
                               )
                             }
                             onChangeParam={this.handleChangeParam}
@@ -405,7 +436,7 @@ export default class GuardEditor extends PureComponent {
                   </div>
                   <div>
                     <ObjectInspector
-                      name={formatLabel(alias || 'object')}
+                      name={alias || 'object'}
                       object={exampleObject}
                       onClickPropName={this.handleObjectPropClick}
                     />

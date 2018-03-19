@@ -1,29 +1,40 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { formatLabel } from '../../utils';
-import getParamComponent from './';
 import './ArrayEditor.less';
+import withExpressionInput from './PathExpressionInputInjector';
 
+@withExpressionInput
 export default class ArrayEditor extends PureComponent {
   static propTypes = {
-    name: PropTypes.string.isRequired,
-    value: PropTypes.arrayOf(PropTypes.any),
-    schema: PropTypes.object,
-    onChange: PropTypes.func.isRequired
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+    value: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.any),
+      PropTypes.string
+    ]),
+    itemComponent: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
+    component: PropTypes.func
   }
 
   handleAdd = _ => this.props.onChange((this.props.value || []).concat(null))
 
-  handleChange = index => newValue => this.props.onChange([
-    ...this.props.value.slice(0, index), newValue, ...this.props.value.slice(index + 1)
-  ])
+  handleChange = index => newValue => this.props.onChange(
+    [...this.props.value.slice(0, index), newValue, ...this.props.value.slice(index + 1)]
+  )
 
-  handleDelete = index => _ => this.props.onChange([
-    ...this.props.value.slice(0, index), ...this.props.value.slice(index + 1)
-  ])
+  handleDelete = index => _ => this.props.onChange(
+    [...this.props.value.slice(0, index), ...this.props.value.slice(index + 1)]
+  )
 
   render() {
-    const { name, value, schema } = this.props;
+    const { label, value, itemComponent: ItemComponent, component: CustomComponent } = this.props;
+
+    let renderLabel = label;
+
+    if (typeof label === 'function') {
+      const Label = label;
+      renderLabel = (<Label/>)
+    }
 
     return (
       <div className='form-group'>
@@ -31,40 +42,47 @@ export default class ArrayEditor extends PureComponent {
           <thead>
             <tr>
               <th>
-                <label htmlFor={name} className="control-label">{formatLabel(name)}</label>
+                <label className="control-label">{renderLabel}</label>
               </th>
-              <th className='text-right'>
-                <i
-                  className='fa fa-plus'
-                  style={{ cursor: 'pointer' }}
-                  onClick={this.handleAdd}
-                />
-              </th>
+              {
+                !CustomComponent && (
+                  <th className='text-right'>
+                    <i
+                      className='fa fa-plus'
+                      style={{ cursor: 'pointer' }}
+                      onClick={this.handleAdd}
+                    />
+                  </th>
+                )
+              }
             </tr>
           </thead>
           <tbody>
             {
-              (
-                Component => (value || []).map((v, i) => (
-                  <tr key={i}>
+              CustomComponent ?
+                (
+                  <tr>
                     <td>
-                      {
-                        <Component
-                          value={v}
-                          onChange={this.handleChange(i)}
-                        />
-                      }
-                    </td>
-                    <td className='text-right'>
-                      <i
-                        className='fa fa-minus'
-                        style={{ cursor: 'pointer', marginTop: '10px' }}
-                        onClick={this.handleDelete(i)}
-                      />
+                      <CustomComponent value={value} onChange={this.props.onChange}/>
                     </td>
                   </tr>
-                ))
-              )(getParamComponent(schema.items))
+                ) :
+                (
+                  (Array.isArray(value) ? value : []).map((v, i, arr) => (
+                    <tr key={`${i}-${arr.length}`}>
+                      <td>
+                        <ItemComponent value={v} onChange={this.handleChange(i)}/>
+                      </td>
+                      <td className='text-right'>
+                        <i
+                          className='fa fa-minus'
+                          style={{ cursor: 'pointer', marginTop: '10px' }}
+                          onClick={this.handleDelete(i)}
+                        />
+                      </td>
+                    </tr>
+                  ))
+                )
             }
           </tbody>
         </table>

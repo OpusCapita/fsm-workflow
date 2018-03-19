@@ -49,18 +49,18 @@ describe('<WorkflowEditor />', () => {
             { name: 'approved' },
             { name: 'rejected' },
             { name: 'validated' }
-          ],
-          objectConfiguration: {
-            alias: 'invoice',
-            example: {
-              invoiceNo: "inv5566"
-            },
-            schema: {
-              type: "object",
-              properties: {
-                invoiceNo: {
-                  type: "string"
-                }
+          ]
+        },
+        objectConfiguration: {
+          alias: 'invoice',
+          example: {
+            invoiceNo: "inv5566"
+          },
+          schema: {
+            type: "object",
+            properties: {
+              invoiceNo: {
+                type: "string"
               }
             }
           }
