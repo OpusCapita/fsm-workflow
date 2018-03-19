@@ -1,4 +1,11 @@
 
+Release 2.0.1 Mon Mar 19 2018 10:40:13 GMT+0000 (UTC)
+=======================================================
+
+- Added ability to specify path expression as param value ([#53](https://github.com/OpusCapita/fsm-workflow/issues/53)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-19 13:28:03 +0300)
+- Fixed menu github icon. (Egor Stambakio stambakio@scand.com, 2018-03-15 15:07:22 +0300)
+- Updating documentation [skip ci] (GitHub asergeev-sc@users.noreply.github.com, 2018-03-13 09:41:51 +0300)
+
 Release 2.0.0 Wed Mar 07 2018 11:54:57 GMT+0000 (UTC)
 =======================================================
 
