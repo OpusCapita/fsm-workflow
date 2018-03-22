@@ -20,7 +20,8 @@ class Storage {
           collate: 'utf8_general_ci'
         }
       },
-      sync: { force: true }
+      sync: { force: true },
+      logging: null
     });
 
     // create Invoice model from JSON schema

@@ -17,7 +17,6 @@ router.get('/api/history/:objectId', async(req, res) => {
     }
   });
   const history = historyData.
-    map(({ dataValues }) => dataValues).
     filter(({ event }) => event !== '__START__');
   return res.send({ history })
 })

@@ -322,7 +322,7 @@ businessObjId: ...     // business object unique id (examples: '123456789')
   *   finishedOn
   * }
   */
-  getHistory({ object, user, finishedOn }, { max, offset }, { by, order }) {
+  getHistory({ object, user, finishedOn }, { max, offset } = {}, { by, order } = {}) {
     const { convertObjectToReference } = this;
     return this.history.search({
       object: convertObjectToReference(object),
@@ -335,17 +335,26 @@ businessObjId: ...     // business object unique id (examples: '123456789')
     }, {
       by,
       order
-    }).then((historyRecords) => {
-      // map businessObjId, businessObjType to object
-      return historyRecords.map(({ businessObjType, businessObjId, ...otherProperties }) => {
-        return {
-          object: {
-            businessObjType,
-            businessObjId
-          },
-          ...otherProperties
-        }
-      });
-    });
+    }).then((historyRecords) => historyRecords.map(({
+        event,
+        from,
+        to,
+        businessObjType,
+        businessObjId,
+        user,
+        description,
+        finishedOn
+      }) => ({
+        event,
+        from,
+        to,
+        object: {
+          businessObjType,
+          businessObjId
+        },
+        user,
+        description,
+        finishedOn
+      })));
   }
 }
