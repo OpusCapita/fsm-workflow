@@ -250,7 +250,7 @@ Machine configuration
 ```
 var machine = new Machine({ history, ... });
 ```
-**history** is a DAO that provides a possibility to create and read object workflow history records. You can find its API (and DB specific implementation) [here](https://github.com/OpusCapita/fsm-workflow/tree/master/history).
+**history** is a DAO that provides a possibility to create and read object workflow history records. You can find its API (and DB specific implementation) [here](https://github.com/OpusCapita/fsm-workflow/tree/master/packages/history).
 
 Machine writes history records for all object transitions within the workflow.
 It happens when you start workflow
