@@ -322,7 +322,11 @@ businessObjId: ...     // business object unique id (examples: '123456789')
   *   finishedOn
   * }
   */
-  getHistory({ object, user, finishedOn }, { max, offset } = {}, { by, order } = {}) {
+  getHistory(
+    { object, user, finishedOn },
+    /* istanbul ignore next */ { max, offset } = {},
+    /* istanbul ignore next */ { by, order } = {}
+  ) {
     const { convertObjectToReference } = this;
     return this.history.search({
       object: convertObjectToReference(object),
