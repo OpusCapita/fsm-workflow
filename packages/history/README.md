@@ -77,6 +77,6 @@ const history = await require('@opuscapita/fsm-workflow-history')(sequelize);
 | user             | string    | true     | user initiated a transition                                      |
 | workflowName     | string    | true     | unique workflow name, known by workflow machine                  |
 | description      | string    | false    | event/object/trsnaition information                              |
-| finishedAt       | timestamp | true     | like in Grailsflow, object finished the transition in 'to' state |
+| finishedOn       | timestamp | true     | like in Grailsflow, object finished the transition in 'to' state |
 
 See [Express Server Demo](src/demo/server.js) for an example of using Workflow History.
