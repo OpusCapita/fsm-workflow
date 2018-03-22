@@ -55,63 +55,18 @@ jobs:
           name: test
           command: npm test
 
-      - run:
-          name: build-and-deploy-gh-pages
-          command: |
-            cd packages/editor
-            bash ./scripts/gh-pages/build.sh
-            bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+    #   - run:
+    #       name: build-and-deploy-gh-pages
+    #       command: |
+    #         cd packages/editor
+    #         bash ./scripts/gh-pages/build.sh
+    #         bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - store_artifacts:
           path: ./test-results
 
       - store_test_results:
           path: ./test-results
-
-  # deploy-editor-to-github-pages:
-  #   docker:
-  #     - image: circleci/node:6
-  #   working_directory: ~/repo/packages/editor
-  #   steps:
-  #     - checkout:
-  #         path: ~/repo
-  #     - run:
-  #         name: save-cache-checksum
-  #         command: find -name "package.json" | xargs cat > /tmp/cache-checksum
-  #
-  #     - restore_cache:
-  #         keys:
-  #           - v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
-  #           # fallback to using the latest cache if no exact match is found
-  #           - v1-dependencies-
-  #     - run:
-  #         name: install-dependencies
-  #         command: npm install
-  #
-  #     - save_cache:
-  #         key: v1-dependencies-{{ checksum "/tmp/cache-checksum" }}
-  #         paths:
-  #           - ./package-lock.json
-  #           - ./node_modules
-  #           - ./packages/core/package-lock.json
-  #           - ./packages/core/node_modules
-  #           - ./packages/editor/package-lock.json
-  #           - ./packages/editor/node_modules
-  #           - ./packages/history/package-lock.json
-  #           - ./packages/history/node_modules
-  #           - ./packages/task-manager/package-lock.json
-  #           - ./packages/task-manager/node_modules
-  #           - ./packages/examples/invoice-console/package-lock.json
-  #           - ./packages/examples/invoice-console/node_modules
-  #           - ./packages/examples/process-task-manager-ui/package-lock.json
-  #           - ./packages/examples/process-task-manager-ui/node_modules
-  #
-  #     - run:
-  #         name: build-gh-pages
-  #         command: bash ./scripts/gh-pages/build.sh
-  #     - run:
-  #         name: deploy-gh-pages
-  #         command: bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
   build_release:
     <<: *defaults
