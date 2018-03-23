@@ -1,4 +1,11 @@
 
+Release 2.0.2 Fri Mar 23 2018 13:22:46 GMT+0000 (UTC)
+=======================================================
+
+- FSM history integration tests ([#61](https://github.com/OpusCapita/fsm-workflow/issues/61)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-23 16:16:57 +0300)
+- Update README.md (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-22 13:20:15 +0300)
+- Update README.md (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-22 10:25:35 +0300)
+
 Release 2.0.1 Mon Mar 19 2018 10:40:13 GMT+0000 (UTC)
 =======================================================
 
