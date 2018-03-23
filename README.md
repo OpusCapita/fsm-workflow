@@ -43,6 +43,10 @@ Task management is implemented as additional library. You can find more detailed
 
 Workflow Transition History is implemented as separate library. You can find more information [here](packages/history/README.md).
 
+### FAQ for developers
+**How do I set a version for all packages?**
+Define it as `version` value in `lerna.json` file. There's no need to rewrite version in packages, release process will handle it itself. 
+
 ### References
 
 [Existing FSM libs review](existingFsmLibsReview.md)
