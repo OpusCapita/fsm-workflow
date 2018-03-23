@@ -167,7 +167,10 @@ export default class MachineDefinition {
               // guard is an actual function
               condition(this.prepareParams({ explicitParams: guards[idx].params, implicitParams }))
             ).then(result => {
-              // if guard is resolve with false or is rejected, e.g. transition is not available at the moment
+              // TBD these lines don't seem related to the code below
+              // ??? move them somewhere?
+              //
+              // if guard is resolved with false or is rejected, e.g. transition is not available at the moment
               // pass arguments specified in guard call (part of schema)
               // additionally object, request and context are also passed
               // request should be used to pass params for some dynamic calculations f.e.
@@ -175,7 +178,7 @@ export default class MachineDefinition {
               return guards[idx].negate ? !result : !!result
             })
           })
-        ).then(executionResults => resolve(executionResults.every(result => !!result))).catch(e => reject(e))
+        ).then(executionResults => resolve(executionResults.every(Boolean))).catch(e => reject(e))
       })
     };
 
@@ -203,15 +206,17 @@ export default class MachineDefinition {
       return new this.promise((resolve, reject) => {
         // collecting conditions that belong to current auto transition into list of functions
         const automaticConditions = automatic.map((autoGuard, idx) => {
+          if (autoGuard.expression) { // autoGuard is an object with inline JS expression
+            return autoGuard
+          }
           if (!this.conditions[automatic[idx].name]) {
             throw new Error(
               // if no functions definition found - throw an error
               // eslint-disable-next-line max-len
               `Automatic condition '${automatic[idx].name}' is specified in one the transitions but is not found/implemented!`
             )
-          } else {
-            return this.conditions[automatic[idx].name];
           }
+          return this.conditions[automatic[idx].name];
         });
 
         const implicitParams = {
@@ -227,7 +232,14 @@ export default class MachineDefinition {
         // execute all checks asynchronously then collect & aggregate executions results
         return this.promise.all(
           automaticConditions.map((autoCondition, idx) => {
-            return this.promise.resolve(
+            return this.promise.resolve(autoCondition.expression ?
+              // autoGuard is an inline expression
+              // we cast eval result to boolean because guard can only return boolean by design
+              !!MachineDefinition.evaluateExpression({
+                expression: autoCondition.expression,
+                params: implicitParams
+              }) :
+              // autoGuard is an actual function
               autoCondition(this.prepareParams({ explicitParams: automatic[idx].params, implicitParams }))
             ).then(result => {
               // if check return false, return false, e.g. transition is not available at the moment
@@ -236,7 +248,7 @@ export default class MachineDefinition {
               return automatic[idx].negate ? !result : !!result
             })
           })
-        ).then(executionResults => resolve(executionResults.every(result => !!result))).catch(e => reject(e));
+        ).then(executionResults => resolve(executionResults.every(Boolean))).catch(e => reject(e));
       })
     };
 
@@ -246,13 +258,13 @@ export default class MachineDefinition {
         checkGuards(transition),
         isAutomatic ? checkAutomatic(transition) : this.promise.resolve(true)
       ]).then(checkResults => {
-        if (checkResults.every(result => !!result)) {
+        if (checkResults.every(Boolean)) {
           return transition;
         } else {
           return null;
         }
       }))).then(foundTransitions => ({
-        transitions: foundTransitions.filter(foundTransitions => !!foundTransitions)
+        transitions: foundTransitions.filter(Boolean)
       })
     );
   }
