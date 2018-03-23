@@ -33,25 +33,28 @@ const search = model => {
       by = 'finishedOn',
       order = 'desc'
     } = {}
-  ) => model.findAll({
-    where: {
-      ...(businessObjId && { businessObjId }),
-      ...(businessObjType && { businessObjType }),
-      ...(user && { user }),
-      ...(workflowName && { workflowName }),
-      ...(Object.keys(finishedOn).length && {
-        finishedOn: {
-          ...(finishedOn.gt && { [gt]: finishedOn.gt }),
-          ...(finishedOn.gte && { [gte]: finishedOn.gte }),
-          ...(finishedOn.lt && { [lt]: finishedOn.lt }),
-          ...(finishedOn.lte && { [lte]: finishedOn.lte })
-        }
-      })
-    },
-    order: [[by, order.toUpperCase()]],
-    limit: max,
-    offset
-  });
+  ) => model.
+    findAll({
+      where: {
+        ...(businessObjId && { businessObjId }),
+        ...(businessObjType && { businessObjType }),
+        ...(user && { user }),
+        ...(workflowName && { workflowName }),
+        ...(Object.keys(finishedOn).length && {
+          finishedOn: {
+            ...(finishedOn.gt && { [gt]: finishedOn.gt }),
+            ...(finishedOn.gte && { [gte]: finishedOn.gte }),
+            ...(finishedOn.lt && { [lt]: finishedOn.lt }),
+            ...(finishedOn.lte && { [lte]: finishedOn.lte })
+          }
+        })
+      },
+      order: [[by, order.toUpperCase()]],
+      limit: max,
+      offset
+    }).
+    // get proper object without Sequelize meta data
+    map(raw => raw.get())
 };
 
 module.exports = model => ({

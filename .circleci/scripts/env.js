@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
-let run = require('./run');
-let env = process.env;
-let DOCKER_TAG = env.CIRCLE_BRANCH.replace('/', '-').replace('#', '-');
+const run = require('./run');
+const env = process.env;
+const re = /[^A-Za-z0-9\\-]/g;
+const DOCKER_TAG = env.CIRCLE_BRANCH.replace(re, '');
+const AZURE_APP_NAME = 'opuscapita-fsm-workflow-demo';
+const SUBDOMAIN = `${AZURE_APP_NAME}-${DOCKER_TAG}`.slice(0, 60);
 
 module.exports = {
-  AZURE_APP_NAME: "opuscapita-fsm-workflow-demo",
+  AZURE_APP_NAME,
   AZURE_APP_SERVICE_PLAN: env.MINSK_CORE_DEMO_AZURE_APP_SERVICE_PLAN,
   AZURE_PASS: env.AZURE_PASS,
   AZURE_RESOURCE_GROUP: env.MINSK_CORE_DEMO_AZURE_RESOURCE_GROUP,
@@ -14,6 +17,7 @@ module.exports = {
   DOCKER_DEMO_CONTAINER_NAME: "opuscapita/fsm-workflow-demo",
   DOCKER_PASS: env.DOCKER_PASS,
   DOCKER_TAG,
+  SUBDOMAIN,
   DOCKER_USER: env.DOCKER_USER,
   GH_NAME: env.GH_NAME,
   GH_MAIL: env.GH_MAIL,
@@ -24,5 +28,5 @@ module.exports = {
   // API_KEY: env.MINSK_CORE_DEMO_GOOGLE_DRIVE_API_KEY,
   // CLIENT_ID: env.MINSK_CORE_DEMO_GOOGLE_DRIVE_CLIENT_ID,
   CHANGELOG_GITHUB_TOKEN: env.MINSK_CORE_DEMO_CHANGELOG_GITHUB_TOKEN,
-  SERVER_URL: `http://opuscapita-fsm-workflow-demo-${DOCKER_TAG}.azurewebsites.net`
+  SERVER_URL: `http://${SUBDOMAIN}.azurewebsites.net`
 };

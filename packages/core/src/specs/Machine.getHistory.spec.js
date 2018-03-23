@@ -37,7 +37,7 @@ describe('machine: getHistory', function() {
       finihedOn: Date(),
       user: 'start gate official',
       description: "stadium sreams: 'run baby, run!'",
-      object: convertObjectToReference(object),
+      ...convertObjectToReference(object),
       workflowName
     };
     let passedSearchParameters, passedPaging, passedSorting = null;
@@ -76,7 +76,6 @@ describe('machine: getHistory', function() {
       assert.equal(results.length, 1);
       const { object, ...otherHistoryProperties } = results[0];
       assert.deepEqual(results[0], {
-        workflowName: machine.machineDefinition.schema.name,
         object: convertObjectToReference(object),
         ...otherHistoryProperties,
       });
