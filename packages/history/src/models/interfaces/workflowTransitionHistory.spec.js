@@ -18,7 +18,7 @@ describe('history', () => {
     ({ add, search } = modelInterface(model));
   });
 
-  describe('.add()', () => {
+  describe('add() & search()', () => {
     it('should add history record with description', async () => {
       const { finishedOn, ...record } = (await add({
         from: 'from-point',
@@ -72,11 +72,7 @@ describe('history', () => {
     });
 
     it('should search for all history records', async () => {
-      const records = (await search()).map(raw => {
-        const record = raw.get();
-        delete record.finishedOn;
-        return record;
-      });
+      const records = (await search()).map(({ finishedOn, ...record }) => record);
 
       assert.deepEqual(records, [{
         id: 2,
@@ -118,11 +114,7 @@ describe('history', () => {
       }, {
         by: 'businessObjType',
         order: 'asc'
-      })).map(raw => {
-        const record = raw.get();
-        delete record.finishedOn;
-        return record;
-      });
+      })).map(({ finishedOn, ...record }) => record);
 
       assert.deepEqual(records, [{
         id: 2,
