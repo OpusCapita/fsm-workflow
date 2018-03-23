@@ -94,6 +94,9 @@ creating_github_release(){
 
 }
 
+########################################## Script initialization #################################################
+echo "[INFO] ================================================================================================="
+echo "[INFO] Starting release script."
 echo "[INFO] ================================================================================================="
 echo "[INFO] Getting arguments from commit message."
 echo "[INFO] ================================================================================================="
@@ -119,9 +122,20 @@ echo -e "\n[INFO] ==============================================================
 echo "[INFO] Setting git user attributes."
 echo "[INFO] ================================================================================================="
 git config --global user.name "$(git log -1 --pretty=%an)"
-echo "[INFO] User name: $(git config user.name)"
+if [ -z "$(git config --global user.name)" ]; then
+  echo "[ERROR] Undefined git user name."
+  exit 1
+else
+  echo "[INFO] User name: $(git config user.name)"
+fi
+
 git config --global user.email $(git log -1 --pretty=%ae)
-echo "[INFO] User email: $(git config user.email)"
+if [ -z "$(git config --global user.email)" ]; then
+  echo "[ERROR] Undefined git user email address."
+  exit 1
+else
+  echo "[INFO] User email: $(git config user.email)"
+fi
 
 echo -e "\n[INFO] ================================================================================================="
 echo "[INFO] Checkout for release branch: ${RELEASE_BRANCH}."
