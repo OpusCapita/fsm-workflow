@@ -1,4 +1,10 @@
 
+Release 2.0.3 Fri Mar 23 2018 14:05:34 GMT+0000 (UTC)
+=======================================================
+
+- Added ability to define expressions in automatic guards. ([#62](https://github.com/OpusCapita/fsm-workflow/issues/62)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-23 16:44:55 +0300)
+- Update README.md (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-23 16:44:36 +0300)
+
 Release 2.0.2 Fri Mar 23 2018 13:22:46 GMT+0000 (UTC)
 =======================================================
 
