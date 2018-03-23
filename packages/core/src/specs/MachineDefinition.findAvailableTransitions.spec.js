@@ -576,6 +576,28 @@ describe('machine definition: findAvailableTransitions', function() {
                   ]
                 }
               ]
+            },
+            {
+              from: 'i',
+              to: 'j',
+              event: 'i2j',
+              automatic: [
+                {
+                  name: 'i2j-auto-expression-guard',
+                  expression: 'object.enabled === true'
+                }
+              ]
+            },
+            {
+              from: 'j',
+              to: 'k',
+              event: 'j2k',
+              automatic: [
+                {
+                  name: 'j2k-auto-expression-guard',
+                  expression: 'object.enabled === true'
+                }
+              ]
             }
           ]
         },
@@ -689,6 +711,31 @@ describe('machine definition: findAvailableTransitions', function() {
         isAutomatic: true
       }).catch((e) => {
         assert(e, 'Error is thrown as expected')
+      });
+    });
+
+    it("expression auto-guard permits transition to be automatic", () => {
+      return machineDefinition.findAvailableTransitions({
+        from: 'i',
+        object: {
+          enabled: true
+        },
+        isAutomatic: true
+      }).then(result => {
+        assert.equal(result.transitions.length, 1);
+        assert.equal(result.transitions[0].event, 'i2j');
+      });
+    });
+
+    it("expression auto-guard forbids transition to be automatic", () => {
+      return machineDefinition.findAvailableTransitions({
+        from: 'j',
+        object: {
+          enabled: false
+        },
+        isAutomatic: true
+      }).then(result => {
+        assert.equal(result.transitions.length, 0);
       });
     });
   });
