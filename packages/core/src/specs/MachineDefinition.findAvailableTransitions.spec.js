@@ -192,6 +192,17 @@ describe('machine definition: findAvailableTransitions', function() {
                   expression: "not a valid expression"
                 }
               ]
+            },
+            {
+              from: 'i',
+              to: 'j',
+              event: 'i->j',
+              guards: [
+                {
+                  expression: "invoice.enabled === true",
+                  negate: true
+                }
+              ]
             }
           ]
         },
@@ -312,6 +323,19 @@ describe('machine definition: findAvailableTransitions', function() {
       }).catch(err => {
         assert.ok(true)
         done()
+      })
+    });
+
+    it(`expression guard doesn't get negated`, (done) => {
+      machineDefinition.findAvailableTransitions({
+        from: 'i',
+        object: {
+          enabled: true
+        }
+      }).then(({ transitions }) => {
+        assert.equal(transitions.length, 1);
+        assert.equal(transitions[0].event, 'i->j')
+        done();
       })
     });
   });
@@ -583,7 +607,6 @@ describe('machine definition: findAvailableTransitions', function() {
               event: 'i2j',
               automatic: [
                 {
-                  name: 'i2j-auto-expression-guard',
                   expression: 'object.enabled === true'
                 }
               ]
@@ -594,8 +617,18 @@ describe('machine definition: findAvailableTransitions', function() {
               event: 'j2k',
               automatic: [
                 {
-                  name: 'j2k-auto-expression-guard',
                   expression: 'object.enabled === true'
+                }
+              ]
+            },
+            {
+              from: 'k',
+              to: 'l',
+              event: 'k2l',
+              automatic: [
+                {
+                  expression: 'object.enabled === true',
+                  negate: true
                 }
               ]
             }
@@ -736,6 +769,18 @@ describe('machine definition: findAvailableTransitions', function() {
         isAutomatic: true
       }).then(result => {
         assert.equal(result.transitions.length, 0);
+      });
+    });
+
+    it("expression auto-guard doesn't get negated", () => {
+      return machineDefinition.findAvailableTransitions({
+        from: 'k',
+        object: {
+          enabled: true
+        },
+        isAutomatic: true
+      }).then(result => {
+        assert.equal(result.transitions.length, 1);
       });
     });
   });
