@@ -8,14 +8,10 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import withConfirmDialog from '../ConfirmDialog';
 import { isDef, formatArg, formatLabel } from '../utils';
+import { removeEmptyParams } from './utils';
 import guardPropTypes from './guardPropTypes';
 import GuardEditor from './GuardEditor.react';
 import './Guards.less';
-
-const removeEmptyParams = ({ params = [], ...rest }) => {
-  const newParams = params.filter(({ value }) => isDef(value));
-  return { ...rest, ...(newParams.length && { params: newParams }) }
-}
 
 @withConfirmDialog
 export default class GuardsTable extends PureComponent {

@@ -8,14 +8,14 @@
   ],
   "author": "Egor Stambakio <egor.stambakio@opuscapita.com>",
   "license": "Apache-2.0",
-  "repository": "https://github.com/OpusCapita/fsm/tree/master/packages/editor",
+  "repository": "OpusCapita/fsm/tree/master/packages/editor",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development showroom-scan ./src && webpack-dev-server --config config/webpack.config.showroom.js",
-    "build": "cross-env NODE_ENV=development rimraf lib && webpack --config config/webpack.config.build.js",
+    "start": "showroom-scan ./src && cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.showroom.js",
+    "build": "rimraf lib && webpack --config config/webpack.config.build.js",
     "lint-fix": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc --fix",
     "lint": "node ./node_modules/eslint/bin/eslint.js ./src --config ./config/.eslintrc",
     "test-only": "rimraf ./.nyc_output ./coverage && cross-env nyc mocha --recursive \"src/**/*.spec.js\" --require ignore-styles",

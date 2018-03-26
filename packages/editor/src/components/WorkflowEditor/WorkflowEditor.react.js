@@ -18,7 +18,7 @@ import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
 import guardPropTypes from '../Guards/guardPropTypes';
 import actionPropTypes from '../Actions/actionPropTypes';
-// TODO maybe move the following flags somewhere or get rid of them completely
+// TODO maybe move the following flags somewhere or get rid of them entirely
 import {
   DELETE_STATE_TRANSITIONS,
   SWAP_STATE_IN_TRANSITIONS
@@ -153,16 +153,19 @@ export default class WorkflowEditor extends PureComponent {
     }))
   }
 
-  handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards })
+  handleSaveTransitionGuards = index => guards => this.handleEditTransition({ index, guards });
 
-  handleSaveTransitionActions = index => actions => this.handleEditTransition({ index, actions })
+  handleSaveTransitionAutomatic = index => automatic => this.handleEditTransition({ index, automatic });
+
+  handleSaveTransitionActions = index => actions => this.handleEditTransition({ index, actions });
 
   createJsonOutput = _ => {
     const { schema } = this.state;
 
-    const transitions = schema.transitions.map(({ guards, actions, ...rest }) => ({
+    const transitions = schema.transitions.map(({ guards, actions, automatic, ...rest }) => ({
       ...rest,
       ...(guards && guards.length > 0 && { guards }),
+      ...((Array.isArray(automatic) ? automatic.length > 0 : automatic === true) && { automatic }),
       ...(actions && actions.length > 0 && { actions })
     }))
 
@@ -174,7 +177,7 @@ export default class WorkflowEditor extends PureComponent {
     }
   }
 
-  handleSave = _ => this.props.onSave(this.createJsonOutput())
+  handleSave = _ => this.props.onSave(this.createJsonOutput());
 
   handleDeleteState = ({ name: stateName, sideEffect = {} }) => {
     const { name: sideEffectName, alternative } = sideEffect;
@@ -312,6 +315,7 @@ export default class WorkflowEditor extends PureComponent {
                   onEditTransition={this.handleEditTransition}
                   onDeleteTransition={this.handleDeleteTransition}
                   onSaveGuards={this.handleSaveTransitionGuards}
+                  onSaveAutomatic={this.handleSaveTransitionAutomatic}
                   onSaveActions={this.handleSaveTransitionActions}
                   componentsRegistry={this.props.componentsRegistry}
                 />

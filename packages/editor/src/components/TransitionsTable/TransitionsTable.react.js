@@ -5,7 +5,8 @@ import Button from 'react-bootstrap/lib/Button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { isDef } from '../utils';
-import Guards from '../Guards';
+import Guards from '../Guards/GuardsTable.react';
+import Automatic from '../Guards/AutomaticTable.react';
 import Actions from '../Actions';
 import TransitionEditor from './TransitionEditor.react';
 import withConfirmDialog from '../ConfirmDialog';
@@ -33,6 +34,7 @@ export default class TransitionsTable extends PureComponent {
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
+    onSaveAutomatic: PropTypes.func.isRequired,
     onSaveActions: PropTypes.func.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
@@ -63,6 +65,11 @@ export default class TransitionsTable extends PureComponent {
   handleSaveGuards = index => guards => {
     this.handleCloseModal();
     this.props.onSaveGuards(index)(guards);
+  }
+
+  handleSaveAutomatic = index => automatic => {
+    this.handleCloseModal();
+    this.props.onSaveAutomatic(index)(automatic);
   }
 
   handleSaveActions = index => actions => {
@@ -108,6 +115,12 @@ export default class TransitionsTable extends PureComponent {
               Guards
             </Button>
             <Button
+              onClick={this.handleModal(index)('automatic')}
+              disabled={!(from && to && event)}
+            >
+              Automatic
+            </Button>
+            <Button
               onClick={this.handleModal(index)('actions')}
               disabled={!(from && to && event)}
             >
@@ -147,6 +160,25 @@ export default class TransitionsTable extends PureComponent {
               }"`}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveGuards(currentTransition)}
+            />
+          );
+          break;
+        case 'automatic':
+          modal = (
+            <Automatic
+              guards={transition.automatic}
+              conditions={conditions}
+              title={
+                `Automatic guards for transition on "${
+                  transition.event
+                }" from "${
+                  getStateLabel(transition.from)
+                }" to "${
+                  getStateLabel(transition.to)
+                }"`
+              }
+              onClose={this.handleCloseModal}
+              onSave={this.handleSaveAutomatic(currentTransition)}
             />
           );
           break;
