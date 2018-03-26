@@ -159,15 +159,15 @@ export default class AutomaticTable extends PureComponent {
         </Modal.Header>
         <Modal.Body>
           <div className="oc-fsm-crud-editor--states-editor">
-            <div className='clearfix'>
-              <div className='pull-left'>
-                <input
-                  type='checkbox'
-                  checked={guards === true}
-                  onChange={this.handleToggle}
-                />
-                <span>{`\u2000`}Always automatic</span>
-              </div>
+            <div className="form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="always-automatic"
+                checked={guards === true}
+                onChange={this.handleToggle}
+              />
+              <label className="form-check-label" htmlFor="always-automatic">{`\u2000`}Always automatic</label>
             </div>
             {
               guards !== true && (

@@ -130,6 +130,7 @@ export default class GuardsTable extends PureComponent {
                 <tr>
                   <th>Name</th>
                   <th>Parameters</th>
+                  <th style={{ width: '60px' }}>Negate</th>
                   <th className='text-right'>
                     <Button
                       bsSize='sm'
@@ -143,7 +144,7 @@ export default class GuardsTable extends PureComponent {
               <tbody>
                 {
                   guards.length > 0 ?
-                    guards.map(({ name: guardName, params, expression }, index) => (
+                    guards.map(({ name: guardName, params, expression, negate }, index) => (
                       <tr key={`${guardName}-${index}`}>
                         <td style={{ paddingTop: '15px' }}>
                           {
@@ -187,6 +188,11 @@ export default class GuardsTable extends PureComponent {
                                 null
                           }
                         </td>
+                        <td className='text-center'>
+                          {
+                            negate && (<i className='fa fa-check'></i>)
+                          }
+                        </td>
                         <td className='text-right'>
                           <ButtonGroup bsStyle='sm'>
                             <Button
@@ -208,7 +214,7 @@ export default class GuardsTable extends PureComponent {
                       </tr>
                     )) :
                     <tr>
-                      <td colSpan={3} style={{ textAlign: 'center' }}>
+                      <td colSpan={4} style={{ textAlign: 'center' }}>
                         No guards specified for this transition. Go ahead and{`\u00A0`}
                         <a
                           onClick={this.handleOpenEditor()}

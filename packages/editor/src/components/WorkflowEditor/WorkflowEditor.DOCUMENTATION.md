@@ -92,7 +92,8 @@
                   name: 'restrictedRoles',
                   value: ['REV']
                 }
-              ]
+              ],
+              negate: true
             }
           ],
           "actions": [
