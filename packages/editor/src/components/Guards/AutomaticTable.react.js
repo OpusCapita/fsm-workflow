@@ -77,7 +77,7 @@ export default class AutomaticTable extends PureComponent {
       const { guards: propsGuards } = this.props;
       if (
         stateGuards === true ||
-        (!isDef(propsGuards) && stateGuards.length === 0) ||
+        stateGuards.length === 0 ||
         isEqual(stateGuards, propsGuards)
       ) {
         return false
