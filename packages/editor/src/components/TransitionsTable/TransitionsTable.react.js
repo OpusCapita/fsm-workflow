@@ -76,7 +76,7 @@ export default class TransitionsTable extends PureComponent {
   }
 
   render() {
-    const { transitions, states, getStateLabel, actions, conditions } = this.props;
+    const { transitions = [], states = [], getStateLabel, actions, conditions } = this.props;
     const { showModal, currentTransition, modalType } = this.state;
 
     const rows = transitions.map(({ from, to, event }, index) => (
