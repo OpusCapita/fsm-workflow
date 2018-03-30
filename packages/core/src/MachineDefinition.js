@@ -165,17 +165,16 @@ export default class MachineDefinition {
                 params: implicitParams
               }) :
               // guard is an actual function
-              condition(this.prepareParams({ explicitParams: guards[idx].params, implicitParams }))
-            ).then(result => {
-              // TBD these lines don't seem related to the code below
-              // ??? move them somewhere?
-              //
-              // if guard is resolved with false or is rejected, e.g. transition is not available at the moment
               // pass arguments specified in guard call (part of schema)
               // additionally object, request and context are also passed
               // request should be used to pass params for some dynamic calculations f.e.
               // role dependent transitions and e.t.c
-              return guards[idx].negate ? !result : !!result
+              condition(this.prepareParams({ explicitParams: guards[idx].params, implicitParams }))
+            ).then(result => {
+              // if guard is resolved with false or is rejected, e.g. transition is not available at the moment
+
+              // `negate` property is applied only to function invocations
+              return guards[idx].negate && !guards[idx].expression ? !result : !!result
             })
           })
         ).then(executionResults => resolve(executionResults.every(Boolean))).catch(e => reject(e))
@@ -240,12 +239,14 @@ export default class MachineDefinition {
                 params: implicitParams
               }) :
               // autoGuard is an actual function
+              // pass arguments specified in guard call (part of schema)
+              // additionally object and context are also passed
               autoCondition(this.prepareParams({ explicitParams: automatic[idx].params, implicitParams }))
             ).then(result => {
               // if check return false, return false, e.g. transition is not available at the moment
-              // pass arguments specified in guard call (part of schema)
-              // additionally object and context are also passed
-              return automatic[idx].negate ? !result : !!result
+
+              // `negate` property is applied only to function invocations
+              return automatic[idx].negate && !automatic[idx].expression ? !result : !!result
             })
           })
         ).then(executionResults => resolve(executionResults.every(Boolean))).catch(e => reject(e));
