@@ -55,12 +55,12 @@ jobs:
           name: test
           command: npm test
 
-    #   - run:
-    #       name: build-and-deploy-gh-pages
-    #       command: |
-    #         cd packages/editor
-    #         bash ./scripts/gh-pages/build.sh
-    #         bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+      - run:
+          name: build-and-deploy-gh-pages
+          command: |
+            cd packages/editor
+            bash ./scripts/gh-pages/build.sh
+            bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - store_artifacts:
           path: ./test-results
@@ -115,6 +115,13 @@ jobs:
       - run:
           name: test
           command: npm test
+
+      - run:
+          name: Build and deploy gh-pages editor demo
+          command: |
+           cd packages/editor
+           bash ./scripts/gh-pages/build.sh
+           bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - run:
           name: "Publish release."

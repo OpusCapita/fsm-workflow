@@ -77,7 +77,7 @@ export default class AutomaticTable extends PureComponent {
       const { guards: propsGuards } = this.props;
       if (
         stateGuards === true ||
-        (!isDef(propsGuards) && stateGuards.length === 0) ||
+        stateGuards.length === 0 ||
         isEqual(stateGuards, propsGuards)
       ) {
         return false
@@ -159,15 +159,15 @@ export default class AutomaticTable extends PureComponent {
         </Modal.Header>
         <Modal.Body>
           <div className="oc-fsm-crud-editor--states-editor">
-            <div className='clearfix'>
-              <div className='pull-left'>
-                <input
-                  type='checkbox'
-                  checked={guards === true}
-                  onChange={this.handleToggle}
-                />
-                <span>{`\u2000`}Always automatic</span>
-              </div>
+            <div className="form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="always-automatic"
+                checked={guards === true}
+                onChange={this.handleToggle}
+              />
+              <label className="form-check-label" htmlFor="always-automatic">{`\u2000`}Always automatic</label>
             </div>
             {
               guards !== true && (
@@ -176,6 +176,7 @@ export default class AutomaticTable extends PureComponent {
                     <tr>
                       <th>Name</th>
                       <th>Parameters</th>
+                      <th style={{ width: '60px' }}>Negate</th>
                       <th className='text-right'>
                         <Button
                           bsSize='sm'
@@ -189,7 +190,7 @@ export default class AutomaticTable extends PureComponent {
                   <tbody>
                     {
                       guards.length > 0 ?
-                        guards.map(({ name: guardName, params, expression }, index) => (
+                        guards.map(({ name: guardName, params, expression, negate }, index) => (
                           <tr key={`${guardName}-${index}`}>
                             <td style={{ paddingTop: '15px' }}>
                               {
@@ -231,6 +232,11 @@ export default class AutomaticTable extends PureComponent {
                                       <pre>{expression}</pre>
                                     ) :
                                     null
+                              }
+                            </td>
+                            <td className='text-center'>
+                              {
+                                negate && (<i className='fa fa-check'></i>)
                               }
                             </td>
                             <td className='text-right'>
