@@ -34,7 +34,7 @@ class WorkflowGraph extends Component {
 
   convertSchemaToDotLang(schema) {
     // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
-    const { transitions, initialState, finalStates } = schema;
+    const { transitions = [], initialState, finalStates = [] } = schema;
 
     const { getStateLabel } = this.props;
 

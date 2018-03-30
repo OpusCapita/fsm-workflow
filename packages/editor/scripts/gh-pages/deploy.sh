@@ -24,7 +24,7 @@ GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
 # replace "/", "#", etc. in current git branch name
 urlencode() {
-  node -e "console.log('${*}'.replace('/', '(slash)').replace('#', '(hash)'))"
+  node -e "console.log('${*}'.replace('/', '-').replace('#', '-'))"
 }
 
 SAFE_GIT_BRANCH=`urlencode $GIT_BRANCH`

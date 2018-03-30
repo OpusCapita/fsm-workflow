@@ -97,8 +97,8 @@ describe('<WorkflowEditor />', () => {
     expect(wrapper.state().schema).to.deep.equal(schema);
 
     // test onSave handler
-    expect(wrapper.find('h1').find('button').text().trim()).to.equal('Save');
-    wrapper.find('h1').find('button').simulate('click');
+    expect(wrapper.find('h1').find('button').at(0).text().trim()).to.equal('Save');
+    wrapper.find('h1').find('button').at(0).simulate('click');
     expect(props.onSave.calledOnce).to.be.true; // eslint-disable-line no-unused-expressions
     expect(props.onSave.getCall(0).args[0]).to.deep.equal({ schema });
 

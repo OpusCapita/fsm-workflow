@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
-import Button from 'react-bootstrap/lib/Button';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
 import startCase from 'lodash/startCase';
+import TopButtons from '../TopButtons.react';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
@@ -133,7 +133,7 @@ export default class WorkflowEditor extends PureComponent {
         ...(
           isDef(index) ?
             prevState.schema.transitions.map((t, i) => i === index ? { ...t, ...rest } : t) :
-            prevState.schema.transitions.concat({ ...rest })
+            (prevState.schema.transitions || []).concat({ ...rest })
         )
       ]
     }
@@ -162,7 +162,7 @@ export default class WorkflowEditor extends PureComponent {
   createJsonOutput = _ => {
     const { schema } = this.state;
 
-    const transitions = schema.transitions.map(({ guards, actions, automatic, ...rest }) => ({
+    const transitions = (schema.transitions || []).map(({ guards, actions, ...rest }) => ({
       ...rest,
       ...(guards && guards.length > 0 && { guards }),
       ...((Array.isArray(automatic) ? automatic.length > 0 : automatic === true) && { automatic }),
@@ -198,7 +198,7 @@ export default class WorkflowEditor extends PureComponent {
               prevState.schema.transitions
         }),
         initialState: prevState.schema.initialState === stateName ? '' : prevState.schema.initialState,
-        finalStates: prevState.schema.finalStates.filter(state => state !== stateName)
+        finalStates: (prevState.schema.finalStates || []).filter(state => state !== stateName)
       }
     }))
   }
@@ -214,7 +214,8 @@ export default class WorkflowEditor extends PureComponent {
     ({
       schema: {
         ...prevState.schema,
-        states: prevState.schema.states.map(state => state.name === initialName ? { name, description } : state),
+        states: (prevState.schema.states || []).
+          map(state => state.name === initialName ? { name, description } : state),
         initialState: (initialState => isInitial ?
           name :
           initialState === initialName ?
@@ -228,8 +229,8 @@ export default class WorkflowEditor extends PureComponent {
             isFinal ?
               fs.concat(name) : // state was not already final -> should add state to finalStates
               fs // nothing to do
-        )(prevState.schema.finalStates),
-        transitions: prevState.schema.transitions.map(({ from, to, ...other }) => ({
+        )(prevState.schema.finalStates || []),
+        transitions: (prevState.schema.transitions || []).map(({ from, to, ...other }) => ({
           ...other,
           from: from === initialName ? name : from,
           to: to === initialName ? name : to
@@ -240,22 +241,22 @@ export default class WorkflowEditor extends PureComponent {
     ({
       schema: {
         ...prevState.schema,
-        states: prevState.schema.states.concat({ name, description }),
+        states: (prevState.schema.states || []).concat({ name, description }),
         ...(isInitial && { initialState: name }),
         ...(isFinal && {
-          finalStates: prevState.schema.finalStates.concat(name)
+          finalStates: (prevState.schema.finalStates || []).concat(name)
         })
       }
     })
   )
 
   getStateLabel = name => (({ name, description } = {}) => description || startCase(name || ''))(
-    find(this.state.schema.states, ({ name: stateName }) => name === stateName)
+    find(this.state.schema.states || [], ({ name: stateName }) => name === stateName)
   )
 
   render() {
     const { schema } = this.state;
-    const { title, workflow: { actions, conditions } } = this.props;
+    const { title, workflow: { actions = {}, conditions = {} } } = this.props;
 
     return (
       <Grid>
@@ -263,20 +264,11 @@ export default class WorkflowEditor extends PureComponent {
           <Col sm={12}>
             <h1>
               Workflow Editor{title && `:\u00A0${title}`}
-              <Button
-                bsStyle="primary"
-                style={{ float: 'right', marginTop: '16px' }}
-                disabled={!schema.name ||
-                  schema.transitions.some(({ from, to, event }) => !(from && to && event))
-                }
-                onClick={this.handleSave}
-              >
-                Save
-              </Button>
+              <TopButtons schema={schema} onSave={this.handleSave}/>
             </h1>
 
             <TopForm
-              name={schema.name}
+              name={schema.name || ''}
               onNameChange={this.handleNameChange}
             />
 
@@ -288,9 +280,9 @@ export default class WorkflowEditor extends PureComponent {
             >
               <Tab eventKey={1} title={(<h4>States</h4>)}>
                 <StatesTable
-                  states={schema.states}
+                  states={schema.states || []}
                   statesInTransitions={
-                    schema.transitions.reduce(
+                    (schema.transitions || []).reduce(
                       (involvedStates, transition) => ['from', 'to'].reduce(
                         (acc, key) => involvedStates.indexOf(transition[key]) === -1 ?
                           acc.concat(transition[key]) :
@@ -299,16 +291,16 @@ export default class WorkflowEditor extends PureComponent {
                       ), []
                     )
                   }
-                  initialState={schema.initialState}
-                  finalStates={schema.finalStates}
+                  initialState={schema.initialState || ''}
+                  finalStates={schema.finalStates || []}
                   onDelete={this.handleDeleteState}
                   onEdit={this.handleEditState}
                 />
               </Tab>
               <Tab eventKey={2} title={(<h4>Transitions</h4>)}>
                 <TransitionsTable
-                  transitions={schema.transitions}
-                  states={schema.states.map(({ name }) => name)}
+                  transitions={schema.transitions || []}
+                  states={(schema.states || []).map(({ name }) => name)}
                   actions={actions}
                   conditions={conditions}
                   getStateLabel={this.getStateLabel}
