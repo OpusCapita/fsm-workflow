@@ -162,7 +162,7 @@ export default class WorkflowEditor extends PureComponent {
   createJsonOutput = _ => {
     const { schema } = this.state;
 
-    const transitions = (schema.transitions || []).map(({ guards, actions, ...rest }) => ({
+    const transitions = (schema.transitions || []).map(({ guards, actions, automatic, ...rest }) => ({
       ...rest,
       ...(guards && guards.length > 0 && { guards }),
       ...((Array.isArray(automatic) ? automatic.length > 0 : automatic === true) && { automatic }),
