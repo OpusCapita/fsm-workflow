@@ -92,7 +92,8 @@
                   name: 'restrictedRoles',
                   value: ['REV']
                 }
-              ]
+              ],
+              negate: true
             }
           ],
           "actions": [
@@ -136,12 +137,18 @@
         {
           "from": "inspectionRequired",
           "to": "approvalRequired",
-          "event": "automatic-inspect"
+          "event": "automatic-inspect",
+          "automatic": true
         },
         {
           "from": "inspectionRequired",
           "to": "inspClrRequired",
-          "event": "sendToClarification"
+          "event": "sendToClarification",
+          "automatic": [
+            {
+              "expression": "invoice[\"netAmount\"] < 100"
+            }
+          ]
         },
         {
           "from": "inspClrRequired",

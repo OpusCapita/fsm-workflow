@@ -270,7 +270,14 @@ export default class GuardEditor extends PureComponent {
           expression: (this.props.guard || {}).expression || ''
         }
     }), nextTab === 2 && this.autoPlay)
-  })(nextTab)
+  })(nextTab);
+
+  handleToggleNegate = _ => this.setState(({ guard }) => ({
+    guard: {
+      ...guard,
+      negate: !guard.negate
+    }
+  }));
 
   render() {
     const { objectConfiguration: { alias } } = this.context;
@@ -319,18 +326,34 @@ export default class GuardEditor extends PureComponent {
                         <div className="output-heading">
                           <b>Choose condition</b>
                           <div className='right-block'>
-                            <FormControl
-                              componentClass="select"
-                              value={guard.name || ''}
-                              onChange={this.handleSelectCondition}
-                            >
-                              <option value=""></option>
-                              {
-                                Object.keys(conditions).map((name, i) => (
-                                  <option key={`${i}-${name}`} value={name}>{formatLabel(name)}</option>
-                                ))
-                              }
-                            </FormControl>
+                            {
+                              guard.name && (
+                                <div className='form-check pull-right' style={{ marginRight: '20px' }}>
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id="negate-check"
+                                    checked={!!guard.negate}
+                                    onChange={this.handleToggleNegate}
+                                  />
+                                  <label className="form-check-label" htmlFor="negate-check">{`\u2000`}Negate</label>
+                                </div>
+                              )
+                            }
+                            <div className='pull-right'>
+                              <FormControl
+                                componentClass="select"
+                                value={guard.name || ''}
+                                onChange={this.handleSelectCondition}
+                              >
+                                <option value=""></option>
+                                {
+                                  Object.keys(conditions).map((name, i) => (
+                                    <option key={`${i}-${name}`} value={name}>{formatLabel(name)}</option>
+                                  ))
+                                }
+                              </FormControl>
+                            </div>
                           </div>
                         </div>
                       </div>
