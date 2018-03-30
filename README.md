@@ -3,6 +3,11 @@
 [![CircleCI Status](https://circleci.com/gh/OpusCapita/fsm-workflow/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/fsm-workflow)
 ![badge-license](https://img.shields.io/github/license/OpusCapita/fsm-workflow.svg)
 
+### Demo
+
+- [Complete demo app](https://opuscapita-fsm-workflow-demo-master.azurewebsites.net)
+- [Worflow editor demo (showroom)](https://opuscapita.github.io/fsm-workflow/branches/master/editor/?currentComponentName=WorkflowEditor&maxContainerWidth=100%25)
+
 ### Introduction
 [Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) workflow is implemented in JS using [Promise](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise)-s.
 
