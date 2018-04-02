@@ -1,4 +1,9 @@
 
+Release 2.0.5 Mon Apr 02 2018 08:45:35 GMT+0000 (UTC)
+=======================================================
+
+- Updated build config. [ci skip] (Dmitry Shienok dshienok@scand.com, 2018-04-02 11:44:14 +0300)
+
 Release 2.0.4 Mon Apr 02 2018 08:30:24 GMT+0000 (UTC)
 =======================================================
 
