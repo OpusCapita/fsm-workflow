@@ -1,4 +1,13 @@
 
+Release 2.0.4 Mon Apr 02 2018 08:30:24 GMT+0000 (UTC)
+=======================================================
+
+- Update README.md (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-30 23:21:22 +0300)
+- Added ability to edit automatic guards for transitions ([#64](https://github.com/OpusCapita/fsm-workflow/issues/64)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-30 16:56:37 +0300)
+- Added `negate` flag to guards/automatic editors ([#66](https://github.com/OpusCapita/fsm-workflow/issues/66)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-30 16:42:14 +0300)
+- Restrict `negate` prop only for function invocations in guards and automatic. ([#65](https://github.com/OpusCapita/fsm-workflow/issues/65)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-30 16:22:12 +0300)
+- Fixed editor to allow empty schema and added download button. ([#68](https://github.com/OpusCapita/fsm-workflow/issues/68)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-03-30 16:21:25 +0300)
+
 Release 2.0.3 Fri Mar 23 2018 14:05:34 GMT+0000 (UTC)
 =======================================================
 
