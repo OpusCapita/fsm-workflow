@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-task-manager",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Task manager for FSM workflow",
   "main": "./lib/index.js",
   "files": [
@@ -29,7 +29,7 @@
     "bluebird": "3.5.0"
   },
   "devDependencies": {
-    "@opuscapita/fsm-workflow-core": "2.1.1",
+    "@opuscapita/fsm-workflow-core": "2.1.2",
     "@opuscapita/npm-scripts": "2.0.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",

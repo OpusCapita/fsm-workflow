@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-history",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Business-object history for FSM workflow",
   "repository": "https://github.com/OpusCapita/fsm/tree/master/packages/history",
   "main": "src/index.js",
