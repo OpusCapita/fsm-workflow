@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require('assert');
-
 /*
  * The function return Model.create(...) promise
  * which resolved value is a row instance.

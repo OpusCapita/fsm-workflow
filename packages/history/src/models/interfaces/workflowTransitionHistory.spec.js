@@ -9,14 +9,14 @@ const modelInterface = require('./workflowTransitionHistory');
 describe('history', () => {
   let history;
 
-  before(async () => {
+  before(async() => {
     const sequelize = new Sequelize('sqlite:/:memory:');
     const model = await modelDefinition(sequelize, Sequelize.DataTypes).sync({ force: true });
     history = modelInterface(model);
   });
 
   describe('add() & search() & delete()', () => {
-    it('should add history record with description', async () => {
+    it('should add history record with description', async() => {
       const { finishedOn, ...record } = (await history.add({
         from: 'from-point',
         to: 'to-point',
@@ -28,6 +28,7 @@ describe('history', () => {
         workflowName: 'test workflow'
       })).get();
 
+      assert(finishedOn);
       assert.deepEqual(record, {
         id: 1,
         from: 'from-point',
@@ -41,7 +42,7 @@ describe('history', () => {
       });
     });
 
-    it('should add history record without description', async () => {
+    it('should add history record without description', async() => {
       const { finishedOn, ...record } = (await history.add({
         from: 'from-2-point',
         to: 'to-2-point',
@@ -52,6 +53,7 @@ describe('history', () => {
         workflowName: 'test workflow'
       })).get();
 
+      assert(finishedOn);
       assert.deepEqual(record, {
         id: 2,
         from: 'from-2-point',
@@ -64,7 +66,7 @@ describe('history', () => {
       });
     });
 
-    it('should search for all history records', async () => {
+    it('should search for all history records', async() => {
       const records = (await history.search()).map(({ finishedOn, ...record }) => record);
 
       assert.deepEqual(records, [{
@@ -90,7 +92,7 @@ describe('history', () => {
       }]);
     });
 
-    it('should search for some history records', async () => {
+    it('should search for some history records', async() => {
       const records = (await history.search({
         object: {
           businessObjType: 'invoice',
@@ -122,10 +124,22 @@ describe('history', () => {
       }]);
     });
 
-    it('should delete history records', async () => {
-      assert.equal(await history.delete({businessObjType: 'no existing type'}), 0, "it is expected that 0 records are removed");
-      assert.equal(await history.delete({businessObjId: 'no existing type'}), 0, "it is expected that 0 records are removed");
-      assert.equal(await history.delete({businessObjType: 'invoice', businessObjId: '428-wb71'}), 2, "it is expected that 2 records are removed");
+    it('should delete history records', async() => {
+      assert.equal(
+        await history.delete({
+          businessObjType: 'no existing type'
+        }), 0, "it is expected that 0 records are removed"
+      );
+      assert.equal(
+        await history.delete({
+          businessObjId: 'no existing type'
+        }), 0, "it is expected that 0 records are removed"
+      );
+      assert.equal(
+        await history.delete({
+          businessObjType: 'invoice', businessObjId: '428-wb71'
+        }), 2, "it is expected that 2 records are removed"
+      );
     });
   });
 });
