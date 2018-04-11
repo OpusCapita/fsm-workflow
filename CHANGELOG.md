@@ -1,4 +1,13 @@
 
+Release 2.1.1 Wed Apr 11 2018 21:04:17 GMT+0000 (UTC)
+=======================================================
+
+- v2.1.0 (Alexey Sergeev sab@scand.com, 2018-04-11 23:52:51 +0300)
+- Fixing code style (Alexey Sergeev sab@scand.com, 2018-04-11 23:33:40 +0300)
+- ([#69](https://github.com/OpusCapita/fsm-workflow/issues/69)) Adding/implementing history.delete({businessObjType, businessObjId}) method that deletes business object history (method returns Promise that is resolved to a number of deveted history records) (Alexey Sergeev sab@scand.com, 2018-04-11 23:22:30 +0300)
+- Adding list of contributors, license info and updating NPM links [skip ci] (GitHub asergeev-sc@users.noreply.github.com, 2018-04-11 22:08:06 +0300)
+- Fixing editor gh-pages deploy script. (Egor Stambakio stambakio@scand.com, 2018-04-04 09:56:18 +0300)
+
 Release 2.0.5 Mon Apr 02 2018 08:45:35 GMT+0000 (UTC)
 =======================================================
 
