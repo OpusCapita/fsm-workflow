@@ -1,7 +1,7 @@
 # FSM core
 
-![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-core.svg)
-![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-core.svg)
+[![npm version](https://img.shields.io/npm/v/@opuscapita/fsm-workflow-core.svg)](https://npmjs.org/package/@opuscapita/fsm-workflow-core)
+[![NPM Downloads](https://img.shields.io/npm/dm/@opuscapita/fsm-workflow-core.svg)](https://npmjs.org/package/@opuscapita/fsm-workflow-core)
 
 Machine and its definition.
 
@@ -363,3 +363,15 @@ machine.cannot({ object, event })    // whether event is not available
 machine.onStartTransition()   // returns promise
 machine.onFinishTransition()  // returns promise
 ```
+
+## Contributors
+
+| <img src="https://avatars.githubusercontent.com/u/24603787?v=3" width="100px;"/> | [**Alexey Sergeev**](https://github.com/asergeev-sc)     |
+| :---: | :---: |
+| <img src="https://avatars3.githubusercontent.com/u/24650360?v=3" width="100px;"/> | [**Daniel Zhitomirsky**](https://github.com/dzhitomirsky-sc) |
+| <img src="https://avatars1.githubusercontent.com/u/31243790?v=3" width="100px;"/> | [**Egor Stambakio**](https://github.com/estambakio-sc) |
+| <img src="https://avatars1.githubusercontent.com/u/24649844?v=3" width="100px;"/> | [**Andrei Mourzenkov**](https://github.com/amourzenkov-sc) |
+
+## License
+
+**OpusCapita FSM Workflow** is licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE) for the full license text.
