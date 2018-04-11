@@ -1,5 +1,7 @@
 'use strict';
 
+const assert = require('assert');
+
 /*
  * The function return Model.create(...) promise
  * which resolved value is a row instance.
@@ -57,7 +59,16 @@ const search = model => {
     map(raw => raw.get())
 };
 
+/*
+ * The function return Model.delete(...) promise
+ * which resolved value is number of removed records.
+ */
+const del = model => (where = null) => {
+  return model.destroy({ where });
+};
+
 module.exports = model => ({
   add: add(model),
-  search: search(model)
+  search: search(model),
+  delete: del(model)
 });

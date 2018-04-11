@@ -8,11 +8,9 @@
     "src"
   ],
   "scripts": {
-    "start": "node ./src/demo/server",
-    "debug": "npm start -- --inspect",
     "lint": "eslint src",
     "test": "rimraf ./.nyc_output ./coverage && nyc --reporter=lcov --reporter=text mocha --reporter=mocha-junit-reporter --recursive \"src/**/*.spec.js\"",
-    "test-only": "rimraf ./.nyc_output ./coverage && nyc mocha --recursive \"src/**/*.spec.js\""
+    "test-only": "mocha --recursive \"src/**/*.spec.js\""
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -27,19 +25,12 @@
     "sequelize": "~3 || ~4"
   },
   "devDependencies": {
-    "@opuscapita/npm-scripts": "2.0.0",
     "babel-eslint": "7.2.3",
-    "body-parser": "1.18.2",
-    "chai": "4.1.2",
-    "cross-env": "5.1.3",
-    "eslint": "3.19.0",
-    "eslint-config-opuscapita": "1.0.7",
-    "eslint-plugin-react": "6.10.3",
-    "express": "4.16.2",
-    "helmet": "3.10.0",
+    "eslint": "4.14.0",
+    "eslint-config-opuscapita": "2.0.0",
+    "eslint-plugin-react": "7.5.1",
     "mocha": "5.0.0",
     "mocha-junit-reporter": "1.13.0",
-    "mysql2": "1.5.2",
     "nyc": "11.1.0",
     "rimraf": "2.6.1",
     "sequelize": "4.33.1",
@@ -49,12 +40,14 @@
     "per-file": true,
     "all": true,
     "exclude": [
-      "**/*.spec.js"
+      "**/*.spec.js",
+      "**/migrations/*.js",
+      "**/index.js"
     ],
-    "check-coverage": false,
-    "lines": 70,
-    "statements": 70,
-    "functions": 70,
-    "branches": 70
+    "check-coverage": true,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
   }
 }
