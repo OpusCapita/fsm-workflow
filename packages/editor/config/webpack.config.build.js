@@ -1,6 +1,7 @@
 const { resolve } = require('path');
 const merge = require('webpack-merge');
 const common = require('./webpack.config.common');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = merge(common, {
   entry: [
@@ -12,18 +13,9 @@ module.exports = merge(common, {
     library: `fsm-workflow-editor`,
     libraryTarget: 'umd'
   },
-  externals: {
-    react: {
-      root: 'React',
-      commonjs2: 'react',
-      commonjs: 'react',
-      amd: 'react'
-    },
-    'react-dom': {
-      root: 'ReactDOM',
-      commonjs2: 'react-dom',
-      commonjs: 'react-dom',
-      amd: 'react-dom'
-    }
-  }
+  externals: [
+    nodeExternals({
+      modulesFromFile: true
+    })
+  ]
 });
