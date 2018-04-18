@@ -1,4 +1,10 @@
 
+Release 2.1.2 Wed Apr 18 2018 07:04:41 GMT+0000 (UTC)
+=======================================================
+
+- Fixing login into Azure [skip ci] (Alexey Sergeev sab@scand.com, 2018-04-18 09:50:12 +0300)
+- Externalized dependencies in fsm-workflow-editor [#70](https://github.com/OpusCapita/fsm-workflow/issues/70) ([#71](https://github.com/OpusCapita/fsm-workflow/issues/71)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-04-14 10:32:12 +0300)
+
 Release 2.1.1 Wed Apr 11 2018 21:04:17 GMT+0000 (UTC)
 =======================================================
 
