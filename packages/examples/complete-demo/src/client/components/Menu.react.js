@@ -14,7 +14,7 @@ export default function AppMenu({ history, location }) {
     },
     {
       to: '/editor',
-      label: 'Worflow Editor'
+      label: 'Workflow Editor'
     }
   ];
 
