@@ -1,4 +1,10 @@
 
+Release 2.1.3-beta-test Wed May 23 2018 14:37:29 GMT+0300 (MSK)
+=======================================================
+
+- Fixed grammar in complete demo menu (Egor Stambakio stambakio@scand.com, 2018-05-08 08:27:58 +0300)
+- Adding an issue template file [ci skip] (Egor Stambakio egor.stambakio@opuscapita.com, 2018-05-02 12:26:24 +0300)
+
 Release 2.1.2 Wed Apr 18 2018 07:04:41 GMT+0000 (UTC)
 =======================================================
 

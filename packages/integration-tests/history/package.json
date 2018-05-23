@@ -1,6 +1,6 @@
 {
   "name": "fsm-history-integration-tests",
-  "version": "2.1.3",
+  "version": "2.1.3-beta-test",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
   "author": "Egor Stambakio <stambakio@scand.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@opuscapita/fsm-workflow-core": "2.1.3",
-    "@opuscapita/fsm-workflow-history": "2.1.3",
+    "@opuscapita/fsm-workflow-core": "2.1.3-beta-test",
+    "@opuscapita/fsm-workflow-history": "2.1.3-beta-test",
     "chai": "4.1.2",
     "mocha": "3.5.0",
     "mocha-junit-reporter": "1.13.0",
