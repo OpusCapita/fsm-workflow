@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-demo",
-  "version": "2.1.3-beta-test",
+  "version": "2.1.3-beta-test2",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -13,9 +13,9 @@
     "demo:start": "cross-env PORT=3020 NODE_ENV=production node src/compiled-server/index.js"
   },
   "dependencies": {
-    "@opuscapita/fsm-workflow-core": "2.1.3-beta-test",
-    "@opuscapita/fsm-workflow-editor": "2.1.3-beta-test",
-    "@opuscapita/fsm-workflow-history": "2.1.3-beta-test",
+    "@opuscapita/fsm-workflow-core": "2.1.3-beta-test2",
+    "@opuscapita/fsm-workflow-editor": "2.1.3-beta-test2",
+    "@opuscapita/fsm-workflow-history": "2.1.3-beta-test2",
     "@opuscapita/i18n": "1.1.1",
     "@opuscapita/react-navigation": "0.1.2",
     "body-parser": "1.18.2",
