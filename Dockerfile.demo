@@ -9,7 +9,7 @@ COPY ./ /demo
 
 WORKDIR /demo
 
-RUN npm i --unsafe-perm && \
+RUN npm i && \
   cd ./packages/examples/complete-demo && \
   npm run demo:build
 
