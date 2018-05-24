@@ -13,7 +13,7 @@ describe('machine definition: findAvailableTransitions', function() {
     });
   });
 
-  it("returns empty list if transition are not defined in machine schema", function() {
+  it("returns empty list if transitions are not defined in machine schema", function() {
     // 0 transitions
     return new MachineDefinition().findAvailableTransitions({ from: 'anyState' }).then(({ transitions }) => {
       assert(transitions);
@@ -225,11 +225,7 @@ describe('machine definition: findAvailableTransitions', function() {
           enabled: false
         }
       }).then((result) => {
-        console.log({ result })
         return assert.equal(result.transitions.length, 0)
-      }).catch(e => {
-        console.log({e});
-        return assert.fail(e)
       });
     });
 
@@ -635,6 +631,12 @@ describe('machine definition: findAvailableTransitions', function() {
                   negate: true
                 }
               ]
+            },
+            {
+              from: 'l',
+              to: 'm',
+              event: 'l2m',
+              automatic: []
             }
           ]
         },
@@ -785,6 +787,18 @@ describe('machine definition: findAvailableTransitions', function() {
         isAutomatic: true
       }).then(result => {
         assert.equal(result.transitions.length, 1);
+      });
+    });
+
+    it("if automatic is empty array, it means false", () => {
+      return machineDefinition.findAvailableTransitions({
+        from: 'l',
+        object: {
+          enabled: true
+        },
+        isAutomatic: true
+      }).then(result => {
+        assert.equal(result.transitions.length, 0);
       });
     });
   });

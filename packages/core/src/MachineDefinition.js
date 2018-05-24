@@ -105,7 +105,7 @@ export default class MachineDefinition {
    * @param {object} implicitParams
    * @returns {array<{ condition, result<boolean> }>}
    */
-  inspectConditions({ conditions = [], implicitParams }) {
+  inspectConditions({ conditions, implicitParams }) {
     // eslint-disable-next-line new-cap
     return new this.promise((resolve, reject) => {
       // collecting conditions that belong to current transition
@@ -133,32 +133,28 @@ export default class MachineDefinition {
             }) :
             // condition is an actual function
             // pass arguments specified in condition call (part of schema)
-            // additionally object, request and context are also passed
+            // additionally object, request and context are also passed as implicitParams
             // request should be used to pass params for some dynamic calculations f.e.
             // role dependent transitions and e.t.c
             condition(this.prepareParams({ explicitParams: conditions[idx].params, implicitParams }))
-          ).then(result => {
-            console.log('condition result', JSON.stringify(result));
-            return ({
-              condition: conditions[idx],
-              // `negate` property is applied only to function invocations
-              result: conditions[idx].negate && !condition.expression ? !result : !!result
-            })
-          })
+          ).then(result => ({
+            condition: conditions[idx],
+            // `negate` property is applied only to function invocations
+            result: conditions[idx].negate && !condition.expression ? !result : !!result
+          }))
         })
-      ).then(conditionsResults => {
-        console.log({ conditionsResults });
-        return conditionsResults
-      }).catch(reject)
+      ).
+        then(resolve).
+        catch(reject)
     })
   }
 
   /**
    * inspectTransitions is a generic function which returns transitions with evaluated conditions
    * @param {boolean} checkAutomatic - defines if we need to check `automatic` conditions
-   * @returns {object<{ transition, result<transition with inspected conditions> }>}
+   * @returns {array<{ transition, result<transition with inspected conditions> }>}
    */
-  inspectTransitions({ from, event, object, request, context, checkAutomatic = false } = {}) {
+  inspectTransitions({ from, event, object, request, context, checkAutomatic }) {
     // if from is not specified, then no transition is available
     if (from === null || from === undefined) {
       // to do throw proper error
@@ -166,9 +162,9 @@ export default class MachineDefinition {
     }
     const { schema } = this;
     const { transitions } = schema;
-    // if not transitions, the return empty list
+    // if not transitions, then return empty list
     if (!transitions) {
-      return this.promise.resolve({ transitions: [] });
+      return this.promise.resolve([]);
     }
     const checkFrom = transition => {
       return transition.from === from;
@@ -203,10 +199,7 @@ export default class MachineDefinition {
           if (guards) {
             inspectionData.push(
               this.inspectConditions({ conditions: guards, implicitParams }).
-                then(inspectedGuards => {
-                  console.log({ inspectedGuards });
-                  return { guards: inspectedGuards }
-                })
+                then(inspectedGuards => ({ guards: inspectedGuards }))
             )
           }
 
@@ -219,16 +212,15 @@ export default class MachineDefinition {
             } else {
               inspectionData.push(
                 this.inspectConditions({ conditions: automatic, implicitParams }).
-                  then(inspectedAutomatic => {
-                    console.log({ inspectedAutomatic });
-                    return { automatic: inspectedAutomatic }
-                  })
+                  then(inspectedAutomatic => ({ automatic: inspectedAutomatic }))
               )
             }
           }
 
           return this.promise.all(inspectionData).
-            then(([transition, ...inspected]) => ({ // inspected === [ guards results, automatic results ]
+            // transition === transition, which was inspected, as it's defined in schema
+            // inspected === [{ guards: guards results }, { automatic: automatic results }]
+            then(([transition, ...inspected]) => ({
               transition,
               result: inspected.reduce((acc, inspectionResult) => ({ ...acc, ...inspectionResult }), transition)
             }))
@@ -237,39 +229,24 @@ export default class MachineDefinition {
   }
 
   findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
-    // if from is not specified, then no transition is available
-    if (from === null || from === undefined) {
-      // to do throw proper error
-      return this.promise.reject(new Error("'from' is not defined"));
-    }
-    const { schema } = this;
-    const { transitions } = schema;
-    // if not transitions, the return empty list
-    if (!transitions) {
-      return this.promise.resolve({ transitions: [] });
-    }
-
     return this.inspectTransitions({ from, event, object, request, context, checkAutomatic: isAutomatic }).
-      then(inspectionData => {
-        // console.log(JSON.stringify({ inspectionData }));
-        return inspectionData.
-          filter(({ transition, result }) => {
-            const guardsResults = transition.guards ?
-              result.guards.every(({ result }) => result) :
-              true;
+      then(inspectionResults => inspectionResults. // [ { transition, result }, { transition, result }, ... ]
+        filter(({ transition, result }) => {
+          const guardsResults = transition.guards ?
+            result.guards.every(({ result }) => result) :
+            true;
 
-            let automaticResults = true;
+          let automaticResults = true;
 
-            if (isAutomatic) {
-              automaticResults = Array.isArray(result.automatic) ?
-                result.automatic.every(({ result }) => result) :
-                result.automatic
-            }
+          if (isAutomatic) {
+            automaticResults = Array.isArray(result.automatic) ?
+              result.automatic.every(({ result }) => result) :
+              result.automatic
+          }
 
-            return guardsResults && automaticResults
-          }).
-          map(({ transition }) => transition)
-      }).
+          return guardsResults && automaticResults;
+        }).
+        map(({ transition }) => transition)).
       then(transitions => ({ transitions }))
   }
 
