@@ -83,6 +83,7 @@ export default class MachineDefinition {
   }
 
   // evaluate explicit params and combine with implicit params
+  // this function is not made static because it is used in Machine.js via instance accessor
   prepareParams({ explicitParams = [], implicitParams }) {
     return {
       ...explicitParams.reduce((params, { name, value, expression }) => ({
@@ -98,7 +99,66 @@ export default class MachineDefinition {
     }
   }
 
-  findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
+  /**
+   * inspectConditions is a generic function which returns passed conditions with results of evaluation
+   * @param {array<object>} conditions
+   * @param {object} implicitParams
+   * @returns {array<{ condition, result<boolean> }>}
+   */
+  inspectConditions({ conditions = [], implicitParams }) {
+    // eslint-disable-next-line new-cap
+    return new this.promise((resolve, reject) => {
+      // collecting conditions that belong to current transition
+      const preparedConditions = conditions.map((condition, idx) => {
+        if (condition.expression) { // condition is an object with inline JS expression
+          return condition
+        }
+        if (!this.conditions[condition.name]) {
+          throw new Error(
+            // eslint-disable-next-line max-len
+            `Constraint '${condition.name}' is specified in one of transitions but corresponding condition is not found/implemented!`
+          )
+        }
+        return this.conditions[condition.name];
+      });
+
+      return this.promise.all(
+        preparedConditions.map((condition, idx) => {
+          return this.promise.resolve(condition.expression ?
+            // condition is an inline expression
+            // we cast eval result to boolean because condition can only return boolean by design
+            !!MachineDefinition.evaluateExpression({
+              expression: condition.expression,
+              params: implicitParams
+            }) :
+            // condition is an actual function
+            // pass arguments specified in condition call (part of schema)
+            // additionally object, request and context are also passed
+            // request should be used to pass params for some dynamic calculations f.e.
+            // role dependent transitions and e.t.c
+            condition(this.prepareParams({ explicitParams: conditions[idx].params, implicitParams }))
+          ).then(result => {
+            console.log('condition result', JSON.stringify(result));
+            return ({
+              condition: conditions[idx],
+              // `negate` property is applied only to function invocations
+              result: conditions[idx].negate && !condition.expression ? !result : !!result
+            })
+          })
+        })
+      ).then(conditionsResults => {
+        console.log({ conditionsResults });
+        return conditionsResults
+      }).catch(reject)
+    })
+  }
+
+  /**
+   * inspectTransitions is a generic function which returns transitions with evaluated conditions
+   * @param {boolean} checkAutomatic - defines if we need to check `automatic` conditions
+   * @returns {object<{ transition, result<transition with inspected conditions> }>}
+   */
+  inspectTransitions({ from, event, object, request, context, checkAutomatic = false } = {}) {
     // if from is not specified, then no transition is available
     if (from === null || from === undefined) {
       // to do throw proper error
@@ -122,152 +182,95 @@ export default class MachineDefinition {
       return transition.event === event;
     };
 
-    const checkGuards = transition => {
-      const { guards, from, to, event } = transition;
-      // if guards are undefined
-      if (!guards) {
-        return this.promise.resolve(true);
-      }
-
-      // eslint-disable-next-line new-cap
-      return new this.promise((resolve, reject) => {
-        // collecting conditions that belong to current transition
-        const conditions = guards.map((guard, idx) => {
-          if (guard.expression) { // guard is an object with inline JS expression
-            return guard
-          }
-          if (!this.conditions[guard.name]) {
-            throw new Error(
-              // eslint-disable-next-line max-len
-              `Guard '${guard.name}' is specified in one of transitions but corresponding condition is not found/implemented!`
-            )
-          }
-          return this.conditions[guard.name];
-        });
-
-        const implicitParams = {
-          from,
-          to,
-          event,
-          object,
-          ...this.prepareObjectAlias(object),
-          request,
-          context
-        }
-
-        return this.promise.all(
-          conditions.map((condition, idx) => {
-            return this.promise.resolve(condition.expression ?
-              // guard is an inline expression
-              // we cast eval result to boolean because guard can only return boolean by design
-              !!MachineDefinition.evaluateExpression({
-                expression: condition.expression,
-                params: implicitParams
-              }) :
-              // guard is an actual function
-              // pass arguments specified in guard call (part of schema)
-              // additionally object, request and context are also passed
-              // request should be used to pass params for some dynamic calculations f.e.
-              // role dependent transitions and e.t.c
-              condition(this.prepareParams({ explicitParams: guards[idx].params, implicitParams }))
-            ).then(result => {
-              // if guard is resolved with false or is rejected, e.g. transition is not available at the moment
-
-              // `negate` property is applied only to function invocations
-              return guards[idx].negate && !guards[idx].expression ? !result : !!result
-            })
-          })
-        ).then(executionResults => resolve(executionResults.every(Boolean))).catch(e => reject(e))
-      })
-    };
-
-    /**
-     * Checks transition for automatic execution
-     * Possible automatic transition definitions:
-     * automatic: true
-     * automatic: [g1, g2,...,gn] //gi - condition name, from confition definition
-     *
-     * @param transition
-     * @return {boolean}
-     */
-    const checkAutomatic = transition => {
-      const { from, to, event, automatic } = transition;
-
-      // automatic: checking for boolean 'true'
-      if (automatic === true) {
-        return this.promise.resolve(true);
-      } else if (!automatic || automatic.length === 0) {
-        // automatic also could be an array in the same way as guards
-        return this.promise.resolve(false);
-      }
-
-      // eslint-disable-next-line new-cap
-      return new this.promise((resolve, reject) => {
-        // collecting conditions that belong to current auto transition into list of functions
-        const automaticConditions = automatic.map((autoGuard, idx) => {
-          if (autoGuard.expression) { // autoGuard is an object with inline JS expression
-            return autoGuard
-          }
-          if (!this.conditions[automatic[idx].name]) {
-            throw new Error(
-              // if no functions definition found - throw an error
-              // eslint-disable-next-line max-len
-              `Automatic condition '${automatic[idx].name}' is specified in one the transitions but is not found/implemented!`
-            )
-          }
-          return this.conditions[automatic[idx].name];
-        });
-
-        const implicitParams = {
-          from,
-          to,
-          event,
-          object,
-          ...this.prepareObjectAlias(object),
-          request,
-          context
-        }
-
-        // execute all checks asynchronously then collect & aggregate executions results
-        return this.promise.all(
-          automaticConditions.map((autoCondition, idx) => {
-            return this.promise.resolve(autoCondition.expression ?
-              // autoGuard is an inline expression
-              // we cast eval result to boolean because guard can only return boolean by design
-              !!MachineDefinition.evaluateExpression({
-                expression: autoCondition.expression,
-                params: implicitParams
-              }) :
-              // autoGuard is an actual function
-              // pass arguments specified in guard call (part of schema)
-              // additionally object and context are also passed
-              autoCondition(this.prepareParams({ explicitParams: automatic[idx].params, implicitParams }))
-            ).then(result => {
-              // if check return false, return false, e.g. transition is not available at the moment
-
-              // `negate` property is applied only to function invocations
-              return automatic[idx].negate && !automatic[idx].expression ? !result : !!result
-            })
-          })
-        ).then(executionResults => resolve(executionResults.every(Boolean))).catch(e => reject(e));
-      })
-    };
-
-    // eslint-disable-next-line new-cap
     return this.promise.all(
-      transitions.filter(t => checkEvent(t) && checkFrom(t)).map(transition => this.promise.all([
-        checkGuards(transition),
-        isAutomatic ? checkAutomatic(transition) : this.promise.resolve(true)
-      ]).then(checkResults => {
-        if (checkResults.every(Boolean)) {
-          return transition;
-        } else {
-          return null;
-        }
-      }))).then(foundTransitions => ({
-        transitions: foundTransitions.filter(Boolean)
-      })
-    );
+      transitions.
+        filter(t => checkEvent(t) && checkFrom(t)).
+        map(transition => {
+          const { to, event, guards, automatic } = transition;
+
+          const implicitParams = {
+            from,
+            to,
+            event,
+            object,
+            ...this.prepareObjectAlias(object),
+            request,
+            context
+          }
+
+          const inspectionData = [transition];
+
+          if (guards) {
+            inspectionData.push(
+              this.inspectConditions({ conditions: guards, implicitParams }).
+                then(inspectedGuards => {
+                  console.log({ inspectedGuards });
+                  return { guards: inspectedGuards }
+                })
+            )
+          }
+
+          if (checkAutomatic) {
+            // if checkAutomatic === true then check `automatic` condition(s)
+            if (Object(automatic) !== automatic) { // primitive -> cast to boolean
+              inspectionData.push({ automatic: !!automatic })
+            } else if (automatic.length === 0) { // empty array
+              inspectionData.push({ automatic: false })
+            } else {
+              inspectionData.push(
+                this.inspectConditions({ conditions: automatic, implicitParams }).
+                  then(inspectedAutomatic => {
+                    console.log({ inspectedAutomatic });
+                    return { automatic: inspectedAutomatic }
+                  })
+              )
+            }
+          }
+
+          return this.promise.all(inspectionData).
+            then(([transition, ...inspected]) => ({ // inspected === [ guards results, automatic results ]
+              transition,
+              result: inspected.reduce((acc, inspectionResult) => ({ ...acc, ...inspectionResult }), transition)
+            }))
+        })
+    )
+  }
+
+  findAvailableTransitions({ from, event, object, request, context, isAutomatic = false } = {}) {
+    // if from is not specified, then no transition is available
+    if (from === null || from === undefined) {
+      // to do throw proper error
+      return this.promise.reject(new Error("'from' is not defined"));
+    }
+    const { schema } = this;
+    const { transitions } = schema;
+    // if not transitions, the return empty list
+    if (!transitions) {
+      return this.promise.resolve({ transitions: [] });
+    }
+
+    return this.inspectTransitions({ from, event, object, request, context, checkAutomatic: isAutomatic }).
+      then(inspectionData => {
+        // console.log(JSON.stringify({ inspectionData }));
+        return inspectionData.
+          filter(({ transition, result }) => {
+            const guardsResults = transition.guards ?
+              result.guards.every(({ result }) => result) :
+              true;
+
+            let automaticResults = true;
+
+            if (isAutomatic) {
+              automaticResults = Array.isArray(result.automatic) ?
+                result.automatic.every(({ result }) => result) :
+                result.automatic
+            }
+
+            return guardsResults && automaticResults
+          }).
+          map(({ transition }) => transition)
+      }).
+      then(transitions => ({ transitions }))
   }
 
   /**

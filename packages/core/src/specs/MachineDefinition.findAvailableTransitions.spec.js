@@ -225,7 +225,11 @@ describe('machine definition: findAvailableTransitions', function() {
           enabled: false
         }
       }).then((result) => {
+        console.log({ result })
         return assert.equal(result.transitions.length, 0)
+      }).catch(e => {
+        console.log({e});
+        return assert.fail(e)
       });
     });
 
