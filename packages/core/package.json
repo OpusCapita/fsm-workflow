@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/OpusCapita/fsm/tree/master/core#readme",
   "dependencies": {
-    "babel-preset-env": "1.6.1",
     "bluebird": "3.5.0"
   },
   "devDependencies": {
