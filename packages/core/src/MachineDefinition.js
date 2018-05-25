@@ -222,7 +222,7 @@ export default class MachineDefinition {
             // inspected === [{ guards: guards results }, { automatic: automatic results }]
             then(([transition, ...inspected]) => ({
               transition,
-              result: inspected.reduce((acc, inspectionResult) => ({ ...acc, ...inspectionResult }), transition)
+              result: inspected.reduce((acc, inspectionResult) => ({ ...acc, ...inspectionResult }), {})
             }))
         })
     )
