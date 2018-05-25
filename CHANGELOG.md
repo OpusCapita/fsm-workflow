@@ -1,4 +1,9 @@
 
+Release 2.2.0 Fri May 25 2018 17:12:34 GMT+0300 (MSK)
+=======================================================
+
+- Added inspectTransitions function, refactored conditions evaluation ([#73](https://github.com/OpusCapita/fsm-workflow/issues/73)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-05-25 17:10:28 +0300)
+
 Release 2.1.3-beta-test Wed May 23 2018 14:37:29 GMT+0300 (MSK)
 =======================================================
 
