@@ -109,7 +109,7 @@ export default class MachineDefinition {
     // eslint-disable-next-line new-cap
     return new this.promise((resolve, reject) => {
       // collecting conditions that belong to current transition
-      const preparedConditions = conditions.map((condition, idx) => {
+      const preparedConditions = conditions.map(condition => {
         if (condition.expression) { // condition is an object with inline JS expression
           return condition
         }
@@ -152,7 +152,7 @@ export default class MachineDefinition {
   /**
    * inspectTransitions is a generic function which returns transitions with evaluated conditions
    * @param {boolean} checkAutomatic - defines if we need to check `automatic` conditions
-   * @returns {array<{ transition, result<transition with inspected conditions> }>}
+   * @returns {array<{ transition, result<{ guards: guards results, automatic: automatic results }> }>}
    */
   inspectTransitions({ from, event, object, request, context, checkAutomatic }) {
     // if from is not specified, then no transition is available
@@ -232,19 +232,19 @@ export default class MachineDefinition {
     return this.inspectTransitions({ from, event, object, request, context, checkAutomatic: isAutomatic }).
       then(inspectionResults => inspectionResults. // [ { transition, result }, { transition, result }, ... ]
         filter(({ transition, result }) => {
-          const guardsResults = transition.guards ?
+          const guardsResult = transition.guards ?
             result.guards.every(({ result }) => result) :
             true;
 
-          let automaticResults = true;
+          let automaticResult = true;
 
           if (isAutomatic) {
-            automaticResults = Array.isArray(result.automatic) ?
+            automaticResult = Array.isArray(result.automatic) ?
               result.automatic.every(({ result }) => result) :
               result.automatic
           }
 
-          return guardsResults && automaticResults;
+          return guardsResult && automaticResult;
         }).
         map(({ transition }) => transition)).
       then(transitions => ({ transitions }))
