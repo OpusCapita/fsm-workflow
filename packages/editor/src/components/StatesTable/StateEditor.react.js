@@ -15,7 +15,7 @@ import ErrorLabel from '../ErrorLabel.react';
 @withConfirmDialog
 export default class StateEditor extends PureComponent {
   static propTypes = {
-    state: statePropTypes,
+    fsmState: statePropTypes,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     existingStates: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -27,8 +27,8 @@ export default class StateEditor extends PureComponent {
   state = {
     name: '',
     description: '',
-    ...this.props.state,
-    initialName: (this.props.state || {}).name
+    ...this.props.fsmState,
+    initialName: (this.props.fsmState || {}).name
   }
 
   handleChangeField = field => ({ target: { value } }) => this.setState({
@@ -45,12 +45,12 @@ export default class StateEditor extends PureComponent {
   }
 
   hasUnsavedChanges = _ => {
-    const { state: propState } = this.props;
+    const { fsmState } = this.props;
 
     const { name, description, isInitial, isFinal } = this.state;
 
-    return propState ?
-      !isEqual(propState, { name, description, isInitial, isFinal }) : // compare initial and current states
+    return fsmState ?
+      !isEqual(fsmState, { name, description, isInitial, isFinal }) : // compare initial and current states
       name || description || isInitial || isFinal // look for any input for newely created object
   }
 
@@ -98,15 +98,17 @@ export default class StateEditor extends PureComponent {
             placeholder=''
             value={name}
             onChange={this.handleChangeField('name')}
+            {...(!name && { style: { color: '#999' } })}
           >
             {
-              [
-                ...(name ? [] : ['']),
-                ...availableNames.
-                  filter(availableName => availableName === name || existingStates.indexOf(availableName) === -1)
-              ].map((name, i) => (
-                <option value={name} key={`${name}_${i}`}>{name || 'Select state:'}</option>
-              ))
+              !name && (<option value='' disabled={true} style={{ color: '#999' }}>Select state</option>)
+            }
+            {
+              availableNames.
+                filter(availableName => availableName === name || existingStates.indexOf(availableName) === -1).
+                map((name, i) => (
+                  <option value={name} key={i} style={{ color: '#555' }}>{name}</option>
+                ))
             }
           </FormControl>
         )
@@ -123,8 +125,8 @@ export default class StateEditor extends PureComponent {
         <Modal.Header closeButton={true}>
           <Modal.Title>
             {
-              this.props.state ?
-                `Edit state '${this.props.state.name}'` :
+              this.props.fsmState ?
+                `Edit state '${this.props.fsmState.name}'` :
                 `Add new state`
             }
           </Modal.Title>

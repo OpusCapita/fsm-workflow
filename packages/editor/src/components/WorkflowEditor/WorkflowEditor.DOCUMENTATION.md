@@ -397,12 +397,14 @@
 
   onSave={v => console.log(JSON.stringify(v.schema, null, 2))}
 
-  stateConfig={{
-    availableNames: [
-      'inspectionRequired',
-      'approvalRequired',
-      'approved'
-    ]
+  schemaConfig = {{
+    state: {
+      availableNames: [
+        'inspectionRequired',
+        'approvalRequired',
+        'approved'
+      ]
+    }
   }}
 />
 ```

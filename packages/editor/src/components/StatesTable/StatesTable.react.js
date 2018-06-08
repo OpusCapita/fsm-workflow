@@ -107,15 +107,15 @@ export default class StatesTable extends PureComponent {
     let modal;
 
     if (showModal) {
-      let state;
+      let fsmState;
 
       if (isDef(currentState)) {
-        state = find(states, ({ name }) => name === currentState)
+        fsmState = find(states, ({ name }) => name === currentState)
       }
 
       modal = (
         <StateEditor
-          state={state}
+          fsmState={fsmState}
           existingStates={states.map(({ name }) => name)}
           onClose={this.handleClose}
           onSave={this.handleSave}

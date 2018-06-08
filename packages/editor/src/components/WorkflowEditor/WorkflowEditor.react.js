@@ -56,8 +56,10 @@ export default class WorkflowEditor extends PureComponent {
       }).isRequired,
     }).isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
-    stateConfig: PropTypes.shape({
-      availableNames: PropTypes.arrayOf(PropTypes.string)
+    schemaConfig: PropTypes.shape({
+      state: PropTypes.shape({
+        availableNames: PropTypes.arrayOf(PropTypes.string)
+      })
     })
   }
 
@@ -259,7 +261,7 @@ export default class WorkflowEditor extends PureComponent {
 
   render() {
     const { schema } = this.state;
-    const { title, workflow: { actions = {}, conditions = {} }, stateConfig } = this.props;
+    const { title, workflow: { actions = {}, conditions = {} }, schemaConfig } = this.props;
 
     return (
       <Grid>
@@ -298,7 +300,7 @@ export default class WorkflowEditor extends PureComponent {
                   finalStates={schema.finalStates || []}
                   onDelete={this.handleDeleteState}
                   onEdit={this.handleEditState}
-                  stateConfig={stateConfig}
+                  stateConfig={(schemaConfig || {}).state}
                 />
               </Tab>
               <Tab eventKey={2} title={(<h4>Transitions</h4>)}>
