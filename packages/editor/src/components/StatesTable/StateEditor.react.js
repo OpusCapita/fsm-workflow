@@ -13,12 +13,15 @@ import withConfirmDialog from '../ConfirmDialog';
 import ErrorLabel from '../ErrorLabel.react';
 
 @withConfirmDialog
-export default class StatesEditor extends PureComponent {
+export default class StateEditor extends PureComponent {
   static propTypes = {
     state: statePropTypes,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired
+    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired,
+    stateConfig: PropTypes.shape({
+      availableNames: PropTypes.arrayOf(PropTypes.string)
+    })
   }
 
   state = {
@@ -57,7 +60,7 @@ export default class StatesEditor extends PureComponent {
   })
 
   render() {
-    const { existingStates } = this.props;
+    const { existingStates, stateConfig } = this.props;
 
     const {
       name,
@@ -67,7 +70,48 @@ export default class StatesEditor extends PureComponent {
       initialName
     } = this.state;
 
-    const duplicateName = !!find(existingStates, existingName => existingName === name && initialName !== existingName);
+    const duplicateName = !!find(
+      existingStates,
+      existingName => existingName === name && initialName !== existingName
+    );
+
+    const { availableNames } = (stateConfig || {});
+
+    let nameInput = (
+      <FormControl
+        placeholder='Enter state name'
+        type='text'
+        value={name}
+        onChange={this.handleChangeField('name')}
+      />
+    );
+
+    if (availableNames) {
+      if (availableNames.every(name => existingStates.indexOf(name) > -1) && !name) {
+        nameInput = (
+          <div>No available names left.</div>
+        )
+      } else {
+        nameInput = (
+          <FormControl
+            componentClass='select'
+            placeholder=''
+            value={name}
+            onChange={this.handleChangeField('name')}
+          >
+            {
+              [
+                ...(name ? [] : ['']),
+                ...availableNames.
+                  filter(availableName => availableName === name || existingStates.indexOf(availableName) === -1)
+              ].map((name, i) => (
+                <option value={name} key={`${name}_${i}`}>{name || 'Select state:'}</option>
+              ))
+            }
+          </FormControl>
+        )
+      }
+    }
 
     return (
       <Modal
@@ -88,12 +132,9 @@ export default class StatesEditor extends PureComponent {
         <Modal.Body>
           <FormGroup controlId='stateName' style={{ marginBottom: 0 }}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl
-              placeholder='Enter state name'
-              type='text'
-              value={name}
-              onChange={this.handleChangeField('name')}
-            />
+            {
+              nameInput
+            }
             <ErrorLabel {...(duplicateName && { error: `This state already exists` })}/>
           </FormGroup>
           <FormGroup controlId="stateDescription">

@@ -72,189 +72,189 @@
     },
     "schema": {
       "name": "InvoiceApproval",
-      "initialState": "inspectionRequired",
-      "finalStates": [
-        "approved"
-      ],
-      "transitions": [
-        {
-          "from": "inspectionRequired",
-          "to": "approvalRequired",
-          "event": "inspect",
-          "guards": [
-            {
-              expression: "invoice[\"netAmount\"] > 100"
-            },
-            {
-              name: 'userHasRoles',
-              params: [
-                {
-                  name: 'restrictedRoles',
-                  value: ['REV']
-                }
-              ],
-              negate: true
-            }
-          ],
-          "actions": [
-            {
-              name: "testAction",
-              params: [
-                {
-                  name: "dinnerMenu",
-                  value: ['Steak', 'Mashrooms']
-                },
-                {
-                  name: "fullName",
-                  value: "John Smith"
-                }
-              ]
-            },
-            {
-              name: 'sendMail',
-              params: [
-                {
-                  name: 'fromAddress',
-                  value: 'support@client.com'
-                },
-                {
-                  name: 'greeting',
-                  value: 'Mr. Twister'
-                }
-              ]
-            },
-            {
-              name: 'updateProcessedBy',
-              params: [
-                {
-                  name: 'processedByFieldName',
-                  value: "customerId"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "from": "inspectionRequired",
-          "to": "approvalRequired",
-          "event": "automatic-inspect",
-          "automatic": true
-        },
-        {
-          "from": "inspectionRequired",
-          "to": "inspClrRequired",
-          "event": "sendToClarification",
-          "automatic": [
-            {
-              "expression": "invoice[\"netAmount\"] < 100"
-            }
-          ]
-        },
-        {
-          "from": "inspClrRequired",
-          "to": "inspectionRequired",
-          "event": "clarifyForInspection"
-        },
-        {
-          "from": "inspectionRequired",
-          "to": "inspectionRejected",
-          "event": "rejectInspection"
-        },
-        {
-          "from": "inspClrRequired",
-          "to": "inspectionRejected",
-          "event": "rejectInspection"
-        },
-        {
-          "from": "inspectionRejected",
-          "to": "inspectionRequired",
-          "event": "cancelRejection"
-        },
-        {
-          "from": "approvalRequired",
-          "to": "inspectionRequired",
-          "event": "cancelInspection"
-        },
-        {
-          "from": "approvalRequired",
-          "to": "inspectionRejected",
-          "event": "rejectInspection"
-        },
-        {
-          "from": "approvalRequired",
-          "to": "approved",
-          "event": "approve"
-        },
-        {
-          "from": "approvalRequired",
-          "to": "appClrRequired",
-          "event": "sendToClarification"
-        },
-        {
-          "from": "approvalRequired",
-          "to": "inspClrRequired",
-          "event": "sendToClarification"
-        },
-        {
-          "from": "approvalRequired",
-          "to": "approvalRejected",
-          "event": "rejectApproval"
-        },
-        {
-          "from": "appClrRequired",
-          "to": "approvalRequired",
-          "event": "clarifyForApproval"
-        },
-        {
-          "from": "appClrRequired",
-          "to": "approvalRejected",
-          "event": "rejectApproval"
-        },
-        {
-          "from": "approved",
-          "to": "approvalRequired",
-          "event": "cancelApproval"
-        },
-        {
-          "from": "approved",
-          "to": "approvalRejected",
-          "event": "rejectApproval"
-        },
-        {
-          "from": "approved",
-          "to": "appClrRequired",
-          "event": "sendToClarification"
-        },
-        {
-          "from": "approvalRejected",
-          "to": "approvalRequired",
-          "event": "cancelRejection"
-        }
-      ],
-      "states": [
-        {
-          "name": "inspectionRequired",
-          "description": "Inspection Required"
-        },
-        {
-          "name": "approvalRequired"
-        },
-        {
-          "name": "inspClrRequired"
-        },
-        {
-          "name": "inspectionRejected"
-        },
-        {
-          "name": "approved"
-        },
-        {
-          "name": "appClrRequired"
-        },
-        {
-          "name": "approvalRejected"
-        }
-      ]
+      // "initialState": "inspectionRequired",
+      // "finalStates": [
+      //   "approved"
+      // ],
+      // "transitions": [
+      //   {
+      //     "from": "inspectionRequired",
+      //     "to": "approvalRequired",
+      //     "event": "inspect",
+      //     "guards": [
+      //       {
+      //         expression: "invoice[\"netAmount\"] > 100"
+      //       },
+      //       {
+      //         name: 'userHasRoles',
+      //         params: [
+      //           {
+      //             name: 'restrictedRoles',
+      //             value: ['REV']
+      //           }
+      //         ],
+      //         negate: true
+      //       }
+      //     ],
+      //     "actions": [
+      //       {
+      //         name: "testAction",
+      //         params: [
+      //           {
+      //             name: "dinnerMenu",
+      //             value: ['Steak', 'Mashrooms']
+      //           },
+      //           {
+      //             name: "fullName",
+      //             value: "John Smith"
+      //           }
+      //         ]
+      //       },
+      //       {
+      //         name: 'sendMail',
+      //         params: [
+      //           {
+      //             name: 'fromAddress',
+      //             value: 'support@client.com'
+      //           },
+      //           {
+      //             name: 'greeting',
+      //             value: 'Mr. Twister'
+      //           }
+      //         ]
+      //       },
+      //       {
+      //         name: 'updateProcessedBy',
+      //         params: [
+      //           {
+      //             name: 'processedByFieldName',
+      //             value: "customerId"
+      //           }
+      //         ]
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     "from": "inspectionRequired",
+      //     "to": "approvalRequired",
+      //     "event": "automatic-inspect",
+      //     "automatic": true
+      //   },
+      //   {
+      //     "from": "inspectionRequired",
+      //     "to": "inspClrRequired",
+      //     "event": "sendToClarification",
+      //     "automatic": [
+      //       {
+      //         "expression": "invoice[\"netAmount\"] < 100"
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     "from": "inspClrRequired",
+      //     "to": "inspectionRequired",
+      //     "event": "clarifyForInspection"
+      //   },
+      //   {
+      //     "from": "inspectionRequired",
+      //     "to": "inspectionRejected",
+      //     "event": "rejectInspection"
+      //   },
+      //   {
+      //     "from": "inspClrRequired",
+      //     "to": "inspectionRejected",
+      //     "event": "rejectInspection"
+      //   },
+      //   {
+      //     "from": "inspectionRejected",
+      //     "to": "inspectionRequired",
+      //     "event": "cancelRejection"
+      //   },
+      //   {
+      //     "from": "approvalRequired",
+      //     "to": "inspectionRequired",
+      //     "event": "cancelInspection"
+      //   },
+      //   {
+      //     "from": "approvalRequired",
+      //     "to": "inspectionRejected",
+      //     "event": "rejectInspection"
+      //   },
+      //   {
+      //     "from": "approvalRequired",
+      //     "to": "approved",
+      //     "event": "approve"
+      //   },
+      //   {
+      //     "from": "approvalRequired",
+      //     "to": "appClrRequired",
+      //     "event": "sendToClarification"
+      //   },
+      //   {
+      //     "from": "approvalRequired",
+      //     "to": "inspClrRequired",
+      //     "event": "sendToClarification"
+      //   },
+      //   {
+      //     "from": "approvalRequired",
+      //     "to": "approvalRejected",
+      //     "event": "rejectApproval"
+      //   },
+      //   {
+      //     "from": "appClrRequired",
+      //     "to": "approvalRequired",
+      //     "event": "clarifyForApproval"
+      //   },
+      //   {
+      //     "from": "appClrRequired",
+      //     "to": "approvalRejected",
+      //     "event": "rejectApproval"
+      //   },
+      //   {
+      //     "from": "approved",
+      //     "to": "approvalRequired",
+      //     "event": "cancelApproval"
+      //   },
+      //   {
+      //     "from": "approved",
+      //     "to": "approvalRejected",
+      //     "event": "rejectApproval"
+      //   },
+      //   {
+      //     "from": "approved",
+      //     "to": "appClrRequired",
+      //     "event": "sendToClarification"
+      //   },
+      //   {
+      //     "from": "approvalRejected",
+      //     "to": "approvalRequired",
+      //     "event": "cancelRejection"
+      //   }
+      // ],
+      // "states": [
+      //   {
+      //     "name": "inspectionRequired",
+      //     "description": "Inspection Required"
+      //   },
+      //   {
+      //     "name": "approvalRequired"
+      //   },
+      //   {
+      //     "name": "inspClrRequired"
+      //   },
+      //   {
+      //     "name": "inspectionRejected"
+      //   },
+      //   {
+      //     "name": "approved"
+      //   },
+      //   {
+      //     "name": "appClrRequired"
+      //   },
+      //   {
+      //     "name": "approvalRejected"
+      //   }
+      // ]
     },
     actions: {
       testAction: {
@@ -396,6 +396,14 @@
   componentsRegistry={_scope.componentsRegistry}
 
   onSave={v => console.log(JSON.stringify(v.schema, null, 2))}
+
+  stateConfig={{
+    availableNames: [
+      'inspectionRequired',
+      'approvalRequired',
+      'approved'
+    ]
+  }}
 />
 ```
 

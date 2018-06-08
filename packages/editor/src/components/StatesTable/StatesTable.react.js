@@ -6,7 +6,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Button from 'react-bootstrap/lib/Button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import statePropTypes from './statePropTypes';
-import StatesEditor from './StatesEditor.react';
+import StateEditor from './StateEditor.react';
 import { isDef } from '../utils';
 import withConfirmDialog from '../ConfirmDialog';
 import DeleteStateDialogBody from './DeleteStateDialogBody.react';
@@ -22,7 +22,10 @@ export default class StatesTable extends PureComponent {
     finalStates: PropTypes.arrayOf(PropTypes.string).isRequired,
     onDelete: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
-    statesInTransitions: PropTypes.arrayOf(PropTypes.string)
+    statesInTransitions: PropTypes.arrayOf(PropTypes.string),
+    stateConfig: PropTypes.shape({
+      availableNames: PropTypes.arrayOf(PropTypes.string)
+    })
   }
 
   constructor(...args) {
@@ -98,6 +101,7 @@ export default class StatesTable extends PureComponent {
   }
 
   render() {
+    const { stateConfig } = this.props;
     const { states, currentState, showModal } = this.state;
 
     let modal;
@@ -110,11 +114,12 @@ export default class StatesTable extends PureComponent {
       }
 
       modal = (
-        <StatesEditor
+        <StateEditor
           state={state}
           existingStates={states.map(({ name }) => name)}
           onClose={this.handleClose}
           onSave={this.handleSave}
+          stateConfig={stateConfig}
         />
       )
     }
