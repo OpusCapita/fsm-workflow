@@ -98,16 +98,15 @@ export default class StateEditor extends PureComponent {
             placeholder=''
             value={name}
             onChange={this.handleChangeField('name')}
-            {...(!name && { style: { color: '#999' } })}
           >
             {
-              !name && (<option value='' disabled={true} style={{ color: '#999' }}>Select state</option>)
+              !name && (<option value='' ></option>)
             }
             {
               availableNames.
                 filter(availableName => availableName === name || existingStates.indexOf(availableName) === -1).
                 map((name, i) => (
-                  <option value={name} key={i} style={{ color: '#555' }}>{name}</option>
+                  <option value={name} key={i}>{name}</option>
                 ))
             }
           </FormControl>
