@@ -15,20 +15,21 @@ import ErrorLabel from '../ErrorLabel.react';
 @withConfirmDialog
 export default class StateEditor extends PureComponent {
   static propTypes = {
-    fsmState: statePropTypes,
+    value: statePropTypes,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired,
-    stateConfig: PropTypes.shape({
-      availableNames: PropTypes.arrayOf(PropTypes.string)
-    })
+    usedNames: PropTypes.arrayOf(PropTypes.string),
+    availableNames: PropTypes.arrayOf(PropTypes.string)
+  }
+
+  static defaultProps = {
+    usedNames: []
   }
 
   state = {
     name: '',
     description: '',
-    ...this.props.fsmState,
-    initialName: (this.props.fsmState || {}).name
+    ...this.props.value
   }
 
   handleChangeField = field => ({ target: { value } }) => this.setState({
@@ -40,17 +41,23 @@ export default class StateEditor extends PureComponent {
   }))
 
   handleSave = _ => {
-    const { name, description, isInitial, isFinal, initialName } = this.state;
-    this.props.onSave({ name, description, isInitial, isFinal, initialName })
+    const { name, description, isInitial, isFinal } = this.state;
+    this.props.onSave({
+      name,
+      description,
+      isInitial,
+      isFinal,
+      initialName: (this.props.value || {}).name
+    })
   }
 
   hasUnsavedChanges = _ => {
-    const { fsmState } = this.props;
+    const { value } = this.props;
 
     const { name, description, isInitial, isFinal } = this.state;
 
-    return fsmState ?
-      !isEqual(fsmState, { name, description, isInitial, isFinal }) : // compare initial and current states
+    return value ?
+      !isEqual(value, { name, description, isInitial, isFinal }) : // compare initial and current states
       name || description || isInitial || isFinal // look for any input for newely created object
   }
 
@@ -60,22 +67,19 @@ export default class StateEditor extends PureComponent {
   })
 
   render() {
-    const { existingStates, stateConfig } = this.props;
+    const { usedNames, availableNames } = this.props;
 
     const {
       name,
       description,
       isInitial = false,
-      isFinal = false,
-      initialName
+      isFinal = false
     } = this.state;
 
     const duplicateName = !!find(
-      existingStates,
-      existingName => existingName === name && initialName !== existingName
+      usedNames,
+      usedName => usedName === name && (this.props.value || {}).name !== usedName
     );
-
-    const { availableNames } = (stateConfig || {});
 
     let nameInput = (
       <FormControl
@@ -87,7 +91,7 @@ export default class StateEditor extends PureComponent {
     );
 
     if (availableNames) {
-      if (availableNames.every(name => existingStates.indexOf(name) > -1) && !name) {
+      if (availableNames.every(name => usedNames.indexOf(name) > -1) && !name) {
         nameInput = (
           <div>No available names left.</div>
         )
@@ -104,7 +108,7 @@ export default class StateEditor extends PureComponent {
             }
             {
               availableNames.
-                filter(availableName => availableName === name || existingStates.indexOf(availableName) === -1).
+                filter(availableName => availableName === name || usedNames.indexOf(availableName) === -1).
                 map((name, i) => (
                   <option value={name} key={i}>{name}</option>
                 ))
@@ -124,8 +128,8 @@ export default class StateEditor extends PureComponent {
         <Modal.Header closeButton={true}>
           <Modal.Title>
             {
-              this.props.fsmState ?
-                `Edit state '${this.props.fsmState.name}'` :
+              this.props.value ?
+                `Edit state '${this.props.value.name}'` :
                 `Add new state`
             }
           </Modal.Title>
