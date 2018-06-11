@@ -1,4 +1,10 @@
 
+[Release 2.2.1](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.1) Mon Jun 11 2018 16:25:58 GMT+0300 (MSK)
+=======================================================
+
+- Added ability to restrict states names [#74](https://github.com/OpusCapita/fsm-workflow/issues/74) ([#75](https://github.com/OpusCapita/fsm-workflow/issues/75)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-06-11 16:02:52 +0300)
+- Minor fixes (estambakio-sc egor.stambakio@opuscapita.com, 2018-06-02 11:59:00 +0300)
+
 Release 2.2.0 Fri May 25 2018 17:12:34 GMT+0300 (MSK)
 =======================================================
 
