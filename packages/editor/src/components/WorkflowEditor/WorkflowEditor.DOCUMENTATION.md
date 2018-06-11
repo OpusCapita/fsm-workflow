@@ -396,6 +396,22 @@
   componentsRegistry={_scope.componentsRegistry}
 
   onSave={v => console.log(JSON.stringify(v.schema, null, 2))}
+
+  schemaConfig = {{
+    state: {
+      availableNames: [
+        'inspectionRequired',
+        'approvalRequired',
+        'approved',
+        'inspClrRequired',
+        'inspectionRejected',
+        'appClrRequired',
+        'approvalRejected',
+        'rejected',
+        'inspected'
+      ]
+    }
+  }}
 />
 ```
 

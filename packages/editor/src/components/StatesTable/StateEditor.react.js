@@ -13,19 +13,23 @@ import withConfirmDialog from '../ConfirmDialog';
 import ErrorLabel from '../ErrorLabel.react';
 
 @withConfirmDialog
-export default class StatesEditor extends PureComponent {
+export default class StateEditor extends PureComponent {
   static propTypes = {
-    state: statePropTypes,
+    value: statePropTypes,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    existingStates: PropTypes.arrayOf(PropTypes.string).isRequired
+    usedNames: PropTypes.arrayOf(PropTypes.string),
+    availableNames: PropTypes.arrayOf(PropTypes.string)
+  }
+
+  static defaultProps = {
+    usedNames: []
   }
 
   state = {
     name: '',
     description: '',
-    ...this.props.state,
-    initialName: (this.props.state || {}).name
+    ...this.props.value
   }
 
   handleChangeField = field => ({ target: { value } }) => this.setState({
@@ -37,17 +41,23 @@ export default class StatesEditor extends PureComponent {
   }))
 
   handleSave = _ => {
-    const { name, description, isInitial, isFinal, initialName } = this.state;
-    this.props.onSave({ name, description, isInitial, isFinal, initialName })
+    const { name, description, isInitial, isFinal } = this.state;
+    this.props.onSave({
+      name,
+      description,
+      isInitial,
+      isFinal,
+      initialName: (this.props.value || {}).name
+    })
   }
 
   hasUnsavedChanges = _ => {
-    const { state: propState } = this.props;
+    const { value } = this.props;
 
     const { name, description, isInitial, isFinal } = this.state;
 
-    return propState ?
-      !isEqual(propState, { name, description, isInitial, isFinal }) : // compare initial and current states
+    return value ?
+      !isEqual(value, { name, description, isInitial, isFinal }) : // compare initial and current states
       name || description || isInitial || isFinal // look for any input for newely created object
   }
 
@@ -57,17 +67,57 @@ export default class StatesEditor extends PureComponent {
   })
 
   render() {
-    const { existingStates } = this.props;
+    const { usedNames, availableNames } = this.props;
 
     const {
       name,
       description,
       isInitial = false,
-      isFinal = false,
-      initialName
+      isFinal = false
     } = this.state;
 
-    const duplicateName = !!find(existingStates, existingName => existingName === name && initialName !== existingName);
+    const duplicateName = !!find(
+      usedNames,
+      usedName => usedName === name && (this.props.value || {}).name !== usedName
+    );
+
+    let nameInput = (
+      <FormControl
+        placeholder='Enter state name'
+        type='text'
+        value={name}
+        onChange={this.handleChangeField('name')}
+      />
+    );
+
+    if (availableNames) {
+      if (availableNames.every(name => usedNames.indexOf(name) > -1) && !name) {
+        nameInput = (
+          <div>No available names left.</div>
+        )
+      } else {
+        nameInput = (
+          <FormControl
+            componentClass='select'
+            placeholder=''
+            value={name}
+            onChange={this.handleChangeField('name')}
+          >
+            {
+              !name && (<option value='' ></option>)
+            }
+            {
+              availableNames.
+                filter(availableName => availableName === name || usedNames.indexOf(availableName) === -1).
+                sort().
+                map((name, i) => (
+                  <option value={name} key={i}>{name}</option>
+                ))
+            }
+          </FormControl>
+        )
+      }
+    }
 
     return (
       <Modal
@@ -79,8 +129,8 @@ export default class StatesEditor extends PureComponent {
         <Modal.Header closeButton={true}>
           <Modal.Title>
             {
-              this.props.state ?
-                `Edit state '${this.props.state.name}'` :
+              this.props.value ?
+                `Edit state '${this.props.value.name}'` :
                 `Add new state`
             }
           </Modal.Title>
@@ -88,12 +138,9 @@ export default class StatesEditor extends PureComponent {
         <Modal.Body>
           <FormGroup controlId='stateName' style={{ marginBottom: 0 }}>
             <ControlLabel>Name</ControlLabel>
-            <FormControl
-              placeholder='Enter state name'
-              type='text'
-              value={name}
-              onChange={this.handleChangeField('name')}
-            />
+            {
+              nameInput
+            }
             <ErrorLabel {...(duplicateName && { error: `This state already exists` })}/>
           </FormGroup>
           <FormGroup controlId="stateDescription">

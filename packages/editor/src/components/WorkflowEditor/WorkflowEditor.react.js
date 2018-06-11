@@ -55,7 +55,12 @@ export default class WorkflowEditor extends PureComponent {
         schema: PropTypes.object
       }).isRequired,
     }).isRequired,
-    componentsRegistry: PropTypes.objectOf(PropTypes.func)
+    componentsRegistry: PropTypes.objectOf(PropTypes.func),
+    schemaConfig: PropTypes.shape({
+      state: PropTypes.shape({
+        availableNames: PropTypes.arrayOf(PropTypes.string)
+      })
+    })
   }
 
   static contextTypes = {
@@ -103,7 +108,7 @@ export default class WorkflowEditor extends PureComponent {
   }
 
   // proxy to this.setState; can be used for debugging purposes, e.g. as a logger or onChange handler
-  setNewState = setFunc => this.setState(setFunc)
+  setNewState = setFunc => this.setState(setFunc);
 
   handleNameChange = ({ target: { value: name } }) => this.setNewState(prevState => ({
     schema: {
@@ -256,7 +261,7 @@ export default class WorkflowEditor extends PureComponent {
 
   render() {
     const { schema } = this.state;
-    const { title, workflow: { actions = {}, conditions = {} } } = this.props;
+    const { title, workflow: { actions = {}, conditions = {} }, schemaConfig } = this.props;
 
     return (
       <Grid>
@@ -295,6 +300,7 @@ export default class WorkflowEditor extends PureComponent {
                   finalStates={schema.finalStates || []}
                   onDelete={this.handleDeleteState}
                   onEdit={this.handleEditState}
+                  stateConfig={(schemaConfig || {}).state}
                 />
               </Tab>
               <Tab eventKey={2} title={(<h4>Transitions</h4>)}>
