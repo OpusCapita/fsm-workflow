@@ -109,6 +109,7 @@ export default class StateEditor extends PureComponent {
             {
               availableNames.
                 filter(availableName => availableName === name || usedNames.indexOf(availableName) === -1).
+                sort().
                 map((name, i) => (
                   <option value={name} key={i}>{name}</option>
                 ))
