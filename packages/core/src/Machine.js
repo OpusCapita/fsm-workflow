@@ -183,20 +183,20 @@ businessObjId: ...     // business object unique id (examples: '123456789')
       const [{ to, actions = [] }] = transitions;
 
       // extracting actionDefinitions list from
-      let actionDefinitions = actions.map((action, idx) => {
-        if (!machineDefinition.actions[actions[idx].name]) {
+      const actionDefinitions = actions.map(action => {
+        if (!machineDefinition.actions[action.name]) {
           // throwing an error will fail top reject promise
           throw new Error({
-            action: actions[idx].name,
+            action: action.name,
             object,
             from,
             event,
             to,
-            message: `Action '${actions[idx].name}' is specified in one the transitions but is not found/implemented!`
+            message: `Action '${action.name}' is specified in one the transitions but is not found/implemented!`
           });
         }
         // wrapping action into a Promise to support both sync/async variants
-        return machineDefinition.actions[actions[idx].name];
+        return machineDefinition.actions[action.name];
       });
 
       const implicitParams = {
@@ -210,39 +210,46 @@ businessObjId: ...     // business object unique id (examples: '123456789')
       }
 
       // reducing actionDefinitions to promise queue
-      return actionDefinitions.reduce((executionAccumulator, action, idx) => {
-        return executionAccumulator.then(({ actionExecutionResults, object }) => promise.resolve(action({
-          ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
-          actionExecutionResults
-        })).then(actionResult => promise.resolve({
-          actionExecutionResults: actionExecutionResults.concat([
-            {
-              name: actions[idx].name,
-              result: actionResult
-            }
-          ]),
-          object
-        })))
-      }, promise.resolve({ // initial object accumulator
-        actionExecutionResults: [],
-        object
-      })).then(({ actionExecutionResults, object }) => promise.resolve(changeObjectState(to)).then(_ => {
-        // first we promote object state to the next state and only then save history
-        return this.history.add({
-          from,
-          to,
-          event,
-          // TODO: add validation for type and id here???
-          ...convertObjectToReference(object),
-          // TODO: add validation for user???
-          user,
-          description,
-          workflowName
-        }).then(_ => promise.resolve({
-          actionExecutionResults,
-          object
-        }))
-      }));
+      return actionDefinitions.
+        reduce((executionAccumulator, action, idx) => executionAccumulator.
+          then(({ actionExecutionResults, object }) => promise.resolve(action({
+            ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
+            actionExecutionResults
+          })).
+            then(actionResult => ({
+              actionExecutionResults: [
+                ...actionExecutionResults,
+                {
+                  name: actions[idx].name,
+                  result: actionResult
+                }
+              ],
+              object
+            }))
+          ),
+          promise.resolve({ // initial object accumulator
+            actionExecutionResults: [],
+            object
+          })
+        ).
+        then(({ actionExecutionResults, object }) => {
+          changeObjectState(to);
+          // first we promote object state to the next state and only then save history
+          return this.history.add({
+            from,
+            to,
+            event,
+            // TODO: add validation for type and id here???
+            ...convertObjectToReference(object),
+            // TODO: add validation for user???
+            user,
+            description,
+            workflowName
+          }).then(_ => ({
+            actionExecutionResults,
+            object
+          }))
+        });
     });
   }
 
@@ -264,34 +271,26 @@ businessObjId: ...     // business object unique id (examples: '123456789')
     return this.machineDefinition.getAvailableStates();
   }
 
-  // returns true iff object in specified state
+  // returns true if object in specified state
   is({ object, state }) {
     return this.currentState({ object }) === state;
   }
 
-  // returns true iff object in once of filal state specified in machine definition
-  // isFinal({ state }) {
-  //   // console.log(`finalStates: '${this.machineDefinition.schema.finalStates}'`);
-  //   // console.log(`state: '${state}'`);
-  //   return this.machineDefinition.schema.finalStates.indexOf(state) >= 0;
-  // }
-
-  // returns true iff object in one of final states specified in machine definition schema
+  // returns true if object in one of final states specified in machine definition schema
   isInFinalState({ object }) {
     return this.machineDefinition.schema.finalStates.indexOf(this.currentState({ object })) >= 0;
   }
 
-  // retuns promise, where then gets single argument with boolean value
+  // returns promise, where then gets single argument with boolean value
   can({ object, event }) {
     return this.availableTransitions({ object, event }).then(({ transitions }) => {
-      // console.log(`transitions: '${JSON.stringify(transitions)}'`);
-      return this.promise.resolve(transitions && transitions.length > 0);
+      return transitions && transitions.length > 0;
     });
   }
 
   // retuns promise, where then gets single argument with boolean value
   cannot({ object, event }) {
-    return this.can({ event, object }).then(result => this.promise.resolve(!result));
+    return this.can({ event, object }).then(result => !result);
   }
 
   /**
@@ -339,7 +338,7 @@ businessObjId: ...     // business object unique id (examples: '123456789')
     }, {
       by,
       order
-    }).then((historyRecords) => historyRecords.map(({
+    }).then(historyRecords => historyRecords.map(({
         event,
         from,
         to,
