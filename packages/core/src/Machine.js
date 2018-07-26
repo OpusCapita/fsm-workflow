@@ -1,11 +1,11 @@
 export default class Machine {
   constructor({
-      machineDefinition,
-      promise = Machine.defaultPromise(),
-      context = {},
-      history,
-      convertObjectToReference
-    } = {}) {
+    machineDefinition,
+    promise = Machine.defaultPromise(),
+    context = {},
+    history,
+    convertObjectToReference
+  } = {}) {
     if (!machineDefinition) {
       throw new Error("machineDefinition is undefined");
     }
@@ -178,7 +178,7 @@ businessObjId: ...     // business object unique id (examples: '123456789')
       if (transitions.length > 1) {
         console.warn(`More than one transition is found for 'from': '${from}' and 'event': '${event}'`);
       }
-        // select first found transition and read its information
+      // select first found transition and read its information
       // using node destruct syntax to get 1st element and destruct it to {to, actions} object
       const [{ to, actions = [] }] = transitions;
 
@@ -227,10 +227,10 @@ businessObjId: ...     // business object unique id (examples: '123456789')
               object
             }))
           ),
-          promise.resolve({ // initial object accumulator
-            actionExecutionResults: [],
-            object
-          })
+        promise.resolve({ // initial object accumulator
+          actionExecutionResults: [],
+          object
+        })
         ).
         then(({ actionExecutionResults, object }) => {
           changeObjectState(to);
@@ -339,25 +339,25 @@ businessObjId: ...     // business object unique id (examples: '123456789')
       by,
       order
     }).then(historyRecords => historyRecords.map(({
-        event,
-        from,
-        to,
+      event,
+      from,
+      to,
+      businessObjType,
+      businessObjId,
+      user,
+      description,
+      finishedOn
+    }) => ({
+      event,
+      from,
+      to,
+      object: {
         businessObjType,
-        businessObjId,
-        user,
-        description,
-        finishedOn
-      }) => ({
-        event,
-        from,
-        to,
-        object: {
-          businessObjType,
-          businessObjId
-        },
-        user,
-        description,
-        finishedOn
-      })));
+        businessObjId
+      },
+      user,
+      description,
+      finishedOn
+    })));
   }
 }

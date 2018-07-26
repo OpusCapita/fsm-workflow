@@ -264,12 +264,12 @@ export default class MachineDefinition {
     }
     if (this.schema.transitions && this.schema.transitions.length > 0) {
       result = result.concat(this.schema.transitions.reduce(
-          // gather all states from transitions
-          (accumulator, t) => {
-            return accumulator.concat(t.from, t.to)
-          },
-          []
-        ));
+        // gather all states from transitions
+        (accumulator, t) => {
+          return accumulator.concat(t.from, t.to)
+        },
+        []
+      ));
     }
 
     return toUnique(result).sort();

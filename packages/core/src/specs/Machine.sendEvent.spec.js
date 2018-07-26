@@ -11,7 +11,7 @@ const convertObjectToReference = (object) => {
   }
 };
 
-let createMachine = ({ actions = {}, history, objectAlias } = {}) => {
+const createMachine = ({ actions = {}, history, objectAlias } = {}) => {
   const objectConfiguration = {};
   if (objectAlias) {
     objectConfiguration['alias'] = objectAlias;
