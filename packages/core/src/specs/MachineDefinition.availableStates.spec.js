@@ -2,12 +2,12 @@ import assert from "assert";
 import MachineDefinition from "../MachineDefinition";
 
 const createMachineDefintion = ({ states = [
-    { name: 'a' },
-    { name: 'b' },
-    { name: 'y' },
-    { name: 'm' },
-    { name: 'n' },
-    { name: 'z' },
+  { name: 'a' },
+  { name: 'b' },
+  { name: 'y' },
+  { name: 'm' },
+  { name: 'n' },
+  { name: 'z' },
 ], transitions = [
   {
     from: 'a',
