@@ -210,46 +210,50 @@ businessObjId: ...     // business object unique id (examples: '123456789')
       }
 
       // reducing actionDefinitions to promise queue
-      return actionDefinitions.
-        reduce((executionAccumulator, action, idx) => executionAccumulator.
-          then(({ actionExecutionResults, object }) => promise.resolve(action({
-            ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
-            actionExecutionResults
-          })).
-            then(actionResult => ({
-              actionExecutionResults: [
-                ...actionExecutionResults,
-                {
-                  name: actions[idx].name,
-                  result: actionResult
-                }
-              ],
-              object
-            }))
-          ),
+      return actionDefinitions.reduce(
+        (executionAccumulator, action, idx) => {
+          return executionAccumulator.then(({ actionExecutionResults, object }) => {
+            // action can be both synchronous and asynchronous
+            // we need promise.resolve to make it then-able
+            return promise.resolve(action({
+              ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
+              actionExecutionResults
+            })).then(actionResult => {
+              return {
+                actionExecutionResults: [
+                  ...actionExecutionResults,
+                  {
+                    name: actions[idx].name,
+                    result: actionResult
+                  }
+                ],
+                object
+              }
+            })
+          })
+        },
         promise.resolve({ // initial object accumulator
           actionExecutionResults: [],
           object
         })
-        ).
-        then(({ actionExecutionResults, object }) => {
-          changeObjectState(to);
-          // first we promote object state to the next state and only then save history
-          return this.history.add({
-            from,
-            to,
-            event,
-            // TODO: add validation for type and id here???
-            ...convertObjectToReference(object),
-            // TODO: add validation for user???
-            user,
-            description,
-            workflowName
-          }).then(_ => ({
-            actionExecutionResults,
-            object
-          }))
-        });
+      ).then(({ actionExecutionResults, object }) => {
+        changeObjectState(to);
+        // first we promote object state to the next state and only then save history
+        return this.history.add({
+          from,
+          to,
+          event,
+          // TODO: add validation for type and id here???
+          ...convertObjectToReference(object),
+          // TODO: add validation for user???
+          user,
+          description,
+          workflowName
+        }).then(_ => ({
+          actionExecutionResults,
+          object
+        }))
+      });
     });
   }
 
