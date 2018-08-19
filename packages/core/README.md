@@ -189,7 +189,8 @@ var machineDefinition = new MachineDefinition({
 
 ### Code (Actions and Conditions(guards/automatic))
 
-[Ideas & thoughts](actionsAndConditions.md)
+- [Actions & considions configuration and usage](https://github.com/OpusCapita/fsm-workflow/blob/master/packages/editor/src/components/Actions/Readme.md)
+- [Ideas & thoughts](actionsAndConditions.md)
 
 #### Action
 
