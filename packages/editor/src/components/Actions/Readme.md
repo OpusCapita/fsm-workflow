@@ -1,4 +1,4 @@
-Actions
+Actions (and conditions) configuration
 ========
 
 Action storage
