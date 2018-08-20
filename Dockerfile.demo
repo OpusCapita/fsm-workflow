@@ -14,6 +14,6 @@ RUN npm i --unsafe-perm
 
 WORKDIR /demo/packages/examples/complete-demo
 
-CMD ["npm", "run", "demo:build", "&&", "npm", "run", "demo:start"]
+CMD ["./start.sh"]
 
 EXPOSE $PORT
