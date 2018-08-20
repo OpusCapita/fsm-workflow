@@ -10,12 +10,10 @@ COPY ./ /demo
 
 WORKDIR /demo
 
-RUN npm i --unsafe-perm && \
-  cd ./packages/examples/complete-demo && \
-  npm run demo:build
+RUN npm i --unsafe-perm
 
 WORKDIR /demo/packages/examples/complete-demo
 
-CMD ["npm", "run", "demo:start"]
+CMD ["npm", "run", "demo:build", "&&", "npm", "run", "demo:start"]
 
 EXPOSE $PORT
