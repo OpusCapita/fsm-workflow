@@ -21,6 +21,8 @@ const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 3020;
 const baseUrl = process.env.BASE_URL || '/';
 
+console.log('server baseUrl', { baseUrl });
+
 const url = path => `${baseUrl}${path}`.replace(/\/{2,}/, '/');
 
 const app = express();
