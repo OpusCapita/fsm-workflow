@@ -1,12 +1,8 @@
 import React, { PureComponent } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  withRouter
-} from 'react-router-dom'
+import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { I18nManager } from '@opuscapita/i18n';
-import { uiMessageNotifications } from '../uiGlobalComponents'
+import { uiMessageNotifications } from '../uiGlobalComponents';
 import Menu from './Menu.react';
 import HomePage from './HomePage.react';
 import Editor from './Editor.react';

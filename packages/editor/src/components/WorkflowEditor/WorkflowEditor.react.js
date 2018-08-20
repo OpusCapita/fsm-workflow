@@ -267,7 +267,7 @@ export default class WorkflowEditor extends PureComponent {
       <Grid>
         <Row>
           <Col sm={12}>
-            <h1>
+            <h1 className='oc-fsm-crud-editor--title'>
               Workflow Editor{title && `:\u00A0${title}`}
               <TopButtons schema={schema} onSave={this.handleSave}/>
             </h1>
@@ -279,7 +279,7 @@ export default class WorkflowEditor extends PureComponent {
 
             <Tabs
               animation={false}
-              id="fsm-workflow-editor-elements"
+              id='fsm-workflow-editor-elements'
               mountOnEnter={true}
               unmountOnExit={true}
             >

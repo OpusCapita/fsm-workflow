@@ -34,7 +34,7 @@ export default class Editor extends PureComponent {
   }
 
   handleSave = data => {
-    console.log({ data })
+    console.log({ data });
     const { uiMessageNotifications } = this.context;
     superagent.
       post('/api/editordata').

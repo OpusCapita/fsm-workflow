@@ -1,7 +1,12 @@
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const plugins = [];
+const plugins = [
+  new CopyWebpackPlugin([
+    path.resolve(__dirname, '../src/demo/index.html')
+  ])
+];
 
 if (process.env.NODE_ENV === 'production') {
   plugins.push(new UglifyJsPlugin())
@@ -13,7 +18,7 @@ const config = {
   entry: path.resolve(__dirname, '../src/client/index.js'),
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, '../www'),
+    path: path.resolve(__dirname, '../build'),
     publicPath: '/'
   },
   externals: {
@@ -21,7 +26,7 @@ const config = {
     'react-dom': 'ReactDOM'
   },
   devServer: {
-    contentBase: path.resolve(__dirname, '../www')
+    contentBase: path.resolve(__dirname, '../build')
   },
   devtool: 'inline-source-map',
   module: {

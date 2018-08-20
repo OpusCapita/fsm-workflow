@@ -160,30 +160,13 @@ jobs:
           name: Executing release scrtipt.
           command: .circleci/release.sh
 
-  azure-maintenance:
-    docker:
-      - image: opuscapita/ci-node8:latest
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - setup_remote_docker
-
-      - run:
-          name: init-ci-container
-          command: /ci-scripts/init.sh
-
-      - run:
-          name: azure-cleanup
-          command: ./.circleci/scripts/azure-cleanup.js
-
   deploy-demo:
-    docker:
-      - image: opuscapita/ci-node8:latest
-
-    working_directory: ~/repo
+    <<: *defaults
     steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh
+
       - checkout
       - setup_remote_docker
 
@@ -198,19 +181,16 @@ jobs:
             - dependencies-
 
       - run:
-          name: init-ci-container
-          command: /ci-scripts/init.sh
+          name: Deploy docker demo image
+          command: .circleci/scripts/deploy-docker-image.sh
+
       - run:
-          name: deploy-docker-demo-image
+          name: Deploy demo installation
           command: |
-            node ./.circleci/scripts/deploy-docker-demo-image.js
-      - run:
-          name: azure-create-web-app
-          command: |
-            node ./.circleci/scripts/azure-create-webapp.js
-      - run:
-          name: update-github-commit-status
-          command: node ./.circleci/scripts/update-github-commit-status.js
+            az login -u "${AZURE_USER}" -p "${AZURE_PASS}" &> /tmp/az-login.log
+            az aks get-credentials -g ${MINSK_CORE_K8S_AZURE_RG} -n ${MINSK_CORE_K8S_AZURE_NAME}
+            helm init --client-only
+            .helm/install.sh
 
 workflows:
   version: 2

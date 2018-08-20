@@ -24,7 +24,7 @@ export default class TopButtons extends PureComponent {
     const { schema, onSave } = this.props;
 
     return (
-      <div className="btn-group" style={{ float: 'right', marginTop: '16px' }}>
+      <div className="btn-group">
         <Dropdown id='top-buttons'>
           <Button
             disabled={!schema.name ||

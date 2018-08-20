@@ -17,18 +17,19 @@ import schema from './schema';
 import objectConfig from './objectConfig';
 import { generateObjects } from './utils';
 
-const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
+const port = process.env.PORT || 3020;
+const baseUrl = process.env.BASE_URL || '/';
 
 const app = express();
 const server = Server(app);
 app.use(bodyParser.json())
-app.use(objectRoutes)
-app.use(sendEventRoute)
-app.use(transitionsRoute)
-app.use(editorDataRoute)
-app.use(statesRoute)
-app.use(historyRoute)
+app.use(baseUrl, objectRoutes)
+app.use(baseUrl, sendEventRoute)
+app.use(baseUrl, transitionsRoute)
+app.use(baseUrl, editorDataRoute)
+app.use(baseUrl, statesRoute)
+app.use(baseUrl, historyRoute)
 
 const compiler = webpack(config);
 
@@ -38,13 +39,13 @@ if (process.env.NODE_ENV === 'development') {
     publicPath: config.output.publicPath
   }))
 } else {
-  app.get('/bundle.js', (req, res) => {
-    res.sendFile(resolve(__dirname, '../../www/bundle.js'));
+  app.get(`${baseUrl}/bundle.js`.replace(/\/{2,}/, '/'), (req, res) => {
+    res.sendFile(resolve(__dirname, '../../build/bundle.js'));
   })
 }
 
 app.get('*', function(req, res) {
-  res.sendFile(resolve(__dirname, '../../www/index.html'));
+  res.sendFile(resolve(__dirname, '../../build/index.html'));
 });
 
 // initialize data and start server
