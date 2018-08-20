@@ -4,6 +4,7 @@ import superagent from 'superagent';
 import WorkflowEditor from '@opuscapita/fsm-workflow-editor';
 import componentsRegistry from '../customComponentsRegistry';
 import { notificationSuccess, notificationError } from '../constants';
+import { url } from '../utils';
 
 export default class Editor extends PureComponent {
   static contextTypes = {
@@ -20,7 +21,7 @@ export default class Editor extends PureComponent {
     const { uiMessageNotifications } = this.context;
     const self = this;
     superagent.
-      get('/api/editordata').
+      get(url('/api/editordata')).
       then(res => {
         self.setState({ ...res.body })
       }).
@@ -37,7 +38,7 @@ export default class Editor extends PureComponent {
     console.log({ data });
     const { uiMessageNotifications } = this.context;
     superagent.
-      post('/api/editordata').
+      post(url('/api/editordata')).
       send(data).
       then(res => {
         uiMessageNotifications.success({

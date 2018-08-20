@@ -21,6 +21,8 @@ const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 3020;
 const baseUrl = process.env.BASE_URL || '/';
 
+const url = path => `${baseUrl}${path}`.replace(/\/{2,}/, '/');
+
 const app = express();
 const server = Server(app);
 app.use(bodyParser.json())
@@ -39,7 +41,7 @@ if (process.env.NODE_ENV === 'development') {
     publicPath: config.output.publicPath
   }))
 } else {
-  app.get(`${baseUrl}/bundle.js`.replace(/\/{2,}/, '/'), (req, res) => {
+  app.get(url('/bundle.js'), (req, res) => {
     res.sendFile(resolve(__dirname, '../../build/bundle.js'));
   })
 }
