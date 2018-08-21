@@ -37,7 +37,7 @@ export default class App extends PureComponent {
   render() {
     const MyMenu = withRouter(Menu);
 
-    console.log('router', { baseUrl });
+    console.log('ui router', { baseUrl });
 
     return (
       <Router basename={baseUrl}>

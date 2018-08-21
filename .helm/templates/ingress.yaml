@@ -16,6 +16,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-signin: https://{{ .Values.ingress.host }}/oauth2/start?rd=$request_uri
     nginx.ingress.kubernetes.io/auth-url: https://{{ .Values.ingress.host }}/oauth2/auth
     nginx.ingress.kubernetes.io/add-base-url: "true"
+    nginx.ingress.kubernetes.io/app-root: '/'
 spec:
   rules:
   - host: {{ .Values.ingress.host }}
