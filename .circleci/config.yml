@@ -9,7 +9,7 @@ jobs:
     <<: *defaults
     steps:
       - run:
-          name: Environment inject
+          name: environment-inject
           command: /bin/env_inject.sh
       - checkout
       - run:
@@ -72,7 +72,7 @@ jobs:
     <<: *defaults
     steps:
       - run:
-          name: Environment inject
+          name: environment-inject
           command: /bin/env_inject.sh
 
       - checkout
@@ -121,7 +121,7 @@ jobs:
           command: npm run publish-release
 
       - run:
-          name: Build and deploy gh-pages editor demo
+          name: build-and-deploy-gh-pages-editor-demo
           command: |
            cd packages/editor
            bash ./scripts/gh-pages/build.sh
@@ -151,20 +151,20 @@ jobs:
     steps:
 
       - run:
-          name: Environment inject
+          name: environment-inject
           command: env_inject.sh
 
       - checkout
 
       - run:
-          name: Executing release scrtipt.
+          name: executing-release-script.
           command: .circleci/release.sh
 
   deploy-demo:
     <<: *defaults
     steps:
       - run:
-          name: Environment inject
+          name: environment-inject
           command: /bin/env_inject.sh
 
       - checkout
@@ -181,11 +181,11 @@ jobs:
             - dependencies-
 
       - run:
-          name: Deploy docker demo image
+          name: deploy-docker-demo-image
           command: .circleci/scripts/deploy-docker-image.sh
 
       - run:
-          name: Deploy demo installation
+          name: deploy-demo-installation
           command: |
             set -x
             az login -u "${AZURE_USER}" -p "${AZURE_PASS}" &> /tmp/az-login.log
