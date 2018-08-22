@@ -34,11 +34,14 @@ export default class App extends PureComponent {
   }
 
   render() {
-    console.log('app renders');
     const MyMenu = withRouter(Menu);
 
+    const basename = document.baseURI.replace(new RegExp(`\.+${window.location.host}`), '');
+
+    console.log('app renders', basename);
+
     return (
-      <Router basename={document.baseURI}>
+      <Router basename={basename}>
         <div>
           <MyMenu/>
           <Route exact={true} path='/' component={HomePage}/>
