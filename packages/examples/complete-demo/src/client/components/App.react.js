@@ -9,7 +9,6 @@ import Editor from './Editor.react';
 import WorkflowHistory from './History.react';
 import { notificationSuccess, notificationError } from '../constants';
 import './styles.css';
-import { baseUrl } from '../utils';
 
 export default class App extends PureComponent {
   static childContextTypes = {
@@ -37,10 +36,8 @@ export default class App extends PureComponent {
   render() {
     const MyMenu = withRouter(Menu);
 
-    console.log('ui router', { baseUrl });
-
     return (
-      <Router basename={baseUrl}>
+      <Router>
         <div>
           <MyMenu/>
           <Route exact={true} path='/' component={HomePage}/>
