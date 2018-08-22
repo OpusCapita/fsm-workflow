@@ -12,61 +12,61 @@ jobs:
           name: Environment inject
           command: /bin/env_inject.sh
       - checkout
-    #   - run:
-    #       name: save-cache-checksum
-    #       command: find -name "package.json" | xargs cat > /tmp/cache-checksum
+      - run:
+          name: save-cache-checksum
+          command: find -name "package.json" | xargs cat > /tmp/cache-checksum
 
-    #   - restore_cache:
-    #       keys:
-    #         - dependencies-{{ checksum "/tmp/cache-checksum" }}
-    #         # fallback to using the latest cache if no exact match is found
-    #         - dependencies-
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "/tmp/cache-checksum" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-
 
-    #   - run:
-    #       name: bootstrap (install dependencies)
-    #       # we use --unsafe-perm as current build using root user which fails
-    #       command: npm install --unsafe-perm
+      - run:
+          name: bootstrap (install dependencies)
+          # we use --unsafe-perm as current build using root user which fails
+          command: npm install --unsafe-perm
 
-    #   - save_cache:
-    #       key: dependencies-{{ checksum "/tmp/cache-checksum" }}
-    #       paths:
-    #         - ./package-lock.json
-    #         - ./node_modules
-    #         - ./packages/core/package-lock.json
-    #         - ./packages/core/node_modules
-    #         - ./packages/editor/package-lock.json
-    #         - ./packages/editor/node_modules
-    #         - ./packages/history/package-lock.json
-    #         - ./packages/history/node_modules
-    #         - ./packages/task-manager/package-lock.json
-    #         - ./packages/task-manager/node_modules
-    #         - ./packages/examples/invoice-console/package-lock.json
-    #         - ./packages/examples/invoice-console/node_modules
-    #         - ./packages/examples/process-task-manager-ui/package-lock.json
-    #         - ./packages/examples/process-task-manager-ui/node_modules
-    #         - ./packages/examples/complete-demo/package-lock.json
-    #         - ./packages/examples/complete-demo/node_modules
+      - save_cache:
+          key: dependencies-{{ checksum "/tmp/cache-checksum" }}
+          paths:
+            - ./package-lock.json
+            - ./node_modules
+            - ./packages/core/package-lock.json
+            - ./packages/core/node_modules
+            - ./packages/editor/package-lock.json
+            - ./packages/editor/node_modules
+            - ./packages/history/package-lock.json
+            - ./packages/history/node_modules
+            - ./packages/task-manager/package-lock.json
+            - ./packages/task-manager/node_modules
+            - ./packages/examples/invoice-console/package-lock.json
+            - ./packages/examples/invoice-console/node_modules
+            - ./packages/examples/process-task-manager-ui/package-lock.json
+            - ./packages/examples/process-task-manager-ui/node_modules
+            - ./packages/examples/complete-demo/package-lock.json
+            - ./packages/examples/complete-demo/node_modules
 
-    #   - run:
-    #       name: lint
-    #       command: npm run lint
+      - run:
+          name: lint
+          command: npm run lint
 
-    #   - run:
-    #       name: test
-    #       command: npm test
+      - run:
+          name: test
+          command: npm test
 
-    #   - run:
-    #       name: build-and-deploy-gh-pages
-    #       command: |
-    #         cd packages/editor
-    #         ./scripts/gh-pages/build.sh
-    #         ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+      - run:
+          name: build-and-deploy-gh-pages
+          command: |
+            cd packages/editor
+            ./scripts/gh-pages/build.sh
+            ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
-    #   - store_artifacts:
-    #       path: ./test-results
+      - store_artifacts:
+          path: ./test-results
 
-    #   - store_test_results:
-    #       path: ./test-results
+      - store_test_results:
+          path: ./test-results
 
   build_release:
     <<: *defaults
