@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!--
+    base '/' is required for development, while deployed app should rewrite it
+    (set its own 'base' BEFORE any other 'base' tags)
+
+    https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    >> If multiple <base> elements are specified, only the first href and first target value are used; all others are ignored.
+  -->
   <base href="/">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
