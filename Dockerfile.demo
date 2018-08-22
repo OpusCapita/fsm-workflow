@@ -3,11 +3,8 @@
 FROM node:8.9.4
 LABEL maintainer="OpusCapita"
 
-ARG BASE_URL
-
 ENV HOST 0.0.0.0
 ENV PORT 3020
-ENV BASE_URL $BASE_URL
 
 COPY ./ /demo
 
