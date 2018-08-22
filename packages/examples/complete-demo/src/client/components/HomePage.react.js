@@ -120,7 +120,6 @@ export default class HomePage extends PureComponent {
   handleHistory = objectId => _ => this.props.history.push(`/invoice/${objectId}`);
 
   render() {
-    console.log('render home');
     const { businessObjects, loading } = this.state;
     return (
       <Grid>

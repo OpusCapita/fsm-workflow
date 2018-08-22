@@ -8,8 +8,8 @@ import HomePage from './HomePage.react';
 import Editor from './Editor.react';
 import WorkflowHistory from './History.react';
 import { notificationSuccess, notificationError } from '../constants';
-import './styles.css';
 import { baseUrl } from '../utils';
+import './styles.css';
 
 export default class App extends PureComponent {
   static childContextTypes = {
