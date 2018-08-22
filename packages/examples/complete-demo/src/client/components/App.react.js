@@ -9,6 +9,7 @@ import Editor from './Editor.react';
 import WorkflowHistory from './History.react';
 import { notificationSuccess, notificationError } from '../constants';
 import './styles.css';
+import { baseUrl } from '../utils';
 
 export default class App extends PureComponent {
   static childContextTypes = {
@@ -36,12 +37,8 @@ export default class App extends PureComponent {
   render() {
     const MyMenu = withRouter(Menu);
 
-    const basename = document.baseURI.replace(new RegExp(`\.+${window.location.host}`), '');
-
-    console.log('app renders', basename);
-
     return (
-      <Router basename={basename}>
+      <Router basename={baseUrl}>
         <div>
           <MyMenu/>
           <Route exact={true} path='/' component={HomePage}/>

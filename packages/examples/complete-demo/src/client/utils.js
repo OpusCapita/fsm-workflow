@@ -1,4 +1,4 @@
-export const baseUrl = process.env.BASE_URL || '/';
+export const baseUrl = (document.baseURI || '/').replace(new RegExp(`\.+${window.location.host}`), '');
 
 console.log('client baseUrl', { baseUrl });
 
