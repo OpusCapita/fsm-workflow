@@ -1,28 +1,26 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
-import Viz from 'viz.js';
+import cytoscape from 'cytoscape';
 import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
 
-const propTypes = {
-  schema: PropTypes.object,
-  getStateLabel: PropTypes.func.isRequired
-};
+export default class WorkflowGraph extends PureComponent {
+  static propTypes = {
+    schema: PropTypes.object,
+    getStateLabel: PropTypes.func.isRequired
+  }
 
-const defaultProps = {
-  schema: null
-};
-
-export default
-class WorkflowGraph extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      svg: ''
-    };
+  static defaultProps = {
+    schema: null
   }
 
   componentDidMount() {
+    const el = findDOMNode(this);
+    const { clientHeight, clientWidth } = el;
+    this.container.style.width = clientWidth + 'px';
+    this.container.style.height = clientHeight + 'px';
+
     this.renderGraph(this.props.schema);
   }
 
@@ -32,36 +30,47 @@ class WorkflowGraph extends Component {
     }
   }
 
-  convertSchemaToDotLang(schema) {
-    // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
-    const { transitions = [], initialState, finalStates = [] } = schema;
-
-    const { getStateLabel } = this.props;
-
-    let src = '';
-    src += `digraph finite_state_machine {\n`;
-    src += `\trankdir=LR;\n`;
-    src += `\tedge [fontname="Helvetica"];\n`;
-    // eslint-disable-next-line max-len
-    src += `\tnode [shape = rect fillcolor="#b71c1c" margin="0.2,0.1" color="transparent" fontname="Helvetica" style="rounded,filled"];\n`;
-    src += `\t${finalStates.map(state => `"${getStateLabel(state)}"`).join(' ')}\n`;
-    src += `\tnode [fillcolor="#14892c"];\n`;
-    src = initialState ? src + `\t"${getStateLabel(initialState)}"\n` : src;
-    src += `\tnode [fillcolor="#0277bd"];\n`;
-    src += transitions.
-      filter(({ from, to, event }) => (from && to && event)).
-      map(({ from, to, event }) => (`\t"${getStateLabel(from)}" -> "${getStateLabel(to)}" [label = "${event}"];`)).
-      join(`\n`);
-    src += `}`;
-
-    return src;
-  }
-
   renderGraph = (schema) => {
-    const vizSrc = this.convertSchemaToDotLang(schema);
-    this.setState({
-      svg: Viz(vizSrc, { format: "svg", engine: "dot", totalMemory: 16777216 })
-    });
+    const cy = cytoscape({
+      container: this.container,
+
+      elements: [ // list of graph elements to start with
+        { // node a
+          data: { id: 'a' }
+        },
+        { // node b
+          data: { id: 'b' }
+        },
+        { // edge ab
+          data: { id: 'ab', source: 'a', target: 'b' }
+        }
+      ],
+
+      style: [ // the stylesheet for the graph
+        {
+          selector: 'node',
+          style: {
+            'background-color': '#666',
+            'label': 'data(id)'
+          }
+        },
+
+        {
+          selector: 'edge',
+          style: {
+            'width': 3,
+            'line-color': '#ccc',
+            'target-arrow-color': '#ccc',
+            'target-arrow-shape': 'triangle'
+          }
+        }
+      ],
+
+      layout: {
+        name: 'grid',
+        rows: 1
+      }
+    })
   }
 
   render() {
@@ -77,50 +86,13 @@ class WorkflowGraph extends Component {
       );
     }
 
-    const { svg } = this.state;
-
     return (
-      <div
-        className="oc-fsm-crud-editor--workflow-graph"
-      >
+      <div className="oc-fsm-crud-editor--workflow-graph">
         <div
-          dangerouslySetInnerHTML={{ __html: svg }}
-        >
-        </div>
-        <div className="oc-fsm-crud-editor--workflow-graph__legend">
-          <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
-            <div
-              className={`
-                oc-fsm-crud-editor--workflow-graph__legend-item-badge
-                oc-fsm-crud-editor--workflow-graph__legend-item-badge--regular-state
-              `}
-            ></div>
-            <div>— regular state nodes</div>
-          </div>
-          <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
-            <div
-              className={`
-                oc-fsm-crud-editor--workflow-graph__legend-item-badge
-                oc-fsm-crud-editor--workflow-graph__legend-item-badge--initial-state
-              `}
-            ></div>
-            <div>— initial state nodes</div>
-          </div>
-          <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
-            <div
-              className={`
-                oc-fsm-crud-editor--workflow-graph__legend-item-badge
-                oc-fsm-crud-editor--workflow-graph__legend-item-badge--final-state
-              `}
-            ></div>
-            <div>— final state nodes</div>
-          </div>
-
-        </div>
+          ref={el => (this.container = el)}
+        ></div>
       </div>
     );
   }
 }
 
-WorkflowGraph.propTypes = propTypes;
-WorkflowGraph.defaultProps = defaultProps;
