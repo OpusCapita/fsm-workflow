@@ -1,17 +1,14 @@
 import React, { PureComponent } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  withRouter
-} from 'react-router-dom'
+import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { I18nManager } from '@opuscapita/i18n';
-import { uiMessageNotifications } from '../uiGlobalComponents'
+import { uiMessageNotifications } from '../uiGlobalComponents';
 import Menu from './Menu.react';
 import HomePage from './HomePage.react';
 import Editor from './Editor.react';
 import WorkflowHistory from './History.react';
 import { notificationSuccess, notificationError } from '../constants';
+import { baseUrl } from '../utils';
 import './styles.css';
 
 export default class App extends PureComponent {
@@ -38,10 +35,10 @@ export default class App extends PureComponent {
   }
 
   render() {
-    const MyMenu = withRouter(Menu)
+    const MyMenu = withRouter(Menu);
 
     return (
-      <Router>
+      <Router basename={baseUrl}>
         <div>
           <MyMenu/>
           <Route exact={true} path='/' component={HomePage}/>
