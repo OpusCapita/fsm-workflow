@@ -5,7 +5,7 @@
 
 ### Demo
 
-- [Complete demo app](https://opuscapita-fsm-workflow-demo-master.azurewebsites.net)
+- [Complete demo app](https://opuscapita-mk8s-cluster-1.westeurope.cloudapp.azure.com/fsm-workflow/master/)
 - [Worflow editor demo (showroom)](https://opuscapita.github.io/fsm-workflow/branches/master/editor/?currentComponentName=WorkflowEditor&maxContainerWidth=100%25)
 
 ### Introduction
