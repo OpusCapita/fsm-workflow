@@ -1,5 +1,5 @@
 import Editor from './Editor.react';
-import withExpressionInput from '../ParamsEditor/components/PathExpressionInputInjector';
+import withExpressionInput from '../components/ParamsEditor/components/PathExpressionInputInjector';
 
 export default Editor;
 
