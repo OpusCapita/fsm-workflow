@@ -13,7 +13,7 @@ jobs:
           command: /bin/env_inject.sh
       - checkout
       - run:
-          name: save-cache-checksum
+          name: Save cache checksum
           command: find -name "package.json" | xargs cat > /tmp/cache-checksum
 
       - restore_cache:
@@ -23,7 +23,7 @@ jobs:
             - dependencies-
 
       - run:
-          name: bootstrap (install dependencies)
+          name: Bootstrap (install dependencies)
           # we use --unsafe-perm as current build using root user which fails
           command: npm install --unsafe-perm
 
@@ -48,19 +48,19 @@ jobs:
             - ./packages/examples/complete-demo/node_modules
 
       - run:
-          name: lint
+          name: Lint
           command: npm run lint
 
       - run:
-          name: test
+          name: Test
           command: npm test
 
       - run:
-          name: build-and-deploy-gh-pages
+          name: Build and deploy gh-pages
           command: |
             cd packages/editor
-            bash ./scripts/gh-pages/build.sh
-            bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
+            ./scripts/gh-pages/build.sh
+            ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
       - store_artifacts:
           path: ./test-results
@@ -77,7 +77,7 @@ jobs:
 
       - checkout
       - run:
-          name: save-cache-checksum
+          name: Save cache checksum
           command: find -name "package.json" | xargs cat > /tmp/cache-checksum
 
       - restore_cache:
@@ -86,7 +86,7 @@ jobs:
             - dependencies-
 
       - run:
-          name: bootstrap (install dependencies)
+          name: Bootstrap (install dependencies)
           # we use --unsafe-perm as current build using root user which fails
           command: npm install --unsafe-perm
 
@@ -109,15 +109,15 @@ jobs:
             - ./packages/examples/process-task-manager-ui/node_modules
 
       - run:
-          name: lint
+          name: Lint
           command: npm run lint
 
       - run:
-          name: test
+          name: Test
           command: npm test
 
       - run:
-          name: "Publish release."
+          name: Publish release
           command: npm run publish-release
 
       - run:
@@ -160,35 +160,18 @@ jobs:
           name: Executing release scrtipt.
           command: .circleci/release.sh
 
-  azure-maintenance:
-    docker:
-      - image: opuscapita/ci-node8:latest
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - setup_remote_docker
-
-      - run:
-          name: init-ci-container
-          command: /ci-scripts/init.sh
-
-      - run:
-          name: azure-cleanup
-          command: ./.circleci/scripts/azure-cleanup.js
-
   deploy-demo:
-    docker:
-      - image: opuscapita/ci-node8:latest
-
-    working_directory: ~/repo
+    <<: *defaults
     steps:
+      - run:
+          name: Environment inject
+          command: /bin/env_inject.sh
+
       - checkout
       - setup_remote_docker
 
       - run:
-          name: save-cache-checksum
+          name: Save cache checksum
           command: find -name "package.json" | xargs cat > /tmp/cache-checksum
 
       - restore_cache:
@@ -198,19 +181,17 @@ jobs:
             - dependencies-
 
       - run:
-          name: init-ci-container
-          command: /ci-scripts/init.sh
+          name: Deploy docker demo image
+          command: .circleci/scripts/deploy-docker-image.sh
+
       - run:
-          name: deploy-docker-demo-image
+          name: Deploy demo installation
           command: |
-            node ./.circleci/scripts/deploy-docker-demo-image.js
-      - run:
-          name: azure-create-web-app
-          command: |
-            node ./.circleci/scripts/azure-create-webapp.js
-      - run:
-          name: update-github-commit-status
-          command: node ./.circleci/scripts/update-github-commit-status.js
+            set -x
+            az login -u "${AZURE_USER}" -p "${AZURE_PASS}" &> /tmp/az-login.log
+            az aks get-credentials -g ${MINSK_CORE_K8S_AZURE_RG} -n ${MINSK_CORE_K8S_AZURE_NAME}
+            helm init --client-only
+            .helm/install.sh
 
 workflows:
   version: 2

@@ -13,6 +13,7 @@ import Table from 'react-bootstrap/lib/Table';
 import SplitButton from 'react-bootstrap/lib/SplitButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { notificationError } from '../constants';
+import { url } from '../utils';
 
 export default class HomePage extends PureComponent {
   static propTypes = {
@@ -34,7 +35,7 @@ export default class HomePage extends PureComponent {
     const { uiMessageNotifications } = this.context;
 
     superagent.
-      get('/api/objects').
+      get(url('/api/objects')).
       accept('application/json').
       then(res => {
         this.setState(prevState => ({ businessObjects: res.body }))
@@ -48,7 +49,7 @@ export default class HomePage extends PureComponent {
       })
 
     superagent.
-      get('/api/states').
+      get(url('/api/states')).
       accept('application/json').
       then(res => {
         this.setState(prevState => ({ states: res.body.states }))
@@ -70,7 +71,7 @@ export default class HomePage extends PureComponent {
     this.setState(prevState => ({ loading: { ...prevState.loading, [objectId]: true } }));
     return event &&
       superagent.
-        post('/api/event').
+        post(url('/api/event')).
         send({ objectId, event }).
         then(response => {
           const { object } = response.body;
@@ -104,7 +105,7 @@ export default class HomePage extends PureComponent {
   getAvailableTransitions = object => {
     const { uiMessageNotifications } = this.context;
     return superagent.
-      post('/api/transitions').
+      post(url('/api/transitions')).
       send({ objectId: object[objectIdProp] }).
       then(({ body }) => body).
       catch(err => {

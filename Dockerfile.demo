@@ -3,7 +3,8 @@
 FROM node:8.9.4
 LABEL maintainer="OpusCapita"
 
-RUN mkdir /demo
+ENV HOST 0.0.0.0
+ENV PORT 3020
 
 COPY ./ /demo
 
@@ -17,4 +18,4 @@ WORKDIR /demo/packages/examples/complete-demo
 
 CMD ["npm", "run", "demo:start"]
 
-EXPOSE 3020
+EXPOSE $PORT

@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import express from 'express';
 import { Server } from 'http';
+import morgan from 'morgan';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import config from '../../config/webpack.config';
@@ -17,18 +18,21 @@ import schema from './schema';
 import objectConfig from './objectConfig';
 import { generateObjects } from './utils';
 
-const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
+const port = process.env.PORT || 3020;
 
 const app = express();
 const server = Server(app);
-app.use(bodyParser.json())
-app.use(objectRoutes)
-app.use(sendEventRoute)
-app.use(transitionsRoute)
-app.use(editorDataRoute)
-app.use(statesRoute)
-app.use(historyRoute)
+
+app.use(bodyParser.json());
+app.use(morgan('tiny', { immediate: true }));
+
+app.use(objectRoutes);
+app.use(sendEventRoute);
+app.use(transitionsRoute);
+app.use(editorDataRoute);
+app.use(statesRoute);
+app.use(historyRoute);
 
 const compiler = webpack(config);
 
@@ -39,12 +43,12 @@ if (process.env.NODE_ENV === 'development') {
   }))
 } else {
   app.get('/bundle.js', (req, res) => {
-    res.sendFile(resolve(__dirname, '../../www/bundle.js'));
+    res.sendFile(resolve(__dirname, '../../build/bundle.js'));
   })
 }
 
 app.get('*', function(req, res) {
-  res.sendFile(resolve(__dirname, '../../www/index.html'));
+  res.sendFile(resolve(__dirname, '../../build/index.html'));
 });
 
 // initialize data and start server

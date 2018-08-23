@@ -1,6 +1,5 @@
 const condition = args => {
-  // console.log(`condition "userHasRoles" executed`);
-  console.log(`\n\ncondition "userHasRoles" executed with \n${JSON.stringify(args)}\n\n`)
+  // console.log(`\n\ncondition "userHasRoles" executed with \n${JSON.stringify(args)}\n\n`)
   return true
 }
 

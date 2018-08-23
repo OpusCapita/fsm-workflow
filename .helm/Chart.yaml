@@ -1,0 +1,11 @@
+apiVersion: v1
+description: A Helm chart for @OpusCapita/fsm-workflow
+name: fsm-workflow
+version: 0.0.1
+home: https://github.com/OpusCapita/fsm-workflow
+maintainers:
+  - name: Egor Stambakio
+    email: egor.stambakio@opuscapita.com
+    url: https://github.com/estambakio-sc
+icon: http://test.jcatalog.com/oc-logo-rgb.svg
+tillerVersion: ">2.8.0"

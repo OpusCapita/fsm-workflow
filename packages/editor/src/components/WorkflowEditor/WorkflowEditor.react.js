@@ -232,6 +232,7 @@ export default class WorkflowEditor extends PureComponent {
     const { title, workflow: { schema, actions = {}, conditions = {} }, schemaConfig } = this.props;
 
     return (
+<<<<<<< HEAD
       <div className='oc-fsm-crud-editor'>
         <h1>
           Workflow Editor{title && `:\u00A0${title}`}
@@ -282,6 +283,68 @@ export default class WorkflowEditor extends PureComponent {
               onSaveAutomatic={this.handleSaveTransitionAutomatic}
               onSaveActions={this.handleSaveTransitionActions}
               componentsRegistry={this.props.componentsRegistry}
+=======
+      <Grid>
+        <Row>
+          <Col sm={12}>
+            <h1 className='oc-fsm-crud-editor--title'>
+              Workflow Editor{title && `:\u00A0${title}`}
+              <TopButtons schema={schema} onSave={this.handleSave}/>
+            </h1>
+
+            <TopForm
+              name={schema.name || ''}
+              onNameChange={this.handleNameChange}
+            />
+
+            <Tabs
+              animation={false}
+              id='fsm-workflow-editor-elements'
+              mountOnEnter={true}
+              unmountOnExit={true}
+            >
+              <Tab eventKey={1} title={(<h4>States</h4>)}>
+                <StatesTable
+                  states={schema.states || []}
+                  statesInTransitions={
+                    (schema.transitions || []).reduce(
+                      (involvedStates, transition) => ['from', 'to'].reduce(
+                        (acc, key) => involvedStates.indexOf(transition[key]) === -1 ?
+                          acc.concat(transition[key]) :
+                          acc
+                        , involvedStates
+                      ), []
+                    )
+                  }
+                  initialState={schema.initialState || ''}
+                  finalStates={schema.finalStates || []}
+                  onDelete={this.handleDeleteState}
+                  onEdit={this.handleEditState}
+                  stateConfig={(schemaConfig || {}).state}
+                />
+              </Tab>
+              <Tab eventKey={2} title={(<h4>Transitions</h4>)}>
+                <TransitionsTable
+                  transitions={schema.transitions || []}
+                  states={(schema.states || []).map(({ name }) => name)}
+                  actions={actions}
+                  conditions={conditions}
+                  getStateLabel={this.getStateLabel}
+                  onEditTransition={this.handleEditTransition}
+                  onDeleteTransition={this.handleDeleteTransition}
+                  onSaveGuards={this.handleSaveTransitionGuards}
+                  onSaveAutomatic={this.handleSaveTransitionAutomatic}
+                  onSaveActions={this.handleSaveTransitionActions}
+                  componentsRegistry={this.props.componentsRegistry}
+                />
+              </Tab>
+            </Tabs>
+
+            <EditorOutput
+              schema={schema}
+              getStateLabel={this.getStateLabel}
+              createJsonOutput={this.createJsonOutput}
+>>>>>>> master
             />
           </Tab>
         </Tabs>
