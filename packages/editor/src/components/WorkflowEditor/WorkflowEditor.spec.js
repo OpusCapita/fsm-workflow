@@ -11,7 +11,7 @@ import TabContent from 'react-bootstrap/lib/TabContent';
 import WorkflowEditor from './WorkflowEditor.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
-import EditorOutput from '../EditorOutput.react';
+import WorkflowGraph from '../WorkflowGraph';
 import TopForm from '../TopForm.react';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -114,6 +114,6 @@ describe('<WorkflowEditor />', () => {
     expect(tabs.find(TabContent).find(TransitionsTable).exists()).to.equal(false);
 
     // check output presence
-    expect(wrapper.contains(EditorOutput)).to.be.true; // eslint-disable-line no-unused-expressions
+    expect(wrapper.contains(WorkflowGraph)).to.be.true; // eslint-disable-line no-unused-expressions
   });
 });
