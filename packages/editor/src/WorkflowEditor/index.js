@@ -1,7 +1,7 @@
-import Editor from './Editor.react';
+import WorkflowEditor from './WorkflowEditor.react';
 import withExpressionInput from '../components/ParamsEditor/components/PathExpressionInputInjector';
 
-export default Editor;
+export default WorkflowEditor;
 
 // enable usage with custom components
 export { withExpressionInput };

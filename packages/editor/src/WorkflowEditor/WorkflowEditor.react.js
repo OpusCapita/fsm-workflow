@@ -3,11 +3,11 @@ import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import isEqual from 'lodash/isEqual';
-import WorkflowEditor from '../components/WorkflowEditor';
-import WorkflowGraph from '../components/WorkflowGraph';
+import Editor from '../components/Editor';
+import Graph from '../components/Graph';
 
-export default class Editor extends PureComponent {
-  static propTypes = WorkflowEditor.propTypes;
+export default class WorkflowEditor extends PureComponent {
+  static propTypes = Editor.propTypes;
 
   static defaultProps = {
     onChange: _ => {}
@@ -32,7 +32,10 @@ export default class Editor extends PureComponent {
     return ({ schema })
   }
 
-  handleChange = stateObjOrFunc => this.setState(stateObjOrFunc, _ => this.props.onChange(this.state.schema));
+  handleChange = stateObjOrFunc => this.setState(
+    stateObjOrFunc,
+    _ => this.props.onChange({ schema: this.state.schema })
+  );
 
   render() {
     const { schema } = this.state;
@@ -49,11 +52,11 @@ export default class Editor extends PureComponent {
       <Grid>
         <Row>
           <Col sm={12}>
-            <WorkflowEditor
+            <Editor
               {...editorProps}
               onChange={this.handleChange}
             />
-            <WorkflowGraph schema={schema}/>
+            <Graph schema={schema}/>
           </Col>
         </Row>
       </Grid>

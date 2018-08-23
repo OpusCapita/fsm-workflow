@@ -4,9 +4,9 @@ import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
 import { render as renderCy } from './cy';
 import { getStateLabel } from '../utils';
-import './WorkflowGraph.less';
+import './Graph.less';
 
-export default class WorkflowGraph extends PureComponent {
+export default class Graph extends PureComponent {
   static propTypes = {
     schema: PropTypes.object
   }
@@ -34,7 +34,7 @@ export default class WorkflowGraph extends PureComponent {
     this.container.style.width = clientWidth + 'px';
     this.container.style.height = clientHeight + 'px';
 
-    console.log({ schema });
+    // console.log({ schema });
 
     const { transitions, initialState, finalStates } = schema;
 
@@ -74,7 +74,7 @@ export default class WorkflowGraph extends PureComponent {
       edges: []
     });
 
-    console.log({ elements });
+    // console.log({ elements });
 
     this.cy = renderCy({ element: this.container, ...elements });
   }

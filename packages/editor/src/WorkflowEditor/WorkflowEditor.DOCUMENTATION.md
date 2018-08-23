@@ -1,4 +1,4 @@
-# Editor
+# WorkflowEditor
 
 ## Synopsis
 
@@ -13,7 +13,11 @@
 ## Code Example
 
 ```js
-<Editor
+<WorkflowEditor
+  onChange={v => console.log('onChange', v)}
+
+  onSave={v => console.log(JSON.stringify(v.schema, null, 2))}
+
   title="Invoice"
 
   workflow={{
@@ -395,8 +399,6 @@
 
   componentsRegistry={_scope.componentsRegistry}
 
-  onSave={v => console.log(JSON.stringify(v.schema, null, 2))}
-
   schemaConfig = {{
     state: {
       availableNames: [
@@ -421,7 +423,7 @@ Egor Stambakio <egor.stambakio@opuscapita.com>
 
 ## Component Name
 
-Editor
+WorkflowEditor
 
 ## License
 

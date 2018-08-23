@@ -233,7 +233,7 @@ export default class WorkflowEditor extends PureComponent {
 
     return (
       <div className='oc-fsm-crud-editor'>
-        <h1>
+        <h1 className='oc-fsm-crud-editor--title'>
           Workflow Editor{title && `:\u00A0${title}`}
           <TopButtons schema={schema} onSave={this.handleSave}/>
         </h1>

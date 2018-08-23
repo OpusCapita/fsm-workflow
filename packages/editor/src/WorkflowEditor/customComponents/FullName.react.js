@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
-import withExpressionInput from '../../ParamsEditor/components/PathExpressionInputInjector';
+import { withExpressionInput } from '../';
 
 const splitFullName = str => {
   const s = (str || '').replace(/ +(?= )/g, '');
