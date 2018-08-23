@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
-import cytoscape from 'cytoscape';
 import isEqual from 'lodash/isEqual';
+import find from 'lodash/find';
+import { render as renderCy } from './cy';
 import './WorkflowGraph.less';
 
 export default class WorkflowGraph extends PureComponent {
@@ -16,83 +16,99 @@ export default class WorkflowGraph extends PureComponent {
   }
 
   componentDidMount() {
-    const el = findDOMNode(this);
-    const { clientHeight, clientWidth } = el;
-    this.container.style.width = clientWidth + 'px';
-    this.container.style.height = clientHeight + 'px';
-
-    this.renderGraph(this.props.schema);
+    this.draw(this.props.schema);
   }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.schema, nextProps.schema)) {
-      this.renderGraph(nextProps.schema);
+      this.draw(nextProps.schema);
     }
   }
 
-  renderGraph = (schema) => {
-    const cy = cytoscape({
-      container: this.container,
+  draw = (schema = this.props.schema) => {
+    if (!this.container) {
+      return
+    }
 
-      elements: [ // list of graph elements to start with
-        { // node a
-          data: { id: 'a' }
-        },
-        { // node b
-          data: { id: 'b' }
-        },
-        { // edge ab
-          data: { id: 'ab', source: 'a', target: 'b' }
-        }
-      ],
+    const { getStateLabel } = this.props;
 
-      style: [ // the stylesheet for the graph
-        {
-          selector: 'node',
-          style: {
-            'background-color': '#666',
-            'label': 'data(id)'
+    const { clientHeight, clientWidth } = this.container;
+    this.container.style.width = clientWidth + 'px';
+    this.container.style.height = clientHeight + 'px';
+
+    console.log({ schema });
+
+    const { transitions, initialState, finalStates } = schema;
+
+    const elements = transitions.reduce((acc, { from, to, event }) => {
+      const newNodes = [from, to].
+        filter(state => !find(acc.nodes, el => el.data.id === state)).
+        map(state => ({
+          data: {
+            id: state,
+            label: getStateLabel(state),
+            ...(state === initialState && {
+              initialState: true
+            }),
+            ...(finalStates.indexOf(state) !== -1 && {
+              finalState: true
+            })
           }
-        },
+        }));
 
-        {
-          selector: 'edge',
-          style: {
-            'width': 3,
-            'line-color': '#ccc',
-            'target-arrow-color': '#ccc',
-            'target-arrow-shape': 'triangle'
+      const newEdges = [
+        ...(!find(acc.edges, el => el.data.id === event) && [{
+          data: {
+            id: event,
+            source: from,
+            target: to,
+            label: event
           }
-        }
-      ],
+        }])
+      ];
 
-      layout: {
-        name: 'grid',
-        rows: 1
+      return {
+        nodes: [...acc.nodes, ...newNodes],
+        edges: [...acc.edges, ...newEdges]
       }
-    })
+    }, {
+      nodes: [],
+      edges: []
+    });
+
+    console.log({ elements });
+
+    this.cy = renderCy({ element: this.container, ...elements });
   }
+
+  handleReset = _ => this.draw();
 
   render() {
     const { schema } = this.props;
 
-    if (!schema) {
-      return (
-        <div className="oc-fsm-crud-editor--workflow-graph">
-          <h4>
-            Nothing to visualize
-          </h4>
-        </div>
-      );
-    }
-
     return (
-      <div className="oc-fsm-crud-editor--workflow-graph">
-        <div
-          ref={el => (this.container = el)}
-        ></div>
+      <div>
+        <h2>Schema</h2>
+        <p>This is a temporary solution for FSM visualization.</p>
+        <div className='btn-group'>
+          <button className='btn btn-default' onClick={this.handleReset}>Reset graph</button>
+        </div>
+        <div className="oc-fsm-crud-editor--workflow-editor__graph">
+          {
+            schema ? (
+              <div
+                className="oc-fsm-crud-editor--workflow-editor__graph-content"
+                ref={el => (this.container = el)}
+              ></div>
+            ) : (
+              <div className="oc-fsm-crud-editor--workflow-editor__graph-content">
+                <h4>Nothing to visualize</h4>
+              </div>
+            )
+          }
+        </div>
       </div>
-    );
+    )
   }
 }
 

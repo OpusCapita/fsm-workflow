@@ -28,13 +28,13 @@
     "@opuscapita/react-select": "1.0.0-oc.0",
     "codemirror": "5.33.0",
     "core-js": "2.5.3",
-    "cytoscape": "3.2.16",
+    "cytoscape": "3.2.9",
+    "cytoscape-cose-bilkent": "4.0.0",
     "file-saver": "1.3.8",
     "kvolkovich-sc-react-codemirror": "1.0.1",
     "lodash": "4.17.5",
     "react-bootstrap": "0.31.5",
-    "react-inspector": "2.2.2",
-    "viz.js": "1.8.0"
+    "react-inspector": "2.2.2"
   },
   "devDependencies": {
     "@opuscapita/i18n": "1.1.0",

@@ -12,7 +12,7 @@ import TopButtons from '../TopButtons.react';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
 import TransitionsTable from '../TransitionsTable';
-import EditorOutput from '../EditorOutput.react';
+import WorkflowGraph from '../WorkflowGraph';
 import { isDef } from '../utils';
 import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
@@ -320,10 +320,9 @@ export default class WorkflowEditor extends PureComponent {
               </Tab>
             </Tabs>
 
-            <EditorOutput
+            <WorkflowGraph
               schema={schema}
               getStateLabel={this.getStateLabel}
-              createJsonOutput={this.createJsonOutput}
             />
           </Col>
         </Row>
