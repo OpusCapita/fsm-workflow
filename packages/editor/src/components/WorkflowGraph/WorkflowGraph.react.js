@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
 import { render as renderCy } from './cy';
+import { getStateLabel } from '../utils';
 import './WorkflowGraph.less';
 
 export default class WorkflowGraph extends PureComponent {
   static propTypes = {
-    schema: PropTypes.object,
-    getStateLabel: PropTypes.func.isRequired
+    schema: PropTypes.object
   }
 
   static defaultProps = {
@@ -26,11 +26,9 @@ export default class WorkflowGraph extends PureComponent {
   }
 
   draw = (schema = this.props.schema) => {
-    if (!this.container) {
+    if (!this.container || !schema) {
       return
     }
-
-    const { getStateLabel } = this.props;
 
     const { clientHeight, clientWidth } = this.container;
     this.container.style.width = clientWidth + 'px';
@@ -46,7 +44,7 @@ export default class WorkflowGraph extends PureComponent {
         map(state => ({
           data: {
             id: state,
-            label: getStateLabel(state),
+            label: getStateLabel(schema)(state),
             ...(state === initialState && {
               initialState: true
             }),
@@ -87,7 +85,7 @@ export default class WorkflowGraph extends PureComponent {
     const { schema } = this.props;
 
     return (
-      <div>
+      <div className="oc-fsm-crud-editor--workflow-editor__graph-wrapper">
         <h2>Schema</h2>
         <p>This is a temporary solution for FSM visualization.</p>
         <div className='btn-group'>

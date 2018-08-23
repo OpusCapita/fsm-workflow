@@ -1,1 +1,1 @@
-module.exports = require('./components/WorkflowEditor');
+module.exports = require('./Editor');

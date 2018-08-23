@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import startCase from 'lodash/startCase';
+import find from 'lodash/find';
+
+export const getStateLabel = schema => name => (({ name, description } = {}) => description || startCase(name || ''))(
+  find(schema.states || [], ({ name: stateName }) => name === stateName)
+)
 
 export const isDef = v => v !== undefined && v !== null;
 
