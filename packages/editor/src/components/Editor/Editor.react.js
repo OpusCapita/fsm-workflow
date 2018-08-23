@@ -118,7 +118,7 @@ export default class WorkflowEditor extends PureComponent {
   }))
 
   handleDeleteTransition = index => {
-    const { transitions } = this.state.schema;
+    const { transitions } = this.props.workflow.schema;
 
     this.handleChange(prevState => ({
       schema: {

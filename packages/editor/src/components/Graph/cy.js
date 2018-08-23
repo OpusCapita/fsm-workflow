@@ -16,6 +16,7 @@ export function render({ element, nodes, edges }) {
 
     boxSelectionEnabled: true,
     autounselectify: true,
+    userZoomingEnabled: false,
 
     style: [
       {

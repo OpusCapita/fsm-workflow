@@ -1,7 +1,4 @@
 import React, { PureComponent } from 'react';
-import Grid from 'react-bootstrap/lib/Grid';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
 import isEqual from 'lodash/isEqual';
 import Editor from '../components/Editor';
 import Graph from '../components/Graph';
@@ -32,6 +29,9 @@ export default class WorkflowEditor extends PureComponent {
     return ({ schema })
   }
 
+  /**
+   * @param {object|func} stateObjOrFunc - same as first argument for this.setState
+   */
   handleChange = stateObjOrFunc => this.setState(
     stateObjOrFunc,
     _ => this.props.onChange({ schema: this.state.schema })
@@ -49,17 +49,17 @@ export default class WorkflowEditor extends PureComponent {
     }
 
     return (
-      <Grid>
-        <Row>
-          <Col sm={12}>
+      <div className='container'>
+        <div className='row'>
+          <div className='col-sm-12'>
             <Editor
               {...editorProps}
               onChange={this.handleChange}
             />
             <Graph schema={schema}/>
-          </Col>
-        </Row>
-      </Grid>
+          </div>
+        </div>
+      </div>
     )
   }
 }
