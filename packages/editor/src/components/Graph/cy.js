@@ -120,7 +120,8 @@ export function render({ element, nodes, edges }) {
           'z-index': '100',
           'text-wrap': 'wrap',
           'text-background-opacity': '1',
-          'target-distance-from-node': '2px'
+          'target-distance-from-node': '2px',
+          'text-rotation': 'autorotate'
         }
       },
       {
@@ -196,7 +197,7 @@ export function render({ element, nodes, edges }) {
     layout: {
       name: 'cose-bilkent',
       // randomize: true,
-      idealEdgeLength: 50,
+      idealEdgeLength: 80,
       nodeRepulsion: 4500,
       animate: false,
       tile: true,
