@@ -55,9 +55,9 @@ export default class Graph extends PureComponent {
         }));
 
       const newEdges = [
-        ...(!find(acc.edges, el => el.data.id === event) && [{
+        ...(!find(acc.edges, el => el.data.id === `${from}-${to}-${event}`) && [{
           data: {
-            id: event,
+            id: `${from}-${to}-${event}`,
             source: from,
             target: to,
             label: event
