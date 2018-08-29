@@ -71,103 +71,188 @@
       }
     },
     "schema": {
-      "name": "supplier approval",
-      "initialState": "new",
-      "finalStates": ["activated"],
-      "states": [
-        { "name": "new", "description": "new" },
-        { "name": "activated", "description": "activated" },
-        { "name": "inUpdatePending", "description": "inUpdatePending" },
-        { "name": "inCustomerReview", "description": "inCustomerReview" },
-        { "name": "inRegistration", "description": "inRegistration" },
-        { "name": "inQualificationPending", "description": "inQualificationPending" },
-        { "name": "inCommodityGroupApproval", "description": "inCommodityGroupApproval" },
-        { "name": "rejected", "description": "rejected" },
-        { "name": "inComplianceCheck", "description": "inComplianceCheck" },
-        { "name": "inSupplierResponsibilityPending", "description": "inSupplierResponsibilityPending" }
+      "name": "InvoiceApproval",
+      "initialState": "inspectionRequired",
+      "finalStates": [
+        "approved"
       ],
       "transitions": [
         {
-          "from": "new",
-          "event": "doLicenseConfirm",
-          "to": "inRegistration"
+          "from": "inspectionRequired",
+          "to": "approvalRequired",
+          "event": "inspect",
+          "guards": [
+            {
+              expression: "invoice[\"netAmount\"] > 100"
+            },
+            {
+              name: 'userHasRoles',
+              params: [
+                {
+                  name: 'restrictedRoles',
+                  value: ['REV']
+                }
+              ],
+              negate: true
+            }
+          ],
+          "actions": [
+            {
+              name: "testAction",
+              params: [
+                {
+                  name: "dinnerMenu",
+                  value: ['Steak', 'Mashrooms']
+                },
+                {
+                  name: "fullName",
+                  value: "John Smith"
+                }
+              ]
+            },
+            {
+              name: 'sendMail',
+              params: [
+                {
+                  name: 'fromAddress',
+                  value: 'support@client.com'
+                },
+                {
+                  name: 'greeting',
+                  value: 'Mr. Twister'
+                }
+              ]
+            },
+            {
+              name: 'updateProcessedBy',
+              params: [
+                {
+                  name: 'processedByFieldName',
+                  value: "customerId"
+                }
+              ]
+            }
+          ]
         },
         {
-          "from": "activated",
-          "event": "doLicenseConfirm",
-          "to": "inUpdatePending"
+          "from": "inspectionRequired",
+          "to": "approvalRequired",
+          "event": "automatic-inspect",
+          "automatic": true
         },
         {
-          "from": "inUpdatePending",
-          "event": "doCustomerReview",
-          "to": "inCustomerReview",
-          "actions": [{ "name": "onCustomerReview" }]
+          "from": "inspectionRequired",
+          "to": "inspClrRequired",
+          "event": "sendToClarification",
+          "automatic": [
+            {
+              "expression": "invoice[\"netAmount\"] < 100"
+            }
+          ]
         },
         {
-          "from": "inCustomerReview",
-          "event": "approve",
-          "to": "activated",
-          "actions": [{ "name": "onCustomerApprove" }]
+          "from": "inspClrRequired",
+          "to": "inspectionRequired",
+          "event": "clarifyForInspection"
         },
         {
-          "from": "inCustomerReview",
-          "event": "return",
-          "to": "inUpdatePending",
-          "actions": [{ "name": "onCustomerReturn" }]
+          "from": "inspectionRequired",
+          "to": "inspectionRejected",
+          "event": "rejectInspection"
         },
         {
-          "from": "inRegistration",
-          "event": "doCustomerReview",
-          "to": "inQualificationPending",
-          "actions": [{ "name": "onCustomerReviewInRegistration" }]
+          "from": "inspClrRequired",
+          "to": "inspectionRejected",
+          "event": "rejectInspection"
         },
         {
-          "from": "inQualificationPending",
-          "event": "approve",
-          "to": "inCommodityGroupApproval",
-          "actions": [{ "name": "onApproveQualification" }]
+          "from": "inspectionRejected",
+          "to": "inspectionRequired",
+          "event": "cancelRejection"
         },
         {
-          "from": "inQualificationPending",
-          "event": "reject",
-          "to": "rejected",
-          "actions": [{ "name": "onRejectQualification" }]
+          "from": "approvalRequired",
+          "to": "inspectionRequired",
+          "event": "cancelInspection"
         },
         {
-          "from": "inQualificationPending",
-          "event": "return",
-          "to": "inRegistration",
-          "actions": [{ "name": "onReturnQualification" }]
+          "from": "approvalRequired",
+          "to": "inspectionRejected",
+          "event": "rejectInspection"
         },
         {
-          "from": "inCommodityGroupApproval",
-          "event": "approveCommodityGroups",
-          "to": "inComplianceCheck",
-          "actions": [{ "name": "onApproveCommodityGroups" }]
+          "from": "approvalRequired",
+          "to": "approved",
+          "event": "approve"
         },
         {
-          "from": "inCommodityGroupApproval",
-          "event": "rejectCommodityGroups",
-          "to": "rejected",
-          "actions": [{ "name": "onRejectCommodityGroups" }]
+          "from": "approvalRequired",
+          "to": "appClrRequired",
+          "event": "sendToClarification"
         },
         {
-          "from": "inComplianceCheck",
-          "event": "approve",
-          "to": "inSupplierResponsibilityPending",
-          "actions": [{ "name": "onApproveComplianceCheck" }]
+          "from": "approvalRequired",
+          "to": "inspClrRequired",
+          "event": "sendToClarification"
         },
         {
-          "from": "inComplianceCheck",
-          "event": "reject",
-          "to": "rejected",
-          "actions": [{ "name": "onRejectComplianceCheck" }]
+          "from": "approvalRequired",
+          "to": "approvalRejected",
+          "event": "rejectApproval"
         },
         {
-          "from": "inSupplierResponsibilityPending",
-          "event": "done",
-          "to": "activated",
-          "actions": [{ "name": "onDone" }]
+          "from": "appClrRequired",
+          "to": "approvalRequired",
+          "event": "clarifyForApproval"
+        },
+        {
+          "from": "appClrRequired",
+          "to": "approvalRejected",
+          "event": "rejectApproval"
+        },
+        {
+          "from": "approved",
+          "to": "approvalRequired",
+          "event": "cancelApproval"
+        },
+        {
+          "from": "approved",
+          "to": "approvalRejected",
+          "event": "rejectApproval"
+        },
+        {
+          "from": "approved",
+          "to": "appClrRequired",
+          "event": "sendToClarification"
+        },
+        {
+          "from": "approvalRejected",
+          "to": "approvalRequired",
+          "event": "cancelRejection"
+        }
+      ],
+      "states": [
+        {
+          "name": "inspectionRequired",
+          "description": "Inspection Required"
+        },
+        {
+          "name": "approvalRequired"
+        },
+        {
+          "name": "inspClrRequired"
+        },
+        {
+          "name": "inspectionRejected"
+        },
+        {
+          "name": "approved"
+        },
+        {
+          "name": "appClrRequired"
+        },
+        {
+          "name": "approvalRejected"
         }
       ]
     },
