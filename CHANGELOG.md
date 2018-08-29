@@ -1,4 +1,20 @@
 
+[Release 2.2.2](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.2) Wed Aug 29 2018 14:51:47 GMT+0300 (MSK)
+=======================================================
+
+- Revert example schema for editor (Egor Stambakio stambakio@scand.com, 2018-08-29 14:38:07 +0300)
+- Merge branch 'master' of github.com:OpusCapita/fsm-workflow (Egor Stambakio stambakio@scand.com, 2018-08-29 14:10:03 +0300)
+- Fix svg position (Egor Stambakio stambakio@scand.com, 2018-08-29 14:09:51 +0300)
+- Removing authorization (GitHub asergeev-sc@users.noreply.github.com, 2018-08-29 14:04:55 +0300)
+- Comment azure-maintenance job [skip ci] (GitHub asergeev-sc@users.noreply.github.com, 2018-08-27 07:32:58 +0300)
+- Update README.md (GitHub kvolkovich-sc@users.noreply.github.com, 2018-08-23 17:58:29 +0300)
+- Move demo app deployment to k8s cluster ([#79](https://github.com/OpusCapita/fsm-workflow/issues/79)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-08-23 13:26:04 +0300)
+- [ci skip] (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-08-19 21:42:32 +0300)
+- [ci skip] (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-08-19 21:41:15 +0300)
+- Suppress az login output (Kirill Volkovich kirill.volkovich@opuscapita.com, 2018-08-19 00:37:29 +0300)
+- Added Readme.md for FSM editor package [ci skip] (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-08-16 15:50:33 +0300)
+- Remove obsolete code, fix indentation (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-07-27 08:53:14 +0300)
+
 [Release 2.2.1](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.1) Mon Jun 11 2018 16:25:58 GMT+0300 (MSK)
 =======================================================
 
