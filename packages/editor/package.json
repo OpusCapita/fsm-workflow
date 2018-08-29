@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-editor",
-  "version": "2.2.2",
+  "version": "2.2.3-SNAPSHOT",
   "description": "Fsm workflow crud editor",
   "main": "lib/index.js",
   "files": [
