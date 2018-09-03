@@ -1,14 +1,14 @@
 {
-  "version": "2.2.3-SNAPSHOT",
+  "version": "2.2.3",
   "lerna": "2.8.0",
   "packages": [
     "packages/core",
     "packages/editor",
-    "packages/history",
-    "packages/task-manager",
+    "packages/examples/complete-demo",
     "packages/examples/invoice-console",
     "packages/examples/process-task-manager-ui",
-    "packages/examples/complete-demo",
-    "packages/integration-tests/history"
+    "packages/history",
+    "packages/integration-tests/history",
+    "packages/task-manager"
   ]
 }
