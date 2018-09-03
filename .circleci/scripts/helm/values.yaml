@@ -1,0 +1,12 @@
+phase: "qa"
+image:
+  repository: ""
+  tag: "master"
+ingress:
+  host: ""
+  baseUrl: ""
+github:
+  project: ""
+vcs:
+  ref: ""
+dockerSecret: "dockerhub"

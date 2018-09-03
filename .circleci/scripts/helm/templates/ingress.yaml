@@ -1,0 +1,28 @@
+{{- $serviceName := include "fsm-workflow.fullname" . -}}
+{{- $baseUrl := .Values.ingress.baseUrl -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fsm-workflow.fullname" . }}
+  labels:
+    app: {{ template "fsm-workflow.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+spec:
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: {{ $baseUrl }}
+        backend:
+          serviceName: {{ $serviceName }}
+          servicePort: 80
+  tls:
+    - hosts:
+      - {{ .Values.ingress.host }}
