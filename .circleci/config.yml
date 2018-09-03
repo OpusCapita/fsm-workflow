@@ -9,19 +9,15 @@ jobs:
     <<: *defaults
     steps:
       - run:
-          name: Environment inject
+          name: Inject environment
           command: /bin/env_inject.sh
       - checkout
       - run:
           name: Save cache checksum
-          command: find -name "package.json" | xargs cat > /tmp/cache-checksum
-
+          command: find . -name "package.json" | sort | xargs cat >> /tmp/cache-checksum
       - restore_cache:
           keys:
             - dependencies-{{ checksum "/tmp/cache-checksum" }}
-            # fallback to using the latest cache if no exact match is found
-            - dependencies-
-
       - run:
           name: Bootstrap (install dependencies)
           # we use --unsafe-perm as current build using root user which fails
@@ -72,24 +68,19 @@ jobs:
     <<: *defaults
     steps:
       - run:
-          name: Environment inject
+          name: Inject environment
           command: /bin/env_inject.sh
-
       - checkout
       - run:
           name: Save cache checksum
-          command: find -name "package.json" | xargs cat > /tmp/cache-checksum
-
+          command: find . -name "package.json" | sort | xargs cat >> /tmp/cache-checksum
       - restore_cache:
           keys:
             - dependencies-{{ checksum "/tmp/cache-checksum" }}
-            - dependencies-
-
       - run:
           name: Bootstrap (install dependencies)
           # we use --unsafe-perm as current build using root user which fails
           command: npm install --unsafe-perm
-
       - save_cache:
           key: dependencies-{{ checksum "/tmp/cache-checksum" }}
           paths:
@@ -107,69 +98,47 @@ jobs:
             - ./packages/examples/invoice-console/node_modules
             - ./packages/examples/process-task-manager-ui/package-lock.json
             - ./packages/examples/process-task-manager-ui/node_modules
+            - ./packages/examples/complete-demo/package-lock.json
+            - ./packages/examples/complete-demo/node_modules
 
       - run:
-          name: Lint
+          name: Lint sources
           command: npm run lint
-
       - run:
-          name: Test
+          name: Run tests
           command: npm test
-
       - run:
           name: Publish release
           command: npm run publish-release
-
       - run:
-          name: Build and deploy gh-pages editor demo
+          name: Build and deploy editor demo in to gh-pages branch
           command: |
            cd packages/editor
            bash ./scripts/gh-pages/build.sh
            bash ./scripts/gh-pages/deploy.sh .gh-pages-tmp
-
       - store_artifacts:
           path: ./packages/core/test-results.xml
           prefix: core
-
       - store_artifacts:
           path: ./packages/editor/test-results.xml
           prefix: editor
-
       - store_artifacts:
           path: ./packages/task-manager/test-results.xml
           prefix: task-manager
-
       - store_artifacts:
           path: ./packages/history/test-results.xml
           prefix: history
-
       - store_test_results:
           path: ./junit
-
-  release:
-    <<: *defaults
-    steps:
-
-      - run:
-          name: Environment inject
-          command: env_inject.sh
-
-      - checkout
-
-      - run:
-          name: Executing release scrtipt.
-          command: .circleci/release.sh
 
   deploy-demo:
     <<: *defaults
     steps:
       - run:
-          name: Environment inject
+          name: Inject environment
           command: /bin/env_inject.sh
-
       - checkout
       - setup_remote_docker
-
       - run:
           name: Save cache checksum
           command: find -name "package.json" | xargs cat > /tmp/cache-checksum
@@ -203,10 +172,6 @@ workflows:
               ignore:
                 - gh-pages
                 - release
-      - release:
-          filters:
-            branches:
-              only: release
       - build_release:
           filters:
             tags:
