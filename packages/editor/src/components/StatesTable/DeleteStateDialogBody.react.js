@@ -9,6 +9,7 @@ import { formatLabel } from '../utils';
 // TODO maybe optimize communication between components to make it less coupled
 export default class DeleteStateDialogBody extends PureComponent {
   static propTypes = {
+    i18n: PropTypes.object.isRequired,
     states: PropTypes.arrayOf(statePropTypes).isRequired,
     stateName: PropTypes.string.isRequired,
     onSelect: PropTypes.func.isRequired
@@ -34,27 +35,29 @@ export default class DeleteStateDialogBody extends PureComponent {
   }, _ => this.props.onSelect({ index, alternative: this.state.alternativeState }))
 
   render() {
-    const { states, stateName } = this.props;
+    const { states, stateName, i18n } = this.props;
     const { alternativeState, selectedOptionIndex } = this.state;
     const otherStates = states.filter(({ name }) => stateName !== name);
 
     return (
       <div>
-        <p>{`State "${stateName}" is used in transitions. Options to proceed:`}</p>
+        <p>
+          {i18n.getMessage('fsmWorkflowEditor.states.confirmation.message.description', { stateName })}
+        </p>
         <FormGroup>
           <Radio
             name="radioGroup"
             checked={selectedOptionIndex === 0}
             onChange={this.handleSelectOption(0)}
           >
-            Delete this state and involved transitions
+            {i18n.getMessage('fsmWorkflowEditor.states.confirmation.message.delete')}
           </Radio>
           <Radio
             name="radioGroup"
             checked={selectedOptionIndex === 1}
             onChange={this.handleSelectOption(1)}
           >
-            {`Swap state "${stateName}" with a different one:`}
+            {i18n.getMessage('fsmWorkflowEditor.states.confirmation.message.swap', { stateName })}
             <FormControl
               componentClass="select"
               value={alternativeState}

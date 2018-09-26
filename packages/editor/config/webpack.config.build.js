@@ -4,6 +4,10 @@ const common = require('./webpack.config.common');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = merge(common, {
+  mode: 'production',
+  optimization: {
+    minimize: false
+  },
   entry: [
     '../src/index.js'
   ],

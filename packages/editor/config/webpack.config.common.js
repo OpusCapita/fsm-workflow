@@ -6,7 +6,7 @@ module.exports = {
   context: resolve(__dirname, '../src'),
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
-    new LodashModuleReplacementPlugin()
+    // new LodashModuleReplacementPlugin()
   ],
   module: {
     rules: [

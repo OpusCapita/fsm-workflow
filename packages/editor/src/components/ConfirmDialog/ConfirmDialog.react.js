@@ -13,20 +13,30 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     textConfirm: PropTypes.string,
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   static defaultProps = {
     textCancel: 'Cancel',
     textConfirm: 'Ok'
   }
 
-  state = {
-    show: false,
-    confirmHandler: null,
-    title: 'Confirmation',
-    message: 'You have made changes. Closing this editor will lose these changes.'
+  constructor(...args) {
+    super(...args);
+
+    const { i18n } = this.context;
+
+    this.state = {
+      show: false,
+      confirmHandler: null,
+      title: i18n.getMessage('fsmWorkflowEditor.common.confirmation.title'),
+      message: i18n.getMessage('fsmWorkflowEditor.common.confirmation.message')
+    }
   }
 
   componentDidMount = _ => {
-    this._mountNode = document.createElement('div');
+    this._mountNode = document.createElement('div'); // eslint-disable-line no-undef
     this.renderDialog();
   };
 
@@ -54,11 +64,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
   }
 
   createDialog = _ => {
-    const {
-      textConfirm,
-      textCancel
-    } = this.props;
-
+    const { textConfirm, textCancel } = this.props;
     const { show, title, message, BodyComponent } = this.state;
 
     return (

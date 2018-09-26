@@ -28,6 +28,10 @@ export default class StatesTable extends PureComponent {
     })
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   constructor(...args) {
     super(...args);
 
@@ -51,8 +55,8 @@ export default class StatesTable extends PureComponent {
   }
 
   handleDelete = name => {
+    const { i18n } = this.context;
     const { statesInTransitions } = this.props;
-
     const { states } = this.state;
 
     return this._triggerDialog({
@@ -64,6 +68,7 @@ export default class StatesTable extends PureComponent {
         statesInTransitions.indexOf(name) > -1 ? {
           BodyComponent: _ => (
             <DeleteStateDialogBody
+              i18n={i18n}
               states={states}
               stateName={name}
               onSelect={
@@ -101,6 +106,7 @@ export default class StatesTable extends PureComponent {
   }
 
   render() {
+    const { i18n } = this.context;
     const { stateConfig } = this.props;
     const { states, currentState, showModal } = this.state;
 
@@ -129,16 +135,20 @@ export default class StatesTable extends PureComponent {
         <Table className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th style={{ width: '60px' }} className='text-center'>Initial</th>
-              <th style={{ width: '60px' }} className='text-center'>Final</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.states.name.label')}</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.states.description.label')}</th>
+              <th style={{ width: '60px' }} className='text-center'>
+                {i18n.getMessage('fsmWorkflowEditor.states.initial.label')}
+              </th>
+              <th style={{ width: '60px' }} className='text-center'>
+                {i18n.getMessage('fsmWorkflowEditor.states.final.label')}
+              </th>
               <th className='text-right'>
                 <Button
                   bsSize='sm'
                   onClick={this.handleAdd}
                 >
-                  Add
+                  {i18n.getMessage('fsmWorkflowEditor.buttons.add.label')}
                 </Button>
               </th>
             </tr>
@@ -161,19 +171,15 @@ export default class StatesTable extends PureComponent {
                   </td>
                   <td className='text-right'>
                     <ButtonGroup bsStyle='sm'>
-                      <Button
-                        onClick={this.handleEdit(name)}
-                      >
+                      <Button onClick={this.handleEdit(name)}>
                         <Glyphicon glyph='edit'/>
                         {'\u2000'}
-                        Edit
+                        {i18n.getMessage('fsmWorkflowEditor.buttons.edit.label')}
                       </Button>
-                      <Button
-                        onClick={this.handleDelete(name)}
-                      >
+                      <Button onClick={this.handleDelete(name)}>
                         <Glyphicon glyph='trash'/>
                         {'\u2000'}
-                        Delete
+                        {i18n.getMessage('fsmWorkflowEditor.buttons.delete.label')}
                       </Button>
                     </ButtonGroup>
                   </td>

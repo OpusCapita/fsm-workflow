@@ -22,6 +22,10 @@ export default class StateEditor extends PureComponent {
     availableNames: PropTypes.arrayOf(PropTypes.string)
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   static defaultProps = {
     usedNames: []
   }
@@ -67,6 +71,7 @@ export default class StateEditor extends PureComponent {
   })
 
   render() {
+    const { i18n } = this.context;
     const { usedNames, availableNames } = this.props;
 
     const {
@@ -83,7 +88,7 @@ export default class StateEditor extends PureComponent {
 
     let nameInput = (
       <FormControl
-        placeholder='Enter state name'
+        placeholder={i18n.getMessage('fsmWorkflowEditor.states.name.placeholder')}
         type='text'
         value={name}
         onChange={this.handleChangeField('name')}
@@ -93,7 +98,7 @@ export default class StateEditor extends PureComponent {
     if (availableNames) {
       if (availableNames.every(name => usedNames.indexOf(name) > -1) && !name) {
         nameInput = (
-          <div>No available names left.</div>
+          <div>{i18n.getMessage('fsmWorkflowEditor.states.noAvailableNamesLeft')}</div>
         )
       } else {
         nameInput = (
@@ -110,9 +115,7 @@ export default class StateEditor extends PureComponent {
               availableNames.
                 filter(availableName => availableName === name || usedNames.indexOf(availableName) === -1).
                 sort().
-                map((name, i) => (
-                  <option value={name} key={i}>{name}</option>
-                ))
+                map((name, i) => (<option value={name} key={i}>{name}</option>))
             }
           </FormControl>
         )
@@ -137,16 +140,18 @@ export default class StateEditor extends PureComponent {
         </Modal.Header>
         <Modal.Body>
           <FormGroup controlId='stateName' style={{ marginBottom: 0 }}>
-            <ControlLabel>Name</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.states.name.label')}</ControlLabel>
             {
               nameInput
             }
-            <ErrorLabel {...(duplicateName && { error: `This state already exists` })}/>
+            <ErrorLabel
+              {...(duplicateName && { error: i18n.getMessage('fsmWorkflowEditor.errors.stateAlreadyExists') })}
+            />
           </FormGroup>
           <FormGroup controlId="stateDescription">
-            <ControlLabel>Description</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.states.description.label')}</ControlLabel>
             <FormControl
-              placeholder="Enter state description"
+              placeholder={i18n.getMessage('fsmWorkflowEditor.states.description.placeholder')}
               type='text'
               value={description}
               onChange={this.handleChangeField('description')}
@@ -156,13 +161,13 @@ export default class StateEditor extends PureComponent {
             checked={isInitial}
             onChange={this.handleToggleField('isInitial')}
           >
-            Initial
+            {i18n.getMessage('fsmWorkflowEditor.states.initial.label')}
           </Checkbox>
           <Checkbox
             checked={isFinal}
             onChange={this.handleToggleField('isFinal')}
           >
-            Final
+            {i18n.getMessage('fsmWorkflowEditor.states.final.label')}
           </Checkbox>
         </Modal.Body>
         <Modal.Footer>
@@ -171,9 +176,11 @@ export default class StateEditor extends PureComponent {
             onClick={this.handleSave}
             disabled={!name || duplicateName}
           >
-            Ok
+            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
           </Button>
-          <Button onClick={this.handleClose}>Close</Button>
+          <Button onClick={this.handleClose}>
+            {i18n.getMessage('fsmWorkflowEditor.buttons.cancel.label')}
+          </Button>
         </Modal.Footer>
       </Modal>
     )

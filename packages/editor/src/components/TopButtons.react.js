@@ -11,6 +11,10 @@ export default class TopButtons extends PureComponent {
     onSave: PropTypes.func.isRequired
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   handleDownload = _ => {
     const { schema } = this.props;
     const blob = new Blob( // eslint-disable-line no-undef
@@ -21,6 +25,7 @@ export default class TopButtons extends PureComponent {
   }
 
   render() {
+    const { i18n } = this.context;
     const { schema, onSave } = this.props;
 
     return (
@@ -33,13 +38,13 @@ export default class TopButtons extends PureComponent {
             onClick={onSave}
             bsStyle='primary'
           >
-            Save
+            {i18n.getMessage('fsmWorkflowEditor.buttons.save.label')}
           </Button>
           <Dropdown.Toggle bsStyle='primary'/>
           <Dropdown.Menu className='pull-right'>
             <MenuItem onClick={this.handleDownload}>
               <span className="btn-sm text-left">
-                Download
+                {i18n.getMessage('fsmWorkflowEditor.buttons.download.label')}
               </span>
             </MenuItem>
           </Dropdown.Menu>
