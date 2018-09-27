@@ -8,6 +8,10 @@ export default class ExpressionSwitcher extends PureComponent {
     onClick: PropTypes.func.isRequired
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   componentDidMount() {
     // adjust label width
     if (this.ref) {
@@ -20,9 +24,10 @@ export default class ExpressionSwitcher extends PureComponent {
 
   handleChange = this.props.onClick
 
-  handleRef = el => this.ref = el; // eslint-disable-line no-return-assign
+  handleRef = el => (this.ref = el);
 
   render() {
+    const { i18n } = this.context;
     const { label, expression } = this.props;
 
     return (
@@ -35,8 +40,8 @@ export default class ExpressionSwitcher extends PureComponent {
           >
             {
               expression ?
-                `Enter value` :
-                `Define expression`
+                i18n.getMessage('fsmWorkflowEditor.paramsEditor.enterValue') :
+                i18n.getMessage('fsmWorkflowEditor.paramsEditor.defineExpression')
             }
           </a>)
         </span>

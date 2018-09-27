@@ -33,6 +33,7 @@ export default class ActionInvocationEditor extends Component {
   }
 
   static contextTypes = {
+    i18n: PropTypes.object.isRequired,
     objectConfiguration: PropTypes.object.isRequired
   }
 
@@ -131,34 +132,18 @@ export default class ActionInvocationEditor extends Component {
   }
 
   handleInvoke = _ => {
-    const {
-      exampleObject,
-      name,
-      params
-    } = this.state;
+    const { exampleObject, name, params } = this.state;
 
     if (!name) {
       return;
     }
 
     const {
-      transition: {
-        from,
-        to,
-        event
-      }
+      transition: { from, to, event }
     } = this.props;
 
-    const commonArgs = {
-      object: JSON.parse(exampleObject),
-      from,
-      to,
-      event
-    }
-
-    this.setState({
-      invocationResults: invokeAction(name, params, commonArgs)
-    })
+    const commonArgs = { object: JSON.parse(exampleObject), from, to, event };
+    this.setState({ invocationResults: invokeAction(name, params, commonArgs) });
   }
 
   handleToggleAutoplay = _ => this.setState(prevState => ({
@@ -183,6 +168,7 @@ export default class ActionInvocationEditor extends Component {
   }))
 
   render() {
+    const { i18n } = this.context;
     const { actions, componentsRegistry } = this.props;
 
     const {
@@ -203,7 +189,7 @@ export default class ActionInvocationEditor extends Component {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            Action invocation
+            {i18n.getMessage('fsmWorkflowEditor.actions.editor.title')}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ paddingBottom: 0 }}>
@@ -213,7 +199,7 @@ export default class ActionInvocationEditor extends Component {
                 <th>
                   <div className="oc-fsm-crud-editor--modal-heading">
                     <div className="output-heading">
-                      <b>Choose action</b>
+                      <b>{i18n.getMessage('fsmWorkflowEditor.actions.editor.chooseAction')}</b>
                       <div className='right-block'>
                         <FormControl
                           componentClass="select"
@@ -331,9 +317,11 @@ export default class ActionInvocationEditor extends Component {
             onClick={this.handleSave}
             disabled={!actionName}
           >
-            Ok
+            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
           </Button>
-          <Button onClick={this.handleClose}>Close</Button>
+          <Button onClick={this.handleClose}>
+            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+          </Button>
         </Modal.Footer>
       </Modal>
     )

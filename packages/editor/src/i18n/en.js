@@ -27,6 +27,7 @@ const states = {
     label: 'Final'
   },
   noAvailableNamesLeft: 'No available names left.',
+  stateAlreadyExists: 'This state already exists',
   deleteDialog: {
     message: {
       description: 'State "{stateName}" is used in transitions. Options to proceed:',
@@ -110,12 +111,27 @@ const automatic = {
   title: 'Automatic guards for transition on "{event}" from "{from}" to "{to}"',
   alwaysAutomatic: 'Always automatic',
   emptyList: 'No automatic guards specified for this transition.',
-  addNewCallout: 'Add new!',
+  addNewCallout: 'Add new!'
 }
 
 const actions = {
   label: 'Actions',
-  title: 'Actions for transition on "{event}" from "{from}" to "{to}"'
+  title: 'Actions for transition on "{event}" from "{from}" to "{to}"',
+  deleteDialog: {
+    message: 'Do you really want to remove this action?'
+  },
+  name: {
+    label: 'Name'
+  },
+  parameters: {
+    label: 'Parameters'
+  },
+  emptyList: 'No actions specified for this transition.',
+  addNewCallout: 'Add new!',
+  editor: {
+    title: 'Action invocation',
+    chooseAction: 'Choose action'
+  }
 }
 
 const buttons = {
@@ -145,8 +161,31 @@ const buttons = {
   }
 }
 
-const errors = {
-  stateAlreadyExists: 'This state already exists'
+const paramsEditor = {
+  stringInput: {
+    placeholder: 'Enter value'
+  },
+  integerInput: {
+    inValid: 'Not a valid integer'
+  },
+  decimalInput: {
+    inValid: 'Not a valid number'
+  },
+  enterValue: 'Enter value',
+  defineExpression: 'Define expression',
+  expression: 'Expression',
+  selectProperty: 'Select property of {businessObject}'
+}
+
+const preview = {
+  title: 'Schema',
+  description: 'This is a temporary solution for FSM visualization.',
+  meta: {
+    regular: 'regular state nodes',
+    initial: 'initial state nodes',
+    final: 'final state nodes'
+  },
+  nothingToVisualize: 'Nothing to visualize'
 }
 
 export default {
@@ -158,6 +197,7 @@ export default {
     guards,
     automatic,
     actions,
-    errors
+    paramsEditor,
+    preview
   }
 }

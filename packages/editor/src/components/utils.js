@@ -15,7 +15,14 @@ export const unifyPath = path => path.split('.').slice(1).map(s => `[${JSON.stri
 
 export const formatArg = ({ i18n, schema = {}, value, expression }) => {
   if (expression) {
-    return (<span><span className="badge badge-secondary">Expression</span>{`\u2000${value}`}</span>)
+    return (
+      <span>
+        <span className="badge badge-secondary">
+          {i18n.getMessage('fsmWorkflowEditor.paramsEditor.expression')}
+        </span>
+        {`\u2000${value}`}
+      </span>
+    )
   }
 
   const { type, format } = schema;

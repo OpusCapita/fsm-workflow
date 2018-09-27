@@ -145,7 +145,7 @@ export default class StateEditor extends PureComponent {
               nameInput
             }
             <ErrorLabel
-              {...(duplicateName && { error: i18n.getMessage('fsmWorkflowEditor.errors.stateAlreadyExists') })}
+              {...(duplicateName && { error: i18n.getMessage('fsmWorkflowEditor.states.stateAlreadyExists') })}
             />
           </FormGroup>
           <FormGroup controlId="stateDescription">

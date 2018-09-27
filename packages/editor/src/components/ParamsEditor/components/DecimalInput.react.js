@@ -27,7 +27,7 @@ export default class DecimalInput extends PureComponent {
       // chop long tail after decimal separator
       this.props.onChange(i18n.parseDecimalNumber(i18n.formatDecimalNumber(result || null) || null))
     } catch (err) {
-      error = 'Not a valid number'
+      error = i18n.getMessage('fsmWorkflowEditor.paramsEditor.decimalInput.inValid')
     } finally {
       this.setState({ value, error })
     }
@@ -44,7 +44,7 @@ export default class DecimalInput extends PureComponent {
       })
     } catch (err) {
       this.setState({
-        error: 'Not a valid number'
+        error: i18n.getMessage('fsmWorkflowEditor.paramsEditor.decimalInput.inValid')
       })
     }
   }

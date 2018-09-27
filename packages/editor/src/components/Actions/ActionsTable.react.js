@@ -60,7 +60,7 @@ export default class ActionsTable extends PureComponent {
 
   handleDelete = index => this._triggerDialog({
     confirmHandler: _ => this.onDelete(index),
-    message: `Do you really want to remove this action?`
+    message: this.context.i18n.getMessage('fsmWorkflowEditor.actions.deleteDialog.message')
   })
 
   handleSave = _ => this.props.onSave(this.state.transitionActions)
@@ -125,14 +125,14 @@ export default class ActionsTable extends PureComponent {
             <Table className="oc-fsm-crud-editor--table-actions">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Parameters</th>
+                  <th>{i18n.getMessage('fsmWorkflowEditor.actions.name.label')}</th>
+                  <th>{i18n.getMessage('fsmWorkflowEditor.actions.parameters.label')}</th>
                   <th className='text-right'>
                     <Button
                       bsSize='sm'
                       onClick={this.handleOpenEditor()}
                     >
-                      Add
+                      {i18n.getMessage('fsmWorkflowEditor.buttons.add.label')}
                     </Button>
                   </th>
                 </tr>
@@ -183,14 +183,14 @@ export default class ActionsTable extends PureComponent {
                             >
                               <Glyphicon glyph='edit' />
                               {'\u2000'}
-                              Edit
+                              {i18n.getMessage('fsmWorkflowEditor.buttons.edit.label')}
                             </Button>
                             <Button
                               onClick={this.handleDelete(index)}
                             >
                               <Glyphicon glyph='trash' />
                               {'\u2000'}
-                              Delete
+                              {i18n.getMessage('fsmWorkflowEditor.buttons.delete.label')}
                             </Button>
                           </ButtonGroup>
                         </td>
@@ -198,13 +198,14 @@ export default class ActionsTable extends PureComponent {
                     )) :
                     <tr>
                       <td colSpan={3} style={{ textAlign: 'center' }}>
-                        No actions specified for this transition. Go ahead and{`\u00A0`}
+                        {i18n.getMessage('fsmWorkflowEditor.actions.emptyList')}
+                        {`\u00A0`}
                         <a
                           onClick={this.handleOpenEditor()}
                           style={{ cursor: 'pointer', fontWeight: 'bold' }}
                         >
-                          add new
-                        </a>!
+                          {i18n.getMessage('fsmWorkflowEditor.actions.addNewCallout')}
+                        </a>
                       </td>
                     </tr>
                 }
@@ -219,9 +220,11 @@ export default class ActionsTable extends PureComponent {
             bsStyle="primary"
             onClick={this.handleSave}
           >
-            Ok
+            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
           </Button>
-          <Button onClick={this.handleClose}>Close</Button>
+          <Button onClick={this.handleClose}>
+            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+          </Button>
         </Modal.Footer>
       </Modal>
     )
