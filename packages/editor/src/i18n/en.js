@@ -190,14 +190,16 @@ const preview = {
 
 export default {
   fsmWorkflowEditor: {
-    common,
-    buttons,
-    states,
-    transitions,
-    guards,
-    automatic,
-    actions,
-    paramsEditor,
-    preview
+    ui: {
+      common,
+      buttons,
+      states,
+      transitions,
+      guards,
+      automatic,
+      actions,
+      paramsEditor,
+      preview
+    }
   }
 }

@@ -38,13 +38,13 @@ export default class TopButtons extends PureComponent {
             onClick={onSave}
             bsStyle='primary'
           >
-            {i18n.getMessage('fsmWorkflowEditor.buttons.save.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.save.label')}
           </Button>
           <Dropdown.Toggle bsStyle='primary'/>
           <Dropdown.Menu className='pull-right'>
             <MenuItem onClick={this.handleDownload}>
               <span className="btn-sm text-left">
-                {i18n.getMessage('fsmWorkflowEditor.buttons.download.label')}
+                {i18n.getMessage('fsmWorkflowEditor.ui.buttons.download.label')}
               </span>
             </MenuItem>
           </Dropdown.Menu>

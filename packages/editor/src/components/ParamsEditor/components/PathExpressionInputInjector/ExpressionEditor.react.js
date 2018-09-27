@@ -42,7 +42,7 @@ export default class ExpressionEditor extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            {i18n.getMessage('fsmWorkflowEditor.paramsEditor.selectProperty', { businessObject: alias })}
+            {i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.selectProperty', { businessObject: alias })}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -56,7 +56,7 @@ export default class ExpressionEditor extends PureComponent {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.onClose}>
-            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}
           </Button>
         </Modal.Footer>
       </Modal>

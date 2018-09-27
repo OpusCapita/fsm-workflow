@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Viz from 'viz.js';
 import isEqual from 'lodash/isEqual';
 import './WorkflowGraph.less';
+import { getLabel } from '../utils';
 
 export default class WorkflowGraph extends Component {
   static propTypes = {
-    schema: PropTypes.object,
-    getStateLabel: PropTypes.func.isRequired
+    schema: PropTypes.object
   }
 
   static contextTypes = {
@@ -32,11 +32,11 @@ export default class WorkflowGraph extends Component {
     }
   }
 
-  convertSchemaToDotLang(schema) {
+  convertSchemaToDotLang = schema => {
+    const { i18n } = this.context;
     // DOT language used by graphviz: https://graphviz.gitlab.io/_pages/doc/info/lang.html
     const { transitions = [], initialState, finalStates = [] } = schema;
-
-    const { getStateLabel } = this.props;
+    const getStateLabel = getLabel(i18n)('states');
 
     let src = '';
     src += `digraph finite_state_machine {\n`;
@@ -72,7 +72,7 @@ export default class WorkflowGraph extends Component {
       return (
         <div className="oc-fsm-crud-editor--workflow-graph">
           <h4>
-            {i18n.getMessage('fsmWorkflowEditor.preview.nothingToVisualize')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.preview.nothingToVisualize')}
           </h4>
         </div>
       );
@@ -96,7 +96,7 @@ export default class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--regular-state
               `}
             ></div>
-            <div>— {i18n.getMessage('fsmWorkflowEditor.preview.meta.regular')}</div>
+            <div>— {i18n.getMessage('fsmWorkflowEditor.ui.preview.meta.regular')}</div>
           </div>
           <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
             <div
@@ -105,7 +105,7 @@ export default class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--initial-state
               `}
             ></div>
-            <div>— {i18n.getMessage('fsmWorkflowEditor.preview.meta.regular')}</div>
+            <div>— {i18n.getMessage('fsmWorkflowEditor.ui.preview.meta.regular')}</div>
           </div>
           <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
             <div
@@ -114,7 +114,7 @@ export default class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--final-state
               `}
             ></div>
-            <div>— {i18n.getMessage('fsmWorkflowEditor.preview.meta.regular')}</div>
+            <div>— {i18n.getMessage('fsmWorkflowEditor.ui.preview.meta.regular')}</div>
           </div>
 
         </div>

@@ -4,7 +4,7 @@ import statePropTypes from './statePropTypes';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import Radio from 'react-bootstrap/lib/Radio';
 import FormControl from 'react-bootstrap/lib/FormControl';
-import { formatLabel } from '../utils';
+import { getLabel } from '../utils';
 
 // TODO maybe optimize communication between components to make it less coupled
 export default class DeleteStateDialogBody extends PureComponent {
@@ -38,11 +38,15 @@ export default class DeleteStateDialogBody extends PureComponent {
     const { states, stateName, i18n } = this.props;
     const { alternativeState, selectedOptionIndex } = this.state;
     const otherStates = states.filter(({ name }) => stateName !== name);
+    const getStateName = getLabel(i18n)('states');
 
     return (
       <div>
         <p>
-          {i18n.getMessage('fsmWorkflowEditor.states.deleteDialog.message.description', { stateName })}
+          {i18n.getMessage(
+            'fsmWorkflowEditor.ui.states.deleteDialog.message.description',
+            { stateName: getStateName(stateName) }
+          )}
         </p>
         <FormGroup>
           <Radio
@@ -50,14 +54,17 @@ export default class DeleteStateDialogBody extends PureComponent {
             checked={selectedOptionIndex === 0}
             onChange={this.handleSelectOption(0)}
           >
-            {i18n.getMessage('fsmWorkflowEditor.states.deleteDialog.message.delete')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.states.deleteDialog.message.delete')}
           </Radio>
           <Radio
             name="radioGroup"
             checked={selectedOptionIndex === 1}
             onChange={this.handleSelectOption(1)}
           >
-            {i18n.getMessage('fsmWorkflowEditor.states.deleteDialog.message.swap', { stateName })}
+            {i18n.getMessage(
+              'fsmWorkflowEditor.ui.states.deleteDialog.message.swap',
+              { stateName: getStateName(stateName) }
+            )}
             <FormControl
               componentClass="select"
               value={alternativeState}
@@ -65,8 +72,8 @@ export default class DeleteStateDialogBody extends PureComponent {
               onFocus={this.handleSelectOption(1)}
             >
               {
-                otherStates.map(({ name, description }, i) => (
-                  <option value={name} key={`${name}-${i}`}>{description || formatLabel(name)}</option>
+                otherStates.map(({ name }, i) => (
+                  <option value={name} key={`${name}-${i}`}>{getStateName(name)}</option>
                 ))
               }
             </FormControl>

@@ -11,6 +11,7 @@ import FormGroup from 'react-bootstrap/lib/FormGroup';
 import statePropTypes from './statePropTypes';
 import withConfirmDialog from '../ConfirmDialog';
 import ErrorLabel from '../ErrorLabel.react';
+import { getLabel } from '../utils';
 
 @withConfirmDialog
 export default class StateEditor extends PureComponent {
@@ -88,7 +89,7 @@ export default class StateEditor extends PureComponent {
 
     let nameInput = (
       <FormControl
-        placeholder={i18n.getMessage('fsmWorkflowEditor.states.name.placeholder')}
+        placeholder={i18n.getMessage('fsmWorkflowEditor.ui.states.name.placeholder')}
         type='text'
         value={name}
         onChange={this.handleChangeField('name')}
@@ -98,7 +99,7 @@ export default class StateEditor extends PureComponent {
     if (availableNames) {
       if (availableNames.every(name => usedNames.indexOf(name) > -1) && !name) {
         nameInput = (
-          <div>{i18n.getMessage('fsmWorkflowEditor.states.noAvailableNamesLeft')}</div>
+          <div>{i18n.getMessage('fsmWorkflowEditor.ui.states.noAvailableNamesLeft')}</div>
         )
       } else {
         nameInput = (
@@ -115,13 +116,14 @@ export default class StateEditor extends PureComponent {
               availableNames.
                 filter(availableName => availableName === name || usedNames.indexOf(availableName) === -1).
                 sort().
-                map((name, i) => (<option value={name} key={i}>{name}</option>))
+                map((name, i) => (<option value={name} key={i}>{getLabel(i18n)('states')(name)}</option>))
             }
           </FormControl>
         )
       }
     }
 
+    // TODO translate title
     return (
       <Modal
         show={true}
@@ -140,18 +142,18 @@ export default class StateEditor extends PureComponent {
         </Modal.Header>
         <Modal.Body>
           <FormGroup controlId='stateName' style={{ marginBottom: 0 }}>
-            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.states.name.label')}</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.ui.states.name.label')}</ControlLabel>
             {
               nameInput
             }
             <ErrorLabel
-              {...(duplicateName && { error: i18n.getMessage('fsmWorkflowEditor.states.stateAlreadyExists') })}
+              {...(duplicateName && { error: i18n.getMessage('fsmWorkflowEditor.ui.states.stateAlreadyExists') })}
             />
           </FormGroup>
           <FormGroup controlId="stateDescription">
-            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.states.description.label')}</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.ui.states.description.label')}</ControlLabel>
             <FormControl
-              placeholder={i18n.getMessage('fsmWorkflowEditor.states.description.placeholder')}
+              placeholder={i18n.getMessage('fsmWorkflowEditor.ui.states.description.placeholder')}
               type='text'
               value={description}
               onChange={this.handleChangeField('description')}
@@ -161,13 +163,13 @@ export default class StateEditor extends PureComponent {
             checked={isInitial}
             onChange={this.handleToggleField('isInitial')}
           >
-            {i18n.getMessage('fsmWorkflowEditor.states.initial.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.states.initial.label')}
           </Checkbox>
           <Checkbox
             checked={isFinal}
             onChange={this.handleToggleField('isFinal')}
           >
-            {i18n.getMessage('fsmWorkflowEditor.states.final.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.states.final.label')}
           </Checkbox>
         </Modal.Body>
         <Modal.Footer>
@@ -176,10 +178,10 @@ export default class StateEditor extends PureComponent {
             onClick={this.handleSave}
             disabled={!name || duplicateName}
           >
-            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
           </Button>
           <Button onClick={this.handleClose}>
-            {i18n.getMessage('fsmWorkflowEditor.buttons.cancel.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.cancel.label')}
           </Button>
         </Modal.Footer>
       </Modal>

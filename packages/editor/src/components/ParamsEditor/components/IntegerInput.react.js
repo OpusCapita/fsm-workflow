@@ -26,7 +26,7 @@ export default class IntegerInput extends PureComponent {
       const result = i18n.parseNumber(value || null);
       this.props.onChange(result)
     } catch (err) {
-      error = i18n.getMessage('fsmWorkflowEditor.paramsEditor.integerInput.inValid')
+      error = i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.integerInput.inValid')
     } finally {
       this.setState({ value, error })
     }
@@ -43,7 +43,7 @@ export default class IntegerInput extends PureComponent {
       })
     } catch (err) {
       this.setState({
-        error: i18n.getMessage('fsmWorkflowEditor.paramsEditor.integerInput.inValid')
+        error: i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.integerInput.inValid')
       })
     }
   }

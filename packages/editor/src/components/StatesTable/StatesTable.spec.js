@@ -31,11 +31,11 @@ describe('<StatesTable />', () => {
 
     const header = wrapper.find('thead tr').at(0).find('th');
     expect(header.length).to.equal(5);
-    expect(header.at(0).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.states.name.label'));
-    expect(header.at(1).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.states.description.label'));
-    expect(header.at(2).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.states.initial.label'));
-    expect(header.at(3).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.states.final.label'));
-    expect(header.at(4).find('button').text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.buttons.add.label'));
+    expect(header.at(0).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.states.name.label'));
+    expect(header.at(1).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.states.description.label'));
+    expect(header.at(2).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.states.initial.label'));
+    expect(header.at(3).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.states.final.label'));
+    expect(header.at(4).find('button').text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label'));
 
     expect(wrapper.find('tbody tr')).to.have.length(props.states.length);
 
@@ -44,17 +44,17 @@ describe('<StatesTable />', () => {
     expect(firstRow.at(2).childAt(0).exists()).to.be.true; // eslint-disable-line no-unused-expressions
     expect(firstRow.at(3).childAt(0).exists()).to.be.false; // eslint-disable-line no-unused-expressions
     expect(firstRow.at(4).find('button').at(0).text().trim()).
-      to.equal(i18n.getMessage('fsmWorkflowEditor.buttons.edit.label'));
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label'));
     expect(firstRow.at(4).find('button').at(1).text().trim()).
-      to.equal(i18n.getMessage('fsmWorkflowEditor.buttons.delete.label'));
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label'));
 
     const secondRow = wrapper.find('tbody tr').at(1).find('td');
     expect(secondRow.at(0).text()).to.equal(props.states[1].name);
     expect(secondRow.at(2).childAt(0).exists()).to.be.false; // eslint-disable-line no-unused-expressions
     expect(secondRow.at(3).childAt(0).exists()).to.be.true; // eslint-disable-line no-unused-expressions
     expect(secondRow.at(4).find('button').at(0).text().trim()).
-      to.equal(i18n.getMessage('fsmWorkflowEditor.buttons.edit.label'));
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label'));
     expect(secondRow.at(4).find('button').at(1).text().trim()).
-      to.equal(i18n.getMessage('fsmWorkflowEditor.buttons.delete.label'));
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label'));
   });
 });

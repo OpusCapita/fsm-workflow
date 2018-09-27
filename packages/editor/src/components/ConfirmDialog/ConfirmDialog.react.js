@@ -23,8 +23,8 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     const { i18n } = this.context;
 
     this.defaultState = {
-      title: i18n.getMessage('fsmWorkflowEditor.common.confirmation.title'),
-      message: i18n.getMessage('fsmWorkflowEditor.common.confirmation.message')
+      title: i18n.getMessage('fsmWorkflowEditor.ui.common.confirmation.title'),
+      message: i18n.getMessage('fsmWorkflowEditor.ui.common.confirmation.message')
     }
 
     this.state = {
@@ -85,12 +85,12 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
               onClick={this.handleConfirm}
               bsStyle="primary"
             >
-              {textConfirm || i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
+              {textConfirm || i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
             </Button>
             <Button
               onClick={this.handleClose}
             >
-              {textCancel || i18n.getMessage('fsmWorkflowEditor.buttons.cancel.label')}
+              {textCancel || i18n.getMessage('fsmWorkflowEditor.ui.buttons.cancel.label')}
             </Button>
           </div>
         </Modal.Footer>

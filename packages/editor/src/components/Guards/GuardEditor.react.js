@@ -20,7 +20,7 @@ import CodeEditor from '../CodeEditor';
 import ErrorLabel from '../ErrorLabel.react';
 import ObjectInspector from '../ObjectInspector.react';
 import ParamsEditor from '../ParamsEditor';
-import { formatLabel, isDef, unifyPath, omitIfEmpty } from '../utils';
+import { getLabel, isDef, unifyPath, omitIfEmpty } from '../utils';
 
 @withConfirmDialog
 export default class GuardEditor extends PureComponent {
@@ -147,7 +147,7 @@ export default class GuardEditor extends PureComponent {
       return typeof result === 'boolean' ?
         String(result) :
         new Error(i18n.getMessage(
-          'fsmWorkflowEditor.guards.editor.wrongResultType',
+          'fsmWorkflowEditor.ui.guards.editor.wrongResultType',
           { value: result, type: typeof result }
         ));
     } catch (err) {
@@ -297,8 +297,8 @@ export default class GuardEditor extends PureComponent {
           <Modal.Title>
             {
               initialGuard ?
-                i18n.getMessage('fsmWorkflowEditor.guards.editor.title.edit') :
-                i18n.getMessage('fsmWorkflowEditor.guards.editor.title.add')
+                i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.title.edit') :
+                i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.title.add')
             }
           </Modal.Title>
         </Modal.Header>
@@ -313,7 +313,7 @@ export default class GuardEditor extends PureComponent {
           >
             <Tab
               eventKey={1}
-              title={(<h4>{i18n.getMessage('fsmWorkflowEditor.guards.editor.predefinedFunction.label')}</h4>)}
+              title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.predefinedFunction.label')}</h4>)}
             >
               <Table className="oc-fsm-crud-editor--table-actions">
                 <thead>
@@ -322,7 +322,7 @@ export default class GuardEditor extends PureComponent {
                       <div className="oc-fsm-crud-editor--modal-heading">
                         <div className="output-heading">
                           <b>
-                            {i18n.getMessage('fsmWorkflowEditor.guards.editor.predefinedFunction.chooseCondition')}
+                            {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.predefinedFunction.chooseCondition')}
                           </b>
                           <div className='right-block'>
                             {
@@ -337,7 +337,7 @@ export default class GuardEditor extends PureComponent {
                                   />
                                   <label className="form-check-label" htmlFor="negate-check">
                                     {`\u2000`}
-                                    {i18n.getMessage('fsmWorkflowEditor.guards.editor.predefinedFunction.negate')}
+                                    {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.predefinedFunction.negate')}
                                   </label>
                                 </div>
                               )
@@ -351,7 +351,9 @@ export default class GuardEditor extends PureComponent {
                                 <option value=""></option>
                                 {
                                   Object.keys(conditions).map((name, i) => (
-                                    <option key={`${i}-${name}`} value={name}>{formatLabel(name)}</option>
+                                    <option key={`${i}-${name}`} value={name}>
+                                      {getLabel(i18n)('conditions')(name)}
+                                    </option>
                                   ))
                                 }
                               </FormControl>
@@ -377,6 +379,7 @@ export default class GuardEditor extends PureComponent {
                             }
                             onChangeParam={this.handleChangeParam}
                             componentsRegistry={componentsRegistry}
+                            getLabel={getLabel(i18n)(`conditions.${guard.name}.params`)}
                           />
                         )
                       }
@@ -385,7 +388,10 @@ export default class GuardEditor extends PureComponent {
                 </tbody>
               </Table>
             </Tab>
-            <Tab eventKey={2} title={(<h4>{i18n.getMessage('fsmWorkflowEditor.guards.editor.expression.label')}</h4>)}>
+            <Tab
+              eventKey={2}
+              title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.label')}</h4>)}
+            >
               <Row>
                 <Col sm={8}>
                   <Row>
@@ -398,7 +404,7 @@ export default class GuardEditor extends PureComponent {
                             mode: "javascript",
                             lineNumbers: true,
                             theme: "eclipse",
-                            placeholder: i18n.getMessage('fsmWorkflowEditor.guards.editor.expression.placeholder')
+                            placeholder: i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.placeholder')
                           }}
                           onChange={this.handleChangeExpression}
                           onCursorActivity={this.handleCursorActivity}
@@ -423,7 +429,7 @@ export default class GuardEditor extends PureComponent {
                     <Col style={{ margin: '0 10px 0' }}>
                       <div className="oc-fsm-crud-editor--modal-heading">
                         <div className="output-heading">
-                          <b>{i18n.getMessage('fsmWorkflowEditor.guards.editor.expression.results')}</b>
+                          <b>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.results')}</b>
                           <div className='right-block'>
                             <div>
                               <Glyphicon
@@ -438,7 +444,7 @@ export default class GuardEditor extends PureComponent {
                               onChange={this.handleToggleAutoplay}
                               checked={!!autoplay}
                             >
-                              {i18n.getMessage('fsmWorkflowEditor.guards.editor.expression.autoplay')}
+                              {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.autoplay')}
                             </Checkbox>
                           </div>
                         </div>
@@ -457,7 +463,7 @@ export default class GuardEditor extends PureComponent {
                 </Col>
                 <Col sm={4} >
                   <div className="oc-fsm-crud-editor--modal-heading with-padding">
-                    <b>{i18n.getMessage('fsmWorkflowEditor.guards.editor.expression.exampleObject.label')}</b>
+                    <b>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.exampleObject.label')}</b>
                   </div>
                   <div>
                     <ObjectInspector
@@ -467,7 +473,7 @@ export default class GuardEditor extends PureComponent {
                     />
                   </div>
                   <HelpBlock>
-                    {i18n.getMessage('fsmWorkflowEditor.guards.editor.expression.exampleObject.hint')}
+                    {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.exampleObject.hint')}
                   </HelpBlock>
                 </Col>
               </Row>
@@ -484,10 +490,10 @@ export default class GuardEditor extends PureComponent {
               activeTab === 2 && !guard.expression
             }
           >
-            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
           </Button>
           <Button onClick={this.handleClose}>
-            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}
           </Button>
         </Modal.Footer>
       </Modal>

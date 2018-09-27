@@ -11,12 +11,12 @@ export default function TopForm({ name, onNameChange }, { i18n }) {
     <Form horizontal={true}>
       <FormGroup controlId="fsmName">
         <Col componentClass={ControlLabel} sm={1}>
-          {i18n.getMessage('fsmWorkflowEditor.common.workflowName.label')}
+          {i18n.getMessage('fsmWorkflowEditor.ui.common.workflowName.label')}
         </Col>
         <Col sm={11}>
           <FormControl
             type="text"
-            placeholder={i18n.getMessage('fsmWorkflowEditor.common.workflowName.placeholder')}
+            placeholder={i18n.getMessage('fsmWorkflowEditor.ui.common.workflowName.placeholder')}
             value={name}
             onChange={onNameChange}
           />

@@ -6,8 +6,6 @@ import Col from 'react-bootstrap/lib/Col';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 import isEqual from 'lodash/isEqual';
-import find from 'lodash/find';
-import startCase from 'lodash/startCase';
 import TopButtons from '../TopButtons.react';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
@@ -19,10 +17,7 @@ import statePropTypes from '../StatesTable/statePropTypes';
 import guardPropTypes from '../Guards/guardPropTypes';
 import actionPropTypes from '../Actions/actionPropTypes';
 // TODO maybe move the following flags somewhere or get rid of them entirely
-import {
-  DELETE_STATE_TRANSITIONS,
-  SWAP_STATE_IN_TRANSITIONS
-} from '../StatesTable/StatesTable.react';
+import { DELETE_STATE_TRANSITIONS, SWAP_STATE_IN_TRANSITIONS } from '../StatesTable/StatesTable.react';
 import translations from '../../i18n';
 
 export default class WorkflowEditor extends PureComponent {
@@ -258,10 +253,6 @@ export default class WorkflowEditor extends PureComponent {
     })
   )
 
-  getStateLabel = name => (({ name, description } = {}) => description || startCase(name || ''))(
-    find(this.state.schema.states || [], ({ name: stateName }) => name === stateName)
-  )
-
   render() {
     const { i18n } = this.context;
     const { title, workflow: { actions = {}, conditions = {} }, schemaConfig } = this.props;
@@ -272,7 +263,7 @@ export default class WorkflowEditor extends PureComponent {
         <Row>
           <Col sm={12}>
             <h1 className='oc-fsm-crud-editor--title'>
-              {`${i18n.getMessage('fsmWorkflowEditor.common.editorTitle')}${title ? `:\u00A0${title}` : ''}`}
+              {`${i18n.getMessage('fsmWorkflowEditor.ui.common.editorTitle')}${title ? `:\u00A0${title}` : ''}`}
               <TopButtons schema={schema} onSave={this.handleSave}/>
             </h1>
 
@@ -287,7 +278,7 @@ export default class WorkflowEditor extends PureComponent {
               mountOnEnter={true}
               unmountOnExit={true}
             >
-              <Tab eventKey={1} title={(<h4>{i18n.getMessage('fsmWorkflowEditor.states.label')}</h4>)}>
+              <Tab eventKey={1} title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.states.label')}</h4>)}>
                 <StatesTable
                   states={schema.states || []}
                   statesInTransitions={
@@ -307,13 +298,12 @@ export default class WorkflowEditor extends PureComponent {
                   stateConfig={(schemaConfig || {}).state}
                 />
               </Tab>
-              <Tab eventKey={2} title={(<h4>{i18n.getMessage('fsmWorkflowEditor.transitions.label')}</h4>)}>
+              <Tab eventKey={2} title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.label')}</h4>)}>
                 <TransitionsTable
                   transitions={schema.transitions || []}
                   states={(schema.states || []).map(({ name }) => name)}
                   actions={actions}
                   conditions={conditions}
-                  getStateLabel={this.getStateLabel}
                   onEditTransition={this.handleEditTransition}
                   onDeleteTransition={this.handleDeleteTransition}
                   onSaveGuards={this.handleSaveTransitionGuards}
@@ -326,7 +316,6 @@ export default class WorkflowEditor extends PureComponent {
 
             <EditorOutput
               schema={schema}
-              getStateLabel={this.getStateLabel}
               createJsonOutput={this.createJsonOutput}
             />
           </Col>

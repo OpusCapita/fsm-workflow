@@ -5,7 +5,7 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 export default function StringInput({ value, onChange, ...props }, { i18n }) {
   return (
     <FormControl
-      placeholder={i18n.getMessage('fsmWorkflowEditor.paramsEditor.stringInput.placeholder')}
+      placeholder={i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.stringInput.placeholder')}
       type='text'
       {...props}
       value={value || ''}

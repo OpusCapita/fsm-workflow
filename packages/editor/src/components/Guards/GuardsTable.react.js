@@ -7,7 +7,7 @@ import Table from 'react-bootstrap/lib/Table';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import withConfirmDialog from '../ConfirmDialog';
-import { isDef, formatArg, formatLabel } from '../utils';
+import { isDef, formatArg, getLabel } from '../utils';
 import { removeEmptyParams } from './utils';
 import guardPropTypes from './guardPropTypes';
 import GuardEditor from './GuardEditor.react';
@@ -53,7 +53,7 @@ export default class GuardsTable extends PureComponent {
 
   handleDelete = index => this._triggerDialog({
     confirmHandler: _ => this.onDelete(index),
-    message: this.context.i18n.getMessage('fsmWorkflowEditor.guards.deleteDialog.message')
+    message: this.context.i18n.getMessage('fsmWorkflowEditor.ui.guards.deleteDialog.message')
   })
 
   handleSave = _ => this.props.onSave(this.state.guards)
@@ -126,15 +126,15 @@ export default class GuardsTable extends PureComponent {
             <Table className="oc-fsm-crud-editor--table-actions">
               <thead>
                 <tr>
-                  <th>{i18n.getMessage('fsmWorkflowEditor.guards.name.label')}</th>
-                  <th>{i18n.getMessage('fsmWorkflowEditor.guards.parameters.label')}</th>
-                  <th style={{ width: '60px' }}>{i18n.getMessage('fsmWorkflowEditor.guards.negate.label')}</th>
+                  <th>{i18n.getMessage('fsmWorkflowEditor.ui.guards.name.label')}</th>
+                  <th>{i18n.getMessage('fsmWorkflowEditor.ui.guards.parameters.label')}</th>
+                  <th style={{ width: '60px' }}>{i18n.getMessage('fsmWorkflowEditor.ui.guards.negate.label')}</th>
                   <th className='text-right'>
                     <Button
                       bsSize='sm'
                       onClick={this.handleOpenEditor()}
                     >
-                      {i18n.getMessage('fsmWorkflowEditor.buttons.add.label')}
+                      {i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label')}
                     </Button>
                   </th>
                 </tr>
@@ -147,8 +147,8 @@ export default class GuardsTable extends PureComponent {
                         <td style={{ paddingTop: '15px' }}>
                           {
                             guardName ?
-                              formatLabel(guardName) :
-                              i18n.getMessage('fsmWorkflowEditor.guards.expressionTypeName')
+                              getLabel(i18n)('conditions')(guardName) :
+                              i18n.getMessage('fsmWorkflowEditor.ui.guards.expressionTypeName')
                           }
                         </td>
                         <td>
@@ -161,7 +161,7 @@ export default class GuardsTable extends PureComponent {
                                       params.map(({ name, value, expression }, i) => {
                                         return (
                                           <tr key={`${i}-${name}`}>
-                                            <td>{formatLabel(name)}</td>
+                                            <td>{getLabel(i18n)(`conditions.${guardName}.params`)(name)}</td>
                                             <td className="parameter-value">
                                               {
                                                 formatArg({
@@ -196,12 +196,12 @@ export default class GuardsTable extends PureComponent {
                             <Button onClick={this.handleOpenEditor(index)}>
                               <Glyphicon glyph='edit' />
                               {'\u2000'}
-                              {i18n.getMessage('fsmWorkflowEditor.buttons.edit.label')}
+                              {i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label')}
                             </Button>
                             <Button onClick={this.handleDelete(index)}>
                               <Glyphicon glyph='trash' />
                               {'\u2000'}
-                              {i18n.getMessage('fsmWorkflowEditor.buttons.delete.label')}
+                              {i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label')}
                             </Button>
                           </ButtonGroup>
                         </td>
@@ -209,13 +209,13 @@ export default class GuardsTable extends PureComponent {
                     )) :
                     <tr>
                       <td colSpan={4} style={{ textAlign: 'center' }}>
-                        {i18n.getMessage('fsmWorkflowEditor.guards.emptyList')}
+                        {i18n.getMessage('fsmWorkflowEditor.ui.guards.emptyList')}
                         {`\u00A0`}
                         <a
                           onClick={this.handleOpenEditor()}
                           style={{ cursor: 'pointer', fontWeight: 'bold' }}
                         >
-                          {i18n.getMessage('fsmWorkflowEditor.guards.addNewCallout')}
+                          {i18n.getMessage('fsmWorkflowEditor.ui.guards.addNewCallout')}
                         </a>
                       </td>
                     </tr>
@@ -231,10 +231,10 @@ export default class GuardsTable extends PureComponent {
             bsStyle="primary"
             onClick={this.handleSave}
           >
-            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
           </Button>
           <Button onClick={this.handleClose}>
-            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}
           </Button>
         </Modal.Footer>
       </Modal>

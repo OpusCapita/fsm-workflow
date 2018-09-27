@@ -11,7 +11,7 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import withConfirmDialog from '../ConfirmDialog';
 // import CodeEditor from '../CodeEditor';
 import { invokeAction, getParamSchema } from './utils';
-import { isDef, formatLabel, omitIfEmpty } from '../utils';
+import { isDef, omitIfEmpty, getLabel } from '../utils';
 import './ActionInvocationEditor.less';
 import ParamsEditor from '../ParamsEditor';
 
@@ -189,7 +189,7 @@ export default class ActionInvocationEditor extends Component {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            {i18n.getMessage('fsmWorkflowEditor.actions.editor.title')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.actions.editor.title')}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ paddingBottom: 0 }}>
@@ -199,7 +199,7 @@ export default class ActionInvocationEditor extends Component {
                 <th>
                   <div className="oc-fsm-crud-editor--modal-heading">
                     <div className="output-heading">
-                      <b>{i18n.getMessage('fsmWorkflowEditor.actions.editor.chooseAction')}</b>
+                      <b>{i18n.getMessage('fsmWorkflowEditor.ui.actions.editor.chooseAction')}</b>
                       <div className='right-block'>
                         <FormControl
                           componentClass="select"
@@ -209,7 +209,9 @@ export default class ActionInvocationEditor extends Component {
                           <option value=""></option>
                           {
                             Object.keys(actions).map((name, i) => (
-                              <option key={`${i}-${name}`} value={name}>{formatLabel(name)}</option>
+                              <option key={`${i}-${name}`} value={name}>
+                                {getLabel(i18n)('actions')(name)}
+                              </option>
                             ))
                           }
                         </FormControl>
@@ -258,6 +260,7 @@ export default class ActionInvocationEditor extends Component {
                         }
                         onChangeParam={this.handleChangeParam}
                         componentsRegistry={componentsRegistry}
+                        getLabel={getLabel(i18n)(`actions.${actionName}.params`)}
                       />
                     )
                   }
@@ -317,10 +320,10 @@ export default class ActionInvocationEditor extends Component {
             onClick={this.handleSave}
             disabled={!actionName}
           >
-            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
           </Button>
           <Button onClick={this.handleClose}>
-            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}
           </Button>
         </Modal.Footer>
       </Modal>

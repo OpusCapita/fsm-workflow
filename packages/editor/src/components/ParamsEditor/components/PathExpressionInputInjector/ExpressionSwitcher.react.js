@@ -40,8 +40,8 @@ export default class ExpressionSwitcher extends PureComponent {
           >
             {
               expression ?
-                i18n.getMessage('fsmWorkflowEditor.paramsEditor.enterValue') :
-                i18n.getMessage('fsmWorkflowEditor.paramsEditor.defineExpression')
+                i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.enterValue') :
+                i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.defineExpression')
             }
           </a>)
         </span>

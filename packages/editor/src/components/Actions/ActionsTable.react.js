@@ -9,7 +9,7 @@ import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import withConfirmDialog from '../ConfirmDialog';
 import './ActionsTable.less';
 import ActionInvocationEditor from './ActionInvocationEditor.react';
-import { isDef, formatArg, formatLabel } from '../utils';
+import { isDef, formatArg, getLabel } from '../utils';
 import { getParamSchema } from './utils';
 import actionPropTypes from './actionPropTypes';
 
@@ -60,7 +60,7 @@ export default class ActionsTable extends PureComponent {
 
   handleDelete = index => this._triggerDialog({
     confirmHandler: _ => this.onDelete(index),
-    message: this.context.i18n.getMessage('fsmWorkflowEditor.actions.deleteDialog.message')
+    message: this.context.i18n.getMessage('fsmWorkflowEditor.ui.actions.deleteDialog.message')
   })
 
   handleSave = _ => this.props.onSave(this.state.transitionActions)
@@ -125,14 +125,14 @@ export default class ActionsTable extends PureComponent {
             <Table className="oc-fsm-crud-editor--table-actions">
               <thead>
                 <tr>
-                  <th>{i18n.getMessage('fsmWorkflowEditor.actions.name.label')}</th>
-                  <th>{i18n.getMessage('fsmWorkflowEditor.actions.parameters.label')}</th>
+                  <th>{i18n.getMessage('fsmWorkflowEditor.ui.actions.name.label')}</th>
+                  <th>{i18n.getMessage('fsmWorkflowEditor.ui.actions.parameters.label')}</th>
                   <th className='text-right'>
                     <Button
                       bsSize='sm'
                       onClick={this.handleOpenEditor()}
                     >
-                      {i18n.getMessage('fsmWorkflowEditor.buttons.add.label')}
+                      {i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label')}
                     </Button>
                   </th>
                 </tr>
@@ -143,7 +143,7 @@ export default class ActionsTable extends PureComponent {
                     transitionActions.map(({ name: actionName, params = [] }, index) => (
                       <tr key={`${actionName}-${index}`}>
                         <td style={{ paddingTop: '15px' }}>
-                          {formatLabel(actionName)}
+                          {getLabel(i18n)('actions')(actionName)}
                         </td>
                         <td>
                           { params.length > 0 &&
@@ -153,7 +153,7 @@ export default class ActionsTable extends PureComponent {
                                   params.map(({ name, value, expression }, i) => {
                                     return (
                                       <tr key={`${i}-${name}`}>
-                                        <td>{formatLabel(name)}</td>
+                                        <td>{getLabel(i18n)(`actions.${actionName}.params`)(name)}</td>
                                         <td className="parameter-value">
                                           {
                                             formatArg({
@@ -183,14 +183,14 @@ export default class ActionsTable extends PureComponent {
                             >
                               <Glyphicon glyph='edit' />
                               {'\u2000'}
-                              {i18n.getMessage('fsmWorkflowEditor.buttons.edit.label')}
+                              {i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label')}
                             </Button>
                             <Button
                               onClick={this.handleDelete(index)}
                             >
                               <Glyphicon glyph='trash' />
                               {'\u2000'}
-                              {i18n.getMessage('fsmWorkflowEditor.buttons.delete.label')}
+                              {i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label')}
                             </Button>
                           </ButtonGroup>
                         </td>
@@ -198,13 +198,13 @@ export default class ActionsTable extends PureComponent {
                     )) :
                     <tr>
                       <td colSpan={3} style={{ textAlign: 'center' }}>
-                        {i18n.getMessage('fsmWorkflowEditor.actions.emptyList')}
+                        {i18n.getMessage('fsmWorkflowEditor.ui.actions.emptyList')}
                         {`\u00A0`}
                         <a
                           onClick={this.handleOpenEditor()}
                           style={{ cursor: 'pointer', fontWeight: 'bold' }}
                         >
-                          {i18n.getMessage('fsmWorkflowEditor.actions.addNewCallout')}
+                          {i18n.getMessage('fsmWorkflowEditor.ui.actions.addNewCallout')}
                         </a>
                       </td>
                     </tr>
@@ -220,10 +220,10 @@ export default class ActionsTable extends PureComponent {
             bsStyle="primary"
             onClick={this.handleSave}
           >
-            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
           </Button>
           <Button onClick={this.handleClose}>
-            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}
           </Button>
         </Modal.Footer>
       </Modal>

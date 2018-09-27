@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import startCase from 'lodash/startCase';
 
 export const isDef = v => v !== undefined && v !== null;
 
@@ -9,7 +8,15 @@ export const omitIfEmpty = propName => obj => Object.keys(obj).reduce((acc, key)
   ...((key !== propName || isDef(obj[propName])) && { [key]: obj[key] })
 }), {})
 
-export const formatLabel = str => startCase(str);
+/**
+ * Return i18n message for id or id itself in case if message is not present in i18n
+ * @param {string} field - any of 'actions', 'conditions', 'states'
+ */
+export const getLabel = i18n => field => value => {
+  const key = `fsmWorkflowEditor.${field}.${value}.label`;
+  const message = i18n.getMessage(key);
+  return message === key ? value : message;
+}
 
 export const unifyPath = path => path.split('.').slice(1).map(s => `[${JSON.stringify(s)}]`).join('');
 
@@ -18,7 +25,7 @@ export const formatArg = ({ i18n, schema = {}, value, expression }) => {
     return (
       <span>
         <span className="badge badge-secondary">
-          {i18n.getMessage('fsmWorkflowEditor.paramsEditor.expression')}
+          {i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.expression')}
         </span>
         {`\u2000${value}`}
       </span>
