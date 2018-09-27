@@ -5,6 +5,11 @@ import Adapter from 'enzyme-adapter-react-15';
 import { mount } from 'enzyme';
 import TransitionsTable from './TransitionsTable.react';
 import startCase from 'lodash/startCase';
+import { I18nManager } from '@opuscapita/i18n';
+import messages from '../../i18n';
+
+const i18n = new I18nManager();
+i18n.register('asdaa', messages);
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -36,15 +41,15 @@ describe('<TransitionsTable />', () => {
       objectConfiguration: {}
     };
 
-    const wrapper = mount(<TransitionsTable {...props}/>);
+    const wrapper = mount(<TransitionsTable {...props}/>, { context: { i18n } });
     expect(wrapper).to.exist; // eslint-disable-line no-unused-expressions
     // check table header
     const header = wrapper.find('thead tr').at(0).find('th');
     expect(header.length).to.equal(4);
-    expect(header.at(0).text().trim()).to.equal('Event');
-    expect(header.at(1).text().trim()).to.equal('From');
-    expect(header.at(2).text().trim()).to.equal('To');
-    expect(header.at(3).find('button').text().trim()).to.equal('Add');
+    expect(header.at(0).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.transitions.event.label'));
+    expect(header.at(1).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.transitions.from.label'));
+    expect(header.at(2).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.transitions.to.label'));
+    expect(header.at(3).find('button').text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.buttons.add.label'));
 
     const rows = wrapper.find('tbody tr');
     const firstRow = rows.at(0).find('td');

@@ -61,14 +61,12 @@ export default class AutomaticTable extends PureComponent {
 
   handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
-    confirmHandler: this.props.onClose,
-    title: 'Confirmation',
-    message: 'You have made changes. Closing this editor will lose these changes.'
+    confirmHandler: this.props.onClose
   })
 
   handleDelete = index => this._triggerDialog({
     confirmHandler: _ => this.onDelete(index),
-    message: `Do you really want to remove this guard?`
+    message: this.context.i18n.getMessage('fsmWorkflowEditor.guards.deleteDialog.message')
   })
 
   handleToggle = this._triggerDialog({
@@ -88,9 +86,7 @@ export default class AutomaticTable extends PureComponent {
       prevState => prevState.guards !== true ?
         { guards: true } :
         { guards: Array.isArray(this.props.guards) ? this.props.guards : [] }
-    ),
-    title: 'Confirmation',
-    message: 'You have made changes. Checking this will lose these changes.'
+    )
   });
 
   handleSave = _ => this.props.onSave(this.state.guards)
@@ -167,22 +163,25 @@ export default class AutomaticTable extends PureComponent {
                 checked={guards === true}
                 onChange={this.handleToggle}
               />
-              <label className="form-check-label" htmlFor="always-automatic">{`\u2000`}Always automatic</label>
+              <label className="form-check-label" htmlFor="always-automatic">
+                {`\u2000`}
+                {i18n.getMessage('fsmWorkflowEditor.automatic.alwaysAutomatic')}
+              </label>
             </div>
             {
               guards !== true && (
                 <Table className="oc-fsm-crud-editor--table-actions">
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Parameters</th>
-                      <th style={{ width: '60px' }}>Negate</th>
+                      <th>{i18n.getMessage('fsmWorkflowEditor.guards.name.label')}</th>
+                      <th>{i18n.getMessage('fsmWorkflowEditor.guards.parameters.label')}</th>
+                      <th style={{ width: '60px' }}>{i18n.getMessage('fsmWorkflowEditor.guards.negate.label')}</th>
                       <th className='text-right'>
                         <Button
                           bsSize='sm'
                           onClick={this.handleOpenEditor()}
                         >
-                          Add
+                          {i18n.getMessage('fsmWorkflowEditor.buttons.add.label')}
                         </Button>
                       </th>
                     </tr>
@@ -196,7 +195,7 @@ export default class AutomaticTable extends PureComponent {
                               {
                                 guardName ?
                                   formatLabel(guardName) :
-                                  'JavaScript Expression'
+                                  i18n.getMessage('fsmWorkflowEditor.guards.expressionTypeName')
                               }
                             </td>
                             <td>
@@ -246,14 +245,14 @@ export default class AutomaticTable extends PureComponent {
                                 >
                                   <Glyphicon glyph='edit' />
                                   {'\u2000'}
-                                  Edit
+                                  {i18n.getMessage('fsmWorkflowEditor.buttons.edit.label')}
                                 </Button>
                                 <Button
                                   onClick={this.handleDelete(index)}
                                 >
                                   <Glyphicon glyph='trash' />
                                   {'\u2000'}
-                                  Delete
+                                  {i18n.getMessage('fsmWorkflowEditor.buttons.delete.label')}
                                 </Button>
                               </ButtonGroup>
                             </td>
@@ -261,13 +260,14 @@ export default class AutomaticTable extends PureComponent {
                         )) :
                         <tr>
                           <td colSpan={3} style={{ textAlign: 'center' }}>
-                            No automatic guards specified for this transition. Go ahead and{`\u00A0`}
+                            {i18n.getMessage('fsmWorkflowEditor.automatic.emptyList')}
+                            {`\u00A0`}
                             <a
                               onClick={this.handleOpenEditor()}
                               style={{ cursor: 'pointer', fontWeight: 'bold' }}
                             >
-                              add new
-                            </a>!
+                              {i18n.getMessage('fsmWorkflowEditor.automatic.addNewCallout')}
+                            </a>
                           </td>
                         </tr>
                     }
@@ -283,9 +283,11 @@ export default class AutomaticTable extends PureComponent {
             bsStyle="primary"
             onClick={this.handleSave}
           >
-            Ok
+            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
           </Button>
-          <Button onClick={this.handleClose}>Close</Button>
+          <Button onClick={this.handleClose}>
+            {i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}
+          </Button>
         </Modal.Footer>
       </Modal>
     )

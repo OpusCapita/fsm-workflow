@@ -27,7 +27,7 @@ const states = {
     label: 'Final'
   },
   noAvailableNamesLeft: 'No available names left.',
-  confirmation: {
+  deleteDialog: {
     message: {
       description: 'State "{stateName}" is used in transitions. Options to proceed:',
       delete: 'Delete this state and involved transitions',
@@ -37,7 +37,85 @@ const states = {
 }
 
 const transitions = {
-  label: 'Transitions'
+  label: 'Transitions',
+  event: {
+    label: 'Event',
+    placeholder: 'Enter event name'
+  },
+  from: {
+    label: 'From',
+    placeholder: "Select 'from' state"
+  },
+  to: {
+    label: 'To',
+    placeholder: "Select 'to' state"
+  },
+  editor: {
+    title: {
+      add: 'Add new transition',
+      edit: 'Edit transition'
+    }
+  },
+  deleteDialog: {
+    message: 'Do you really want to delete this transition?'
+  },
+  fromRequired: "Specify 'from' state",
+  toRequired: "Specify 'to' state"
+}
+
+const guards = {
+  label: 'Guards',
+  title: 'Guards for transition on "{event}" from "{from}" to "{to}"',
+  name: {
+    label: 'Name'
+  },
+  parameters: {
+    label: 'Parameters'
+  },
+  negate: {
+    label: 'Negate'
+  },
+  expressionTypeName: 'JavaScript Expression',
+  emptyList: 'No guards specified for this transition.',
+  addNewCallout: 'Add new!',
+  deleteDialog: {
+    message: 'Do you really want to remove this guard?'
+  },
+  editor: {
+    title: {
+      edit: 'Edit guard',
+      add: 'Add guard'
+    },
+    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    predefinedFunction: {
+      label: 'Predefined function',
+      chooseCondition: 'Choose condition',
+      negate: 'Negate'
+    },
+    expression: {
+      label: 'Expression',
+      placeholder: 'Enter JavaScript code here',
+      results: 'Results',
+      autoplay: 'Autoplay',
+      exampleObject: {
+        label: 'Example object',
+        hint: 'Click on a property to insert its reference into JavaScript Expression editor.'
+      }
+    }
+  }
+}
+
+const automatic = {
+  label: 'Automatic',
+  title: 'Automatic guards for transition on "{event}" from "{from}" to "{to}"',
+  alwaysAutomatic: 'Always automatic',
+  emptyList: 'No automatic guards specified for this transition.',
+  addNewCallout: 'Add new!',
+}
+
+const actions = {
+  label: 'Actions',
+  title: 'Actions for transition on "{event}" from "{from}" to "{to}"'
 }
 
 const buttons = {
@@ -61,6 +139,9 @@ const buttons = {
   },
   cancel: {
     label: 'Cancel'
+  },
+  close: {
+    label: 'Close'
   }
 }
 
@@ -74,6 +155,9 @@ export default {
     buttons,
     states,
     transitions,
+    guards,
+    automatic,
+    actions,
     errors
   }
 }

@@ -39,6 +39,10 @@ export default class TransitionsTable extends PureComponent {
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   state = {
     showModal: false,
     modalType: null,
@@ -47,7 +51,7 @@ export default class TransitionsTable extends PureComponent {
 
   handleDelete = index => this._triggerDialog({
     confirmHandler: _ => this.props.onDeleteTransition(index),
-    message: `Do you really want to delete this transition?`
+    message: this.context.i18n.getMessage('fsmWorkflowEditor.transitions.deleteDialog.message')
   })
 
   handleModal = index => type => _ => this.setState({
@@ -83,6 +87,7 @@ export default class TransitionsTable extends PureComponent {
   }
 
   render() {
+    const { i18n } = this.context;
     const { transitions = [], states = [], getStateLabel, actions, conditions } = this.props;
     const { showModal, currentTransition, modalType } = this.state;
 
@@ -93,12 +98,20 @@ export default class TransitionsTable extends PureComponent {
         </td>
         <td>
           {
-            getStateLabel(from) || (<span style={{ color: 'red' }}>Specify 'from' state</span>)
+            getStateLabel(from) || (
+              <span style={{ color: 'red' }}>
+                {i18n.getMessage('fsmWorkflowEditor.transitions.fromRequired')}
+              </span>
+            )
           }
         </td>
         <td>
           {
-            getStateLabel(to) || (<span style={{ color: 'red' }}>Specify 'to' state</span>)
+            getStateLabel(to) || (
+              <span style={{ color: 'red' }}>
+                {i18n.getMessage('fsmWorkflowEditor.transitions.toRequired')}
+              </span>
+            )
           }
         </td>
         <td className='text-right'>
@@ -106,30 +119,30 @@ export default class TransitionsTable extends PureComponent {
             <Button onClick={this.handleModal(index)('edit')}>
               <Glyphicon glyph='edit'/>
               {'\u2000'}
-              Edit
+              {i18n.getMessage('fsmWorkflowEditor.buttons.edit.label')}
             </Button>
             <Button
               onClick={this.handleModal(index)('guards')}
               disabled={!(from && to && event)}
             >
-              Guards
+              {i18n.getMessage('fsmWorkflowEditor.guards.label')}
             </Button>
             <Button
               onClick={this.handleModal(index)('automatic')}
               disabled={!(from && to && event)}
             >
-              Automatic
+              {i18n.getMessage('fsmWorkflowEditor.automatic.label')}
             </Button>
             <Button
               onClick={this.handleModal(index)('actions')}
               disabled={!(from && to && event)}
             >
-              Actions
+              {i18n.getMessage('fsmWorkflowEditor.actions.label')}
             </Button>
             <Button onClick={this.handleDelete(index)}>
               <Glyphicon glyph='trash'/>
               {'\u2000'}
-              Delete
+              {i18n.getMessage('fsmWorkflowEditor.buttons.delete.label')}
             </Button>
           </ButtonGroup>
         </td>
@@ -151,13 +164,11 @@ export default class TransitionsTable extends PureComponent {
             <Guards
               guards={transition.guards}
               conditions={conditions}
-              title={`Guards for transition on "${
-                transition.event
-              }" from "${
-                getStateLabel(transition.from)
-              }" to "${
-                getStateLabel(transition.to)
-              }"`}
+              title={i18n.getMessage('fsmWorkflowEditor.guards.title', {
+                event: transition.event, // TODO i18n event name too?
+                from: getStateLabel(transition.from),
+                to: getStateLabel(transition.to)
+              })}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveGuards(currentTransition)}
             />
@@ -168,15 +179,11 @@ export default class TransitionsTable extends PureComponent {
             <Automatic
               guards={transition.automatic}
               conditions={conditions}
-              title={
-                `Automatic guards for transition on "${
-                  transition.event
-                }" from "${
-                  getStateLabel(transition.from)
-                }" to "${
-                  getStateLabel(transition.to)
-                }"`
-              }
+              title={i18n.getMessage('fsmWorkflowEditor.automatic.title', {
+                event: transition.event, // TODO i18n event name too?
+                from: getStateLabel(transition.from),
+                to: getStateLabel(transition.to)
+              })}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveAutomatic(currentTransition)}
             />
@@ -186,13 +193,11 @@ export default class TransitionsTable extends PureComponent {
           modal = (
             <Actions
               transition={transition}
-              title={`Actions for transition on "${
-                transition.event
-              }" from "${
-                getStateLabel(transition.from)
-              }" to "${
-                getStateLabel(transition.to)
-              }"`}
+              title={i18n.getMessage('fsmWorkflowEditor.actions.title', {
+                event: transition.event, // TODO i18n event name too?
+                from: getStateLabel(transition.from),
+                to: getStateLabel(transition.to)
+              })}
               actions={actions}
               getStateLabel={getStateLabel}
               onClose={this.handleCloseModal}
@@ -220,15 +225,15 @@ export default class TransitionsTable extends PureComponent {
         <Table className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
-              <th>Event</th>
-              <th>From</th>
-              <th>To</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.transitions.event.label')}</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.transitions.from.label')}</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.transitions.to.label')}</th>
               <th className="text-right">
                 <Button
                   bsSize='sm'
                   onClick={this.handleModal()('edit')}
                 >
-                  Add
+                  {i18n.getMessage('fsmWorkflowEditor.buttons.add.label')}
                 </Button>
               </th>
             </tr>

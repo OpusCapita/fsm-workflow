@@ -17,21 +17,20 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     i18n: PropTypes.object.isRequired
   }
 
-  static defaultProps = {
-    textCancel: 'Cancel',
-    textConfirm: 'Ok'
-  }
-
   constructor(...args) {
     super(...args);
 
     const { i18n } = this.context;
 
+    this.defaultState = {
+      title: i18n.getMessage('fsmWorkflowEditor.common.confirmation.title'),
+      message: i18n.getMessage('fsmWorkflowEditor.common.confirmation.message')
+    }
+
     this.state = {
       show: false,
       confirmHandler: null,
-      title: i18n.getMessage('fsmWorkflowEditor.common.confirmation.title'),
-      message: i18n.getMessage('fsmWorkflowEditor.common.confirmation.message')
+      ...this.defaultState
     }
   }
 
@@ -64,6 +63,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
   }
 
   createDialog = _ => {
+    const { i18n } = this.context;
     const { textConfirm, textCancel } = this.props;
     const { show, title, message, BodyComponent } = this.state;
 
@@ -85,12 +85,12 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
               onClick={this.handleConfirm}
               bsStyle="primary"
             >
-              {textConfirm}
+              {textConfirm || i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
             </Button>
             <Button
               onClick={this.handleClose}
             >
-              {textCancel}
+              {textCancel || i18n.getMessage('fsmWorkflowEditor.buttons.cancel.label')}
             </Button>
           </div>
         </Modal.Footer>
@@ -110,6 +110,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     }
     return showDialog() ?
       this.setState(_ => ({
+        ...this.defaultState,
         show: true,
         confirmHandler: _ => confirmHandler(event),
         ...(title && { title }),

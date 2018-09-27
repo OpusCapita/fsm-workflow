@@ -6,6 +6,7 @@ import { mount } from 'enzyme';
 import sinon from 'sinon';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import TopForm from './TopForm.react';
+import { I18nManager } from '@opuscapita/i18n';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -16,7 +17,7 @@ describe('<TopForm />', () => {
       onNameChange: sinon.spy()
     };
 
-    const wrapper = mount(<TopForm {...props}/>);
+    const wrapper = mount(<TopForm {...props}/>, { context: { i18n: new I18nManager() } });
     expect(wrapper).to.exist; // eslint-disable-line no-unused-expressions
     expect(wrapper.contains(FormControl)).to.be.true; // eslint-disable-line no-unused-expressions
     expect(wrapper.find(FormControl).prop('value')).to.equal(props.name);

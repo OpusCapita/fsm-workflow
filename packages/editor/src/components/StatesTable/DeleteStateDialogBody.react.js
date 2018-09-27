@@ -42,7 +42,7 @@ export default class DeleteStateDialogBody extends PureComponent {
     return (
       <div>
         <p>
-          {i18n.getMessage('fsmWorkflowEditor.states.confirmation.message.description', { stateName })}
+          {i18n.getMessage('fsmWorkflowEditor.states.deleteDialog.message.description', { stateName })}
         </p>
         <FormGroup>
           <Radio
@@ -50,14 +50,14 @@ export default class DeleteStateDialogBody extends PureComponent {
             checked={selectedOptionIndex === 0}
             onChange={this.handleSelectOption(0)}
           >
-            {i18n.getMessage('fsmWorkflowEditor.states.confirmation.message.delete')}
+            {i18n.getMessage('fsmWorkflowEditor.states.deleteDialog.message.delete')}
           </Radio>
           <Radio
             name="radioGroup"
             checked={selectedOptionIndex === 1}
             onChange={this.handleSelectOption(1)}
           >
-            {i18n.getMessage('fsmWorkflowEditor.states.confirmation.message.swap', { stateName })}
+            {i18n.getMessage('fsmWorkflowEditor.states.deleteDialog.message.swap', { stateName })}
             <FormControl
               componentClass="select"
               value={alternativeState}

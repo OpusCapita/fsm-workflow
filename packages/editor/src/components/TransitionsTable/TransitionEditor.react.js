@@ -24,6 +24,10 @@ export default class TransitionEditor extends PureComponent {
     getStateLabel: PropTypes.func.isRequired
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   state = {
     event: '',
     from: '',
@@ -69,14 +73,9 @@ export default class TransitionEditor extends PureComponent {
   })
 
   render() {
+    const { i18n } = this.context;
     const { states, getStateLabel } = this.props;
-
-    const {
-      from,
-      to,
-      event,
-      isCreating
-    } = this.state;
+    const { from, to, event, isCreating } = this.state;
 
     return (
       <Modal
@@ -89,26 +88,26 @@ export default class TransitionEditor extends PureComponent {
           <Modal.Title>
             {
               isCreating ?
-                `Add new transition` :
-                `Edit transition`
+                i18n.getMessage('fsmWorkflowEditor.transitions.editor.title.add') :
+                i18n.getMessage('fsmWorkflowEditor.transitions.editor.title.edit')
             }
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <FormGroup controlId='transitionEvent'>
-            <ControlLabel>Event</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.transitions.event.label')}</ControlLabel>
             <FormControl
-              placeholder='Enter event name'
+              placeholder={i18n.getMessage('fsmWorkflowEditor.transitions.event.placeholder')}
               type='text'
               value={event}
               onChange={this.handleChangeField('event')}
             />
           </FormGroup>
           <FormGroup controlId="transitionFrom">
-            <ControlLabel>From</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.transitions.from.label')}</ControlLabel>
             <FormControl
               componentClass="select"
-              placeholder="Select 'from' state"
+              placeholder={i18n.getMessage('fsmWorkflowEditor.transitions.from.placeholder')}
               value={from}
               onChange={this.handleChangeField('from')}
             >
@@ -120,10 +119,10 @@ export default class TransitionEditor extends PureComponent {
             </FormControl>
           </FormGroup>
           <FormGroup controlId="transitionTo">
-            <ControlLabel>To</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.transitions.to.label')}</ControlLabel>
             <FormControl
               componentClass="select"
-              placeholder="Select 'to' state"
+              placeholder={i18n.getMessage('fsmWorkflowEditor.transitions.to.placeholder')}
               value={to}
               onChange={this.handleChangeField('to')}
             >
@@ -141,9 +140,9 @@ export default class TransitionEditor extends PureComponent {
             onClick={this.handleSave}
             disabled={!(from && to && event)}
           >
-            Ok
+            {i18n.getMessage('fsmWorkflowEditor.buttons.ok.label')}
           </Button>
-          <Button onClick={this.handleClose}>Close</Button>
+          <Button onClick={this.handleClose}>{i18n.getMessage('fsmWorkflowEditor.buttons.close.label')}</Button>
         </Modal.Footer>
       </Modal>
     )
