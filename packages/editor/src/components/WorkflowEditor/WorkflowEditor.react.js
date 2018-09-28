@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/lib/Col';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 import isEqual from 'lodash/isEqual';
+import hash from 'object-hash';
 import TopButtons from '../TopButtons.react';
 import TopForm from '../TopForm.react';
 import StatesTable from '../StatesTable';
@@ -80,7 +81,7 @@ export default class WorkflowEditor extends PureComponent {
   constructor(...args) {
     super(...args);
 
-    this.context.i18n.register('fsmWorkflowEditor', translations);
+    this.context.i18n.register(`fsmWorkflowEditor-${hash(translations)}`, translations);
 
     this.state = {
       ...this.stateFromProps(this.props)

@@ -35,7 +35,8 @@ describe('<StatesTable />', () => {
     expect(header.at(1).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.states.description.label'));
     expect(header.at(2).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.states.initial.label'));
     expect(header.at(3).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.states.final.label'));
-    expect(header.at(4).find('button').text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label'));
+    expect(header.at(4).find('button').text().trim()).
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label'));
 
     expect(wrapper.find('tbody tr')).to.have.length(props.states.length);
 

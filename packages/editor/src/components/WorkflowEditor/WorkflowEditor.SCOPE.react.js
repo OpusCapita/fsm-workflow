@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import hash from 'object-hash';
 import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 import { I18nManager } from '@opuscapita/i18n';
 import FullName from './customComponents/FullName.react';
@@ -10,18 +9,18 @@ const messages = {
     fsmWorkflowEditor: {
       actions: {
         testAction: { // like in workflow.actions
-          label: 'TEST=ACTION',
+          label: 'Test Action',
           params: {
             nickname: {
-              label: 'NiCKNamE'
+              label: 'Nickname'
             },
             fullName: {
-              label: 'You dont fool me'
+              label: 'Full Name'
             }
           }
         },
         sendMail: {
-          label: '[[Send Email]]',
+          label: 'Send Email',
           params: {
             fromAddress: {
               label: "Sender' address"
@@ -31,7 +30,7 @@ const messages = {
       },
       conditions: { // like in workflow.conditions
         userHasRoles: {
-          label: 'User HAS R0LES',
+          label: 'User Has Roles',
           params: {
             restrictedRoles: {
               label: 'Only these roles are allowed'
@@ -41,18 +40,10 @@ const messages = {
       },
       states: {
         approved: {
-          label: 'APPROVED!'
+          label: 'Approved'
         },
         inspectionRequired: {
-          label: "Erforderliche Inspektion [ lets pretend it's English]"
-        }
-      },
-      events: {
-        cancelApproval: {
-          label: 'Cancel APPROVAL!!'
-        },
-        sendToClarification: {
-          label: 'Clarify it at last!'
+          label: "Inspection Required"
         }
       }
     }
@@ -71,7 +62,7 @@ class WorkflowEditorScope extends Component {
     super(...args);
 
     this.i18n = new I18nManager();
-    this.i18n.register(`fsmWorkflowEditor-${hash(messages)}`, messages);
+    this.i18n.register(`fsmWorkflowEditor`, messages);
   }
 
   getChildContext() {

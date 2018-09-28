@@ -24,7 +24,8 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
 
     this.defaultState = {
       title: i18n.getMessage('fsmWorkflowEditor.ui.common.confirmation.title'),
-      message: i18n.getMessage('fsmWorkflowEditor.ui.common.confirmation.message')
+      message: i18n.getMessage('fsmWorkflowEditor.ui.common.confirmation.message'),
+      BodyComponent: null
     }
 
     this.state = {
@@ -110,7 +111,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     }
     return showDialog() ?
       this.setState(_ => ({
-        ...this.defaultState,
+        ...this.defaultState, // reset state to prevent previous call interfere the current one
         show: true,
         confirmHandler: _ => confirmHandler(event),
         ...(title && { title }),

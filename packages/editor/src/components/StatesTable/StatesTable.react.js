@@ -82,7 +82,7 @@ export default class StatesTable extends PureComponent {
             />
           )
         } : {
-          message: `Do you really want to delete this state?`
+          message: i18n.getMessage('fsmWorkflowEditor.ui.states.deleteDialog.simpleMessage')
         }
       )
     })

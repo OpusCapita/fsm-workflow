@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-15';
 import { mount } from 'enzyme';
-import Label from 'react-bootstrap/lib/Label';
+import Label from './Label.react';
 import ErrorLabel from './ErrorLabel.react';
 
 Enzyme.configure({ adapter: new Adapter() });

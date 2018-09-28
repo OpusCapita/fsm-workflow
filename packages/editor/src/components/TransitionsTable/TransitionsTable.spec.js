@@ -49,7 +49,8 @@ describe('<TransitionsTable />', () => {
     expect(header.at(0).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.transitions.event.label'));
     expect(header.at(1).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.transitions.from.label'));
     expect(header.at(2).text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.transitions.to.label'));
-    expect(header.at(3).find('button').text().trim()).to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label'));
+    expect(header.at(3).find('button').text().trim()).
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label'));
 
     const rows = wrapper.find('tbody tr');
     const firstRow = rows.at(0).find('td');

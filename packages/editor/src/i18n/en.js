@@ -1,4 +1,4 @@
-const common = {
+export const common = {
   editorTitle: 'Workflow Editor',
   workflowName: {
     label: 'Name',
@@ -10,7 +10,7 @@ const common = {
   }
 }
 
-const states = {
+export const states = {
   label: 'States',
   name: {
     label: 'Name',
@@ -33,11 +33,19 @@ const states = {
       description: 'State "{stateName}" is used in transitions. Options to proceed:',
       delete: 'Delete this state and involved transitions',
       swap: 'Swap state "{stateName}" with a different one:'
+    },
+    simpleMessage: 'Do you really want to delete this state?'
+  },
+  editor: {
+    title: {
+      add: 'Add new state',
+      edit: 'Edit state "{stateName}"'
     }
-  }
+  },
+  labelHint: 'Will appear on UI as "{label}"'
 }
 
-const transitions = {
+export const transitions = {
   label: 'Transitions',
   event: {
     label: 'Event',
@@ -64,7 +72,7 @@ const transitions = {
   toRequired: "Specify 'to' state"
 }
 
-const guards = {
+export const guards = {
   label: 'Guards',
   title: 'Guards for transition on "{event}" from "{from}" to "{to}"',
   name: {
@@ -106,7 +114,7 @@ const guards = {
   }
 }
 
-const automatic = {
+export const automatic = {
   label: 'Automatic',
   title: 'Automatic guards for transition on "{event}" from "{from}" to "{to}"',
   alwaysAutomatic: 'Always automatic',
@@ -114,7 +122,7 @@ const automatic = {
   addNewCallout: 'Add new!'
 }
 
-const actions = {
+export const actions = {
   label: 'Actions',
   title: 'Actions for transition on "{event}" from "{from}" to "{to}"',
   deleteDialog: {
@@ -134,7 +142,7 @@ const actions = {
   }
 }
 
-const buttons = {
+export const buttons = {
   save: {
     label: 'Save'
   },
@@ -161,7 +169,7 @@ const buttons = {
   }
 }
 
-const paramsEditor = {
+export const paramsEditor = {
   stringInput: {
     placeholder: 'Enter value'
   },
@@ -177,7 +185,7 @@ const paramsEditor = {
   selectProperty: 'Select property of {businessObject}'
 }
 
-const preview = {
+export const preview = {
   title: 'Schema',
   description: 'This is a temporary solution for FSM visualization.',
   meta: {
@@ -188,18 +196,11 @@ const preview = {
   nothingToVisualize: 'Nothing to visualize'
 }
 
-export default {
-  fsmWorkflowEditor: {
-    ui: {
-      common,
-      buttons,
-      states,
-      transitions,
-      guards,
-      automatic,
-      actions,
-      paramsEditor,
-      preview
-    }
-  }
+export const select = {
+  typeToSearch: `Type to search`,
+  createOption: `Create option "{option}"`,
+  clearValue: `Clear value`,
+  clearAll: `Clear all`,
+  nothingFound: `No results found`,
+  loading: `Loading…`
 }
