@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import ErrorLabel from '../../ErrorLabel.react';
+import { isDef } from '../../utils';
 
 export default class IntegerInput extends PureComponent {
   static propTypes = {
@@ -38,13 +39,9 @@ export default class IntegerInput extends PureComponent {
 
     try {
       const parsed = i18n.parseNumber(value || null);
-      this.setState({
-        value: i18n.formatNumber(parsed || null) || ''
-      })
+      this.setState({ value: i18n.formatNumber(isDef(parsed) ? parsed : null) || '' })
     } catch (err) {
-      this.setState({
-        error: i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.integerInput.inValid')
-      })
+      this.setState({ error: i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.integerInput.inValid') })
     }
   }
 
