@@ -4,33 +4,6 @@ import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 import { I18nManager } from '@opuscapita/i18n';
 import FullName from './customComponents/FullName.react';
 
-function I18nProvider({ locale }) {
-  return class extends PureComponent {
-    static childContextTypes = {
-      i18n: PropTypes.object.isRequired
-    }
-
-    constructor(...args) {
-      super(...args);
-      this.i18n = new I18nManager({ locale });
-    }
-
-    getChildContext() {
-      return {
-        i18n: this.i18n
-      }
-    }
-
-    render() {
-      return (
-        <div>
-          {this.props.children}
-        </div>
-      )
-    }
-  }
-}
-
 const messages = {
   en: {
     fsmWorkflowEditor: {
@@ -74,6 +47,63 @@ const messages = {
         }
       }
     }
+  },
+  de: {
+    fsmWorkflowEditor: {
+      actions: {
+        testAction: { // like in workflow.actions
+          label: 'Testaktion',
+          params: {
+            nickname: {
+              label: 'Spitzname'
+            },
+            fullName: {
+              label: 'vollständiger Name'
+            }
+          }
+        },
+        sendMail: {
+          label: 'E-Mail senden',
+          params: {
+            fromAddress: {
+              label: "von der Adresse"
+            }
+          }
+        }
+      },
+      conditions: { // like in workflow.conditions
+        userHasRoles: {
+          label: 'Benutzer hat Rollen',
+          params: {
+            restrictedRoles: {
+              label: 'eingeschränkte Rollen'
+            }
+          }
+        }
+      },
+      states: {
+        approved: {
+          label: 'Genehmigt'
+        },
+        inspectionRequired: {
+          label: "Inspektion erforderlich"
+        }
+      }
+    }
+  }
+}
+
+const wrapper = ({ i18n }) => class extends React.PureComponent {
+  static childContextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
+  getChildContext() {
+    return { i18n }
+  }
+
+  render() {
+    return this.props.children()
   }
 }
 
@@ -96,13 +126,9 @@ class WorkflowEditorScope extends PureComponent {
     locale: 'en'
   }
 
-  getChildContext() {
-    return { i18n: this.i18n }
-  }
-
   handleChangeLanguage = ({ target: { value } }) => this.setState({ locale: value }, _ => {
     this.i18n = new I18nManager({ locale: value });
-    this.i18n.register(`fsmWorkflowEditor`, messages);
+    this.i18n.register(`${value}-${Math.random()}`, messages);
     this.forceUpdate()
   });
 
@@ -112,7 +138,8 @@ class WorkflowEditorScope extends PureComponent {
 
   render() {
     const { locale } = this.state;
-    const Wrapper = I18nProvider({ locale });
+
+    const Wrapper = wrapper({ i18n: this.i18n });
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -136,7 +163,7 @@ class WorkflowEditorScope extends PureComponent {
 
         <div>
           <Wrapper>
-            {this._renderChildren()}
+            {_ => this._renderChildren()}
           </Wrapper>
         </div>
 

@@ -1,24 +1,25 @@
+/* eslint-disable max-len */
 export const common = {
-  editorTitle: 'Workflow Editor',
+  editorTitle: 'Workflow-Editor',
   workflowName: {
     label: 'Name',
-    placeholder: 'Name of your schema'
+    placeholder: 'Der Name Ihres Schemas'
   },
   confirmation: {
-    title: 'Confirmation',
-    message: 'You have made changes. Closing this editor will lose these changes.'
+    title: 'Bestätigung',
+    message: 'Sie haben die Änderungen vorgenommen. Falls Sie den Editor schließen, gehen die Änderungen verloren.'
   }
 }
 
 export const states = {
-  label: 'States',
+  label: 'Status',
   name: {
     label: 'Name',
-    placeholder: 'Enter state name'
+    placeholder: 'Geben Sie den Namen ein'
   },
   description: {
-    label: 'Description',
-    placeholder: 'Enter state description'
+    label: 'Beschreibung',
+    placeholder: 'Geben Sie die Statusbeschreibung ein'
   },
   initial: {
     label: 'Initial'
@@ -26,181 +27,182 @@ export const states = {
   final: {
     label: 'Final'
   },
-  noAvailableNamesLeft: 'No available names left.',
-  stateAlreadyExists: 'This state already exists',
+  noAvailableNamesLeft: 'Keine weiteren Namen verfügbar.',
+  stateAlreadyExists: 'Dieser Status existiert bereits',
   deleteDialog: {
     message: {
-      description: 'State "{stateName}" is used in transitions. Options to proceed:',
-      delete: 'Delete this state and involved transitions',
-      swap: 'Swap state "{stateName}" with a different one:'
+      description: 'Der Status "{stateName}" wird im Vorgang verwendet. Sie haben die folgenden Optionen:',
+      delete: 'Diesen Status und zugehörigen Vorgänge löschen',
+      swap: 'Diesen Status "{stateName}" auf einen anderen Status ändern'
     },
-    simpleMessage: 'Do you really want to delete this state?'
+    simpleMessage: 'Möchten Sie diesen Status wirklich löschen?'
   },
   editor: {
     title: {
-      add: 'Add new state',
-      edit: 'Edit state "{stateName}"'
+      add: 'Einen neuen Status hinzufügen',
+      edit: 'Neuen Status "{stateName}" bearbeiten'
     }
   },
-  labelHint: 'Will appear on UI as "{label}"'
+  labelHint: 'Es wird als "{label}" in UI angezeigt'
 }
 
 export const transitions = {
-  label: 'Transitions',
+  label: 'Vorgänge',
   event: {
     label: 'Event',
-    placeholder: 'Enter event name'
+    placeholder: 'Geben Sie den Namen des Events ein'
   },
   from: {
-    label: 'From',
-    placeholder: "Select 'from' state"
+    label: 'Von',
+    placeholder: "Wählen Sie den Status 'von'"
   },
   to: {
-    label: 'To',
-    placeholder: "Select 'to' state"
+    label: 'Bis',
+    placeholder: "Wählen Sie den Status 'bis'"
   },
   editor: {
     title: {
-      add: 'Add new transition',
-      edit: 'Edit transition'
+      add: 'Neuen Vorgang hinzufügen',
+      edit: 'Vorgang bearbeiten'
     }
   },
   deleteDialog: {
-    message: 'Do you really want to delete this transition?'
+    message: 'Möchten Sie diesen Vorgang wirklich löschen?'
   },
-  fromRequired: "Specify 'from' state",
-  toRequired: "Specify 'to' state"
+  fromRequired: "Geben Sie den Status 'von' ein",
+  toRequired: "Geben Sie den Status 'bis' ein"
 }
 
 export const guards = {
-  label: 'Guards',
-  title: 'Guards for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Schutz',
+  title: 'Die Schutze für die Vorgänge an "{event}" von "{from}" bis "{to}"',
   name: {
     label: 'Name'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Parameter'
   },
   negate: {
-    label: 'Negate'
+    label: 'Negieren'
   },
-  expressionTypeName: 'JavaScript Expression',
-  emptyList: 'No guards specified for this transition.',
-  addNewCallout: 'Add new!',
+  expressionTypeName: 'JavaScript Ausdruck',
+  emptyList: 'Für diesen Vorgang wurde kein Schutz definiert.',
+  addNewCallout: 'Neu hinzufügen!',
   deleteDialog: {
-    message: 'Do you really want to remove this guard?'
+    message: 'Möchten Sie wirklich diesen Schutz entfernen?'
   },
   editor: {
     title: {
-      edit: 'Edit guard',
-      add: 'Add guard'
+      edit: 'Schutz bearbeiten',
+      add: 'Schutz hinzufügen'
     },
-    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    wrongResultType: 'Die Funktion ergab einen Wert: "{value}" für den Typ "{type}", aber es wurde ein boolean Wert erwartet.',
     predefinedFunction: {
-      label: 'Predefined function',
-      chooseCondition: 'Choose condition',
-      negate: 'Negate'
+      label: 'Vorgegebene Funktion ',
+      chooseCondition: 'Wählen Sie die Bedingung',
+      negate: 'Negieren'
     },
     expression: {
-      label: 'Expression',
-      placeholder: 'Enter JavaScript code here',
-      results: 'Results',
+      label: 'Ausdruck',
+      placeholder: 'Geben Sie JavaScript-Code hier ein',
+      results: 'Ergebnisse',
       autoplay: 'Autoplay',
       exampleObject: {
-        label: 'Example object',
-        hint: 'Click on a property to insert its reference into JavaScript Expression editor.'
+        label: 'Beispielobjekt',
+        hint: 'Klicken Sie auf die Eigenschaft, um die Referenz in den JavaScript-Ausdruckeditor einzugeben.'
       }
     }
   }
 }
 
 export const automatic = {
-  label: 'Automatic',
-  title: 'Automatic guards for transition on "{event}" from "{from}" to "{to}"',
-  alwaysAutomatic: 'Always automatic',
-  emptyList: 'No automatic guards specified for this transition.',
-  addNewCallout: 'Add new!'
+  label: 'Automatisch',
+  title: 'Automatische Schütze für die Vorgänge an "{event}" von "{from}" bis "{to}"',
+  alwaysAutomatic: 'Immer automatisch',
+  emptyList: 'Für diesen Vorgang wurde kein automatischer Schutz definiert.',
+  addNewCallout: 'Neu hinzufügen!'
 }
 
 export const actions = {
-  label: 'Actions',
-  title: 'Actions for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Aktionen',
+  title: 'Aktionen für den Vorgang an "{event}" von "{from}" bis "{to}"',
   deleteDialog: {
-    message: 'Do you really want to remove this action?'
+    message: 'Möchten Sie wirklich diese Aktion entfernen?'
   },
   name: {
     label: 'Name'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Parameter'
   },
-  emptyList: 'No actions specified for this transition.',
-  addNewCallout: 'Add new!',
+  emptyList: 'Für diesen Vorgang wurde keine Aktion definiert.',
+  addNewCallout: 'Neu hinzufügen!',
   editor: {
-    title: 'Action invocation',
-    chooseAction: 'Choose action'
+    title: 'Aktionsanruf',
+    chooseAction: 'Wählen Sie die Aktion aus'
   }
 }
 
 export const buttons = {
   save: {
-    label: 'Save'
+    label: 'Speichern'
   },
   download: {
-    label: 'Download'
+    label: 'Herunterladen'
   },
   add: {
-    label: 'Add'
+    label: 'Hinzufügen'
   },
   edit: {
-    label: 'Edit'
+    label: 'Bearbeiten'
   },
   delete: {
-    label: 'Delete'
+    label: 'Löschen'
   },
   ok: {
     label: 'Ok'
   },
   cancel: {
-    label: 'Cancel'
+    label: 'Abbrechen'
   },
   close: {
-    label: 'Close'
+    label: 'Schließen'
   }
 }
 
 export const paramsEditor = {
   stringInput: {
-    placeholder: 'Enter value'
+    placeholder: 'Geben Sie einen Wert ein'
   },
   integerInput: {
-    inValid: 'Not a valid integer'
+    inValid: 'Keine gültige Ganzzahl'
   },
   decimalInput: {
-    inValid: 'Not a valid number'
+    inValid: 'Keine gültige Zahl'
   },
-  enterValue: 'Enter value',
-  defineExpression: 'Define expression',
-  expression: 'Expression',
-  selectProperty: 'Select property of {businessObject}'
+  enterValue: 'Geben Sie einen Wert ein',
+  defineExpression: 'Definieren Sie einen Ausdruck',
+  expression: 'Ausdruck',
+  selectProperty: 'Wählen Sie die Eigenschaft von {businessObject}'
 }
 
 export const preview = {
   title: 'Schema',
-  description: 'This is a temporary solution for FSM visualization.',
+  description: 'Das ist eine temporäre Lösung für FSM-Visualisierung.',
   meta: {
-    regular: 'regular state nodes',
-    initial: 'initial state nodes',
-    final: 'final state nodes'
+    regular: 'Knoten im regulären Status',
+    initial: 'Knoten im initialen Status',
+    final: 'Knoten im finalen Status'
   },
-  nothingToVisualize: 'Nothing to visualize'
+  nothingToVisualize: 'Es gibt nichts zu visualisieren'
 }
 
 export const select = {
   typeToSearch: `Geben Sie etwas ein, um zu suchen`,
   createOption: `Eine Option "{option}" anlegen`,
-  clearValue: `Inhalt löschen`,
-  clearAll: `Alle löschen`,
+  clearValue: `Löschen`,
+  clearAll: `Inhalt löschen`,
   nothingFound: `Keine Treffer gefunden`,
-  loading: `Laden…`
+  loading: `Laden...`
 }
+/* eslint-enable max-len */
