@@ -13,6 +13,7 @@ export default class ExpressionEditor extends PureComponent {
   }
 
   static contextTypes = {
+    i18n: PropTypes.object.isRequired,
     objectConfiguration: PropTypes.object.isRequired
   }
 
@@ -26,7 +27,8 @@ export default class ExpressionEditor extends PureComponent {
       objectConfiguration: {
         alias = 'object',
         example
-      }
+      },
+      i18n
     } = this.context;
 
     const { currentPath } = this.props;
@@ -40,7 +42,7 @@ export default class ExpressionEditor extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            Select property of {alias}
+            {i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.selectProperty', { businessObject: alias })}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -53,7 +55,9 @@ export default class ExpressionEditor extends PureComponent {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.props.onClose}>Close</Button>
+          <Button onClick={this.props.onClose}>
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}
+          </Button>
         </Modal.Footer>
       </Modal>
     )

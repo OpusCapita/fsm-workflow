@@ -13,20 +13,30 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     textConfirm: PropTypes.string,
   }
 
-  static defaultProps = {
-    textCancel: 'Cancel',
-    textConfirm: 'Ok'
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
   }
 
-  state = {
-    show: false,
-    confirmHandler: null,
-    title: 'Confirmation',
-    message: 'You have made changes. Closing this editor will lose these changes.'
+  constructor(...args) {
+    super(...args);
+
+    const { i18n } = this.context;
+
+    this.defaultState = {
+      title: i18n.getMessage('fsmWorkflowEditor.ui.common.confirmation.title'),
+      message: i18n.getMessage('fsmWorkflowEditor.ui.common.confirmation.message'),
+      BodyComponent: null
+    }
+
+    this.state = {
+      show: false,
+      confirmHandler: null,
+      ...this.defaultState
+    }
   }
 
   componentDidMount = _ => {
-    this._mountNode = document.createElement('div');
+    this._mountNode = document.createElement('div'); // eslint-disable-line no-undef
     this.renderDialog();
   };
 
@@ -54,11 +64,8 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
   }
 
   createDialog = _ => {
-    const {
-      textConfirm,
-      textCancel
-    } = this.props;
-
+    const { i18n } = this.context;
+    const { textConfirm, textCancel } = this.props;
     const { show, title, message, BodyComponent } = this.state;
 
     return (
@@ -79,12 +86,12 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
               onClick={this.handleConfirm}
               bsStyle="primary"
             >
-              {textConfirm}
+              {textConfirm || i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
             </Button>
             <Button
               onClick={this.handleClose}
             >
-              {textCancel}
+              {textCancel || i18n.getMessage('fsmWorkflowEditor.ui.buttons.cancel.label')}
             </Button>
           </div>
         </Modal.Footer>
@@ -104,6 +111,7 @@ export default WrappedComponent => class ConfirmDialog extends PureComponent {
     }
     return showDialog() ?
       this.setState(_ => ({
+        ...this.defaultState, // reset state to prevent previous call interfere the current one
         show: true,
         confirmHandler: _ => confirmHandler(event),
         ...(title && { title }),

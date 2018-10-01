@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import ErrorLabel from '../../ErrorLabel.react';
+import { isDef } from '../../utils';
 
 export default class DecimalInput extends PureComponent {
   static propTypes = {
@@ -27,7 +28,7 @@ export default class DecimalInput extends PureComponent {
       // chop long tail after decimal separator
       this.props.onChange(i18n.parseDecimalNumber(i18n.formatDecimalNumber(result || null) || null))
     } catch (err) {
-      error = 'Not a valid number'
+      error = i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.decimalInput.inValid')
     } finally {
       this.setState({ value, error })
     }
@@ -39,13 +40,10 @@ export default class DecimalInput extends PureComponent {
 
     try {
       const parsed = i18n.parseDecimalNumber(value || null);
-      this.setState({
-        value: i18n.formatDecimalNumber(parsed || null) || ''
-      })
+      const formatted = i18n.formatDecimalNumber(isDef(parsed) ? parsed : null);
+      this.setState({ value: formatted || '' })
     } catch (err) {
-      this.setState({
-        error: 'Not a valid number'
-      })
+      this.setState({ error: i18n.getMessage('fsmWorkflowEditor.ui.paramsEditor.decimalInput.inValid') })
     }
   }
 

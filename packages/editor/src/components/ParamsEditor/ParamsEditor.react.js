@@ -2,26 +2,26 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
-import { formatLabel } from '../utils';
 import getParamComponent from './components';
 import GenericInput from './components/GenericInput.react';
 import ArrayEditor from './components/ArrayEditor.react';
 import MultiSelect from './components/MultiSelect.react';
 
-export default class GenericEditor extends PureComponent {
+export default class ParamsEditor extends PureComponent {
   static propTypes = {
     paramsSchema: PropTypes.shape({
       properties: PropTypes.objectOf.isRequired
     }),
     params: PropTypes.object,
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
-    onChangeParam: PropTypes.func.isRequired
+    onChangeParam: PropTypes.func.isRequired,
+    getLabel: PropTypes.func.isRequired
   }
 
   getParam = name => (this.props.params || {})[name] || {};
 
   render() {
-    const { onChangeParam, componentsRegistry } = this.props;
+    const { onChangeParam, componentsRegistry, getLabel } = this.props;
     const { properties: params } = this.props.paramsSchema;
 
     const inputs = Object.keys(params).map((name, i) => {
@@ -39,7 +39,7 @@ export default class GenericEditor extends PureComponent {
             <MultiSelect
               key={name}
               id={`${name}-${i}`}
-              label={formatLabel(name)}
+              label={getLabel(name)}
               param={param}
               schema={paramSchema}
               onChange={handleChange}
@@ -48,7 +48,7 @@ export default class GenericEditor extends PureComponent {
           (
             <ArrayEditor
               key={name}
-              label={formatLabel(name)}
+              label={getLabel(name)}
               param={param}
               onChange={handleChange}
               itemComponent={getParamComponent(paramSchema.items)}
@@ -58,7 +58,7 @@ export default class GenericEditor extends PureComponent {
         CustomComponent ?
           (
             <CustomComponent
-              label={formatLabel(name)}
+              label={getLabel(name)}
               param={param}
               onChange={handleChange}
             />
@@ -67,7 +67,7 @@ export default class GenericEditor extends PureComponent {
             <GenericInput
               key={name}
               id={`${name}-${i}`}
-              label={formatLabel(name)}
+              label={getLabel(name)}
               component={getParamComponent(paramSchema)}
               onChange={handleChange}
               param={param}

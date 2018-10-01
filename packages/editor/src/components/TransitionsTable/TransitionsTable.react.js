@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/lib/Table';
 import Button from 'react-bootstrap/lib/Button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import { isDef } from '../utils';
+import { isDef, getLabel } from '../utils';
 import Guards from '../Guards/GuardsTable.react';
 import Automatic from '../Guards/AutomaticTable.react';
 import Actions from '../Actions';
@@ -30,13 +30,16 @@ export default class TransitionsTable extends PureComponent {
     conditions: PropTypes.objectOf(PropTypes.shape({
       paramsSchema: PropTypes.object
     })),
-    getStateLabel: PropTypes.func.isRequired,
     onEditTransition: PropTypes.func.isRequired,
     onDeleteTransition: PropTypes.func.isRequired,
     onSaveGuards: PropTypes.func.isRequired,
     onSaveAutomatic: PropTypes.func.isRequired,
     onSaveActions: PropTypes.func.isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func)
+  }
+
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
   }
 
   state = {
@@ -47,7 +50,7 @@ export default class TransitionsTable extends PureComponent {
 
   handleDelete = index => this._triggerDialog({
     confirmHandler: _ => this.props.onDeleteTransition(index),
-    message: `Do you really want to delete this transition?`
+    message: this.context.i18n.getMessage('fsmWorkflowEditor.ui.transitions.deleteDialog.message')
   })
 
   handleModal = index => type => _ => this.setState({
@@ -83,8 +86,10 @@ export default class TransitionsTable extends PureComponent {
   }
 
   render() {
-    const { transitions = [], states = [], getStateLabel, actions, conditions } = this.props;
+    const { i18n } = this.context;
+    const { transitions = [], states = [], actions, conditions } = this.props;
     const { showModal, currentTransition, modalType } = this.state;
+    const getStateLabel = getLabel(i18n)('states');
 
     const rows = transitions.map(({ from, to, event }, index) => (
       <tr key={index}>
@@ -93,12 +98,20 @@ export default class TransitionsTable extends PureComponent {
         </td>
         <td>
           {
-            getStateLabel(from) || (<span style={{ color: 'red' }}>Specify 'from' state</span>)
+            getStateLabel(from) || (
+              <span style={{ color: 'red' }}>
+                {i18n.getMessage('fsmWorkflowEditor.ui.transitions.fromRequired')}
+              </span>
+            )
           }
         </td>
         <td>
           {
-            getStateLabel(to) || (<span style={{ color: 'red' }}>Specify 'to' state</span>)
+            getStateLabel(to) || (
+              <span style={{ color: 'red' }}>
+                {i18n.getMessage('fsmWorkflowEditor.ui.transitions.toRequired')}
+              </span>
+            )
           }
         </td>
         <td className='text-right'>
@@ -106,30 +119,30 @@ export default class TransitionsTable extends PureComponent {
             <Button onClick={this.handleModal(index)('edit')}>
               <Glyphicon glyph='edit'/>
               {'\u2000'}
-              Edit
+              {i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label')}
             </Button>
             <Button
               onClick={this.handleModal(index)('guards')}
               disabled={!(from && to && event)}
             >
-              Guards
+              {i18n.getMessage('fsmWorkflowEditor.ui.guards.label')}
             </Button>
             <Button
               onClick={this.handleModal(index)('automatic')}
               disabled={!(from && to && event)}
             >
-              Automatic
+              {i18n.getMessage('fsmWorkflowEditor.ui.automatic.label')}
             </Button>
             <Button
               onClick={this.handleModal(index)('actions')}
               disabled={!(from && to && event)}
             >
-              Actions
+              {i18n.getMessage('fsmWorkflowEditor.ui.actions.label')}
             </Button>
             <Button onClick={this.handleDelete(index)}>
               <Glyphicon glyph='trash'/>
               {'\u2000'}
-              Delete
+              {i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label')}
             </Button>
           </ButtonGroup>
         </td>
@@ -151,13 +164,11 @@ export default class TransitionsTable extends PureComponent {
             <Guards
               guards={transition.guards}
               conditions={conditions}
-              title={`Guards for transition on "${
-                transition.event
-              }" from "${
-                getStateLabel(transition.from)
-              }" to "${
-                getStateLabel(transition.to)
-              }"`}
+              title={i18n.getMessage('fsmWorkflowEditor.ui.guards.title', {
+                event: transition.event, // TODO i18n event name too?
+                from: getStateLabel(transition.from),
+                to: getStateLabel(transition.to)
+              })}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveGuards(currentTransition)}
             />
@@ -168,15 +179,11 @@ export default class TransitionsTable extends PureComponent {
             <Automatic
               guards={transition.automatic}
               conditions={conditions}
-              title={
-                `Automatic guards for transition on "${
-                  transition.event
-                }" from "${
-                  getStateLabel(transition.from)
-                }" to "${
-                  getStateLabel(transition.to)
-                }"`
-              }
+              title={i18n.getMessage('fsmWorkflowEditor.ui.automatic.title', {
+                event: transition.event, // TODO i18n event name too?
+                from: getStateLabel(transition.from),
+                to: getStateLabel(transition.to)
+              })}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveAutomatic(currentTransition)}
             />
@@ -186,15 +193,12 @@ export default class TransitionsTable extends PureComponent {
           modal = (
             <Actions
               transition={transition}
-              title={`Actions for transition on "${
-                transition.event
-              }" from "${
-                getStateLabel(transition.from)
-              }" to "${
-                getStateLabel(transition.to)
-              }"`}
+              title={i18n.getMessage('fsmWorkflowEditor.ui.actions.title', {
+                event: transition.event, // TODO i18n event name too?
+                from: getStateLabel(transition.from),
+                to: getStateLabel(transition.to)
+              })}
               actions={actions}
-              getStateLabel={getStateLabel}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveActions(currentTransition)}
               componentsRegistry={this.props.componentsRegistry}
@@ -206,7 +210,6 @@ export default class TransitionsTable extends PureComponent {
             <TransitionEditor
               transition={transition}
               states={states}
-              getStateLabel={getStateLabel}
               onSave={this.handleSaveTransition}
               onClose={this.handleCloseModal}
               index={currentTransition}
@@ -220,15 +223,15 @@ export default class TransitionsTable extends PureComponent {
         <Table className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
-              <th>Event</th>
-              <th>From</th>
-              <th>To</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.event.label')}</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.from.label')}</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.to.label')}</th>
               <th className="text-right">
                 <Button
                   bsSize='sm'
                   onClick={this.handleModal()('edit')}
                 >
-                  Add
+                  {i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label')}
                 </Button>
               </th>
             </tr>

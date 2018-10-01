@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = merge(common, {
+  mode: 'development',
   plugins: [
     new HtmlWebpackPlugin({
       template: '../www/index.html',
@@ -22,7 +23,7 @@ module.exports = merge(common, {
   },
   devServer: {
     historyApiFallback: true,
-    inline: false
+    // inline: false
   },
   module: {
     rules: [

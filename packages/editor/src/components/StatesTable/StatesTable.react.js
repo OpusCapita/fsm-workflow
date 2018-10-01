@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/lib/Button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import statePropTypes from './statePropTypes';
 import StateEditor from './StateEditor.react';
-import { isDef } from '../utils';
+import { isDef, getLabel } from '../utils';
 import withConfirmDialog from '../ConfirmDialog';
 import DeleteStateDialogBody from './DeleteStateDialogBody.react';
 
@@ -26,6 +26,10 @@ export default class StatesTable extends PureComponent {
     stateConfig: PropTypes.shape({
       availableNames: PropTypes.arrayOf(PropTypes.string)
     })
+  }
+
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
   }
 
   constructor(...args) {
@@ -51,8 +55,8 @@ export default class StatesTable extends PureComponent {
   }
 
   handleDelete = name => {
+    const { i18n } = this.context;
     const { statesInTransitions } = this.props;
-
     const { states } = this.state;
 
     return this._triggerDialog({
@@ -64,6 +68,7 @@ export default class StatesTable extends PureComponent {
         statesInTransitions.indexOf(name) > -1 ? {
           BodyComponent: _ => (
             <DeleteStateDialogBody
+              i18n={i18n}
               states={states}
               stateName={name}
               onSelect={
@@ -77,7 +82,7 @@ export default class StatesTable extends PureComponent {
             />
           )
         } : {
-          message: `Do you really want to delete this state?`
+          message: i18n.getMessage('fsmWorkflowEditor.ui.states.deleteDialog.simpleMessage')
         }
       )
     })
@@ -101,6 +106,7 @@ export default class StatesTable extends PureComponent {
   }
 
   render() {
+    const { i18n } = this.context;
     const { stateConfig } = this.props;
     const { states, currentState, showModal } = this.state;
 
@@ -129,16 +135,20 @@ export default class StatesTable extends PureComponent {
         <Table className="oc-fsm-crud-editor--table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th style={{ width: '60px' }} className='text-center'>Initial</th>
-              <th style={{ width: '60px' }} className='text-center'>Final</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.ui.states.name.label')}</th>
+              <th>{i18n.getMessage('fsmWorkflowEditor.ui.states.description.label')}</th>
+              <th style={{ width: '60px' }} className='text-center'>
+                {i18n.getMessage('fsmWorkflowEditor.ui.states.initial.label')}
+              </th>
+              <th style={{ width: '60px' }} className='text-center'>
+                {i18n.getMessage('fsmWorkflowEditor.ui.states.final.label')}
+              </th>
               <th className='text-right'>
                 <Button
                   bsSize='sm'
                   onClick={this.handleAdd}
                 >
-                  Add
+                  {i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label')}
                 </Button>
               </th>
             </tr>
@@ -147,7 +157,7 @@ export default class StatesTable extends PureComponent {
             {
               states.map(({ name, description, isInitial, isFinal }) => (
                 <tr key={name}>
-                  <td>{name}</td>
+                  <td>{getLabel(i18n)('states')(name)}</td>
                   <td>{description}</td>
                   <td className='text-center'>
                     {
@@ -161,19 +171,15 @@ export default class StatesTable extends PureComponent {
                   </td>
                   <td className='text-right'>
                     <ButtonGroup bsStyle='sm'>
-                      <Button
-                        onClick={this.handleEdit(name)}
-                      >
+                      <Button onClick={this.handleEdit(name)}>
                         <Glyphicon glyph='edit'/>
                         {'\u2000'}
-                        Edit
+                        {i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label')}
                       </Button>
-                      <Button
-                        onClick={this.handleDelete(name)}
-                      >
+                      <Button onClick={this.handleDelete(name)}>
                         <Glyphicon glyph='trash'/>
                         {'\u2000'}
-                        Delete
+                        {i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label')}
                       </Button>
                     </ButtonGroup>
                   </td>

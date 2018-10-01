@@ -8,7 +8,12 @@ export default class ExpressionInput extends PureComponent {
     onClick: PropTypes.func.isRequired
   }
 
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
+  }
+
   render() {
+    const { i18n } = this.context;
     const { value } = this.props;
     return (
       <button
@@ -22,7 +27,7 @@ export default class ExpressionInput extends PureComponent {
         }}
         onClick={this.props.onClick}
       >
-        {typeof value === 'string' ? formatArg({ value, expression: true }) : '\u2000'}
+        {typeof value === 'string' ? formatArg({ i18n, value, expression: true }) : '\u2000'}
       </button>
     )
   }

@@ -8,6 +8,7 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import withConfirmDialog from '../ConfirmDialog';
+import { getLabel } from '../utils';
 
 @withConfirmDialog
 export default class TransitionEditor extends PureComponent {
@@ -20,8 +21,11 @@ export default class TransitionEditor extends PureComponent {
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     index: PropTypes.number,
-    states: PropTypes.arrayOf(PropTypes.string),
-    getStateLabel: PropTypes.func.isRequired
+    states: PropTypes.arrayOf(PropTypes.string)
+  }
+
+  static contextTypes = {
+    i18n: PropTypes.object.isRequired
   }
 
   state = {
@@ -69,14 +73,10 @@ export default class TransitionEditor extends PureComponent {
   })
 
   render() {
-    const { states, getStateLabel } = this.props;
-
-    const {
-      from,
-      to,
-      event,
-      isCreating
-    } = this.state;
+    const { i18n } = this.context;
+    const { states } = this.props;
+    const { from, to, event, isCreating } = this.state;
+    const getStateLabel = getLabel(i18n)('states');
 
     return (
       <Modal
@@ -89,26 +89,26 @@ export default class TransitionEditor extends PureComponent {
           <Modal.Title>
             {
               isCreating ?
-                `Add new transition` :
-                `Edit transition`
+                i18n.getMessage('fsmWorkflowEditor.ui.transitions.editor.title.add') :
+                i18n.getMessage('fsmWorkflowEditor.ui.transitions.editor.title.edit')
             }
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <FormGroup controlId='transitionEvent'>
-            <ControlLabel>Event</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.event.label')}</ControlLabel>
             <FormControl
-              placeholder='Enter event name'
+              placeholder={i18n.getMessage('fsmWorkflowEditor.ui.transitions.event.placeholder')}
               type='text'
               value={event}
               onChange={this.handleChangeField('event')}
             />
           </FormGroup>
           <FormGroup controlId="transitionFrom">
-            <ControlLabel>From</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.from.label')}</ControlLabel>
             <FormControl
               componentClass="select"
-              placeholder="Select 'from' state"
+              placeholder={i18n.getMessage('fsmWorkflowEditor.ui.transitions.from.placeholder')}
               value={from}
               onChange={this.handleChangeField('from')}
             >
@@ -120,10 +120,10 @@ export default class TransitionEditor extends PureComponent {
             </FormControl>
           </FormGroup>
           <FormGroup controlId="transitionTo">
-            <ControlLabel>To</ControlLabel>
+            <ControlLabel>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.to.label')}</ControlLabel>
             <FormControl
               componentClass="select"
-              placeholder="Select 'to' state"
+              placeholder={i18n.getMessage('fsmWorkflowEditor.ui.transitions.to.placeholder')}
               value={to}
               onChange={this.handleChangeField('to')}
             >
@@ -141,9 +141,9 @@ export default class TransitionEditor extends PureComponent {
             onClick={this.handleSave}
             disabled={!(from && to && event)}
           >
-            Ok
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
           </Button>
-          <Button onClick={this.handleClose}>Close</Button>
+          <Button onClick={this.handleClose}>{i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}</Button>
         </Modal.Footer>
       </Modal>
     )

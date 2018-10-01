@@ -1,13 +1,7 @@
 const { resolve } = require('path');
-const webpack = require('webpack');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
   context: resolve(__dirname, '../src'),
-  plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new LodashModuleReplacementPlugin()
-  ],
   module: {
     rules: [
       {

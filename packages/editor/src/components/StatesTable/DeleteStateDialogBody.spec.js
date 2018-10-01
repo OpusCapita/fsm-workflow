@@ -7,12 +7,14 @@ import DeleteStateDialogBody from './DeleteStateDialogBody.react';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import Radio from 'react-bootstrap/lib/Radio';
+import { I18nManager } from '@opuscapita/i18n';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('<DeleteStateDialogBody />', () => {
   it('renders an modal', () => {
     const props = {
+      i18n: new I18nManager(),
       states: [
         {
           name: 'one',

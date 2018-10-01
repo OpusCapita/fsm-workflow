@@ -20,32 +20,7 @@ import CodeEditor from '../CodeEditor';
 import ErrorLabel from '../ErrorLabel.react';
 import ObjectInspector from '../ObjectInspector.react';
 import ParamsEditor from '../ParamsEditor';
-import { formatLabel, isDef, unifyPath, omitIfEmpty } from '../utils';
-
-const evaluateCode = ({ code, arg }) => {
-  try {
-    const result = (
-      eval( // eslint-disable-line no-eval
-        `
-          (function(arg) {
-            ${Object.keys(arg).map(key => `var ${key} = arg[${JSON.stringify(key)}];`).join('\n')}
-            return (${code})
-          })
-        `
-      )(arg)
-    );
-
-    return typeof result === 'boolean' ?
-      String(result) :
-      new Error(
-        `Function returned:
-        ${String(result)} of type '${typeof result}',
-        but expected a boolean value.`
-      )
-  } catch (err) {
-    return err
-  }
-}
+import { getLabel, isDef, unifyPath, omitIfEmpty } from '../utils';
 
 @withConfirmDialog
 export default class GuardEditor extends PureComponent {
@@ -60,6 +35,7 @@ export default class GuardEditor extends PureComponent {
   }
 
   static contextTypes = {
+    i18n: PropTypes.object.isRequired,
     objectConfiguration: PropTypes.object.isRequired
   }
 
@@ -113,13 +89,7 @@ export default class GuardEditor extends PureComponent {
 
   handleObjectPropClick = ({ path }) => {
     const { alias } = this.context.objectConfiguration;
-    const {
-      guardEditorSelectorPos: {
-        line,
-        ch
-      },
-      guard
-    } = this.state;
+    const { guardEditorSelectorPos: { line, ch }, guard } = this.state;
 
     const workablePath = unifyPath(path);
     const injectedValue = `${alias || 'object'}${workablePath}`
@@ -131,7 +101,6 @@ export default class GuardEditor extends PureComponent {
         bodyLine
     ).join('\n');
 
-    // this.handleChangeExpression(newGuardBody, callback);
     this.setState(prevState => ({
       guard: { ...prevState.guard, expression: newGuardBody }
     }), _ => {
@@ -139,7 +108,7 @@ export default class GuardEditor extends PureComponent {
       // handle codemirror focus and cursor position
       const cm = this._editor.getCodeMirror();
       cm.focus();
-      // focus resets cursor to 0; fix it
+      // focus resets cursor to 0; fix it // TODO rewrite to requestAnimationFrame
       const int = setInterval(_ => { // eslint-disable-line no-undef
         const hasFocus = cm.hasFocus()
         if (hasFocus) {
@@ -153,13 +122,38 @@ export default class GuardEditor extends PureComponent {
   }
 
   _editor;
-  saveRef = el => this._editor = el; // eslint-disable-line no-return-assign
+  saveRef = el => (this._editor = el);
 
   handleToggleAutoplay = _ => this.setState(prevState => ({
     autoplay: !prevState.autoplay
   }), this.autoPlay)
 
-  autoPlay = _ => this.state.autoplay && this.handleEvalCode()
+  autoPlay = _ => this.state.autoplay && this.handleEvalCode();
+
+  evaluateCode = ({ code, arg }) => {
+    const { i18n } = this.context;
+    try {
+      const result = (
+        eval( // eslint-disable-line no-eval
+          `
+            (function(arg) {
+              ${Object.keys(arg).map(key => `var ${key} = arg[${JSON.stringify(key)}];`).join('\n')}
+              return (${code})
+            })
+          `
+        )(arg)
+      );
+
+      return typeof result === 'boolean' ?
+        String(result) :
+        new Error(i18n.getMessage(
+          'fsmWorkflowEditor.ui.guards.editor.wrongResultType',
+          { value: result, type: typeof result }
+        ));
+    } catch (err) {
+      return err
+    }
+  }
 
   handleEvalCode = _ => {
     const { alias } = this.context.objectConfiguration;
@@ -167,7 +161,7 @@ export default class GuardEditor extends PureComponent {
     const object = cloneDeep(this.state.exampleObject);
 
     const result = code ?
-      evaluateCode({
+      this.evaluateCode({
         code,
         arg: {
           object,
@@ -272,17 +266,13 @@ export default class GuardEditor extends PureComponent {
     }), nextTab === 2 && this.autoPlay)
   })(nextTab);
 
-  handleToggleNegate = _ => this.setState(({ guard }) => ({
-    guard: {
-      ...guard,
-      negate: !guard.negate
-    }
-  }));
+  handleToggleNegate = _ => this.setState(({ guard }) => ({ guard: { ...guard, negate: !guard.negate } }));
 
   render() {
-    const { objectConfiguration: { alias } } = this.context;
+    const { objectConfiguration: { alias }, i18n } = this.context;
 
     const {
+      guard: initialGuard,
       conditions = {},
       componentsRegistry = {}
     } = this.props;
@@ -305,7 +295,11 @@ export default class GuardEditor extends PureComponent {
       >
         <Modal.Header closeButton={true}>
           <Modal.Title>
-            {guard ? 'Edit guard' : 'Add guard'}
+            {
+              initialGuard ?
+                i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.title.edit') :
+                i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.title.add')
+            }
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -317,14 +311,19 @@ export default class GuardEditor extends PureComponent {
             activeKey={activeTab}
             onSelect={this.handleTabSelect}
           >
-            <Tab eventKey={1} title={(<h4>Predefined function</h4>)}>
+            <Tab
+              eventKey={1}
+              title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.predefinedFunction.label')}</h4>)}
+            >
               <Table className="oc-fsm-crud-editor--table-actions">
                 <thead>
                   <tr>
                     <th>
                       <div className="oc-fsm-crud-editor--modal-heading">
                         <div className="output-heading">
-                          <b>Choose condition</b>
+                          <b>
+                            {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.predefinedFunction.chooseCondition')}
+                          </b>
                           <div className='right-block'>
                             {
                               guard.name && (
@@ -336,7 +335,10 @@ export default class GuardEditor extends PureComponent {
                                     checked={!!guard.negate}
                                     onChange={this.handleToggleNegate}
                                   />
-                                  <label className="form-check-label" htmlFor="negate-check">{`\u2000`}Negate</label>
+                                  <label className="form-check-label" htmlFor="negate-check">
+                                    {`\u2000`}
+                                    {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.predefinedFunction.negate')}
+                                  </label>
                                 </div>
                               )
                             }
@@ -349,7 +351,9 @@ export default class GuardEditor extends PureComponent {
                                 <option value=""></option>
                                 {
                                   Object.keys(conditions).map((name, i) => (
-                                    <option key={`${i}-${name}`} value={name}>{formatLabel(name)}</option>
+                                    <option key={`${i}-${name}`} value={name}>
+                                      {getLabel(i18n)('conditions')(name)}
+                                    </option>
                                   ))
                                 }
                               </FormControl>
@@ -375,6 +379,7 @@ export default class GuardEditor extends PureComponent {
                             }
                             onChangeParam={this.handleChangeParam}
                             componentsRegistry={componentsRegistry}
+                            getLabel={getLabel(i18n)(`conditions.${guard.name}.params`)}
                           />
                         )
                       }
@@ -383,7 +388,10 @@ export default class GuardEditor extends PureComponent {
                 </tbody>
               </Table>
             </Tab>
-            <Tab eventKey={2} title={(<h4>Expression</h4>)}>
+            <Tab
+              eventKey={2}
+              title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.label')}</h4>)}
+            >
               <Row>
                 <Col sm={8}>
                   <Row>
@@ -396,7 +404,7 @@ export default class GuardEditor extends PureComponent {
                             mode: "javascript",
                             lineNumbers: true,
                             theme: "eclipse",
-                            placeholder: `Enter JavaScript code here`
+                            placeholder: i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.placeholder')
                           }}
                           onChange={this.handleChangeExpression}
                           onCursorActivity={this.handleCursorActivity}
@@ -421,7 +429,7 @@ export default class GuardEditor extends PureComponent {
                     <Col style={{ margin: '0 10px 0' }}>
                       <div className="oc-fsm-crud-editor--modal-heading">
                         <div className="output-heading">
-                          <b>Results</b>
+                          <b>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.results')}</b>
                           <div className='right-block'>
                             <div>
                               <Glyphicon
@@ -436,7 +444,7 @@ export default class GuardEditor extends PureComponent {
                               onChange={this.handleToggleAutoplay}
                               checked={!!autoplay}
                             >
-                              Autoplay
+                              {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.autoplay')}
                             </Checkbox>
                           </div>
                         </div>
@@ -455,7 +463,7 @@ export default class GuardEditor extends PureComponent {
                 </Col>
                 <Col sm={4} >
                   <div className="oc-fsm-crud-editor--modal-heading with-padding">
-                    <b>Example object</b>
+                    <b>{i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.exampleObject.label')}</b>
                   </div>
                   <div>
                     <ObjectInspector
@@ -465,7 +473,7 @@ export default class GuardEditor extends PureComponent {
                     />
                   </div>
                   <HelpBlock>
-                    Click on a property to insert its reference into JavaScript Expression editor.
+                    {i18n.getMessage('fsmWorkflowEditor.ui.guards.editor.expression.exampleObject.hint')}
                   </HelpBlock>
                 </Col>
               </Row>
@@ -482,9 +490,11 @@ export default class GuardEditor extends PureComponent {
               activeTab === 2 && !guard.expression
             }
           >
-            Ok
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.ok.label')}
           </Button>
-          <Button onClick={this.handleClose}>Close</Button>
+          <Button onClick={this.handleClose}>
+            {i18n.getMessage('fsmWorkflowEditor.ui.buttons.close.label')}
+          </Button>
         </Modal.Footer>
       </Modal>
     )
