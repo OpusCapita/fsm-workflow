@@ -105,7 +105,7 @@ export default class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--initial-state
               `}
             ></div>
-            <div>— {i18n.getMessage('fsmWorkflowEditor.ui.preview.meta.regular')}</div>
+            <div>— {i18n.getMessage('fsmWorkflowEditor.ui.preview.meta.initial')}</div>
           </div>
           <div className="oc-fsm-crud-editor--workflow-graph__legend-item">
             <div
@@ -114,7 +114,7 @@ export default class WorkflowGraph extends Component {
                 oc-fsm-crud-editor--workflow-graph__legend-item-badge--final-state
               `}
             ></div>
-            <div>— {i18n.getMessage('fsmWorkflowEditor.ui.preview.meta.regular')}</div>
+            <div>— {i18n.getMessage('fsmWorkflowEditor.ui.preview.meta.final')}</div>
           </div>
 
         </div>
