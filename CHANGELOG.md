@@ -1,4 +1,13 @@
 
+[Release 2.2.3](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.3) Tue Oct 02 2018 08:40:48 GMT+0300 (MSK)
+=======================================================
+
+- i18n for editor ([#82](https://github.com/OpusCapita/fsm-workflow/issues/82)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-10-01 16:57:28 +0300)
+- Using docker image opuscapita/minsk-core-ci tag grails-2.4.4-jdk-8u131-nodejs-6.9.4-maven-3.3.9 [ci skip] (Alexey Sergeev alexey.sergeev@opuscapita.com, 2018-09-07 09:08:34 +0300)
+- Set up version 2.2.3. Reconfigure build process. (Alexey Sergeev sab@scand.com, 2018-09-03 23:13:43 +0300)
+- Reconfiguring build process (Alexey Sergeev sab@scand.com, 2018-09-03 23:01:56 +0300)
+- Fixing cache using in build process (Alexey Sergeev sab@scand.com, 2018-09-03 21:08:41 +0300)
+
 [Release 2.2.3](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.3) Mon Oct 01 2018 17:03:19 GMT+0300 (MSK)
 =======================================================
 
