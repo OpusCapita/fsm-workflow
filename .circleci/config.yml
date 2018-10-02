@@ -95,6 +95,9 @@ workflows:
   build-and-deploy-to-cloud:
     jobs:
       - build
+          filters:
+            tags:
+              only: /.*/
       - deploy-to-cloud:
           requires:
             - build
