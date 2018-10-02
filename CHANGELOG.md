@@ -1,4 +1,9 @@
 
+[Release 2.2.4](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.4) Tue Oct 02 2018 10:25:04 GMT+0300 (MSK)
+=======================================================
+
+- Fix lerna publish script (Egor Stambakio stambakio@scand.com, 2018-10-02 10:22:34 +0300)
+
 [Release 2.2.3](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.3) Tue Oct 02 2018 10:02:06 GMT+0300 (MSK)
 =======================================================
 
