@@ -53,12 +53,6 @@ jobs:
       - run:
           name: Run tests
           command: npm test
-      - run:
-          name: Build and deploy gh-pages
-          command: |
-            cd packages/editor
-            ./scripts/gh-pages/build.sh
-            ./scripts/gh-pages/deploy.sh .gh-pages-tmp
       - store_artifacts:
           path: ./test-results
       - store_test_results:
@@ -71,6 +65,14 @@ jobs:
             else
               echo "This step is skipped as this is not a release build"
             fi
+
+      # This step checkouts gh-pages branch, therefor it should be the last step or clean up properly
+      - run:
+          name: Build and deploy gh-pages
+          command: |
+            cd packages/editor
+            ./scripts/gh-pages/build.sh
+            ./scripts/gh-pages/deploy.sh .gh-pages-tmp
 
   deploy-to-cloud:
     <<: *defaults
