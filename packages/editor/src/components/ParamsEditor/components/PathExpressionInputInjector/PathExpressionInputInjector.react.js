@@ -33,7 +33,7 @@ export default WrappedComponent => WrappedComponent &&
 
     handleChange = value => this.props.onChange({
       value,
-      expression: this.state.expression ? 'path' : null
+      ...(this.state.expression && { expression: 'path' })
     })
 
     handleSelectProp = path => {
