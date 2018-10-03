@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 export const isDef = v => v !== undefined && v !== null;
 
+export const valueOrNull = value => isDef(value) ? value : null;
+
 export const omitIfEmpty = propName => obj => Object.keys(obj).reduce((acc, key) => ({
   ...acc,
   ...((key !== propName || isDef(obj[propName])) && { [key]: obj[key] })
@@ -43,7 +45,7 @@ export const formatArg = ({ i18n, schema = {}, value, expression }) => {
     case 'boolean':
       return isDef(value) ? String(value) : value;
     case 'date':
-      return isDef(value) ? i18n.formatDate(value) : value;
+      return isDef(value) ? i18n.formatDate(new Date(value)) : value;
     case 'array':
       return (
         <ol style={{ paddingLeft: '20px' }}>
