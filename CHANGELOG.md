@@ -1,4 +1,9 @@
 
+[Release 2.2.5](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.5) Wed Oct 03 2018 16:54:22 GMT+0300 (MSK)
+=======================================================
+
+- Fix bugs in ParamsEditor ([#84](https://github.com/OpusCapita/fsm-workflow/issues/84)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-10-03 16:14:32 +0300)
+
 [Release 2.2.4](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.4) Tue Oct 02 2018 11:21:00 GMT+0300 (MSK)
 =======================================================
 
