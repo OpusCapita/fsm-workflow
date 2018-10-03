@@ -45,7 +45,7 @@ export const formatArg = ({ i18n, schema = {}, value, expression }) => {
     case 'boolean':
       return isDef(value) ? String(value) : value;
     case 'date':
-      return isDef(value) ? i18n.formatDate(value) : value;
+      return isDef(value) ? i18n.formatDate(new Date(value)) : value;
     case 'array':
       return (
         <ol style={{ paddingLeft: '20px' }}>
