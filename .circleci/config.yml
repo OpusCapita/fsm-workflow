@@ -92,8 +92,8 @@ jobs:
           working_directory: ~/build/.circleci/helm
           command: git submodule update --init ./dependencies
       - run:
-          name: Deploy demo installation
-          working_directory: .circleci/scripts/helm
+          name: (Re)deploy application to azure
+          working_directory: ~/build/.circleci/helm/chart
           command: ./upgrade.sh
 
 workflows:
