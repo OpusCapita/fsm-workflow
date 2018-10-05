@@ -88,6 +88,10 @@ jobs:
           name: Deploy docker demo image
           command: .circleci/scripts/deploy-docker-image.sh
       - run:
+          name: Prepare helm chart dependencies
+          working_directory: ~/build/.circleci/helm
+          command: git submodule update --init ./dependencies
+      - run:
           name: Deploy demo installation
           working_directory: .circleci/scripts/helm
           command: ./upgrade.sh

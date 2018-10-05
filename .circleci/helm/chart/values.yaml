@@ -1,12 +1,8 @@
 phase: "qa"
 image:
   repository: ""
-  tag: "master"
+  tag: ""
 ingress:
   host: ""
   baseUrl: ""
-github:
-  project: ""
-vcs:
-  ref: ""
 dockerSecret: "dockerhub"
