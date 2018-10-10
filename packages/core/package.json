@@ -25,7 +25,21 @@
   "bugs": {
     "url": "https://github.com/OpusCapita/fsm/issues"
   },
-  "homepage": "https://github.com/OpusCapita/fsm/tree/master/core#readme",
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/core#readme", 
+  "keywords": [
+    "fsm",
+    "statemachine",
+    "state-machine",
+    "state machine",
+    "finite-state-machine",
+    "finite state machine",
+    "finite",
+    "machine",
+    "state",
+    "transition",
+    "action",
+    "state"
+  ],  
   "dependencies": {
     "bluebird": "3.5.0"
   },
