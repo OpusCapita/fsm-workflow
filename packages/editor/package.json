@@ -13,6 +13,22 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/editor#readme", 
+  "keywords": [
+    "editor",
+    "fsm",
+    "statemachine",
+    "state-machine",
+    "state machine",
+    "finite-state-machine",
+    "finite state machine",
+    "finite",
+    "machine",
+    "state",
+    "transition",
+    "action",
+    "state"
+  ],
   "scripts": {
     "start": "showroom-scan ./src && cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.showroom.js",
     "build": "rimraf lib && webpack --config config/webpack.config.build.js",
