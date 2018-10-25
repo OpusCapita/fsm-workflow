@@ -27,11 +27,11 @@ spec:
   rules:
   {{- range .Values.ingress.hosts }}
     - host: {{ . | quote }}
-    http:
-      paths:
+      http:
+        paths:
           - path: {{ $ingressPath }}
-        backend:
+            backend:
               serviceName: {{ $fullName }}
-          servicePort: 80
+              servicePort: 80
   {{- end }}
 {{- end }}
