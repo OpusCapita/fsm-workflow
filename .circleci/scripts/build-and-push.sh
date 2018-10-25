@@ -9,11 +9,12 @@ slugify() {
   echo $1 | iconv -t ascii//TRANSLIT | sed -E s/[^a-zA-Z0-9]+/-/g | sed -E s/^-+\|-+$//g | tr A-Z a-z | cut -c1-53
 }
 
-# docker tag is a slug from git branch name
-# if we would need to build container from git tags then instead of CIRCLE_BRANCH we could use CIRCLE_TAG
-DOCKER_TAG=$(slugify "${CIRCLE_BRANCH}")
+GITHUB_PROJECT="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+
+DOCKER_IMAGE_REPOSITORY=$(echo ${GITHUB_PROJECT} | tr '[:upper:]' '[:lower:]')
+DOCKER_IMAGE_TAG=$(slugify "${CIRCLE_BRANCH}")
 
 docker login -u $DOCKER_USER -p $DOCKER_PASS && \
 docker build -f Dockerfile.demo --no-cache \
-       -t ${CIRCLE_PROJECT_USERNAME}/$CIRCLE_PROJECT_REPONAME:$DOCKER_TAG . && \
-docker push ${CIRCLE_PROJECT_USERNAME}/$CIRCLE_PROJECT_REPONAME:$DOCKER_TAG
+       -t $DOCKER_IMAGE_REPOSITORY:$DOCKER_IMAGE_TAG . && \
+docker push $DOCKER_IMAGE_REPOSITORY:$DOCKER_IMAGE_TAG
