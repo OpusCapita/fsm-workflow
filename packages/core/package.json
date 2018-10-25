@@ -15,7 +15,7 @@
     "prepare": "npm run build",
     "prepack": "npm run build"
   },
-  "repository": "https://github.com/OpusCapita/fsm/tree/master/packages/core",
+  "repository": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/core",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
@@ -23,7 +23,7 @@
   "author": "Alexey Sergeev <sab@scand.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/OpusCapita/fsm/issues"
+    "url": "https://github.com/OpusCapita/fsm-workflow/issues"
   },
   "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/core#readme", 
   "keywords": [
