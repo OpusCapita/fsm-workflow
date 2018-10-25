@@ -11,7 +11,7 @@ slugify() {
 
 GITHUB_PROJECT="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
 
-DOCKER_IMAGE_REPOSITORY=$(echo ${GITHUB_PROJECT} | tr '[:upper:]' '[:lower:]')
+DOCKER_IMAGE_REPOSITORY=$(echo ${GITHUB_PROJECT} | tr '[:upper:]' '[:lower:]')-demo
 DOCKER_IMAGE_TAG=$(slugify "${CIRCLE_BRANCH}")
 
 docker login -u $DOCKER_USER -p $DOCKER_PASS && \
