@@ -99,7 +99,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build applcation Docker image and push it into Docker repository
-          command: .circleci/scripts/deploy-docker-image.sh
+          command: .circleci/scripts/build-and-push.sh
       - run:
           name: (Re)deploy application to azure
           working_directory: ~/build/.circleci/helm/chart
