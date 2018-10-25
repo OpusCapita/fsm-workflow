@@ -5,7 +5,7 @@
 
 ### Demo
 
-- [Complete demo app](https://opuscapita-mk8s-cluster-1.westeurope.cloudapp.azure.com/fsm-workflow/master/)
+- [Complete demo app](https://demo.core.dev.opuscapita.com/fsm-workflow-demo/master)
 - [Worflow editor demo (showroom)](https://opuscapita.github.io/fsm-workflow/branches/master/editor/?currentComponentName=WorkflowEditor&maxContainerWidth=100%25)
 
 ### Introduction
@@ -50,7 +50,7 @@ Workflow Transition History is implemented as separate library. You can find mor
 
 ### FAQ for developers
 **How do I set a version for all packages?**
-Define it as `version` value in `lerna.json` file. There's no need to rewrite version in packages, release process will handle it itself. 
+Define it as `version` value in `lerna.json` file. There's no need to rewrite version in packages, release process will handle it itself.
 
 ### References
 

@@ -109,13 +109,13 @@ workflows:
   version: 2
   build-and-deploy-to-cloud:
     jobs:
-      # - build:
-      #     filters:
-      #       tags:
-      #         only: /.*/
+      - build:
+          filters:
+            tags:
+              only: /.*/
       - deploy-to-cloud:
-          # requires:
-          #   - build
+          requires:
+            - build
           filters:
             tags:
               ignore: /.*/
