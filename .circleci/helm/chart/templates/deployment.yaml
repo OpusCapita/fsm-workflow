@@ -1,34 +1,22 @@
 {{- $serviceName := include "fsm-workflow.fullname" . -}}
-{{- $baseUrl := .Values.ingress.baseUrl -}}
+{{- $path := .Values.ingress.path -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "fsm-workflow.fullname" . }}
   labels:
-    app: {{ template "fsm-workflow.name" . }}
-    phase: {{.Values.phase}}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "fsm-workflow.name" . }}
-      phase: {{.Values.phase}}
-      chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-      release: {{ .Release.Name }}
-      heritage: {{ .Release.Service }}
+{{ include "labels" . | indent 6 }}
   replicas: 1
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: {{ template "fsm-workflow.name" . }}
-        phase: {{.Values.phase}}
-        chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-        release: {{ .Release.Name }}
-        heritage: {{ .Release.Service }}
+{{ include "labels" . | indent 8 }}
       annotations:
         date: {{ now }} # RollingRestart workaround. https://github.com/kubernetes/kubernetes/issues/13488
     spec:
@@ -44,5 +32,11 @@ spec:
             memory: "64Mi"
           limits:
             memory: "256Mi"
+        readinessProbe:
+          httpGet:
+            path: {{ $path }}
+            port: 3020
+          periodSeconds: 3
+          timeoutSeconds: 240            
       imagePullSecrets:
         - name: {{.Values.dockerSecret}}

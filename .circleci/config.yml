@@ -2,12 +2,21 @@ aliases:
   - &inject-environment
     name: Inject environment
     command: /bin/env_inject.sh
+
+  - &update-submodules
+    name: Update submodules
+    command: |
+      git submodule sync
+      git submodule update --init --recursive --jobs 8
+
   - &save-cache-checksum
     name: Save cache checksum
     command: find . -name "package.json" | sort | xargs cat >> /tmp/cache-checksum
+
   - &restore-cache
     keys:
       - dependencies-{{ checksum "/tmp/cache-checksum" }}
+
   - &save-cache
     key: dependencies-{{ checksum "/tmp/cache-checksum" }}
     paths:
@@ -27,10 +36,12 @@ aliases:
       - ./packages/examples/process-task-manager-ui/node_modules
       - ./packages/examples/complete-demo/package-lock.json
       - ./packages/examples/complete-demo/node_modules
+
   - &install-dependencies
     name: Install dependencies
     # we use --unsafe-perm as current build using root user which fails
     command: npm install --unsafe-perm
+
 defaults: &defaults
   docker:
     - image: opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u131-nodejs-8.9.4-maven-3.3.9
@@ -43,6 +54,7 @@ jobs:
     steps:
       - run: *inject-environment
       - checkout
+      - run: *update-submodules
       - run: *save-cache-checksum
       - restore_cache: *restore-cache
       - run: *install-dependencies
@@ -79,18 +91,15 @@ jobs:
     steps:
       - run: *inject-environment
       - checkout
+      - run: *update-submodules
       - run: *save-cache-checksum
       - restore_cache: *restore-cache
       - run: *install-dependencies
       - save_cache: *save-cache
       - setup_remote_docker
       - run:
-          name: Deploy docker demo image
-          command: .circleci/scripts/deploy-docker-image.sh
-      - run:
-          name: Prepare helm chart dependencies
-          working_directory: ~/build/.circleci/helm
-          command: git submodule update --init ./dependencies
+          name: Build applcation Docker image and push it into Docker repository
+          command: .circleci/scripts/build-and-push.sh
       - run:
           name: (Re)deploy application to azure
           working_directory: ~/build/.circleci/helm/chart
@@ -100,13 +109,13 @@ workflows:
   version: 2
   build-and-deploy-to-cloud:
     jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
+      # - build:
+      #     filters:
+      #       tags:
+      #         only: /.*/
       - deploy-to-cloud:
-          requires:
-            - build
+          # requires:
+          #   - build
           filters:
             tags:
               ignore: /.*/

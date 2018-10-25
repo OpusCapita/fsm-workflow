@@ -3,19 +3,11 @@ kind: Service
 metadata:
   name: {{ template "fsm-workflow.fullname" . }}
   labels:
-    app: {{ template "fsm-workflow.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    phase: {{.Values.phase}}
+{{ include "labels" . | indent 4 }}
 spec:
   type: ClusterIP
   ports:
     - port: 80
       targetPort: 3020
   selector:
-    app: {{ template "fsm-workflow.name" . }}
-    phase: {{.Values.phase}}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "labels" . | indent 4 }}
