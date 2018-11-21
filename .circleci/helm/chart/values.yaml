@@ -1,0 +1,13 @@
+image:
+  repository: ""
+  tag: ""
+ingress:
+  enabled: true
+  path: ""
+  hosts:
+    - demo.core.dev.opuscapita.com
+  tls:
+  - hosts:
+    - demo.core.dev.opuscapita.com
+    secretName: demo.core.dev.opuscapita.com-tls
+dockerSecret: "dockerhub"

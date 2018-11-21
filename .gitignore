@@ -1,0 +1,17 @@
+.*.swp
+node_modules
+.log
+yarn.lock
+package-lock.json
+*.log
+test-results.xml
+test-results/report.xml
+.idea
+.nyc_output
+coverage
+.gh-pages-tmp
+
+packages/core/lib
+packages/gui/lib
+packages/task-manager/lib
+packages/business-object-history/.sequelizerc

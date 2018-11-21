@@ -1,0 +1,69 @@
+{
+  "name": "TestWorkflow",
+  "initialState": "a",
+  "finalStates": [
+    "d"
+  ],
+  "transitions": [
+    {
+      "from": "a",
+      "to": "b",
+      "event": "a->b",
+      "guards": [
+        {
+          "name": "guard1"
+        }
+      ],
+      "actions": [
+        {
+          "name": "action1",
+          "params": [
+            {
+              "name": "param1",
+              "value": 1
+            },
+            {
+              "name": "param2",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "from": "b",
+      "to": "c",
+      "event": "b->c"
+    },
+    {
+      "from": "c",
+      "to": "d",
+      "event": "c->d"
+    },
+    {
+      "from": "a",
+      "to": "d",
+      "event": "a->d"
+    },
+    {
+      "from": "a",
+      "to": "c",
+      "event": "a->c"
+    }
+  ],
+  "states": [
+    {
+      "name": "a",
+      "description": "A"
+    },
+    {
+      "name": "b"
+    },
+    {
+      "name": "c"
+    },
+    {
+      "name": "d"
+    }
+  ]
+}

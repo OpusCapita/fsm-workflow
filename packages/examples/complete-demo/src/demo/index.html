@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    base '/' is required for development, while deployed app should rewrite it
+    (set its own 'base' BEFORE any other 'base' tags)
+
+    https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    >> If multiple <base> elements are specified, only the first href and first target value are used; all others are ignored.
+  -->
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workflow Demo App</title>
+  <link rel="stylesheet" href="https://opuscapita.github.io/styles/index.css">
+</head>
+
+<body style="padding-bottom: 0; overflow-x: hidden;">
+  <div id="main"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.2/react.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/15.6.2/react-dom.js" type="text/javascript"></script>
+  <script src="bundle.js" type="text/javascript"></script>
+</body>
+</html>
