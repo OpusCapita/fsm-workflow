@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 slugify() {
   # replaces non latin characters to latin
   # replaces all not letters/numbers with '-'
@@ -11,10 +13,9 @@ slugify() {
 
 GITHUB_PROJECT="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
 
-DOCKER_IMAGE_REPOSITORY=$(echo ${GITHUB_PROJECT} | tr '[:upper:]' '[:lower:]')-demo
+DOCKER_IMAGE_REPOSITORY=$(echo ${GITHUB_PROJECT} | tr '[:upper:]' '[:lower:]')
 DOCKER_IMAGE_TAG=$(slugify "${CIRCLE_BRANCH}")
 
-docker login -u $DOCKER_USER -p $DOCKER_PASS && \
-docker build -f Dockerfile.demo --no-cache \
-       -t $DOCKER_IMAGE_REPOSITORY:$DOCKER_IMAGE_TAG . && \
+docker login -u $DOCKER_USER -p $DOCKER_PASS
+docker build --no-cache -t $DOCKER_IMAGE_REPOSITORY:$DOCKER_IMAGE_TAG .
 docker push $DOCKER_IMAGE_REPOSITORY:$DOCKER_IMAGE_TAG
