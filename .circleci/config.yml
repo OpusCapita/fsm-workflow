@@ -1,7 +1,4 @@
-version: 2.1
-
-orbs:
-  git: opuscapita/git@volatile
+version: 2
 
 aliases:
   - &inject-environment
@@ -61,7 +58,7 @@ jobs:
     <<: *defaults
     steps:
       - run: *inject-environment
-      - git/checkout-with-submodules
+      - checkout
       - run: *save-cache-checksum
       - restore_cache: *restore-cache
       - run: *install-dependencies
