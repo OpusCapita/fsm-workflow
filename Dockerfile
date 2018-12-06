@@ -1,6 +1,6 @@
 # Docker context should be "<repo-root>"
 
-FROM node:8.9.4
+FROM node:8-alpine
 LABEL maintainer="OpusCapita"
 
 ENV HOST 0.0.0.0
