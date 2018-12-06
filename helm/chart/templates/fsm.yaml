@@ -1,27 +1,39 @@
-{{- $serviceName := include "fsm-workflow.fullname" . -}}
-{{- $path := .Values.ingress.path -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: fsm
+  labels:
+    app: fsm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 3020
+  selector:
+    app: fsm
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "fsm-workflow.fullname" . }}
+  name: fsm
   labels:
-{{ include "labels" . | indent 4 }}
+    app: fsm
 spec:
   selector:
     matchLabels:
-{{ include "labels" . | indent 6 }}
+      app: fsm
   replicas: 1
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-{{ include "labels" . | indent 8 }}
+        app: fsm
       annotations:
         date: {{ now }} # RollingRestart workaround. https://github.com/kubernetes/kubernetes/issues/13488
     spec:
       containers:
-      - name: {{ .Chart.Name }}
+      - name: fsm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
         ports:
@@ -30,13 +42,15 @@ spec:
         resources:
           requests:
             memory: "64Mi"
+            cpu: "100m"
           limits:
             memory: "256Mi"
+            cpu: "300m"
         readinessProbe:
           httpGet:
-            path: {{ $path }}
+            path: {{ .Values.ingress.path }}
             port: 3020
           periodSeconds: 3
-          timeoutSeconds: 240            
+          timeoutSeconds: 240
       imagePullSecrets:
         - name: {{.Values.dockerSecret}}

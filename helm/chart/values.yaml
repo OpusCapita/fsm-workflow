@@ -2,7 +2,6 @@ image:
   repository: ""
   tag: ""
 ingress:
-  enabled: true
   path: ""
   hosts: ""
   tls:
