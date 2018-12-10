@@ -1,206 +1,207 @@
 export const common = {
-  editorTitle: 'Workflow Editor',
+  editorTitle: 'Workflow Editor',  // FIXME Not translated!
   workflowName: {
-    label: 'Name',
-    placeholder: 'Name of your schema'
+    label: 'Namn',
+    placeholder: 'Namn på ditt schema'
   },
   confirmation: {
-    title: 'Confirmation',
-    message: 'You have made changes. Closing this editor will lose these changes.'
+    title: 'Bekräftelse',
+    message: 'Du har gjort ändringar. Om du stänger redigeraren försvinner ändringarna.'
   }
 }
 
 export const states = {
-  label: 'States',
+  label: 'States', // FIXME Not translated!
   name: {
-    label: 'Name',
-    placeholder: 'Enter state name'
+    label: 'Namn',
+    placeholder: 'Ange tillståndsnamn'
   },
   description: {
-    label: 'Description',
-    placeholder: 'Enter state description'
+    label: 'Beskrivning',
+    placeholder: 'Ange tillståndsbeskrivning'
   },
   initial: {
     label: 'Initial'
   },
   final: {
-    label: 'Final'
+    label: 'Slutlig'
   },
-  noAvailableNamesLeft: 'No available names left.',
-  stateAlreadyExists: 'This state already exists',
+  noAvailableNamesLeft: 'Det finns inga tillgängliga namn kvar.',
+  stateAlreadyExists: 'Detta tillstånd existerar redan',
   deleteDialog: {
     message: {
-      description: 'State "{stateName}" is used in transitions. Options to proceed:',
-      delete: 'Delete this state and involved transitions',
-      swap: 'Swap state "{stateName}" with a different one:'
+      description: 'Tillståndet "{stateName}" används i övergångar. Alternativ för att fortsätta',
+      delete: 'Ta bort detta tillstånd och berörda övergångar',
+      swap: 'Byt tillståndet "{stateName}" mot ett annat'
     },
-    simpleMessage: 'Do you really want to delete this state?'
+    simpleMessage: 'Vill du verkligen ta bort detta tillstånd?'
   },
   editor: {
     title: {
-      add: 'Add new state',
-      edit: 'Edit state "{stateName}"'
+      add: 'Lägg till ett nytt tillstånd',
+      edit: 'Redigera tillståndet "{stateName}"'
     }
   },
-  labelHint: 'Will appear on UI as "{label}"'
+  labelHint: 'Kommer att visas i användargränssnittet som "{label}"'
 }
 
 export const transitions = {
-  label: 'Transitions',
+  label: 'Övergångar',
   event: {
-    label: 'Event',
-    placeholder: 'Enter event name'
+    label: 'Händelse',
+    placeholder: 'Ange händelsenamn'
   },
   from: {
-    label: 'From',
-    placeholder: "Select 'from' state"
+    label: 'Från',
+    placeholder: 'Välj "från"-tillståndet'
   },
   to: {
-    label: 'To',
-    placeholder: "Select 'to' state"
+    label: 'Till',
+    placeholder: 'Välj "till"-tillståndet'
   },
   editor: {
     title: {
-      add: 'Add new transition',
-      edit: 'Edit transition'
+      add: 'Lägg till en ny övergång',
+      edit: 'Redigera övergång'
     }
   },
   deleteDialog: {
-    message: 'Do you really want to delete this transition?'
+    message: 'Vill du verkligen ta bort denna övergång?'
   },
-  fromRequired: "Specify 'from' state",
-  toRequired: "Specify 'to' state"
+  fromRequired: 'Specificera "från"-tillståndet',
+  toRequired: 'Specificera "till"-tillståndet'
 }
 
 export const guards = {
-  label: 'Guards',
-  title: 'Guards for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Bevakningar',
+  title: 'Bevakningar för övergångar i "{event}" från "{from}" till "{to}"',
   name: {
-    label: 'Name'
+    label: 'Namn'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Parametrar'
   },
   negate: {
-    label: 'Negate'
+    label: 'Ogiltigförklara'
   },
-  expressionTypeName: 'JavaScript Expression',
-  emptyList: 'No guards specified for this transition.',
-  addNewCallout: 'Add new!',
+  expressionTypeName: 'JavaScript-uttryck',
+  emptyList: 'Det finns inga specificerade bevakningar för denna övergång.',
+  addNewCallout: 'Lägg till ny!',
   deleteDialog: {
-    message: 'Do you really want to remove this guard?'
+    message: 'Vill du ta bort denna bevakning?'
   },
   editor: {
     title: {
-      edit: 'Edit guard',
-      add: 'Add guard'
+      edit: 'Redigera bevakning',
+      add: 'Lägg till bevakning'
     },
+     // FIXME Not translated!
     wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
     predefinedFunction: {
-      label: 'Predefined function',
-      chooseCondition: 'Choose condition',
-      negate: 'Negate'
+      label: 'Fördefinierad funktion',
+      chooseCondition: 'Välj villkor',
+      negate: 'Ogiltigförklara'
     },
     expression: {
-      label: 'Expression',
-      placeholder: 'Enter JavaScript code here',
-      results: 'Results',
+      label: 'Uttryck',
+      placeholder: 'Ange JavaScript-kod här',
+      results: 'Resultat',
       autoplay: 'Autoplay',
       exampleObject: {
-        label: 'Example object',
-        hint: 'Click on a property to insert its reference into JavaScript Expression editor.'
+        label: 'Exempelobjekt',
+        hint: 'Klicka på en egenskap för att införa dess referens i redigeraren för JavaScript-uttryck.'
       }
     }
   }
 }
 
 export const automatic = {
-  label: 'Automatic',
-  title: 'Automatic guards for transition on "{event}" from "{from}" to "{to}"',
-  alwaysAutomatic: 'Always automatic',
-  emptyList: 'No automatic guards specified for this transition.',
-  addNewCallout: 'Add new!'
+  label: 'Automatisk',
+  title: 'Automatiska bevakningar för övergång i "{event}" från "{from}" till "{to}"',
+  alwaysAutomatic: 'Alltid automatisk',
+  emptyList: 'Det finns inga automatiska bevakningar för denna övergång.',
+  addNewCallout: 'Lägg till ny!'
 }
 
 export const actions = {
-  label: 'Actions',
-  title: 'Actions for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Åtgärder',
+  title: 'Åtgärder för övergångar i "{event}" från "{from}" till "{to}"',
   deleteDialog: {
-    message: 'Do you really want to remove this action?'
+    message: 'Vill du ta bort denna åtgärd?'
   },
   name: {
-    label: 'Name'
+    label: 'Namn'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Parametrar'
   },
-  emptyList: 'No actions specified for this transition.',
-  addNewCallout: 'Add new!',
+  emptyList: 'Det finns inga specificerade åtgärder för denna övergång.',
+  addNewCallout: 'Lägg till ny!',
   editor: {
-    title: 'Action invocation',
-    chooseAction: 'Choose action'
+    title: 'Åtgärdsanrop',
+    chooseAction: 'Välj åtgärd'
   }
 }
 
 export const buttons = {
   save: {
-    label: 'Save'
+    label: 'Spara'
   },
   download: {
-    label: 'Download'
+    label: 'Hämta'
   },
   add: {
-    label: 'Add'
+    label: 'Lägg till'
   },
   edit: {
-    label: 'Edit'
+    label: 'Redigera'
   },
   delete: {
-    label: 'Delete'
+    label: 'Ta bort'
   },
   ok: {
-    label: 'Ok'
+    label: 'OK'
   },
   cancel: {
-    label: 'Cancel'
+    label: 'Avbryt'
   },
   close: {
-    label: 'Close'
+    label: 'Stäng'
   }
 }
 
 export const paramsEditor = {
   stringInput: {
-    placeholder: 'Enter value'
+    placeholder: 'Ange värde'
   },
   integerInput: {
-    inValid: 'Not a valid integer'
+    inValid: 'Inte ett giltigt heltal'
   },
   decimalInput: {
-    inValid: 'Not a valid number'
+    inValid: 'Inte ett giltigt nummer'
   },
-  enterValue: 'Enter value',
-  defineExpression: 'Define expression',
-  expression: 'Expression',
-  selectProperty: 'Select property of {businessObject}'
+  enterValue: 'Ange värde',
+  defineExpression: 'Definiera uttryck',
+  expression: 'Uttryck',
+  selectProperty: 'Välj egenskap för {businessObject}'
 }
 
 export const preview = {
   title: 'Schema',
-  description: 'This is a temporary solution for FSM visualization.',
+  description: 'Detta är en tillfällig lösning för FSM-visualisering.',
   meta: {
-    regular: 'regular state nodes',
-    initial: 'initial state nodes',
-    final: 'final state nodes'
+    regular: 'reguljära tillståndsnoder',
+    initial: 'initiala tillståndsnoder',
+    final: 'slutliga tillståndsnoder'
   },
-  nothingToVisualize: 'Nothing to visualize'
+  nothingToVisualize: 'Inget att visualisera'
 }
 
 export const select = {
-  typeToSearch: `Type to search`,
-  createOption: `Create option "{option}"`,
-  clearValue: `Clear value`,
-  clearAll: `Clear all`,
-  nothingFound: `No results found`,
-  loading: `Loading…`
+  typeToSearch: `Typ att söka`, // FIXME is it correct? Expected meaning: "Enter something to initiate search"
+  createOption: `Skapa alternativet "{option}"`,
+  clearValue: `Rensa värde`,
+  clearAll: `Rensa allt`,
+  nothingFound: `Inga resultat hittades`,
+  loading: `Läser in…`
 }
