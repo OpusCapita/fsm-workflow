@@ -95,7 +95,7 @@ export const guards = {
       edit: 'Rediger vakt',
       add: 'Legg til vakt'
     },
-     // FIXME Not translated!
+    // FIXME Not translated!
     wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
     predefinedFunction: {
       label: 'Forhåndsdefinert funksjon',

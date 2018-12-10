@@ -95,7 +95,7 @@ export const guards = {
       edit: 'Редактировать сторожевое условие',
       add: 'Добавить сторожевое условие'
     },
-     // FIXME Not translated!
+    // FIXME Not translated!
     wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
     predefinedFunction: {
       label: 'Предопределенная функция',
@@ -198,7 +198,8 @@ export const preview = {
 }
 
 export const select = {
-  typeToSearch: `Тип для поиска`, // FIXME wrong tranlation: initial is "Type to search", which means "Enter something to start searching"
+  // FIXME wrong tranlation: initial is "Type to search", which means "Enter something to start searching"
+  typeToSearch: `Тип для поиска`,
   createOption: `Создать параметр "{option}"`,
   clearValue: `Очистить значение`,
   clearAll: `Очистить все`,

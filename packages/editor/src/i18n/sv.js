@@ -1,5 +1,5 @@
 export const common = {
-  editorTitle: 'Workflow Editor',  // FIXME Not translated!
+  editorTitle: 'Workflow Editor', // FIXME Not translated!
   workflowName: {
     label: 'Namn',
     placeholder: 'Namn på ditt schema'
@@ -95,7 +95,7 @@ export const guards = {
       edit: 'Redigera bevakning',
       add: 'Lägg till bevakning'
     },
-     // FIXME Not translated!
+    // FIXME Not translated!
     wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
     predefinedFunction: {
       label: 'Fördefinierad funktion',
