@@ -10,7 +10,8 @@
   "scripts": {
     "lint": "eslint src",
     "test": "rimraf ./.nyc_output ./coverage && nyc --reporter=lcov --reporter=text mocha --reporter=mocha-junit-reporter --recursive \"src/**/*.spec.js\"",
-    "test-only": "mocha --recursive \"src/**/*.spec.js\""
+    "test-only": "mocha --recursive \"src/**/*.spec.js\"",
+    "benchmark": "node benchmark/index.js"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -18,7 +19,7 @@
   },
   "author": "",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/history#readme", 
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/history#readme",
   "keywords": [
     "history",
     "fsm",
@@ -33,7 +34,7 @@
     "transition",
     "action",
     "state"
-  ],  
+  ],
   "dependencies": {
     "umzug": "2.1.0"
   },
@@ -41,6 +42,7 @@
     "sequelize": "~3 || ~4"
   },
   "devDependencies": {
+    "@opuscapita/fsm-workflow-core": "2.2.6",
     "babel-eslint": "7.2.3",
     "eslint": "4.14.0",
     "eslint-config-opuscapita": "2.0.0",
@@ -50,7 +52,9 @@
     "nyc": "11.1.0",
     "rimraf": "2.6.1",
     "sequelize": "4.33.1",
-    "sqlite3": "3.1.13"
+    "sqlite3": "3.1.13",
+    "mysql2": "1.6.4",
+    "sequelizer": "1.1.3"
   },
   "nyc": {
     "per-file": true,
