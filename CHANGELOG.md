@@ -1,4 +1,21 @@
 
+[Release 2.2.6](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.6) Tue Dec 18 2018 17:04:33 GMT+0300 (MSK)
+=======================================================
+
+- Add index to `businessObjId` field in `workflowTransitionsHistory` table ([#89](https://github.com/OpusCapita/fsm-workflow/issues/89)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-12-18 16:58:14 +0300)
+- Set new deployment job (Egor Stambakio stambakio@scand.com, 2018-12-06 09:54:50 +0300)
+- Set new deployment job (Egor Stambakio stambakio@scand.com, 2018-12-06 09:51:12 +0300)
+- Refactor build process ([#86](https://github.com/OpusCapita/fsm-workflow/issues/86)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2018-11-21 13:18:44 +0300)
+- Restoring full build process (Alexey Sergeev sab@scand.com, 2018-10-26 00:19:30 +0300)
+- CI&CD configuration refactoring ([#85](https://github.com/OpusCapita/fsm-workflow/issues/85)) (GitHub asergeev-sc@users.noreply.github.com, 2018-10-26 00:10:08 +0300)
+- Fixing URL-s [skip ci] (GitHub asergeev-sc@users.noreply.github.com, 2018-10-25 22:58:38 +0300)
+- Update package.json (GitHub asergeev-sc@users.noreply.github.com, 2018-10-10 23:56:11 +0300)
+- Update package.json (GitHub asergeev-sc@users.noreply.github.com, 2018-10-10 23:55:40 +0300)
+- Add keywords. Fixing home page URL (GitHub asergeev-sc@users.noreply.github.com, 2018-10-10 23:54:42 +0300)
+- Fix circleci config (Egor Stambakio stambakio@scand.com, 2018-10-05 16:22:36 +0300)
+- chmod +x (Egor Stambakio stambakio@scand.com, 2018-10-05 16:11:10 +0300)
+- Refactor helm config (Egor Stambakio stambakio@scand.com, 2018-10-05 16:10:10 +0300)
+
 [Release 2.2.5](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.5) Wed Oct 03 2018 16:54:22 GMT+0300 (MSK)
 =======================================================
 
