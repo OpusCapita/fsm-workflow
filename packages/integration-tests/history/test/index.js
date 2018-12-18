@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const { access, unlink } = require('fs');
 const { resolve } = require('path');
 const Sequelize = require('sequelize');
 const Sequelizer = require('sequelizer');
@@ -8,7 +7,7 @@ const history = require('@opuscapita/fsm-workflow-history');
 const schema = require('../data/schema.json');
 const objectConfiguration = require('../data/objectConfiguration.json');
 const actions = require('../data/actions');
-const conditions = require('../data/conditions')
+const conditions = require('../data/conditions');
 
 const sqlitePath = resolve(__dirname, '../data/testdb.sqlite');
 

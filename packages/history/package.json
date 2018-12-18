@@ -18,7 +18,7 @@
   },
   "author": "",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/history#readme", 
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/history#readme",
   "keywords": [
     "history",
     "fsm",
@@ -33,7 +33,7 @@
     "transition",
     "action",
     "state"
-  ],  
+  ],
   "dependencies": {
     "umzug": "2.1.0"
   },
