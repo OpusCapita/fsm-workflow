@@ -12,10 +12,6 @@ module.exports = {
     workflowName: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.TEXT },
     finishedOn: { type: DataTypes.DATE, allowNull: false }
-  }).
-    then(() => queryInterface.addIndex('WorkflowTransitionHistory', {
-      fields: ['businessObjId'],
-      name: 'business_obj_id'
-    })),
+  }),
   down: (queryInterface, DataTypes) => queryInterface.dropTable('WorkflowTransitionHistory')
 };
