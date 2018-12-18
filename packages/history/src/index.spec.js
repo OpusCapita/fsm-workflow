@@ -15,6 +15,6 @@ describe('history', () => {
 
   it('should create index for table WorkflowTransitionHistory on field businessObjId', async() => {
     const res = await sequelize.getQueryInterface().showIndex('WorkflowTransitionHistory');
-    assert(res[0].fields[0].attribute === 'businessObjId');
+    assert(res.some(index => index.fields.length === 1 && index.fields[0].attribute === 'businessObjId'));
   });
 });
