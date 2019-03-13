@@ -5,7 +5,7 @@
 
 ### Demo
 
-- [Complete demo app](https://demo.core.dev.opuscapita.com/fsm-workflow-demo/master)
+- [Complete demo app](https://demo.core.dev.opuscapita.com/fsm-workflow/master)
 - [Worflow editor demo (showroom)](https://opuscapita.github.io/fsm-workflow/branches/master/editor/?currentComponentName=WorkflowEditor&maxContainerWidth=100%25)
 
 ### Introduction
