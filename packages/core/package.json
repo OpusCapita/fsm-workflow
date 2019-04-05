@@ -9,6 +9,7 @@
   "scripts": {
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
+    "test-dev": "mocha src/specs/ModelDefinition.inspectReleaseRestrictions.spec.js --require config/mocha-setup.js",
     "test-only": "mocha src/**/*.spec.js --require config/mocha-setup.js",
     "test": "rimraf ./.nyc_output ./coverage && cross-env nyc mocha --reporter=mocha-junit-reporter --require config/mocha-setup.js --recursive \"src/**/*.spec.js\"",
     "build": "rimraf lib && babel --copy-files --no-babelrc --presets es2015,stage-0 --ignore *.spec.js src --out-dir lib",
@@ -25,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/OpusCapita/fsm-workflow/issues"
   },
-  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/core#readme", 
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/core#readme",
   "keywords": [
     "fsm",
     "statemachine",
@@ -39,7 +40,7 @@
     "transition",
     "action",
     "state"
-  ],  
+  ],
   "dependencies": {
     "bluebird": "3.5.0"
   },
