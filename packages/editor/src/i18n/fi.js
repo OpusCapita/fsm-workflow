@@ -95,7 +95,7 @@ export const guards = {
       edit: 'Muokkaa suojaa',
       add: 'Lisää suoja'
     },
-    wrongResultType: 'Toiminto palautti arvon: "{value}" tyyppiä "{type}", mutta odotettiin totuusarvoa.,
+    wrongResultType: 'Toiminto palautti arvon: "{value}" tyyppiä "{type}", mutta odotettiin totuusarvoa.',
     predefinedFunction: {
       label: 'Esimääritelty toiminto',
       chooseCondition: 'Valitse ehto',
