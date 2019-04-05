@@ -1,5 +1,5 @@
 export const common = {
-  editorTitle: 'Workflow Editor', // FIXME Not translated!
+  editorTitle: 'Arbetsflödesredigerare',
   workflowName: {
     label: 'Namn',
     placeholder: 'Namn på ditt schema'
@@ -11,7 +11,7 @@ export const common = {
 }
 
 export const states = {
-  label: 'States', // FIXME Not translated!
+  label: 'Tillstånd',
   name: {
     label: 'Namn',
     placeholder: 'Ange tillståndsnamn'
@@ -95,8 +95,7 @@ export const guards = {
       edit: 'Redigera bevakning',
       add: 'Lägg till bevakning'
     },
-    // FIXME Not translated!
-    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    wrongResultType: 'Funktionen returnerad: "{value}" av typen "{type}", men förväntat booleskt värde.',
     predefinedFunction: {
       label: 'Fördefinierad funktion',
       chooseCondition: 'Välj villkor',
@@ -198,7 +197,7 @@ export const preview = {
 }
 
 export const select = {
-  typeToSearch: `Typ att söka`, // FIXME is it correct? Expected meaning: "Enter something to initiate search"
+  typeToSearch: `Skriv för att söka`,
   createOption: `Skapa alternativet "{option}"`,
   clearValue: `Rensa värde`,
   clearAll: `Rensa allt`,

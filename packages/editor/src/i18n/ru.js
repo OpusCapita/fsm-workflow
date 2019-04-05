@@ -1,5 +1,5 @@
 export const common = {
-  editorTitle: 'Workflow Editor', // FIXME Not translated!
+  editorTitle: 'Редактор рабочих процессов',
   workflowName: {
     label: 'Имя',
     placeholder: 'Имя вашей схемы'
@@ -11,7 +11,7 @@ export const common = {
 }
 
 export const states = {
-  label: 'States', // FIXME Not translated!
+  label: 'Состояния',
   name: {
     label: 'Имя',
     placeholder: 'Ввести имя состояния'
@@ -95,8 +95,7 @@ export const guards = {
       edit: 'Редактировать сторожевое условие',
       add: 'Добавить сторожевое условие'
     },
-    // FIXME Not translated!
-    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    wrongResultType: 'Функция возвращена: "{value}" типа "{type}", но ожидалось логическое значение.',
     predefinedFunction: {
       label: 'Предопределенная функция',
       chooseCondition: 'Выбрать условие',
@@ -198,8 +197,7 @@ export const preview = {
 }
 
 export const select = {
-  // FIXME wrong tranlation: initial is "Type to search", which means "Enter something to start searching"
-  typeToSearch: `Тип для поиска`,
+  typeToSearch: `Ввести текст для поиска`,
   createOption: `Создать параметр "{option}"`,
   clearValue: `Очистить значение`,
   clearAll: `Очистить все`,

@@ -1,5 +1,5 @@
 export const common = {
-  editorTitle: 'Workflow Editor', // FIXME Not translated!
+  editorTitle: 'Redigeringsprogram for arbeidsflyt',
   workflowName: {
     label: 'Navn',
     placeholder: 'Navn på skjema'
@@ -11,7 +11,7 @@ export const common = {
 }
 
 export const states = {
-  label: 'States', // FIXME Not translated!
+  label: 'Tilstander',
   name: {
     label: 'Navn',
     placeholder: 'Angi tilstandsnavn'
@@ -95,8 +95,7 @@ export const guards = {
       edit: 'Rediger vakt',
       add: 'Legg til vakt'
     },
-    // FIXME Not translated!
-    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    wrongResultType: 'Funksjon returnert: "{value}" av type "{type}", men forventet en boolsk verdi.',
     predefinedFunction: {
       label: 'Forhåndsdefinert funksjon',
       chooseCondition: 'Velg betingelse',
@@ -198,7 +197,7 @@ export const preview = {
 }
 
 export const select = {
-  typeToSearch: `Skriv inn for å søke`, // FIXME is it correct? Expected meaning: "Enter something to initiate search"
+  typeToSearch: `Skriv for å søke`,
   createOption: `Opprett alternativ "{option}"`,
   clearValue: `Tøm verdi`,
   clearAll: `Tøm alle`,

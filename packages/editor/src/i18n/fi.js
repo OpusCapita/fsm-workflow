@@ -1,5 +1,5 @@
 export const common = {
-  editorTitle: 'Workflow Editor', // FIXME Not translated!
+  editorTitle: 'Työnkulun muokkaus',
   workflowName: {
     label: 'Nimi',
     placeholder: 'Skeemasi nimi'
@@ -11,7 +11,7 @@ export const common = {
 }
 
 export const states = {
-  label: 'States', // FIXME Not translated!
+  label: 'Tilat',
   name: {
     label: 'Nimi',
     placeholder: 'Lisää tilan nimi'
@@ -95,8 +95,7 @@ export const guards = {
       edit: 'Muokkaa suojaa',
       add: 'Lisää suoja'
     },
-    // FIXME Not translated!
-    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    wrongResultType: 'Toiminto palautti arvon: "{value}" tyyppiä "{type}", mutta odotettiin totuusarvoa.,
     predefinedFunction: {
       label: 'Esimääritelty toiminto',
       chooseCondition: 'Valitse ehto',
@@ -198,7 +197,7 @@ export const preview = {
 }
 
 export const select = {
-  typeToSearch: `Kirjoita haku`, // FIXME is it correct? Expected meaning: "Enter something to initiate search"
+  typeToSearch: `Kirjoita haku`,
   createOption: `Luo valinta "{option}"`,
   clearValue: `Tyhjennä arvo`,
   clearAll: `Tyhjennä kaikki`,
