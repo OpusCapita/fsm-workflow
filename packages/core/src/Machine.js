@@ -297,6 +297,7 @@ businessObjId: ...     // business object unique id (examples: '123456789')
     return this.can({ event, object }).then(result => !result);
   }
 
+  /* eslint-disable max-len */
   /**
    * Is it allowed to release from current state?
    * @param {object} object - business object
@@ -304,19 +305,23 @@ businessObjId: ...     // business object unique id (examples: '123456789')
    * @param {object} request - (optional) request-specific data
    * @returns {Promise<boolean>}
    */
+  /* eslint-enable max-len */
   canRelease({ object, to, request }) {
     // calculate from state
     const from = this.currentState({ object });
     // get context
     const { context } = this;
-    return this.machineDefinition.inspectReleaseConditions({ from, to, object, request, context }).then(inspectionResults => {
-      // if no release conditions defined for this state then inspectReleaseConditions returns 'true'
-      if (inspectionResults === true) {
-        return true
-      }
-      // return 'false' when first 'false' result is met
-      return !inspectionResults.some(({ result: inspectionResult }) => inspectionResult.some(({ result }) => result === false))
-    })
+    return this.machineDefinition.inspectReleaseConditions({ from, to, object, request, context }).
+      then(inspectionResults => {
+        // if no release conditions defined for this state then inspectReleaseConditions returns 'true'
+        if (inspectionResults === true) {
+          return true
+        }
+        // return 'false' when first 'false' result is met
+        return !inspectionResults.some(
+          ({ result: inspectionResult }) => inspectionResult.some(({ result }) => result === false)
+        )
+      });
   }
 
   /**
