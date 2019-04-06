@@ -298,6 +298,28 @@ businessObjId: ...     // business object unique id (examples: '123456789')
   }
 
   /**
+   * Is it allowed to release from current state?
+   * @param {object} object - business object
+   * @param {string} to - (optional) name of target state (can object release from state 'from' and transit to state 'to'?)
+   * @param {object} request - (optional) request-specific data
+   * @returns {Promise<boolean>}
+   */
+  canRelease({ object, to, request }) {
+    // calculate from state
+    const from = this.currentState({ object });
+    // get context
+    const { context } = this;
+    return this.machineDefinition.inspectReleaseConditions({ from, to, object, request, context }).then(inspectionResults => {
+      // if no release conditions defined for this state then inspectReleaseConditions returns 'true'
+      if (inspectionResults === true) {
+        return true
+      }
+      // return 'false' when first 'false' result is met
+      return !inspectionResults.some(({ result: inspectionResult }) => inspectionResult.some(({ result }) => result === false))
+    })
+  }
+
+  /**
   * Provides access to business object history records within the workflow
   *
   * @param {Object} searchParameters search parameters

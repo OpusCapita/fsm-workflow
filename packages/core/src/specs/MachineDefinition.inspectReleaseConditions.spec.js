@@ -1,29 +1,29 @@
 import assert from 'assert';
 import MachineDefinition from '../MachineDefinition';
 
-describe('machine definition: inspectReleaseRestrictions', function() {
+describe('machine definition: inspectReleaseConditions', function() {
   it(`rejects if 'from' is undefined`, function() {
     const machineDefinition = new MachineDefinition({});
-    return machineDefinition.inspectReleaseRestrictions({}).
+    return machineDefinition.inspectReleaseConditions({}).
       then(result => assert.fail(result)).
       catch(e => assert(e));
   });
 
   it(`rejects if 'from' is null`, function() {
     const machineDefinition = new MachineDefinition({});
-    return machineDefinition.inspectReleaseRestrictions({}).
+    return machineDefinition.inspectReleaseConditions({}).
       then(result => assert.fail(result)).
       catch(e => assert(e));
   });
 
   it('returns true if states are not defined', function() {
     const machineDefinition = new MachineDefinition({ from: null });
-    return machineDefinition.inspectReleaseRestrictions({ from: 'a' }).
-      then(result => assert(result)).
+    return machineDefinition.inspectReleaseConditions({ from: 'a' }).
+      then(result => assert.equal(result, true)).
       catch(e => assert.fail(e));
   });
 
-  it('returns true if no release restrictions defined for state', function() {
+  it('returns true if no release conditions defined for state', function() {
     const definition = {
       schema: {
         transitions: [],
@@ -31,12 +31,12 @@ describe('machine definition: inspectReleaseRestrictions', function() {
       }
     };
     const machineDefinition = new MachineDefinition(definition);
-    return machineDefinition.inspectReleaseRestrictions({ from: 'a' }).
+    return machineDefinition.inspectReleaseConditions({ from: 'a' }).
       then(result => assert(result)).
       catch(e => assert.fail(e));
   });
 
-  describe('when release restrictions are defined', function() {
+  describe('when release conditions are defined', function() {
     const definition = {
       schema: {
         transitions: [],
@@ -44,7 +44,7 @@ describe('machine definition: inspectReleaseRestrictions', function() {
           name: 'a',
           release: [
             {
-              // 'to' is not defined, this restriction is relevant for all requests
+              // 'to' is not defined, this condition is relevant for all requests
               guards: [
                 {
                   expression: 'object.enabled'
@@ -66,19 +66,15 @@ describe('machine definition: inspectReleaseRestrictions', function() {
             },
             {
               to: 'b', // relevant only for 'to' === 'b'
-              guards: [
-                {
-                  expression: 'object.total > 300'
-                }
-              ]
+              guards: [{ expression: 'object.total > 300' }]
             },
             {
               to: ['d', 'b', 'c'], // relevant for any of these states
-              guards: [
-                {
-                  expression: 'object.total > 100'
-                }
-              ]
+              guards: [{ expression: 'object.total > 100' }]
+            },
+            {
+              to: ['c'], // relevant only for 'c'
+              guards: [{ expression: 'object.total > 500' }]
             }
           ]
         }]
@@ -92,17 +88,17 @@ describe('machine definition: inspectReleaseRestrictions', function() {
 
     const stateA = definition.schema.states.find(s => s.name === 'a');
 
-    it(`for empty 'to' inspects only restrictions with empty 'to'`, function() {
+    it(`for empty 'to' inspects only conditions with empty 'to'`, function() {
       const object = { enabled: true, total: 150 }
       const machineDefinition = new MachineDefinition(definition);
 
       const applyToAll = stateA.release.find(r => r.to === undefined);
       assert(applyToAll);
 
-      return machineDefinition.inspectReleaseRestrictions({ from: 'a', object }).
+      return machineDefinition.inspectReleaseConditions({ from: 'a', object }).
         then(result => {
           assert.equal(result.length, 1);
-          assert.deepEqual(applyToAll, result[0].restriction);
+          assert.deepEqual(applyToAll, result[0].condition);
 
           assert.deepEqual(result[0].result[0].condition, applyToAll.guards[0]);
           assert.equal(result[0].result[0].result, object.enabled);
@@ -115,14 +111,14 @@ describe('machine definition: inspectReleaseRestrictions', function() {
         catch(e => assert.fail(e));
     });
 
-    it(`for defined 'to' inspects restrictions both with same 'to', and if restriction includes 'to', and with empty 'to'`, function() { // eslint-disable-line max-len
+    it(`for defined 'to' inspects conditions both with same 'to', and if condition includes 'to', and with empty 'to'`, function() { // eslint-disable-line max-len
       const object = { enabled: true, total: 150 }
       const machineDefinition = new MachineDefinition(definition);
 
-      return machineDefinition.inspectReleaseRestrictions({ from: 'a', to: 'b', object }).
+      return machineDefinition.inspectReleaseConditions({ from: 'a', to: 'b', object }).
         then(result => {
-          assert.equal(result.length, stateA.release.length);
-          result.forEach(({ restriction }, i) => assert.deepEqual(restriction, stateA.release[i]));
+          assert.equal(result.length, 3);
+          result.forEach(({ condition }, i) => assert.deepEqual(condition, stateA.release[i]));
         }).
         catch(e => assert.fail(e));
     });
