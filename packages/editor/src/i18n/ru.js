@@ -1,206 +1,206 @@
 export const common = {
-  editorTitle: 'Workflow Editor',
+  editorTitle: 'Редактор рабочих процессов',
   workflowName: {
-    label: 'Name',
-    placeholder: 'Name of your schema'
+    label: 'Имя',
+    placeholder: 'Имя вашей схемы'
   },
   confirmation: {
-    title: 'Confirmation',
-    message: 'You have made changes. Closing this editor will lose these changes.'
+    title: 'Подтверждение',
+    message: 'Вы внесли изменения Эти изменения пропадут, если закрыть данный редактор.'
   }
 }
 
 export const states = {
-  label: 'States',
+  label: 'Состояния',
   name: {
-    label: 'Name',
-    placeholder: 'Enter state name'
+    label: 'Имя',
+    placeholder: 'Ввести имя состояния'
   },
   description: {
-    label: 'Description',
-    placeholder: 'Enter state description'
+    label: 'Описание',
+    placeholder: 'Ввести описание состояния'
   },
   initial: {
-    label: 'Initial'
+    label: 'Начальный'
   },
   final: {
-    label: 'Final'
+    label: 'Конечный'
   },
-  noAvailableNamesLeft: 'No available names left.',
-  stateAlreadyExists: 'This state already exists',
+  noAvailableNamesLeft: 'Не осталось доступных имен.',
+  stateAlreadyExists: 'Это состояние уже существует',
   deleteDialog: {
     message: {
-      description: 'State "{stateName}" is used in transitions. Options to proceed:',
-      delete: 'Delete this state and involved transitions',
-      swap: 'Swap state "{stateName}" with a different one:'
+      description: 'Состояние "{stateName}" используется в переходах. Параметры для продолжения',
+      delete: 'Удалить этот состояние и сопутствующие переходы',
+      swap: 'Поменять состояние "{stateName}" на другое'
     },
-    simpleMessage: 'Do you really want to delete this state?'
+    simpleMessage: 'Действительно удалить это состояние?'
   },
   editor: {
     title: {
-      add: 'Add new state',
-      edit: 'Edit state "{stateName}"'
+      add: 'Добавить новое состояние',
+      edit: 'Редактировать состояние "{stateName}"'
     }
   },
-  labelHint: 'Will appear on UI as "{label}"'
+  labelHint: 'Появится в пользовательском интерфейсе как "{label}"'
 }
 
 export const transitions = {
-  label: 'Transitions',
+  label: 'Переходы',
   event: {
-    label: 'Event',
-    placeholder: 'Enter event name'
+    label: 'Событие',
+    placeholder: 'Ввести имя события'
   },
   from: {
-    label: 'From',
-    placeholder: "Select 'from' state"
+    label: 'C',
+    placeholder: 'Выбрать состояние "от"'
   },
   to: {
-    label: 'To',
-    placeholder: "Select 'to' state"
+    label: 'По',
+    placeholder: 'Выбрать состояние "до"'
   },
   editor: {
     title: {
-      add: 'Add new transition',
-      edit: 'Edit transition'
+      add: 'Добавить новый переход',
+      edit: 'Редактировать переход'
     }
   },
   deleteDialog: {
-    message: 'Do you really want to delete this transition?'
+    message: 'Действительно удалить этот переход?'
   },
-  fromRequired: "Specify 'from' state",
-  toRequired: "Specify 'to' state"
+  fromRequired: 'Указать состояние "от"',
+  toRequired: 'Указать состояние "до"'
 }
 
 export const guards = {
-  label: 'Guards',
-  title: 'Guards for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Сторожевые условия',
+  title: 'Сторожевые условия для перехода по "{event}" от "{from}" до "{to}"',
   name: {
-    label: 'Name'
+    label: 'Имя'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Параметры'
   },
   negate: {
-    label: 'Negate'
+    label: 'Инвертировать'
   },
-  expressionTypeName: 'JavaScript Expression',
-  emptyList: 'No guards specified for this transition.',
-  addNewCallout: 'Add new!',
+  expressionTypeName: 'Выражение JavaScript',
+  emptyList: 'Не указаны сторожевые условия для этого перехода.',
+  addNewCallout: 'Добавить новое!',
   deleteDialog: {
-    message: 'Do you really want to remove this guard?'
+    message: 'Действительно удалить это сторожевое условие?'
   },
   editor: {
     title: {
-      edit: 'Edit guard',
-      add: 'Add guard'
+      edit: 'Редактировать сторожевое условие',
+      add: 'Добавить сторожевое условие'
     },
-    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    wrongResultType: 'Функция возвращена: "{value}" типа "{type}", но ожидалось логическое значение.',
     predefinedFunction: {
-      label: 'Predefined function',
-      chooseCondition: 'Choose condition',
-      negate: 'Negate'
+      label: 'Предопределенная функция',
+      chooseCondition: 'Выбрать условие',
+      negate: 'Инвертировать'
     },
     expression: {
-      label: 'Expression',
-      placeholder: 'Enter JavaScript code here',
-      results: 'Results',
-      autoplay: 'Autoplay',
+      label: 'Выражение',
+      placeholder: 'Введите здесь код JavaScript',
+      results: 'Результаты',
+      autoplay: 'Автозапуск',
       exampleObject: {
-        label: 'Example object',
-        hint: 'Click on a property to insert its reference into JavaScript Expression editor.'
+        label: 'Типовой объект',
+        hint: 'Щелкните по свойству, чтобы вставить ссылку на него в редактор выражений JavaScript.'
       }
     }
   }
 }
 
 export const automatic = {
-  label: 'Automatic',
-  title: 'Automatic guards for transition on "{event}" from "{from}" to "{to}"',
-  alwaysAutomatic: 'Always automatic',
-  emptyList: 'No automatic guards specified for this transition.',
-  addNewCallout: 'Add new!'
+  label: 'Автоматические',
+  title: 'Автоматические сторожевые условия для перехода по "{event}" от "{from}" до "{to}"',
+  alwaysAutomatic: 'Всегда автоматические',
+  emptyList: 'Не указаны автоматические сторожевые условия для этого перехода.',
+  addNewCallout: 'Добавить новое!'
 }
 
 export const actions = {
-  label: 'Actions',
-  title: 'Actions for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Действия',
+  title: 'Действия для перехода по "{event}" от "{from}" до "{to}"',
   deleteDialog: {
-    message: 'Do you really want to remove this action?'
+    message: 'Действительно удалить это действие?'
   },
   name: {
-    label: 'Name'
+    label: 'Имя'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Параметры'
   },
-  emptyList: 'No actions specified for this transition.',
-  addNewCallout: 'Add new!',
+  emptyList: 'Не указаны действия для этого перехода.',
+  addNewCallout: 'Добавить новое!',
   editor: {
-    title: 'Action invocation',
-    chooseAction: 'Choose action'
+    title: 'Вызов действия',
+    chooseAction: 'Выберите действие'
   }
 }
 
 export const buttons = {
   save: {
-    label: 'Save'
+    label: 'Сохранить'
   },
   download: {
-    label: 'Download'
+    label: 'Скачать'
   },
   add: {
-    label: 'Add'
+    label: 'Добавить'
   },
   edit: {
-    label: 'Edit'
+    label: 'Редактировать'
   },
   delete: {
-    label: 'Delete'
+    label: 'Удалить'
   },
   ok: {
-    label: 'Ok'
+    label: 'Ок'
   },
   cancel: {
-    label: 'Cancel'
+    label: 'Отменить'
   },
   close: {
-    label: 'Close'
+    label: 'Закрыть'
   }
 }
 
 export const paramsEditor = {
   stringInput: {
-    placeholder: 'Enter value'
+    placeholder: 'Ввести значение'
   },
   integerInput: {
-    inValid: 'Not a valid integer'
+    inValid: 'Недопустимое целое число'
   },
   decimalInput: {
-    inValid: 'Not a valid number'
+    inValid: 'Недопустимое количество'
   },
-  enterValue: 'Enter value',
-  defineExpression: 'Define expression',
-  expression: 'Expression',
-  selectProperty: 'Select property of {businessObject}'
+  enterValue: 'Ввести значение',
+  defineExpression: 'Определить выражение',
+  expression: 'Выражение',
+  selectProperty: 'Выбрать свойство {businessObject}'
 }
 
 export const preview = {
-  title: 'Schema',
-  description: 'This is a temporary solution for FSM visualization.',
+  title: 'Схема',
+  description: 'Это временное решение по визуализации FSM.',
   meta: {
-    regular: 'regular state nodes',
-    initial: 'initial state nodes',
-    final: 'final state nodes'
+    regular: 'узлы регулярного состояния',
+    initial: 'узлы начального состояния',
+    final: 'узлы конечного состояния'
   },
-  nothingToVisualize: 'Nothing to visualize'
+  nothingToVisualize: 'Отсутствуют объекты для визуализации'
 }
 
 export const select = {
-  typeToSearch: `Type to search`,
-  createOption: `Create option "{option}"`,
-  clearValue: `Clear value`,
-  clearAll: `Clear all`,
-  nothingFound: `No results found`,
-  loading: `Loading…`
+  typeToSearch: `Ввести текст для поиска`,
+  createOption: `Создать параметр "{option}"`,
+  clearValue: `Очистить значение`,
+  clearAll: `Очистить все`,
+  nothingFound: `Не найдены результаты`,
+  loading: `Идет загрузка…`
 }

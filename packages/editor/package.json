@@ -13,7 +13,7 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/editor#readme", 
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/editor#readme",
   "keywords": [
     "editor",
     "fsm",

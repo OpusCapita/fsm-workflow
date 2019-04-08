@@ -1,206 +1,206 @@
 export const common = {
-  editorTitle: 'Workflow Editor',
+  editorTitle: 'Työnkulun muokkaus',
   workflowName: {
-    label: 'Name',
-    placeholder: 'Name of your schema'
+    label: 'Nimi',
+    placeholder: 'Skeemasi nimi'
   },
   confirmation: {
-    title: 'Confirmation',
-    message: 'You have made changes. Closing this editor will lose these changes.'
+    title: 'Vahvistus',
+    message: 'Olet tehnyt muutoksia. Tämän editorin sulkeminen poistaa muutokset.'
   }
 }
 
 export const states = {
-  label: 'States',
+  label: 'Tilat',
   name: {
-    label: 'Name',
-    placeholder: 'Enter state name'
+    label: 'Nimi',
+    placeholder: 'Lisää tilan nimi'
   },
   description: {
-    label: 'Description',
-    placeholder: 'Enter state description'
+    label: 'Kuvaus',
+    placeholder: 'Lisää tilan kuvaus'
   },
   initial: {
-    label: 'Initial'
+    label: 'Alku'
   },
   final: {
-    label: 'Final'
+    label: 'Loppu'
   },
-  noAvailableNamesLeft: 'No available names left.',
-  stateAlreadyExists: 'This state already exists',
+  noAvailableNamesLeft: 'Ei nimiä käytettävissä',
+  stateAlreadyExists: 'Tämä tila on jo olemassa',
   deleteDialog: {
     message: {
-      description: 'State "{stateName}" is used in transitions. Options to proceed:',
-      delete: 'Delete this state and involved transitions',
-      swap: 'Swap state "{stateName}" with a different one:'
+      description: 'Tilaa "{stateName}" käytetään siirtymissä. Jatkovaihtoehdot',
+      delete: 'Poista tämä tila ja siihen liittyvät siirtymät',
+      swap: 'Vaihda tila "{stateName}" toiseen'
     },
-    simpleMessage: 'Do you really want to delete this state?'
+    simpleMessage: 'Haluatko varmasti poistaa tämän tilan?'
   },
   editor: {
     title: {
-      add: 'Add new state',
-      edit: 'Edit state "{stateName}"'
+      add: 'Lisää uusi tila',
+      edit: 'Muokkaa tilaa "{stateName}"'
     }
   },
-  labelHint: 'Will appear on UI as "{label}"'
+  labelHint: 'Näkyy käyttöliittymässä nimellä "{label}"'
 }
 
 export const transitions = {
-  label: 'Transitions',
+  label: 'Siirtymät',
   event: {
-    label: 'Event',
-    placeholder: 'Enter event name'
+    label: 'Tapahtuma',
+    placeholder: 'Lisää tapahtuman nimi'
   },
   from: {
-    label: 'From',
-    placeholder: "Select 'from' state"
+    label: 'Alkaen',
+    placeholder: "Lisää lähtötila"
   },
   to: {
-    label: 'To',
-    placeholder: "Select 'to' state"
+    label: 'Asti',
+    placeholder: "Lisää kohdetila"
   },
   editor: {
     title: {
-      add: 'Add new transition',
-      edit: 'Edit transition'
+      add: 'Lisää uusi siirtymä',
+      edit: 'Muokkaa siirtymää'
     }
   },
   deleteDialog: {
-    message: 'Do you really want to delete this transition?'
+    message: 'Haluatko varmasti poistaa tämän siirtymän?'
   },
-  fromRequired: "Specify 'from' state",
-  toRequired: "Specify 'to' state"
+  fromRequired: "Määritä lähtötila",
+  toRequired: "Määritä kohdetila"
 }
 
 export const guards = {
-  label: 'Guards',
-  title: 'Guards for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Suojat',
+  title: 'Suojat siirtymälle tapahtumassa "{event}" lähtötilasta "{from}" kohdetilaan "{to}"',
   name: {
-    label: 'Name'
+    label: 'Nimi'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Parametrit'
   },
   negate: {
-    label: 'Negate'
+    label: 'Kiellä'
   },
-  expressionTypeName: 'JavaScript Expression',
-  emptyList: 'No guards specified for this transition.',
-  addNewCallout: 'Add new!',
+  expressionTypeName: 'JavaScript-lauseke',
+  emptyList: 'Tälle siirtymälle ei ole määritelty suojia.',
+  addNewCallout: 'Lisää uusi!',
   deleteDialog: {
-    message: 'Do you really want to remove this guard?'
+    message: 'Haluatko varmasti poistaa tämän suojan?'
   },
   editor: {
     title: {
-      edit: 'Edit guard',
-      add: 'Add guard'
+      edit: 'Muokkaa suojaa',
+      add: 'Lisää suoja'
     },
-    wrongResultType: 'Function returned: "{value}" of type "{type}", but expected a boolean value.',
+    wrongResultType: 'Toiminto palautti arvon: "{value}" tyyppiä "{type}", mutta odotettiin totuusarvoa.',
     predefinedFunction: {
-      label: 'Predefined function',
-      chooseCondition: 'Choose condition',
-      negate: 'Negate'
+      label: 'Esimääritelty toiminto',
+      chooseCondition: 'Valitse ehto',
+      negate: 'Kiellä'
     },
     expression: {
-      label: 'Expression',
-      placeholder: 'Enter JavaScript code here',
-      results: 'Results',
-      autoplay: 'Autoplay',
+      label: 'Ilmaisu',
+      placeholder: 'Syötä tässä JavaScript-koodi',
+      results: 'Tulokset',
+      autoplay: 'Automaattinen toisto',
       exampleObject: {
-        label: 'Example object',
-        hint: 'Click on a property to insert its reference into JavaScript Expression editor.'
+        label: 'Esimerkkiobjekti',
+        hint: 'Napsauta ominaisuutta, jonka viitteen haluat lisätä JavaScript-lausekkeen editoriin.'
       }
     }
   }
 }
 
 export const automatic = {
-  label: 'Automatic',
-  title: 'Automatic guards for transition on "{event}" from "{from}" to "{to}"',
-  alwaysAutomatic: 'Always automatic',
-  emptyList: 'No automatic guards specified for this transition.',
-  addNewCallout: 'Add new!'
+  label: 'Automaattinen',
+  title: 'Automaattiset suojat siirtymälle tapahtumassa "{event}" lähtötilasta "{from}" kohdetilaan "{to}"',
+  alwaysAutomatic: 'Aina automaattinen',
+  emptyList: 'Tälle siirtymälle ei ole määritelty automaattisia suojia.',
+  addNewCallout: 'Lisää uusi!'
 }
 
 export const actions = {
-  label: 'Actions',
-  title: 'Actions for transition on "{event}" from "{from}" to "{to}"',
+  label: 'Toimenpiteitä',
+  title: 'Toimet tapahtumassa "{event}" lähtötilasta "{from}" kohdetilaan "{to}"',
   deleteDialog: {
-    message: 'Do you really want to remove this action?'
+    message: 'Haluatko varmasti poistaa tämän toimen?'
   },
   name: {
-    label: 'Name'
+    label: 'Nimi'
   },
   parameters: {
-    label: 'Parameters'
+    label: 'Parametrit'
   },
-  emptyList: 'No actions specified for this transition.',
-  addNewCallout: 'Add new!',
+  emptyList: 'Tälle siirtymälle ei ole määritelty toimia.',
+  addNewCallout: 'Lisää uusi!',
   editor: {
-    title: 'Action invocation',
-    chooseAction: 'Choose action'
+    title: 'Toimen hakeminen',
+    chooseAction: 'Valitse toimenpide'
   }
 }
 
 export const buttons = {
   save: {
-    label: 'Save'
+    label: 'Tallenna'
   },
   download: {
-    label: 'Download'
+    label: 'Ladata'
   },
   add: {
-    label: 'Add'
+    label: 'Lisää'
   },
   edit: {
-    label: 'Edit'
+    label: 'Editoida'
   },
   delete: {
-    label: 'Delete'
+    label: 'Poista'
   },
   ok: {
-    label: 'Ok'
+    label: 'OK'
   },
   cancel: {
-    label: 'Cancel'
+    label: 'Peru'
   },
   close: {
-    label: 'Close'
+    label: 'Sulje'
   }
 }
 
 export const paramsEditor = {
   stringInput: {
-    placeholder: 'Enter value'
+    placeholder: 'Lisää arvo'
   },
   integerInput: {
-    inValid: 'Not a valid integer'
+    inValid: 'Ei kelvollinen kokonaisluku'
   },
   decimalInput: {
-    inValid: 'Not a valid number'
+    inValid: 'Ei kelvollinen luku'
   },
-  enterValue: 'Enter value',
-  defineExpression: 'Define expression',
-  expression: 'Expression',
-  selectProperty: 'Select property of {businessObject}'
+  enterValue: 'Lisää arvo',
+  defineExpression: 'Määrittele lauseke',
+  expression: 'Ilmaisu',
+  selectProperty: 'Valitse ominaisuus kohteelle {businessObject}'
 }
 
 export const preview = {
-  title: 'Schema',
-  description: 'This is a temporary solution for FSM visualization.',
+  title: 'Skeema',
+  description: 'Tämä on tilapäisratkaisu FSM-visualisointia varten.',
   meta: {
-    regular: 'regular state nodes',
-    initial: 'initial state nodes',
-    final: 'final state nodes'
+    regular: 'tavanomaiset tilanoodit',
+    initial: 'alkutilanoodit',
+    final: 'lopputilanoodit'
   },
-  nothingToVisualize: 'Nothing to visualize'
+  nothingToVisualize: 'Ei visualisoitavaa'
 }
 
 export const select = {
-  typeToSearch: `Type to search`,
-  createOption: `Create option "{option}"`,
-  clearValue: `Clear value`,
-  clearAll: `Clear all`,
-  nothingFound: `No results found`,
-  loading: `Loading…`
+  typeToSearch: `Kirjoita haku`,
+  createOption: `Luo valinta "{option}"`,
+  clearValue: `Tyhjennä arvo`,
+  clearAll: `Tyhjennä kaikki`,
+  nothingFound: `Tuloksia ei löytynyt`,
+  loading: `Lataa…`
 }
