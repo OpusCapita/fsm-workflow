@@ -2,13 +2,13 @@ import assert from 'assert';
 import Machine from '../Machine';
 import MachineDefinition from '../MachineDefinition';
 
-describe('machine: canRelease', function() {
+describe('machine: canBeReleased', function() {
   it(`can release if states are not defined in schema`, function() {
     const machine = new Machine({ machineDefinition: new MachineDefinition() });
 
     const object = { status: 'a' };
 
-    return machine.canRelease({ object }).
+    return machine.canBeReleased({ object }).
       then(result => {
         assert.equal(result, true)
       }).
@@ -30,7 +30,7 @@ describe('machine: canRelease', function() {
 
     const object = { status: 'a' };
 
-    return machine.canRelease({ object }).
+    return machine.canBeReleased({ object }).
       then(result => {
         assert.equal(result, true)
       }).
@@ -90,7 +90,7 @@ describe('machine: canRelease', function() {
     it(`returns true if requested release to any state and wildcard condition passes`, function() {
       const object = { enabled: true, total: 150, status: 'a' }
       const machine = new Machine({ machineDefinition: new MachineDefinition(definition) });
-      return machine.canRelease({ object }).
+      return machine.canBeReleased({ object }).
         then(result => {
           assert.equal(result, true);
         }).
@@ -100,7 +100,7 @@ describe('machine: canRelease', function() {
     it(`returns false if requested release to any state and wildcard condition fails`, function() {
       const object = { enabled: false, total: 150, status: 'a' }
       const machine = new Machine({ machineDefinition: new MachineDefinition(definition) });
-      return machine.canRelease({ object, to: 'b' }).
+      return machine.canBeReleased({ object, to: 'b' }).
         then(result => {
           assert.equal(result, false);
         }).
@@ -110,7 +110,7 @@ describe('machine: canRelease', function() {
     it(`returns true if requested release to particular state and all conditions pass`, function() {
       const object = { enabled: true, total: 301, status: 'a' }
       const machine = new Machine({ machineDefinition: new MachineDefinition(definition) });
-      return machine.canRelease({ object, to: 'b' }).
+      return machine.canBeReleased({ object, to: 'b' }).
         then(result => {
           assert.equal(result, true);
         }).
@@ -120,7 +120,7 @@ describe('machine: canRelease', function() {
     it(`returns false if requested release to particular state and some conditions fail`, function() {
       const object = { enabled: true, total: 299, status: 'a' }
       const machine = new Machine({ machineDefinition: new MachineDefinition(definition) });
-      return machine.canRelease({ object, to: 'b' }).
+      return machine.canBeReleased({ object, to: 'b' }).
         then(result => {
           assert.equal(result, false);
         }).

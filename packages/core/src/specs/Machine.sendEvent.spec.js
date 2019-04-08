@@ -11,7 +11,7 @@ const convertObjectToReference = (object) => {
   }
 };
 
-const createMachine = ({ actions = {}, history, objectAlias } = {}) => {
+const createMachine = ({ actions = {}, history, objectAlias, states } = {}) => {
   const objectConfiguration = {};
   if (objectAlias) {
     objectConfiguration['alias'] = objectAlias;
@@ -92,7 +92,8 @@ const createMachine = ({ actions = {}, history, objectAlias } = {}) => {
                 }
               ]
             }
-          ]
+          ],
+          ...(states ? { states } : {})
         },
         actions: actions || {}
       }),
@@ -256,6 +257,41 @@ describe('machine: sendEvent', function() {
         user,
         description
       });
+    });
+  });
+
+  it(`rejects if canBeReleased returns false`, function() {
+    const from = 'started';
+
+    const states = [
+      {
+        name: from,
+        release: [
+          {
+            to: 'first-stop',
+            guards: [
+              {
+                expression: 'object.enabled'
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const machine = createMachine({ states });
+
+    const object = { status: from, enabled: false };
+    const event = 'move'
+
+    return machine.sendEvent({ object, event }).then((result) => {
+      // eslint-disable-next-line max-len
+      assert.fail("event/transition 'move' should fail because object is not allowed to be released");
+    }).catch(err => {
+      assert.equal(err.object, object);
+      assert.equal(err.from, from);
+      assert.equal(err.to, 'first-stop');
+      assert(err.message);
     });
   });
 });

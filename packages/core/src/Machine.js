@@ -182,78 +182,91 @@ businessObjId: ...     // business object unique id (examples: '123456789')
       // using node destruct syntax to get 1st element and destruct it to {to, actions} object
       const [{ to, actions = [] }] = transitions;
 
-      // extracting actionDefinitions list from
-      const actionDefinitions = actions.map(action => {
-        if (!machineDefinition.actions[action.name]) {
-          // throwing an error will fail top reject promise
-          throw new Error({
-            action: action.name,
-            object,
-            from,
-            event,
-            to,
-            message: `Action '${action.name}' is specified in one the transitions but is not found/implemented!`
+      return this.canBeReleased({ object, to, request }).
+        then(ok => {
+          if (!ok) {
+            return promise.reject({
+              object,
+              from,
+              to,
+              event,
+              message: `Object cannot be released from "${from}" to "${to}"`
+            });
+          }
+
+          // extracting actionDefinitions list from
+          const actionDefinitions = actions.map(action => {
+            if (!machineDefinition.actions[action.name]) {
+              // throwing an error will fail top reject promise
+              throw new Error({
+                action: action.name,
+                object,
+                from,
+                event,
+                to,
+                message: `Action '${action.name}' is specified in one of transitions but is not found/implemented!`
+              });
+            }
+            // wrapping action into a Promise to support both sync/async variants
+            return machineDefinition.actions[action.name];
           });
-        }
-        // wrapping action into a Promise to support both sync/async variants
-        return machineDefinition.actions[action.name];
-      });
 
-      const implicitParams = {
-        from,
-        to,
-        event,
-        object,
-        ...machineDefinition.prepareObjectAlias(object),
-        request,
-        context
-      }
+          const implicitParams = {
+            from,
+            to,
+            event,
+            object,
+            ...machineDefinition.prepareObjectAlias(object),
+            request,
+            context
+          }
 
-      // reducing actionDefinitions to promise queue
-      return actionDefinitions.reduce(
-        (executionAccumulator, action, idx) => {
-          return executionAccumulator.then(({ actionExecutionResults, object }) => {
-            // action can be both synchronous and asynchronous
-            // we need promise.resolve to make it then-able
-            return promise.resolve(action({
-              ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
-              actionExecutionResults
-            })).then(actionResult => {
-              return {
-                actionExecutionResults: [
-                  ...actionExecutionResults,
-                  {
-                    name: actions[idx].name,
-                    result: actionResult
+          // reducing actionDefinitions to promise queue
+          return actionDefinitions.reduce(
+            (executionAccumulator, action, idx) => {
+              return executionAccumulator.then(({ actionExecutionResults, object }) => {
+                // action can be both synchronous and asynchronous
+                // we need promise.resolve to make it then-able
+                return promise.resolve(action({
+                  ...this.machineDefinition.prepareParams({ explicitParams: actions[idx].params, implicitParams }),
+                  actionExecutionResults
+                })).then(actionResult => {
+                  return {
+                    actionExecutionResults: [
+                      ...actionExecutionResults,
+                      {
+                        name: actions[idx].name,
+                        result: actionResult
+                      }
+                    ],
+                    object
                   }
-                ],
-                object
-              }
+                })
+              })
+            },
+            promise.resolve({ // initial object accumulator
+              actionExecutionResults: [],
+              object
             })
-          })
-        },
-        promise.resolve({ // initial object accumulator
-          actionExecutionResults: [],
-          object
-        })
-      ).then(({ actionExecutionResults, object }) => {
-        changeObjectState(to);
-        // first we promote object state to the next state and only then save history
-        return this.history.add({
-          from,
-          to,
-          event,
-          // TODO: add validation for type and id here???
-          ...convertObjectToReference(object),
-          // TODO: add validation for user???
-          user,
-          description,
-          workflowName
-        }).then(_ => ({
-          actionExecutionResults,
-          object
-        }))
-      });
+          ).then(({ actionExecutionResults, object }) => {
+            changeObjectState(to);
+            // first we promote object state to the next state and only then save history
+            return this.history.add({
+              from,
+              to,
+              event,
+              // TODO: add validation for type and id here???
+              ...convertObjectToReference(object),
+              // TODO: add validation for user???
+              user,
+              description,
+              workflowName
+            }).then(_ => ({
+              actionExecutionResults,
+              object
+            }))
+          });
+        });
     });
   }
 
@@ -286,9 +299,11 @@ businessObjId: ...     // business object unique id (examples: '123456789')
   }
 
   // returns promise, where then gets single argument with boolean value
-  can({ object, event }) {
+  can({ object, event }) { // TBD why 'request' is not passed here?
     return this.availableTransitions({ object, event }).then(({ transitions }) => {
-      return transitions && transitions.length > 0;
+      return transitions && transitions.length > 0 &&
+        this.promise.all(transitions.map(({ to }) => this.canBeReleased({ object, to }))).
+          then(results => !results.some(result => result === false));
     });
   }
 
@@ -306,7 +321,7 @@ businessObjId: ...     // business object unique id (examples: '123456789')
    * @returns {Promise<boolean>}
    */
   /* eslint-enable max-len */
-  canRelease({ object, to, request }) {
+  canBeReleased({ object, to, request }) {
     // calculate from state
     const from = this.currentState({ object });
     // get context
@@ -317,7 +332,7 @@ businessObjId: ...     // business object unique id (examples: '123456789')
         if (inspectionResults === true) {
           return true
         }
-        // return 'false' when first 'false' result is met
+        // otherwise return 'false' when first 'false' result is met
         return !inspectionResults.some(
           ({ result: inspectionResult }) => inspectionResult.some(({ result }) => result === false)
         )
