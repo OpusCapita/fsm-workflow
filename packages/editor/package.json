@@ -1,6 +1,6 @@
 {
   "name": "@opuscapita/fsm-workflow-editor",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "description": "Fsm workflow crud editor",
   "main": "lib/index.js",
   "files": [
@@ -13,7 +13,7 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/editor#readme", 
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/editor#readme",
   "keywords": [
     "editor",
     "fsm",

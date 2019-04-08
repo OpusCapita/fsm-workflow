@@ -3,95 +3,96 @@ import PropTypes from 'prop-types';
 import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
 import { I18nManager } from '@opuscapita/i18n';
 import FullName from './customComponents/FullName.react';
+import messages from '../../i18n';
 
-const messages = {
-  en: {
-    fsmWorkflowEditor: {
-      actions: {
-        testAction: { // like in workflow.actions
-          label: 'Test Action',
-          params: {
-            nickname: {
-              label: 'Nickname'
-            },
-            fullName: {
-              label: 'Full Name'
-            }
-          }
-        },
-        sendMail: {
-          label: 'Send Email',
-          params: {
-            fromAddress: {
-              label: "Sender' address"
-            }
-          }
-        }
-      },
-      conditions: { // like in workflow.conditions
-        userHasRoles: {
-          label: 'User Has Roles',
-          params: {
-            restrictedRoles: {
-              label: 'Only these roles are allowed'
-            }
-          }
-        }
-      },
-      states: {
-        approved: {
-          label: 'Approved'
-        },
-        inspectionRequired: {
-          label: "Inspection Required"
-        }
-      }
-    }
-  },
-  de: {
-    fsmWorkflowEditor: {
-      actions: {
-        testAction: { // like in workflow.actions
-          label: 'Testaktion',
-          params: {
-            nickname: {
-              label: 'Spitzname'
-            },
-            fullName: {
-              label: 'vollständiger Name'
-            }
-          }
-        },
-        sendMail: {
-          label: 'E-Mail senden',
-          params: {
-            fromAddress: {
-              label: "von der Adresse"
-            }
-          }
-        }
-      },
-      conditions: { // like in workflow.conditions
-        userHasRoles: {
-          label: 'Benutzer hat Rollen',
-          params: {
-            restrictedRoles: {
-              label: 'eingeschränkte Rollen'
-            }
-          }
-        }
-      },
-      states: {
-        approved: {
-          label: 'Genehmigt'
-        },
-        inspectionRequired: {
-          label: "Inspektion erforderlich"
-        }
-      }
-    }
-  }
-}
+// const messages = {
+//   en: {
+//     fsmWorkflowEditor: {
+//       actions: {
+//         testAction: { // like in workflow.actions
+//           label: 'Test Action',
+//           params: {
+//             nickname: {
+//               label: 'Nickname'
+//             },
+//             fullName: {
+//               label: 'Full Name'
+//             }
+//           }
+//         },
+//         sendMail: {
+//           label: 'Send Email',
+//           params: {
+//             fromAddress: {
+//               label: "Sender' address"
+//             }
+//           }
+//         }
+//       },
+//       conditions: { // like in workflow.conditions
+//         userHasRoles: {
+//           label: 'User Has Roles',
+//           params: {
+//             restrictedRoles: {
+//               label: 'Only these roles are allowed'
+//             }
+//           }
+//         }
+//       },
+//       states: {
+//         approved: {
+//           label: 'Approved'
+//         },
+//         inspectionRequired: {
+//           label: "Inspection Required"
+//         }
+//       }
+//     }
+//   },
+//   de: {
+//     fsmWorkflowEditor: {
+//       actions: {
+//         testAction: { // like in workflow.actions
+//           label: 'Testaktion',
+//           params: {
+//             nickname: {
+//               label: 'Spitzname'
+//             },
+//             fullName: {
+//               label: 'vollständiger Name'
+//             }
+//           }
+//         },
+//         sendMail: {
+//           label: 'E-Mail senden',
+//           params: {
+//             fromAddress: {
+//               label: "von der Adresse"
+//             }
+//           }
+//         }
+//       },
+//       conditions: { // like in workflow.conditions
+//         userHasRoles: {
+//           label: 'Benutzer hat Rollen',
+//           params: {
+//             restrictedRoles: {
+//               label: 'eingeschränkte Rollen'
+//             }
+//           }
+//         }
+//       },
+//       states: {
+//         approved: {
+//           label: 'Genehmigt'
+//         },
+//         inspectionRequired: {
+//           label: "Inspektion erforderlich"
+//         }
+//       }
+//     }
+//   }
+// }
 
 const wrapper = ({ i18n }) => class extends React.PureComponent {
   static childContextTypes = {
@@ -108,9 +109,8 @@ const wrapper = ({ i18n }) => class extends React.PureComponent {
 }
 
 // This @showroomScopeDecorator modify React.Component prototype by adding _renderChildren() method.
-export default
 @showroomScopeDecorator// eslint-disable-line react/no-multi-comp
-class WorkflowEditorScope extends PureComponent {
+export default class WorkflowEditorScope extends PureComponent {
   static childContextTypes = {
     i18n: PropTypes.object.isRequired
   }
