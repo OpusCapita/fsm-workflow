@@ -55,7 +55,8 @@ export default class WorkflowEditor extends PureComponent {
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
     schemaConfig: PropTypes.shape({
       state: PropTypes.shape({
-        availableNames: PropTypes.arrayOf(PropTypes.string)
+        availableNames: PropTypes.arrayOf(PropTypes.string),
+        releaseGuards: PropTypes.oneOf(['none', 'single', 'multiple'])
       })
     })
   }
@@ -75,7 +76,12 @@ export default class WorkflowEditor extends PureComponent {
   }
 
   static defaultProps = {
-    onSave: _ => {}
+    onSave: _ => {},
+    schemaConfig: {
+      state: {
+        releaseGuards: 'none' // TODO swap to 'multiple' by default when ready
+      }
+    }
   }
 
   constructor(...args) {
@@ -297,6 +303,7 @@ export default class WorkflowEditor extends PureComponent {
                   onDelete={this.handleDeleteState}
                   onEdit={this.handleEditState}
                   stateConfig={(schemaConfig || {}).state}
+                  conditions={conditions}
                 />
               </Tab>
               <Tab eventKey={2} title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.label')}</h4>)}>

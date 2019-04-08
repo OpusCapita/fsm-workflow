@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/lib/Table';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Button from 'react-bootstrap/lib/Button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import Guards from '../Guards/GuardsTable.react';
 import statePropTypes from './statePropTypes';
 import StateEditor from './StateEditor.react';
 import { isDef, getLabel } from '../utils';
@@ -24,8 +25,12 @@ export default class StatesTable extends PureComponent {
     onEdit: PropTypes.func.isRequired,
     statesInTransitions: PropTypes.arrayOf(PropTypes.string),
     stateConfig: PropTypes.shape({
-      availableNames: PropTypes.arrayOf(PropTypes.string)
-    })
+      availableNames: PropTypes.arrayOf(PropTypes.string),
+      releaseGuards: PropTypes.oneOf(['none', 'single', 'multiple'])
+    }),
+    conditions: PropTypes.objectOf(PropTypes.shape({
+      paramsSchema: PropTypes.object
+    }))
   }
 
   static contextTypes = {
@@ -88,16 +93,18 @@ export default class StatesTable extends PureComponent {
     })
   }
 
-  handleEdit = name => _ => this.setState({
-    currentState: name,
-    showModal: true
+  handleModal = name => type => _ => this.setState({
+    showModal: true,
+    modalType: type,
+    currentState: name
   })
 
-  handleAdd = this.handleEdit()
+  handleAdd = this.handleModal()('edit');
 
   handleClose = _ => this.setState({
     currentState: null,
-    showModal: false
+    showModal: false,
+    modalType: null
   })
 
   handleSave = (...args) => {
@@ -107,8 +114,8 @@ export default class StatesTable extends PureComponent {
 
   render() {
     const { i18n } = this.context;
-    const { stateConfig } = this.props;
-    const { states, currentState, showModal } = this.state;
+    const { stateConfig, conditions } = this.props;
+    const { states, currentState, showModal, modalType } = this.state;
 
     let modal;
 
@@ -119,15 +126,31 @@ export default class StatesTable extends PureComponent {
         currentStateObject = find(states, ({ name }) => name === currentState)
       }
 
-      modal = (
-        <StateEditor
-          value={currentStateObject}
-          onClose={this.handleClose}
-          onSave={this.handleSave}
-          usedNames={states.map(({ name }) => name)}
-          availableNames={(stateConfig || {}).availableNames}
-        />
-      )
+      switch (modalType) {
+        case 'guards':
+          modal = (stateConfig || {}).releaseGuards === 'none' ?
+            (
+              <Guards
+                guards={((currentStateObject || {}).release || []).reduce((acc, { to, guards }) => to === undefined ? [...acc, ...guards] : [], [])}
+                conditions={conditions}
+                title={i18n.getMessage('State Release Guards [TODO i18n]')}
+                onClose={this.handleClose}
+                // onSave={this.handleSaveGuards(currentState)}
+              />
+            ) :
+            <b>TODO releaseGuards !== 'none'</b>;
+          break;
+        default:
+          modal = (
+            <StateEditor
+              value={currentStateObject}
+              onClose={this.handleClose}
+              onSave={this.handleSave}
+              usedNames={states.map(({ name }) => name)}
+              availableNames={(stateConfig || {}).availableNames}
+            />
+          )
+      }
     }
 
     return (
@@ -171,10 +194,13 @@ export default class StatesTable extends PureComponent {
                   </td>
                   <td className='text-right'>
                     <ButtonGroup bsStyle='sm'>
-                      <Button onClick={this.handleEdit(name)}>
+                      <Button onClick={this.handleModal(name)('edit')}>
                         <Glyphicon glyph='edit'/>
                         {'\u2000'}
                         {i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label')}
+                      </Button>
+                      <Button onClick={this.handleModal(name)('guards')}>
+                        {i18n.getMessage('fsmWorkflowEditor.ui.guards.label')}
                       </Button>
                       <Button onClick={this.handleDelete(name)}>
                         <Glyphicon glyph='trash'/>
