@@ -1,4 +1,11 @@
 
+[Release 2.2.7](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.7) Mon Apr 08 2019 11:07:52 GMT+0300 (MSK)
+=======================================================
+
+- Add translations for remaining languages to editor ([#92](https://github.com/OpusCapita/fsm-workflow/issues/92)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2019-04-08 10:55:25 +0300)
+- Fixing text [skip ci] (GitHub asergeev-sc@users.noreply.github.com, 2019-03-18 15:16:11 +0300)
+- Fix broken link in REAMDE.md (GitHub kvolkovich-sc@users.noreply.github.com, 2019-03-13 09:00:57 +0300)
+
 [Release 2.2.6](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.6) Tue Dec 18 2018 17:04:33 GMT+0300 (MSK)
 =======================================================
 
