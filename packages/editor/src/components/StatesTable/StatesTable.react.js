@@ -11,6 +11,7 @@ import StateEditor from './StateEditor.react';
 import { isDef, getLabel } from '../utils';
 import withConfirmDialog from '../ConfirmDialog';
 import DeleteStateDialogBody from './DeleteStateDialogBody.react';
+import { stateConfigPropTypes } from '../WorkflowEditor/schemaConfigPropTypes';
 
 export const DELETE_STATE_TRANSITIONS = 'deleteStateTransitions';
 export const SWAP_STATE_IN_TRANSITIONS = 'swapStateInTransitions';
@@ -24,13 +25,11 @@ export default class StatesTable extends PureComponent {
     onDelete: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     statesInTransitions: PropTypes.arrayOf(PropTypes.string),
-    stateConfig: PropTypes.shape({
-      availableNames: PropTypes.arrayOf(PropTypes.string),
-      releaseGuards: PropTypes.oneOf(['none', 'single', 'multiple'])
-    }),
+    stateConfig: stateConfigPropTypes,
     conditions: PropTypes.objectOf(PropTypes.shape({
       paramsSchema: PropTypes.object
-    }))
+    })),
+    onSaveReleaseGuards: PropTypes.func.isRequired
   }
 
   static contextTypes = {
@@ -101,21 +100,28 @@ export default class StatesTable extends PureComponent {
 
   handleAdd = this.handleModal()('edit');
 
-  handleClose = _ => this.setState({
+  handleCloseModal = _ => this.setState({
     currentState: null,
     showModal: false,
     modalType: null
   })
 
   handleSave = (...args) => {
-    this.handleClose();
+    this.handleCloseModal();
     this.props.onEdit(...args);
+  }
+
+  handleSaveGuards = currentState => guards => {
+    this.handleCloseModal();
+    this.props.onSaveReleaseGuards(currentState)([{ guards }]);
   }
 
   render() {
     const { i18n } = this.context;
     const { stateConfig, conditions } = this.props;
     const { states, currentState, showModal, modalType } = this.state;
+
+    const simpleReleaseGuards = ((stateConfig || {}).releaseGuards || {}).toState === 'none';
 
     let modal;
 
@@ -128,14 +134,17 @@ export default class StatesTable extends PureComponent {
 
       switch (modalType) {
         case 'guards':
-          modal = (stateConfig || {}).releaseGuards === 'none' ?
+          modal = simpleReleaseGuards ?
             (
               <Guards
-                guards={((currentStateObject || {}).release || []).reduce((acc, { to, guards }) => to === undefined ? [...acc, ...guards] : [], [])}
+                guards={
+                  ((currentStateObject || {}).release || []).
+                    reduce((acc, { to, guards }) => to === undefined ? [...acc, ...guards] : [], [])
+                }
                 conditions={conditions}
                 title={i18n.getMessage('State Release Guards [TODO i18n]')}
-                onClose={this.handleClose}
-                // onSave={this.handleSaveGuards(currentState)}
+                onClose={this.handleCloseModal}
+                onSave={this.handleSaveGuards(currentState)}
               />
             ) :
             <b>TODO releaseGuards !== 'none'</b>;
@@ -144,7 +153,7 @@ export default class StatesTable extends PureComponent {
           modal = (
             <StateEditor
               value={currentStateObject}
-              onClose={this.handleClose}
+              onClose={this.handleCloseModal}
               onSave={this.handleSave}
               usedNames={states.map(({ name }) => name)}
               availableNames={(stateConfig || {}).availableNames}

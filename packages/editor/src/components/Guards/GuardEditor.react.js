@@ -81,7 +81,7 @@ export default class GuardEditor extends PureComponent {
     confirmHandler: this.props.onClose
   })
 
-  handleSave = _ => this.props.onSave(this.state.guard)
+  handleSave = _ => this.props.onSave(omitIfEmpty('expression')(this.state.guard))
 
   handleCursorActivity = cm => this.setState({
     guardEditorSelectorPos: cm.doc.sel.ranges[0].anchor

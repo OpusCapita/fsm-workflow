@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/lib/Col';
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 import isEqual from 'lodash/isEqual';
+import find from 'lodash/find';
 import hash from 'object-hash';
 import TopButtons from '../TopButtons.react';
 import TopForm from '../TopForm.react';
@@ -17,6 +18,7 @@ import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
 import guardPropTypes from '../Guards/guardPropTypes';
 import actionPropTypes from '../Actions/actionPropTypes';
+import { schemaConfigPropTypes } from './schemaConfigPropTypes';
 // TODO maybe move the following flags somewhere or get rid of them entirely
 import { DELETE_STATE_TRANSITIONS, SWAP_STATE_IN_TRANSITIONS } from '../StatesTable/StatesTable.react';
 import translations from '../../i18n';
@@ -53,12 +55,7 @@ export default class WorkflowEditor extends PureComponent {
       }).isRequired,
     }).isRequired,
     componentsRegistry: PropTypes.objectOf(PropTypes.func),
-    schemaConfig: PropTypes.shape({
-      state: PropTypes.shape({
-        availableNames: PropTypes.arrayOf(PropTypes.string),
-        releaseGuards: PropTypes.oneOf(['none', 'single', 'multiple'])
-      })
-    })
+    schemaConfig: schemaConfigPropTypes
   }
 
   static contextTypes = {
@@ -79,7 +76,9 @@ export default class WorkflowEditor extends PureComponent {
     onSave: _ => {},
     schemaConfig: {
       state: {
-        releaseGuards: 'none' // TODO swap to 'multiple' by default when ready
+        releaseGuards: {
+          toState: 'none'
+        }
       }
     }
   }
@@ -260,6 +259,21 @@ export default class WorkflowEditor extends PureComponent {
     })
   )
 
+  handleSaveReleaseGuards = stateName => releaseGuards => this.setNewState(prevState => {
+    return {
+      schema: {
+        ...prevState.schema,
+        states: ((states = []) => {
+          const stateInStates = find(states, ({ name }) => name === stateName);
+          if (stateInStates) {
+            return states.map(state => state.name === stateName ? { ...state, release: releaseGuards } : state)
+          }
+          return [...states, { name: stateName, release: releaseGuards }]
+        })(prevState.schema.states)
+      }
+    }
+  })
+
   render() {
     const { i18n } = this.context;
     const { title, workflow: { actions = {}, conditions = {} }, schemaConfig } = this.props;
@@ -304,6 +318,7 @@ export default class WorkflowEditor extends PureComponent {
                   onEdit={this.handleEditState}
                   stateConfig={(schemaConfig || {}).state}
                   conditions={conditions}
+                  onSaveReleaseGuards={this.handleSaveReleaseGuards}
                 />
               </Tab>
               <Tab eventKey={2} title={(<h4>{i18n.getMessage('fsmWorkflowEditor.ui.transitions.label')}</h4>)}>

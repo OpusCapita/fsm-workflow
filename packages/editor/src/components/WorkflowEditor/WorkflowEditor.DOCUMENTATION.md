@@ -399,7 +399,9 @@
 
   schemaConfig = {{
     state: {
-      releaseGuards: 'none',
+      releaseGuards: {
+        toState: 'none'
+      },
       availableNames: [
         'inspectionRequired',
         'approvalRequired',
