@@ -251,6 +251,64 @@ export default class MachineDefinition {
   }
 
   /**
+   * inspectReleaseConditions inspects 'release' guards defined in schema.states['mystate'].release (optional)
+   *
+   * Release is permitted if not stated otherwise.
+   *
+   * @param {string} from - state to be inspected
+   * @param {string} to (optional) - 'to' state in release guards
+   * @returns {Promise => true|array<object{ condition: <as in schema>, result: <inspectConditions return value> }>}
+   */
+  inspectReleaseConditions({ from, to, object, request, context }) {
+    if (from === null || from === undefined) {
+      return this.promise.reject(Error("inspectReleaseConditions: 'from' is not defined"));
+    }
+
+    // get state definition (if exists) from schema
+    const state = (this.schema.states || []).filter(({ name }) => name === from)[0];
+
+    // if no release guards defined for this state then return 'true'
+    if (!state || !state.release) {
+      return this.promise.resolve(true);
+    }
+
+    const implicitParams = {
+      from,
+      to,
+      object,
+      ...this.prepareObjectAlias(object),
+      request,
+      context
+    }
+
+    return this.promise.all(state.release.
+      /**
+       * Get release conditions which are relevant for current request.
+       * if condition.to === undefined then it works for any 'to'
+       * if condition.to === 'some_name' then it works only for 'to' === 'some_name'
+       * if condition.to === ['one', 'two'] then it works for 'to' === 'one' and 'to' === 'two'
+       */
+      filter(releaseCondition => {
+        // if target state 'to' is not defined in request, then apply only conditions without 'to' property
+        if (to === undefined) {
+          return releaseCondition.to === undefined
+        }
+        if (Array.isArray(releaseCondition.to)) {
+          return releaseCondition.to.indexOf(to) > -1
+        }
+        // if 'to' is not defined in release condition then it's relevant for any 'to' in request
+        if (releaseCondition.to === undefined) {
+          return true
+        }
+        return to === releaseCondition.to;
+      }).map(
+        condition => this.inspectConditions({ conditions: condition.guards, implicitParams }).
+          then(inspectedReleaseConditions => ({ condition, result: inspectedReleaseConditions }))
+      )
+    )
+  }
+
+  /**
    * Returns a list of all states that are defined in schema
    *
    * @return Array

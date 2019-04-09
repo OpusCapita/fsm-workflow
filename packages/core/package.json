@@ -25,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/OpusCapita/fsm-workflow/issues"
   },
-  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/core#readme", 
+  "homepage": "https://github.com/OpusCapita/fsm-workflow/tree/master/packages/core#readme",
   "keywords": [
     "fsm",
     "statemachine",
@@ -39,7 +39,7 @@
     "transition",
     "action",
     "state"
-  ],  
+  ],
   "dependencies": {
     "bluebird": "3.5.0"
   },
