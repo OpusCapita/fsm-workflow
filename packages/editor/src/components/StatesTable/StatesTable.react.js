@@ -12,6 +12,7 @@ import { isDef, getLabel } from '../utils';
 import withConfirmDialog from '../ConfirmDialog';
 import DeleteStateDialogBody from './DeleteStateDialogBody.react';
 import { stateConfigPropTypes } from '../WorkflowEditor/schemaConfigPropTypes';
+import ReleaseTable from './ReleaseGuards/ReleaseTable.react';
 
 export const DELETE_STATE_TRANSITIONS = 'deleteStateTransitions';
 export const SWAP_STATE_IN_TRANSITIONS = 'swapStateInTransitions';
@@ -111,9 +112,14 @@ export default class StatesTable extends PureComponent {
     this.props.onEdit(...args);
   }
 
-  handleSaveGuards = currentState => guards => {
+  handleSaveSimpleReleaseGuards = currentState => guards => {
     this.handleCloseModal();
     this.props.onSaveReleaseGuards(currentState)([{ guards }]);
+  }
+
+  handleSaveReleaseGuards = currentState => releaseGuards => {
+    this.handleCloseModal();
+    this.props.onSaveReleaseGuards(currentState)(releaseGuards);
   }
 
   render() {
@@ -144,10 +150,19 @@ export default class StatesTable extends PureComponent {
                 conditions={conditions}
                 title={i18n.getMessage('State Release Guards [TODO i18n]')}
                 onClose={this.handleCloseModal}
-                onSave={this.handleSaveGuards(currentState)}
+                onSave={this.handleSaveSimpleReleaseGuards(currentState)}
               />
             ) :
-            <b>TODO releaseGuards !== 'none'</b>;
+            (
+              <ReleaseTable
+                releaseGuards={(currentStateObject || {}).release}
+                title={i18n.getMessage('State Release Guards [TODO i18n]')}
+                onClose={this.handleCloseModal}
+                onSave={this.handleSaveReleaseGuards(currentState)}
+                config={(stateConfig || {}).releaseGuards || {}}
+                conditions={conditions}
+              />
+            );
           break;
         default:
           modal = (
