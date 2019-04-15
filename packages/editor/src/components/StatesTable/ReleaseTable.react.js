@@ -6,10 +6,11 @@ import Modal from 'react-bootstrap/lib/Modal';
 import Table from 'react-bootstrap/lib/Table';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import withConfirmDialog from '../../ConfirmDialog';
-import { stateReleaseGuardsPropTypes } from '../statePropTypes';
-import { isDef, getLabel } from '../../utils';
-import Guards from '../../Guards/GuardsTable.react';
+import withConfirmDialog from '../ConfirmDialog';
+import { stateReleaseGuardsPropTypes } from './statePropTypes';
+import { isDef, getLabel } from '../utils';
+import Guards from '../Guards/GuardsTable.react';
+import Select from '../Select';
 
 @withConfirmDialog
 export default class ReleaseTable extends PureComponent {
@@ -23,7 +24,9 @@ export default class ReleaseTable extends PureComponent {
     })),
     config: PropTypes.shape({
       toState: PropTypes.oneOf(['none', 'single', 'multiple'])
-    })
+    }),
+    availableNames: PropTypes.arrayOf(PropTypes.string),
+    from: PropTypes.string.isRequired
   }
 
   static contextTypes = {
@@ -37,6 +40,16 @@ export default class ReleaseTable extends PureComponent {
     modalType: null
   }
 
+  isMode = mode => {
+    const { toState } = this.props.config || {};
+    if (mode === 'multiple') {
+      return toState ? toState === mode : true; // if no toState specified then default is 'multiple'
+    }
+    return toState === mode
+  }
+
+  isMultiple = _ => this.isMode('multiple');
+
   onDelete = index => this.setState(prevState => ({
     releaseGuards: prevState.releaseGuards.filter((_, i) => i !== index)
   }))
@@ -44,7 +57,10 @@ export default class ReleaseTable extends PureComponent {
   hasUnsavedChanges = _ => {
     const { releaseGuards: stateReleaseGuards } = this.state;
     const { releaseGuards } = this.props;
-    return !isEqual(stateReleaseGuards, releaseGuards)
+    if (!releaseGuards && !stateReleaseGuards.length) {
+      return false
+    }
+    return !isEqual(stateReleaseGuards, releaseGuards);
   }
 
   handleClose = this._triggerDialog({
@@ -53,6 +69,11 @@ export default class ReleaseTable extends PureComponent {
   })
 
   handleDelete = index => this._triggerDialog({
+    showDialog: _ => {
+      // delete without a dialog if guards are empty and/or 'to' is empty
+      const { to, guards } = this.state.releaseGuards[index];
+      return to || (guards || []).length > 0
+    },
     confirmHandler: _ => this.onDelete(index),
     message: this.context.i18n.getMessage('fsmWorkflowEditor.ui.guards.deleteDialog.message')
   })
@@ -78,17 +99,83 @@ export default class ReleaseTable extends PureComponent {
         if (i !== index) {
           return el
         }
+        const { guards: _, ...rest } = el; // eslint-disable-line no-unused-vars
         return {
-          ...el,
-          guards
+          ...rest,
+          ...(guards.length ? { guards } : {})
         }
       })
     }));
   }
 
+  handleChangeToState = index => value => this.setState(prevState => {
+    return {
+      releaseGuards: prevState.releaseGuards.map((el, i) => {
+        if (index !== i) {
+          return el;
+        }
+        const { to, ...rest } = el; // eslint-disable-line no-unused-vars
+        if (Array.isArray(value)) {
+          if (!value.length) {
+            return rest
+          }
+          return {
+            // if array holds a single element - save this string value instead of an array
+            to: value.length === 1 ? value[0] : value,
+            ...rest
+          }
+        }
+        return value ? { to: value, ...rest } : rest
+      })
+    }
+  });
+
+  /**
+   * Convert value to React-Select's value:
+   * - from 'myvalue' make { value: 'myvalue', label: 'mylabel' }
+   * - from ['a', 'b'] make [{ value: 'a', label: 'a-i18n-label' }, { value: 'b', label: 'b-i18n-label' }]
+   */
+  value2rs = value => {
+    if (!value) {
+      return null
+    }
+
+    const { i18n } = this.context;
+
+    const result = this.isMultiple() ?
+      // cast a string into a single-element array
+      (typeof value === 'string' ? [value] : value).map(name => ({
+        value: name,
+        label: getLabel(i18n)('states')(name)
+      })) :
+      {
+        value,
+        label: getLabel(i18n)('states')(value)
+      }
+
+    return result;
+  }
+
+  /**
+   * Convert React-Select's value { value: 'myvalue', label: 'mylabel' } to value itself: 'myvalue'
+   */
+  rs2value = rsValue => {
+    if (Array.isArray(rsValue)) {
+      return rsValue.map(({ value }) => value)
+    }
+    if (rsValue) {
+      return rsValue.value
+    }
+    return rsValue
+  }
+
+  handleAdd = _ => this.setState(prevState => ({
+    releaseGuards: [...prevState.releaseGuards, { guards: [] }]
+  }));
+
   render() {
     const { i18n } = this.context;
-    const { title, conditions } = this.props;
+    const { title, conditions, availableNames, from } = this.props;
     const { releaseGuards, showModal, currentIndex, modalType } = this.state;
 
     let modal;
@@ -99,8 +186,6 @@ export default class ReleaseTable extends PureComponent {
       if (isDef(currentIndex)) {
         releaseGuard = releaseGuards[currentIndex];
       }
-
-      // TODO add release guards editor modal
 
       switch (modalType) {
         case 'guards':
@@ -118,6 +203,11 @@ export default class ReleaseTable extends PureComponent {
           modal = null;
       }
     }
+
+    const releaseStateOptions = (availableNames || []).filter(name => name !== from).map(name => ({
+      value: name,
+      label: getLabel(i18n)('states')(name)
+    }));
 
     return (
       <Modal
@@ -140,7 +230,7 @@ export default class ReleaseTable extends PureComponent {
                   <th className='text-right'>
                     <Button
                       bsSize='sm'
-                      onClick={this.handleModal()('edit')}
+                      onClick={this.handleAdd}
                     >
                       {i18n.getMessage('fsmWorkflowEditor.ui.buttons.add.label')}
                     </Button>
@@ -153,21 +243,17 @@ export default class ReleaseTable extends PureComponent {
                     releaseGuards.map(({ to }, index) => (
                       <tr key={`${JSON.stringify(to)}-${index}`}>
                         <td style={{ paddingTop: '15px' }}>
-                          {
-                            to ?
-                              Array.isArray(to) && to.length > 0 ?
-                                JSON.stringify(to.map(getLabel(i18n)('states'))) :
-                                getLabel(i18n)('states')(to) :
-                              null
-                          }
+                          <Select
+                            multi={this.isMode('multiple')}
+                            removeSelected={true}
+                            value={this.value2rs(to)}
+                            options={releaseStateOptions}
+                            onChange={value => this.handleChangeToState(index)(this.rs2value(value))}
+                            placeholder='Any state' // TODO i18n
+                          />
                         </td>
                         <td className='text-right'>
                           <ButtonGroup bsStyle='sm'>
-                            <Button onClick={this.handleModal(index)('edit')}>
-                              <Glyphicon glyph='edit' />
-                              {'\u2000'}
-                              {i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label')}
-                            </Button>
                             <Button onClick={this.handleModal(index)('guards')}>
                               {i18n.getMessage('fsmWorkflowEditor.ui.guards.label')}
                             </Button>
@@ -183,7 +269,7 @@ export default class ReleaseTable extends PureComponent {
                     <tr>
                       <td colSpan={4} style={{ textAlign: 'center' }}>
                         <a
-                          onClick={this.handleModal()('edit')}
+                          onClick={this.handleAdd}
                           style={{ cursor: 'pointer', fontWeight: 'bold' }}
                         >
                           {i18n.getMessage('fsmWorkflowEditor.ui.guards.addNewCallout')}

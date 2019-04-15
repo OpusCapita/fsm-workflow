@@ -77,7 +77,7 @@ export default class WorkflowEditor extends PureComponent {
     schemaConfig: {
       state: {
         releaseGuards: {
-          toState: 'none'
+          toState: 'multiple'
         }
       }
     }
@@ -266,7 +266,18 @@ export default class WorkflowEditor extends PureComponent {
         states: ((states = []) => {
           const stateInStates = find(states, ({ name }) => name === stateName);
           if (stateInStates) {
-            return states.map(state => state.name === stateName ? { ...state, release: releaseGuards } : state)
+            return states.map(state => {
+              if (state.name !== stateName) {
+                return state
+              }
+              const actualGuards = releaseGuards.filter(el => (el.guards || {}).length > 0);
+              if (actualGuards.length) {
+                return { ...state, release: actualGuards }
+              } else {
+                const { release, ...rest } = state; // eslint-disable-line no-unused-vars
+                return rest
+              }
+            })
           }
           return [...states, { name: stateName, release: releaseGuards }]
         })(prevState.schema.states)
