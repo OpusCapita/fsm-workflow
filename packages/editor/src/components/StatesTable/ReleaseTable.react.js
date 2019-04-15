@@ -11,6 +11,7 @@ import { stateReleaseGuardsPropTypes } from './statePropTypes';
 import { isDef, getLabel } from '../utils';
 import Guards from '../Guards/GuardsTable.react';
 import Select from '../Select';
+import { releaseGuardsPropTypes } from '../schemaConfigPropTypes';
 
 @withConfirmDialog
 export default class ReleaseTable extends PureComponent {
@@ -22,9 +23,7 @@ export default class ReleaseTable extends PureComponent {
     conditions: PropTypes.objectOf(PropTypes.shape({
       paramsSchema: PropTypes.object
     })),
-    config: PropTypes.shape({
-      toState: PropTypes.oneOf(['none', 'single', 'multiple'])
-    }),
+    config: releaseGuardsPropTypes,
     availableNames: PropTypes.arrayOf(PropTypes.string),
     from: PropTypes.string.isRequired
   }

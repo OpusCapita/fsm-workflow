@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
-const releaseGuardsPropTypes = PropTypes.shape({
-  toState: PropTypes.oneOf(['none', 'single', 'multiple'])
+export const releaseGuardsPropTypes = PropTypes.shape({
+  toState: PropTypes.oneOf(['all', 'single', 'multiple'])
 });
 
 export const stateConfigPropTypes = PropTypes.shape({

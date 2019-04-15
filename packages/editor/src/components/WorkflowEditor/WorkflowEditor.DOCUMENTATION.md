@@ -427,7 +427,7 @@
   schemaConfig = {{
     state: {
       releaseGuards: {
-        toState: 'none' // none, single, multiple (default)
+        toState: 'single' // all, single, multiple (default)
       },
       availableNames: [
         'inspectionRequired',

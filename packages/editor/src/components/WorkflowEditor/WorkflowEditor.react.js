@@ -18,7 +18,7 @@ import './styles.less';
 import statePropTypes from '../StatesTable/statePropTypes';
 import guardPropTypes from '../Guards/guardPropTypes';
 import actionPropTypes from '../Actions/actionPropTypes';
-import { schemaConfigPropTypes } from './schemaConfigPropTypes';
+import { schemaConfigPropTypes } from '../schemaConfigPropTypes';
 // TODO maybe move the following flags somewhere or get rid of them entirely
 import { DELETE_STATE_TRANSITIONS, SWAP_STATE_IN_TRANSITIONS } from '../StatesTable/StatesTable.react';
 import translations from '../../i18n';

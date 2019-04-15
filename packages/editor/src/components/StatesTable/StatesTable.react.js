@@ -11,7 +11,7 @@ import StateEditor from './StateEditor.react';
 import { isDef, getLabel } from '../utils';
 import withConfirmDialog from '../ConfirmDialog';
 import DeleteStateDialogBody from './DeleteStateDialogBody.react';
-import { stateConfigPropTypes } from '../WorkflowEditor/schemaConfigPropTypes';
+import { stateConfigPropTypes } from '../schemaConfigPropTypes';
 import ReleaseTable from './ReleaseTable.react';
 
 export const DELETE_STATE_TRANSITIONS = 'deleteStateTransitions';
@@ -124,10 +124,10 @@ export default class StatesTable extends PureComponent {
 
   render() {
     const { i18n } = this.context;
-    const { stateConfig, conditions } = this.props;
+    const { stateConfig, conditions, statesInTransitions } = this.props;
     const { states, currentState, showModal, modalType } = this.state;
 
-    const simpleReleaseGuards = ((stateConfig || {}).releaseGuards || {}).toState === 'none';
+    const simpleReleaseGuards = ((stateConfig || {}).releaseGuards || {}).toState === 'all';
 
     let modal;
 
@@ -137,8 +137,6 @@ export default class StatesTable extends PureComponent {
       if (isDef(currentState)) {
         currentStateObject = find(states, ({ name }) => name === currentState)
       }
-
-      console.log({ currentState, currentStateObject });
 
       switch (modalType) {
         case 'guards':
@@ -163,7 +161,7 @@ export default class StatesTable extends PureComponent {
                 onSave={this.handleSaveReleaseGuards(currentState)}
                 config={(stateConfig || {}).releaseGuards || {}}
                 conditions={conditions}
-                availableNames={(stateConfig || {}).availableNames}
+                availableNames={(stateConfig || {}).availableNames || statesInTransitions}
                 from={currentState}
               />
             );
