@@ -194,7 +194,7 @@ export default class ReleaseTable extends PureComponent {
             <Guards
               guards={(releaseGuard || {}).guards}
               conditions={conditions}
-              title={i18n.getMessage('i18n TODO')}
+              title={i18n.getMessage('fsmWorkflowEditor.ui.guards.label')}
               onClose={this.handleCloseModal}
               onSave={this.handleSaveGuards(currentIndex)}
             />
@@ -227,7 +227,7 @@ export default class ReleaseTable extends PureComponent {
             <Table>
               <thead>
                 <tr>
-                  <th>{i18n.getMessage('fsmWorkflowEditor.ui.states.releaseGuards.to')}</th>
+                  <th>{i18n.getMessage('fsmWorkflowEditor.ui.states.releaseGuards.table.to.label')}</th>
                   <th className='text-right'>
                     <Button
                       bsSize='sm'

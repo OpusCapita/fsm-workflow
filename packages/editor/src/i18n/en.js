@@ -42,7 +42,15 @@ export const states = {
       edit: 'Edit state "{stateName}"'
     }
   },
-  labelHint: 'Will appear on UI as "{label}"'
+  labelHint: 'Will appear on UI as "{label}"',
+  releaseGuards: {
+    table: {
+      to: {
+        label: 'To'
+      },
+      title: 'Release guards for state "{stateName}"'
+    }
+  }
 }
 
 export const transitions = {

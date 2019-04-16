@@ -148,7 +148,7 @@ export default class StatesTable extends PureComponent {
                     reduce((acc, { to, guards }) => to === undefined ? [...acc, ...guards] : acc, [])
                 }
                 conditions={conditions}
-                title={i18n.getMessage('State Release Guards [TODO i18n]')}
+                title={i18n.getMessage('fsmWorkflowEditor.ui.guards.label')}
                 onClose={this.handleCloseModal}
                 onSave={this.handleSaveSimpleReleaseGuards(currentState)}
               />
@@ -156,7 +156,9 @@ export default class StatesTable extends PureComponent {
             (
               <ReleaseTable
                 releaseGuards={(currentStateObject || {}).release}
-                title={i18n.getMessage('State Release Guards [TODO i18n]')}
+                title={i18n.getMessage('fsmWorkflowEditor.ui.states.releaseGuards.table.title', {
+                  stateName: currentState
+                })}
                 onClose={this.handleCloseModal}
                 onSave={this.handleSaveReleaseGuards(currentState)}
                 config={(stateConfig || {}).releaseGuards || {}}
