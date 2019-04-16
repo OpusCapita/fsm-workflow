@@ -13,6 +13,11 @@ import Guards from '../Guards/GuardsTable.react';
 import Select from '../Select';
 import { releaseGuardsPropTypes } from '../schemaConfigPropTypes';
 
+const releaseGuardNotEmpty = guard => {
+  const { to, guards } = guard;
+  return !!(to || (guards || []).length)
+}
+
 @withConfirmDialog
 export default class ReleaseTable extends PureComponent {
   static propTypes = {
@@ -56,7 +61,7 @@ export default class ReleaseTable extends PureComponent {
   hasUnsavedChanges = _ => {
     const { releaseGuards: stateReleaseGuards } = this.state;
     const { releaseGuards } = this.props;
-    if (!releaseGuards && !stateReleaseGuards.length) {
+    if (!releaseGuards && (!stateReleaseGuards.length || !stateReleaseGuards.some(releaseGuardNotEmpty))) {
       return false
     }
     return !isEqual(stateReleaseGuards, releaseGuards);
@@ -65,14 +70,11 @@ export default class ReleaseTable extends PureComponent {
   handleClose = this._triggerDialog({
     showDialog: this.hasUnsavedChanges,
     confirmHandler: this.props.onClose
-  })
+  });
 
   handleDelete = index => this._triggerDialog({
-    showDialog: _ => {
-      // delete without a dialog if guards are empty and/or 'to' is empty
-      const { to, guards } = this.state.releaseGuards[index];
-      return to || (guards || []).length > 0
-    },
+    // delete without a dialog if guards are empty and/or 'to' is empty
+    showDialog: _ => releaseGuardNotEmpty(this.state.releaseGuards[index]),
     confirmHandler: _ => this.onDelete(index),
     message: this.context.i18n.getMessage('fsmWorkflowEditor.ui.guards.deleteDialog.message')
   })
@@ -169,7 +171,7 @@ export default class ReleaseTable extends PureComponent {
   }
 
   handleAdd = _ => this.setState(prevState => ({
-    releaseGuards: [...prevState.releaseGuards, { guards: [] }]
+    releaseGuards: [...prevState.releaseGuards, {}]
   }));
 
   render() {
