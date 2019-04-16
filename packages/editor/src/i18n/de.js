@@ -43,7 +43,15 @@ export const states = {
       edit: 'Neuen Status "{stateName}" bearbeiten'
     }
   },
-  labelHint: 'Es wird als "{label}" in UI angezeigt'
+  labelHint: 'Es wird als "{label}" in UI angezeigt',
+  releaseGuards: {
+    table: {
+      to: {
+        label: 'To'
+      },
+      title: 'Release guards for state "{stateName}"'
+    }
+  }
 }
 
 export const transitions = {

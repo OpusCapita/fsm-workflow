@@ -42,7 +42,15 @@ export const states = {
       edit: 'Rediger tilstand "{stateName}"'
     }
   },
-  labelHint: 'Vises på brukergrensesnittet som "{label}"'
+  labelHint: 'Vises på brukergrensesnittet som "{label}"',
+  releaseGuards: {
+    table: {
+      to: {
+        label: 'To'
+      },
+      title: 'Release guards for state "{stateName}"'
+    }
+  }
 }
 
 export const transitions = {
