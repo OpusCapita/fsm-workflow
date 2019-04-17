@@ -1,6 +1,6 @@
 {
   "name": "invoice",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "Alexey Sergeev <sab@scand.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@opuscapita/fsm-workflow-core": "2.2.8",
+    "@opuscapita/fsm-workflow-core": "2.2.9",
     "babel-cli": "6.24.1",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
