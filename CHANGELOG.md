@@ -1,4 +1,10 @@
 
+[Release 2.2.8](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.8) Wed Apr 17 2019 09:52:34 GMT+0300 (MSK)
+=======================================================
+
+- Add 'release guards' to states in editor ([#94](https://github.com/OpusCapita/fsm-workflow/issues/94)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2019-04-17 09:33:46 +0300)
+- Add 'release' guards to states ([#93](https://github.com/OpusCapita/fsm-workflow/issues/93)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2019-04-09 08:32:36 +0300)
+
 [Release 2.2.7](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.7) Mon Apr 08 2019 11:07:52 GMT+0300 (MSK)
 =======================================================
 
