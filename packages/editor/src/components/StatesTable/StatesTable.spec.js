@@ -47,6 +47,8 @@ describe('<StatesTable />', () => {
     expect(firstRow.at(4).find('button').at(0).text().trim()).
       to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label'));
     expect(firstRow.at(4).find('button').at(1).text().trim()).
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.guards.label'));
+    expect(firstRow.at(4).find('button').at(2).text().trim()).
       to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label'));
 
     const secondRow = wrapper.find('tbody tr').at(1).find('td');
@@ -56,6 +58,8 @@ describe('<StatesTable />', () => {
     expect(secondRow.at(4).find('button').at(0).text().trim()).
       to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label'));
     expect(secondRow.at(4).find('button').at(1).text().trim()).
+      to.equal(i18n.getMessage('fsmWorkflowEditor.ui.guards.label'));
+    expect(secondRow.at(4).find('button').at(2).text().trim()).
       to.equal(i18n.getMessage('fsmWorkflowEditor.ui.buttons.delete.label'));
   });
 });

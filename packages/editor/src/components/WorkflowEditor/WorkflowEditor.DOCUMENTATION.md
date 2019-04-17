@@ -234,7 +234,34 @@
       "states": [
         {
           "name": "inspectionRequired",
-          "description": "Inspection Required"
+          "description": "Inspection Required",
+          release: [
+            {
+              guards: [
+                {
+                  expression: 'object.enabled === true'
+                }
+              ]
+            },
+            {
+              to: 'approvalRequired',
+              guards: [
+                {
+                  name: 'userHasRoles',
+                  params: [
+                    {
+                      name: 'restrictedRoles',
+                      value: ['REV']
+                    }
+                  ],
+                  negate: true
+                },
+                {
+                  expression: 'object.status === "fulfilled"'
+                }
+              ]
+            }
+          ]
         },
         {
           "name": "approvalRequired"
@@ -399,6 +426,9 @@
 
   schemaConfig = {{
     state: {
+      releaseGuards: {
+        toState: 'single' // all, single, multiple (default)
+      },
       availableNames: [
         'inspectionRequired',
         'approvalRequired',

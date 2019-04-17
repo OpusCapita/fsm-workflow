@@ -37,6 +37,7 @@ git config --global user.name "$GH_NAME" > /dev/null 2>&1
 # switch into the the gh-pages branch
 if git rev-parse --verify origin/gh-pages > /dev/null 2>&1
 then
+    git stash # for during release builds package.json is changed, therefore remove changes before checkout to gh-pages branch
     git checkout gh-pages
     git pull
 else

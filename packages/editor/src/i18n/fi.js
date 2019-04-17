@@ -42,7 +42,15 @@ export const states = {
       edit: 'Muokkaa tilaa "{stateName}"'
     }
   },
-  labelHint: 'Näkyy käyttöliittymässä nimellä "{label}"'
+  labelHint: 'Näkyy käyttöliittymässä nimellä "{label}"',
+  releaseGuards: {
+    table: {
+      to: {
+        label: 'To'
+      },
+      title: 'Release guards for state "{stateName}"'
+    }
+  }
 }
 
 export const transitions = {

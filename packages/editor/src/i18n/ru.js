@@ -42,7 +42,15 @@ export const states = {
       edit: 'Редактировать состояние "{stateName}"'
     }
   },
-  labelHint: 'Появится в пользовательском интерфейсе как "{label}"'
+  labelHint: 'Появится в пользовательском интерфейсе как "{label}"',
+  releaseGuards: {
+    table: {
+      to: {
+        label: 'To'
+      },
+      title: 'Release guards for state "{stateName}"'
+    }
+  }
 }
 
 export const transitions = {

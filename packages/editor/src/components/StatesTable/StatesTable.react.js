@@ -5,11 +5,14 @@ import Table from 'react-bootstrap/lib/Table';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import Button from 'react-bootstrap/lib/Button';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import Guards from '../Guards/GuardsTable.react';
 import statePropTypes from './statePropTypes';
 import StateEditor from './StateEditor.react';
 import { isDef, getLabel } from '../utils';
 import withConfirmDialog from '../ConfirmDialog';
 import DeleteStateDialogBody from './DeleteStateDialogBody.react';
+import { stateConfigPropTypes } from '../schemaConfigPropTypes';
+import ReleaseTable from './ReleaseTable.react';
 
 export const DELETE_STATE_TRANSITIONS = 'deleteStateTransitions';
 export const SWAP_STATE_IN_TRANSITIONS = 'swapStateInTransitions';
@@ -23,9 +26,11 @@ export default class StatesTable extends PureComponent {
     onDelete: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     statesInTransitions: PropTypes.arrayOf(PropTypes.string),
-    stateConfig: PropTypes.shape({
-      availableNames: PropTypes.arrayOf(PropTypes.string)
-    })
+    stateConfig: stateConfigPropTypes,
+    conditions: PropTypes.objectOf(PropTypes.shape({
+      paramsSchema: PropTypes.object
+    })),
+    onSaveReleaseGuards: PropTypes.func.isRequired
   }
 
   static contextTypes = {
@@ -88,27 +93,41 @@ export default class StatesTable extends PureComponent {
     })
   }
 
-  handleEdit = name => _ => this.setState({
-    currentState: name,
-    showModal: true
+  handleModal = name => type => _ => this.setState({
+    showModal: true,
+    modalType: type,
+    currentState: name
   })
 
-  handleAdd = this.handleEdit()
+  handleAdd = this.handleModal()('edit');
 
-  handleClose = _ => this.setState({
+  handleCloseModal = _ => this.setState({
     currentState: null,
-    showModal: false
+    showModal: false,
+    modalType: null
   })
 
   handleSave = (...args) => {
-    this.handleClose();
+    this.handleCloseModal();
     this.props.onEdit(...args);
+  }
+
+  handleSaveSimpleReleaseGuards = currentState => guards => {
+    this.handleCloseModal();
+    this.props.onSaveReleaseGuards(currentState)([{ guards }]);
+  }
+
+  handleSaveReleaseGuards = currentState => releaseGuards => {
+    this.handleCloseModal();
+    this.props.onSaveReleaseGuards(currentState)(releaseGuards);
   }
 
   render() {
     const { i18n } = this.context;
-    const { stateConfig } = this.props;
-    const { states, currentState, showModal } = this.state;
+    const { stateConfig, conditions, statesInTransitions } = this.props;
+    const { states, currentState, showModal, modalType } = this.state;
+
+    const simpleReleaseGuards = ((stateConfig || {}).releaseGuards || {}).toState === 'all';
 
     let modal;
 
@@ -119,15 +138,47 @@ export default class StatesTable extends PureComponent {
         currentStateObject = find(states, ({ name }) => name === currentState)
       }
 
-      modal = (
-        <StateEditor
-          value={currentStateObject}
-          onClose={this.handleClose}
-          onSave={this.handleSave}
-          usedNames={states.map(({ name }) => name)}
-          availableNames={(stateConfig || {}).availableNames}
-        />
-      )
+      switch (modalType) {
+        case 'guards':
+          modal = simpleReleaseGuards ?
+            (
+              <Guards
+                guards={
+                  ((currentStateObject || {}).release || []).
+                    reduce((acc, { to, guards }) => to === undefined ? [...acc, ...guards] : acc, [])
+                }
+                conditions={conditions}
+                title={i18n.getMessage('fsmWorkflowEditor.ui.guards.label')}
+                onClose={this.handleCloseModal}
+                onSave={this.handleSaveSimpleReleaseGuards(currentState)}
+              />
+            ) :
+            (
+              <ReleaseTable
+                releaseGuards={(currentStateObject || {}).release}
+                title={i18n.getMessage('fsmWorkflowEditor.ui.states.releaseGuards.table.title', {
+                  stateName: currentState
+                })}
+                onClose={this.handleCloseModal}
+                onSave={this.handleSaveReleaseGuards(currentState)}
+                config={(stateConfig || {}).releaseGuards || {}}
+                conditions={conditions}
+                availableNames={(stateConfig || {}).availableNames || statesInTransitions}
+                from={currentState}
+              />
+            );
+          break;
+        default:
+          modal = (
+            <StateEditor
+              value={currentStateObject}
+              onClose={this.handleCloseModal}
+              onSave={this.handleSave}
+              usedNames={states.map(({ name }) => name)}
+              availableNames={(stateConfig || {}).availableNames}
+            />
+          )
+      }
     }
 
     return (
@@ -171,10 +222,13 @@ export default class StatesTable extends PureComponent {
                   </td>
                   <td className='text-right'>
                     <ButtonGroup bsStyle='sm'>
-                      <Button onClick={this.handleEdit(name)}>
+                      <Button onClick={this.handleModal(name)('edit')}>
                         <Glyphicon glyph='edit'/>
                         {'\u2000'}
                         {i18n.getMessage('fsmWorkflowEditor.ui.buttons.edit.label')}
+                      </Button>
+                      <Button onClick={this.handleModal(name)('guards')}>
+                        {i18n.getMessage('fsmWorkflowEditor.ui.guards.label')}
                       </Button>
                       <Button onClick={this.handleDelete(name)}>
                         <Glyphicon glyph='trash'/>
