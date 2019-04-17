@@ -19,7 +19,7 @@ import { MachineDefinition, Machine } from '@opuscapita/fsm-workflow-core';
 
 ## Machine definition
 
-Machine definition consist of:
+Machine definition consists of:
 - [schema](#schema)
 - [actions](#action)
 - conditions [guards](#guard-conditions) &amp; [automatic](#automatic-conditions)
@@ -32,14 +32,48 @@ const machineDefinition = new MachineDefinition({
     name: "invoice approval",
     initialState: "open",
     finalStates: ["approved"],
-    states: [
-      { name: "open", description: "Open" },
+    states: [ // optional meta data for states
+      {
+        name: "open",
+        description: "Open",
+        // release guards specify if state can be released
+        // if not specified then release is always allowed
+        release: [
+          {
+            // if 'release[i].to' field is undefined then release guard is applied no matter what target state is
+            guards: [ // just like in transitions
+              {
+                expression: "object.enabled === true"
+              },
+              {
+                name: "someFunction",
+                params: [
+                  {
+                    name: "param1",
+                    value: 100
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            to: 'approved', // if 'to' is a string then the folling guards are checked only when trying to transit from 'open' to 'approved'
+            guards: [...]
+          },
+          {
+            to: ['approved', 'awaitingConfirmation'], // the same as with string, but for a list of target states
+            guards: [...]
+          }
+        ]
+      },
       { name: "approved", description: "Approved" }
     ],
     transitions: [
       {
           from: "open",
+          to: "approved",
           event: "approve",
+          // guards define weither this transition is available or not
           guards: [
             {
               "name": "validate",
@@ -59,7 +93,7 @@ const machineDefinition = new MachineDefinition({
               "expression": "invoice.netAmount < 10000"
             }
           ],
-          to: "approved",
+          // actions are executed is sequence during transition; 'sendEvent' resolves only after all actions are finished
           actions: [
             {
               "name": "archive",
@@ -75,6 +109,7 @@ const machineDefinition = new MachineDefinition({
               ]
             }
           ],
+          //automatic guards define if transition can be marked as automatic
           automatic: [
             {
                 "name": "lastlyUpdatedMoreThan24hAgo",
@@ -94,9 +129,11 @@ const machineDefinition = new MachineDefinition({
       }
     ]
   },
+  // actions can be synchronous or asynchronous (return Promise)
   actions: {
     archive: function({ param1, param2 }) {}
   },
+  // conditions can be synchronous or asynchronous (return Promise)
   conditions: {
     validate: function({ param1, param2 }) {},
     lastlyUpdatedMoreThan24hAgo: function({ param1, param2 }) {}
@@ -189,7 +226,7 @@ var machineDefinition = new MachineDefinition({
 
 ### Code (Actions and Conditions(guards/automatic))
 
-- [Actions & considions configuration and usage](https://github.com/OpusCapita/fsm-workflow/blob/master/packages/editor/src/components/Actions/Readme.md)
+- [Actions & conditions configuration and usage](https://github.com/OpusCapita/fsm-workflow/blob/master/packages/editor/src/components/Actions/Readme.md)
 - [Ideas & thoughts](actionsAndConditions.md)
 
 #### Action
@@ -329,6 +366,14 @@ object machine uses configured **convertObjectToReference** callback to convert
 real business object into reference object that has the following structure
 **{businessObjType, businessObjId}**
 
+### Debugging schema
+
+In case one needs to find out why particular transitions are available or unavailable there's a lower-level function `MachineDefinition.inspectTransitions`. According to provided input params it returns all analyzed transitions with their guards and results of their evaluation. This helps to determine why particular transition was (un)available in particular case.
+
+In case one needs to inspect `release guards` defined for states, there's `MachineDefinition.inspectReleaseConditions` function which is similar to `MachineDefinition.inspectTransitions`.
+
+For details about these functions see `MachineDefinition.js` source.
+
 ## Machine
 ### API
 
@@ -359,6 +404,7 @@ machine.is({ object, state})         // is object in state
 machine.isInFinalState({ object })   // returns true iff object is in one of final states
 machine.can({ object, event })       // whether event is available
 machine.cannot({ object, event })    // whether event is not available
+machine.canBeReleased({ object, to, request }) // weither object can be released from its current state; 'to' is an optional target state
 
 // hooks (tbd)
 machine.onStartTransition()   // returns promise
