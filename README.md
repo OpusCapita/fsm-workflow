@@ -58,9 +58,11 @@ Define it as `version` value in `lerna.json` file. There's no need to rewrite ve
 
 ### Contributors
 
-| <img src="https://avatars.githubusercontent.com/u/24603787?v=3" width="100px;"/> | [**Alexey Sergeev**](https://github.com/asergeev-sc)     |
+| [<img src="https://avatars.githubusercontent.com/u/24603787?v=3" width="100px;"/>](https://github.com/kvolkovich-sc) | [**Alexey Sergeev**](https://github.com/asergeev-sc)     |
 | :---: | :---: |
-| <img src="https://avatars.githubusercontent.com/u/24652543?v=3" width="100px;"/> | [**Kirill Volkovich**](https://github.com/kvolkovich-sc) |
-| <img src="https://avatars3.githubusercontent.com/u/24650360?v=3" width="100px;"/> | [**Daniel Zhitomirsky**](https://github.com/dzhitomirsky-sc) |
+| [<img src="https://avatars.githubusercontent.com/u/24652543?v=3" width="100px;"/>](https://github.com/kvolkovich-sc) | [**Kirill Volkovich**](https://github.com/kvolkovich-sc) |
+| [<img src="https://avatars3.githubusercontent.com/u/24650360?v=3" width="100px;"/>](https://github.com/dzhitomirsky-sc) | [**Daniel Zhitomirsky**](https://github.com/dzhitomirsky-sc) |
+| [<img src="https://avatars0.githubusercontent.com/u/31243790?s=460&v=4" width="100px;"/>](https://github.com/estambakio-sc) | [**Egor Stambakio**](https://github.com/estambakio-sc) |
+
 
 Contributing are welcome. We need YOU! :metal:
