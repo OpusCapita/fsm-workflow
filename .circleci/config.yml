@@ -52,15 +52,12 @@ jobs:
               --gh-branch="${BRANCH}" \
               --gh-commit="${COMMIT}" \
               --ci-build-url="${CIRCLE_BUILD_URL}"
-      - run:
-          name: Copy over required secrets
-          command: |
-            ./bin/copy-secrets.sh \
-              --from-namespace=lunar-system \
-              --to-namespace=${NAMESPACE} \
-              --secret="${IMAGE_PULL_SECRET_NAME}" \
-              --secret="machineuser-vault-master-secret" \
-              --secret="${MINSK_CORE_K8S_DEMO_DEPLOYMENTS_HOST}"-tls
+
+            kubectl -n "${NAMESPACE}" create secret docker-registry dockerhub \
+              --docker-server="https://index.docker.io/v1/" \
+              --docker-username="${DOCKER_USER}" \
+              --docker-password="${DOCKER_PASS}" \
+              --dry-run -o yaml | kubectl apply -f -
       - run:
           name: Install/upgrade helm release
           command: |
