@@ -11,6 +11,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/add-base-url: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 20m
+    cert-manager.io/cluster-issuer: "default"
 spec:
 {{- if .Values.ingress.tls }}
   tls:
