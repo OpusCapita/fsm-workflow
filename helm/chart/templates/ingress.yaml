@@ -8,7 +8,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/add-base-url: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 20m
     cert-manager.io/cluster-issuer: "default"
@@ -28,7 +28,7 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - path: {{ $path }}
+          - path: {{ $path }}/?(.*)
             backend:
               serviceName: fsm
               servicePort: 80
