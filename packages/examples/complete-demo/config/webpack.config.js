@@ -26,7 +26,8 @@ const config = {
     'react-dom': 'ReactDOM'
   },
   devServer: {
-    contentBase: path.resolve(__dirname, '../build')
+    contentBase: path.resolve(__dirname, '../build'),
+    host: process.env.HOST || 'localhost'
   },
   devtool: 'inline-source-map',
   module: {

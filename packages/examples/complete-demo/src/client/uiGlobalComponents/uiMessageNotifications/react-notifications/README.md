@@ -1,1 +1,0 @@
-This is a copy of [react-notifications](https://github.com/minhtranite/react-notifications/tree/cbc79ea2e996ec4217ffc0ce7562901b03f7f97d) which is compatible with IE11 (removed [hard-coded](https://github.com/minhtranite/react-notifications/blob/2e46ddd8ad7b30c6a981562c92ead5c9fbc0103a/src/NotificationManager.js#L35-L37) `Object.assign` statements).
