@@ -8,7 +8,6 @@ import Table from 'react-bootstrap/lib/Table';
 import Pagination from 'react-bootstrap/lib/Pagination';
 import superagent from 'superagent';
 import { notificationError } from '../constants';
-import { url } from '../utils';
 
 export default class History extends PureComponent {
   static propTypes = {
@@ -24,7 +23,8 @@ export default class History extends PureComponent {
 
   static contextTypes = {
     i18n: PropTypes.object.isRequired,
-    uiMessageNotifications: PropTypes.object.isRequired
+    uiMessageNotifications: PropTypes.object.isRequired,
+    url: PropTypes.func.isRequired
   }
 
   state = {
@@ -39,7 +39,7 @@ export default class History extends PureComponent {
   }
 
   getStates = _ => {
-    const { uiMessageNotifications } = this.context;
+    const { uiMessageNotifications, url } = this.context;
     superagent.
       get(url('/api/states')).
       accept('application/json').
@@ -56,7 +56,7 @@ export default class History extends PureComponent {
   }
 
   getHistory = _ => {
-    const { uiMessageNotifications } = this.context;
+    const { uiMessageNotifications, url } = this.context;
     const { match: { params: { objectId } } } = this.props;
     return superagent.
       get(url(`/api/history/${objectId}`)).
