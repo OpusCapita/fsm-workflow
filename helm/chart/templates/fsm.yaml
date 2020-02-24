@@ -36,6 +36,9 @@ spec:
       - name: fsm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Always
+        env:
+          - name: BASE_URL
+            value: {{ .Values.ingress.path }}
         ports:
         - containerPort: 3020
           name: app
@@ -46,10 +49,10 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "300m"
-        readinessProbe:
-          httpGet:
-            path: {{ .Values.ingress.path }}
-            port: 3020
+        # readinessProbe:
+        #   httpGet:
+        #     path: {{ .Values.ingress.path }}
+        #     port: 3020
           periodSeconds: 3
           timeoutSeconds: 240
       imagePullSecrets:
