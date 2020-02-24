@@ -69,7 +69,7 @@ app.get('*', function(req, res) {
   }))
 }()).
   then(_ => {
-    server.listen(port, host, _ => console.log(`server is listening on ${host}:${port}`));
+    server.listen(port, host, _ => console.log(`Server is listening on http://${host}:${port}`));
   }).
   catch(err => console.log('INIT FAILED', err));
 
