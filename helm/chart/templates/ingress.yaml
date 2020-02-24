@@ -9,11 +9,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/add-base-url: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 20m
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      sub_filter '<base href="/"' '<base href="{{ $path }}/"';
-      sub_filter_once on;
     cert-manager.io/cluster-issuer: "default"
 spec:
 {{- if .Values.ingress.tls }}
