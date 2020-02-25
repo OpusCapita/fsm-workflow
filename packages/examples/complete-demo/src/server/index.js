@@ -4,7 +4,7 @@ import { Server } from 'http';
 import morgan from 'morgan';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import config from '../../config/webpack.config';
+import webpackConfig from '../../config/webpack.config';
 import bodyParser from 'body-parser';
 import objectRoutes from './routes/objects';
 import sendEventRoute from './routes/sendEvent';
@@ -34,12 +34,12 @@ app.use(editorDataRoute);
 app.use(statesRoute);
 app.use(historyRoute);
 
-const compiler = webpack(config);
+const compiler = webpack(webpackConfig);
 
 if (process.env.NODE_ENV === 'development') {
   app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
-    publicPath: config.output.publicPath
+    publicPath: webpackConfig.output.publicPath
   }))
 } else {
   app.get('/bundle.js', (req, res) => {
@@ -48,7 +48,32 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.get('*', function(req, res) {
-  res.sendFile(resolve(__dirname, '../../build/index.html'));
+  res.setHeader('Content-Type', 'text/html');
+  res.send(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workflow Demo App</title>
+  <link rel="stylesheet" href="https://opuscapita.github.io/styles/index.css">
+</head>
+
+<body style="padding-bottom: 0; overflow-x: hidden;">
+  <div id="main"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.2/react.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/15.6.2/react-dom.js" type="text/javascript"></script>
+  <script src="${process.env.BASE_URL || ''}/bundle.js" type="text/javascript"></script>
+
+  <script>
+    ${webpackConfig.output.library}.render(
+      document.getElementById("main"),
+      { baseUrl: "${process.env.BASE_URL || '/'}" }
+    )
+  </script>
+</body>
+</html>`
+  );
 });
 
 // initialize data and start server

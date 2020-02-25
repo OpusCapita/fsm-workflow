@@ -1,25 +1,22 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const plugins = [
-  new CopyWebpackPlugin([
-    path.resolve(__dirname, '../src/demo/index.html')
-  ])
-];
+const plugins = [];
 
 if (process.env.NODE_ENV === 'production') {
   plugins.push(new UglifyJsPlugin())
 }
 
-const config = {
+module.exports = {
   context: path.resolve(__dirname, '../'),
   plugins,
   entry: path.resolve(__dirname, '../src/client/index.js'),
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, '../build'),
-    publicPath: '/'
+    publicPath: '/',
+    library: 'fsmCompleteDemo',
+    libraryTarget: 'umd',
   },
   externals: {
     react: 'React',
@@ -67,5 +64,3 @@ const config = {
     ]
   }
 }
-
-module.exports = config;
