@@ -1,4 +1,12 @@
 
+[Release 2.2.9](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.9) Mon Mar 30 2020 09:03:00 GMT+0300 (MSK)
+=======================================================
+
+- Add transition history indexes (boId, boType, to) & finishedOn ([#101](https://github.com/OpusCapita/fsm-workflow/issues/101)) (GitHub asko.huuki@opuscapita.com, 2020-03-30 09:01:33 +0300)
+- Don't rely on document.baseURI for routing in complete-demo ([#100](https://github.com/OpusCapita/fsm-workflow/issues/100)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2020-02-25 08:44:42 +0300)
+- Make examples/complete-demo compatible with IE11 ([#99](https://github.com/OpusCapita/fsm-workflow/issues/99)) (GitHub 31243790+estambakio-sc@users.noreply.github.com, 2020-02-24 14:49:22 +0300)
+- Update README.md (GitHub asergeev-sc@users.noreply.github.com, 2019-08-05 21:43:02 +0300)
+
 [Release 2.2.8](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.8) Wed Apr 17 2019 09:52:34 GMT+0300 (MSK)
 =======================================================
 
