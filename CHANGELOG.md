@@ -1,4 +1,10 @@
 
+[Release 2.2.10](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.10) Wed Sep 16 2020 11:28:55 GMT+0300 (MSK)
+=======================================================
+
+- Danish translations ([#103](https://github.com/OpusCapita/fsm-workflow/issues/103)) (GitHub 61777811+laurarautava@users.noreply.github.com, 2020-09-16 11:27:04 +0300)
+- Update CI image to opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u192-nodejs-8.17.0-maven-3.3.9 [ci skip] (Egor Stambakio egor.stambakio@opuscapita.com, 2020-05-07 16:14:31 +0300)
+
 [Release 2.2.9](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.9) Mon Mar 30 2020 09:03:00 GMT+0300 (MSK)
 =======================================================
 
