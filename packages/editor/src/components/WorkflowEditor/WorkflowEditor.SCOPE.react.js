@@ -150,12 +150,11 @@ export default class WorkflowEditorScope extends PureComponent {
             </label>
             <div className='col-sm-10'>
               <select onChange={this.handleChangeLanguage} value={locale} className='form-control'>
-                <option value='en'>en</option>
-                <option value='de'>de</option>
-                <option value='fi'>fi</option>
-                <option value='no'>no</option>
-                <option value='ru'>ru</option>
-                <option value='sv'>sv</option>
+                {
+                  Object.keys(messages).map((lang, i) => (
+                    <option value={lang} key={i}>{lang}</option>
+                  ))
+                }
               </select>
             </div>
           </div>
