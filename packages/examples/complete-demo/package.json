@@ -27,8 +27,8 @@
     "prop-types": "15.6.0",
     "react-bootstrap": "0.31.5",
     "react-router-dom": "4.2.2",
-    "sequelize": "4.33.4",
-    "sequelizer": "1.1.3",
+    "sequelize": "6.6.5",
+    "sequelizer": "1.1.4",
     "sqlite3": "4.1.1",
     "superagent": "3.8.2"
   },

@@ -16,7 +16,7 @@ module.exports = async function(sequelize) {
     filter(file => file.indexOf('.') !== 0 && (file !== basename) && (file.slice(-3) === '.js')).
     reduce(
       (models, file) => {
-        const model = require(path.join(__dirname, file));
+        const model = require(path.join(__dirname, file))(sequelize, sequelize.constructor);
 
         return Object.assign(models, {
           [model.name]: model
