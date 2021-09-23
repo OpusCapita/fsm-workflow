@@ -7,16 +7,16 @@ module.exports = {
   up: (queryInterface) => {
     queryInterface.addIndex(
       TABLE,
-      ['businessObjId', 'businessObjType', 'to'],
       {
-        name: SEARCH_INDEX
+        name: SEARCH_INDEX,
+        fields: ['businessObjId', 'businessObjType', 'to'],
       }
     );
     queryInterface.addIndex(
       TABLE,
-      ['finishedOn'],
       {
-        name: FINISHEDON_INDEX
+        name: FINISHEDON_INDEX,
+        fields: ['finishedOn'],
       }
     );
   },

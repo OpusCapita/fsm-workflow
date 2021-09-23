@@ -16,11 +16,11 @@ const search = model => {
     model.sequelize.constructor &&
     model.sequelize.constructor.Op
   ) || {
-    gt: '$gt',
-    gte: '$gte',
-    lt: '$lt',
-    lte: '$lte'
-  };
+      gt: '$gt',
+      gte: '$gte',
+      lt: '$lt',
+      lte: '$lte'
+    };
   const { gt, gte, lt, lte } = Op
   return (
     {
