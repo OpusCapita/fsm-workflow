@@ -44,6 +44,7 @@ const t = {
       define: {
         charset: 'utf8',
         dialectOptions: {
+          mode: 2,
           collate: 'utf8_general_ci'
         }
       },
