@@ -38,19 +38,7 @@ const t = {
     return Object.assign({}, objectConfiguration.example)
   },
   renewSequelize: function() {
-    this.sequelize = new Sequelize('testdb', null, null, {
-      dialect: "sqlite",
-      storage: sqlitePath,
-      define: {
-        charset: 'utf8',
-        dialectOptions: {
-          mode: 2,
-          collate: 'utf8_general_ci'
-        }
-      },
-      sync: { force: true },
-      logging: null // comment this line to show Sequezile logs in console
-    })
+    this.sequelize = new Sequelize('sqlite::memory:')
   }
 }
 
