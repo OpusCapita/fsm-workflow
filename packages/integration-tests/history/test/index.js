@@ -9,8 +9,6 @@ const objectConfiguration = require('../data/objectConfiguration.json');
 const actions = require('../data/actions');
 const conditions = require('../data/conditions');
 
-const sqlitePath = resolve(__dirname, '../data/testdb.sqlite');
-
 const objectDefinition = Sequelizer.fromJsonSchema(objectConfiguration.schema, 'testSchema', {
   uniqueFields: ['objectId']
 });
@@ -40,7 +38,7 @@ const t = {
   renewSequelize: function() {
     this.sequelize = new Sequelize('testdb', null, null, {
       dialect: "sqlite",
-      storage: sqlitePath,
+      storage: ':memory:',
       define: {
         charset: 'utf8',
         dialectOptions: {

@@ -11,13 +11,17 @@ const add = model => fields => model.create(fields);
  * which resolved value is an array of objects.
  */
 const search = model => {
-  const { gt, gte, lt, lte } = model.sequelize && model.sequelize.Op || { // Sequelize v.4 || v.3
-    gt: '$gt',
-    gte: '$gte',
-    lt: '$lt',
-    lte: '$lte'
-  };
-
+  const Op = (
+    model.sequelize &&
+    model.sequelize.constructor &&
+    model.sequelize.constructor.Op
+  ) || {
+      gt: '$gt',
+      gte: '$gte',
+      lt: '$lt',
+      lte: '$lte'
+    };
+  const { gt, gte, lt, lte } = Op
   return (
     {
       object: { businessObjId, businessObjType } = {},
@@ -33,28 +37,29 @@ const search = model => {
       by = 'finishedOn',
       order = 'desc'
     } = {}
-  ) => model.
-    findAll({
-      where: {
-        ...(businessObjId && { businessObjId }),
-        ...(businessObjType && { businessObjType }),
-        ...(user && { user }),
-        ...(workflowName && { workflowName }),
-        ...(Object.keys(finishedOn).length && {
-          finishedOn: {
-            ...(finishedOn.gt && { [gt]: finishedOn.gt }),
-            ...(finishedOn.gte && { [gte]: finishedOn.gte }),
-            ...(finishedOn.lt && { [lt]: finishedOn.lt }),
-            ...(finishedOn.lte && { [lte]: finishedOn.lte })
-          }
-        })
-      },
-      order: [[by, order.toUpperCase()]],
-      limit: max,
-      offset
-    }).
-    // get proper object without Sequelize meta data
-    map(raw => raw.get())
+  ) => {
+    return model.
+      findAll({
+        where: {
+          ...(businessObjId && { businessObjId }),
+          ...(businessObjType && { businessObjType }),
+          ...(user && { user }),
+          ...(workflowName && { workflowName }),
+          ...(Object.keys(finishedOn).length && {
+            finishedOn: {
+              ...(finishedOn.gt && { [gt]: finishedOn.gt }),
+              ...(finishedOn.gte && { [gte]: finishedOn.gte }),
+              ...(finishedOn.lt && { [lt]: finishedOn.lt }),
+              ...(finishedOn.lte && { [lte]: finishedOn.lte })
+            }
+          })
+        },
+        raw: true,
+        order: [[by, order.toUpperCase()]],
+        limit: max,
+        offset
+      })
+  }
 };
 
 /*

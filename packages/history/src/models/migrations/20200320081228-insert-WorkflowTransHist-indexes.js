@@ -5,14 +5,20 @@ const FINISHEDON_INDEX = 'WorkflowTransitionHistory_FinishedOn';
 
 module.exports = {
   up: (queryInterface) => {
-    queryInterface.addIndex(TABLE, {
-      fields: ['businessObjId', 'businessObjType', 'to'],
-      name: SEARCH_INDEX
-    });
-    queryInterface.addIndex(TABLE, {
-      fields: ['finishedOn'],
-      name: FINISHEDON_INDEX
-    });
+    queryInterface.addIndex(
+      TABLE,
+      {
+        name: SEARCH_INDEX,
+        fields: ['businessObjId', 'businessObjType', 'to'],
+      }
+    );
+    queryInterface.addIndex(
+      TABLE,
+      {
+        name: FINISHEDON_INDEX,
+        fields: ['finishedOn'],
+      }
+    );
   },
   down: (queryInterface) => {
     queryInterface.removeIndex(TABLE, FINISHEDON_INDEX);
