@@ -9,8 +9,6 @@ const objectConfiguration = require('../data/objectConfiguration.json');
 const actions = require('../data/actions');
 const conditions = require('../data/conditions');
 
-const sqlitePath = resolve(__dirname, '../data/testdb.sqlite');
-
 const objectDefinition = Sequelizer.fromJsonSchema(objectConfiguration.schema, 'testSchema', {
   uniqueFields: ['objectId']
 });
@@ -38,7 +36,18 @@ const t = {
     return Object.assign({}, objectConfiguration.example)
   },
   renewSequelize: function() {
-    this.sequelize = new Sequelize('sqlite::memory:')
+    this.sequelize = new Sequelize('testdb', null, null, {
+      dialect: "sqlite",
+      storage: ':memory:',
+      define: {
+        charset: 'utf8',
+        dialectOptions: {
+          collate: 'utf8_general_ci'
+        }
+      },
+      sync: { force: true },
+      logging: null // comment this line to show Sequezile logs in console
+    })
   }
 }
 
