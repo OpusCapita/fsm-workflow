@@ -1,4 +1,9 @@
 
+[Release 3.0.0](https://github.com/OpusCapita/fsm-workflow/releases/tag/v3.0.0) Tue Sep 28 2021 09:15:35 GMT+0300 (MSK)
+=======================================================
+
+- Fix a deprecated import statement ([#105](https://github.com/OpusCapita/fsm-workflow/issues/105)) (GitHub ext-Joel.Luukka@opuscapita.com, 2021-09-27 21:09:37 +0300)
+
 [Release 2.2.10](https://github.com/OpusCapita/fsm-workflow/releases/tag/v2.2.10) Wed Sep 16 2020 11:28:55 GMT+0300 (MSK)
 =======================================================
 
