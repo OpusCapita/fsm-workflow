@@ -1,4 +1,9 @@
 
+[Release 3.0.1](https://github.com/OpusCapita/fsm-workflow/releases/tag/v3.0.1) Tue Sep 28 2021 09:56:23 GMT+0300 (MSK)
+=======================================================
+
+- Exclude complete demo and history tests from published packages (Egor Stambakio egor.stambakio@opuscapita.com, 2021-09-28 09:44:45 +0300)
+
 [Release 3.0.0](https://github.com/OpusCapita/fsm-workflow/releases/tag/v3.0.0) Tue Sep 28 2021 09:15:35 GMT+0300 (MSK)
 =======================================================
 
