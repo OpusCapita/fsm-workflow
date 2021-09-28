@@ -3,6 +3,7 @@
   "version": "3.0.1",
   "main": "index.js",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "lint": "rimraf src/compiled-server && eslint src",
     "test-only": "mocha src/**/*.spec.js --require config/mocha-setup.js",
