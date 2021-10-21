@@ -1,10 +1,6 @@
 version: 2
 
 aliases:
-  - &inject-environment
-    name: Inject environment
-    command: /bin/env_inject.sh
-
   - &save-cache-checksum
     name: Save cache checksum
     command: find . -name "package.json" | sort | xargs cat >> /tmp/cache-checksum
@@ -50,19 +46,27 @@ aliases:
 
 defaults: &defaults
   docker:
-    - image: opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u192-nodejs-8.17.0-maven-3.3.9
+    - image: opuscapita/minsk-core-ci:4
   working_directory: ~/build
 
 jobs:
+  init:
+    docker:
+      - image: opuscapita/minsk-core-machineuser-env:2
+    steps:
+      - run: circle_ci_add_env.sh
   build:
     <<: *defaults
     steps:
-      - run: *inject-environment
       - checkout
       - run: *save-cache-checksum
       - restore_cache: *restore-cache
       - run: *install-dependencies
       - save_cache: *save-cache
+      - run:
+          name: Configure
+          command: |
+            configure-maven.sh && configure-grails.sh && configure-npm.sh;
       - run:
           name: Lint sources
           command: npm run lint
@@ -93,7 +97,6 @@ jobs:
   build-docker-image:
     <<: *defaults
     steps:
-      - run: *inject-environment
       - checkout
       - setup_remote_docker
       - run: *calculate-docker-variables
@@ -109,7 +112,6 @@ jobs:
       - image: opuscapita/minsk-core-ci:grails-2.4.4-jdk-8u192-nodejs-8.17.0-maven-3.3.9
     working_directory: ~/build
     steps:
-      - run: *inject-environment
       - checkout
       - run: *calculate-docker-variables
       - run:
@@ -134,7 +136,10 @@ workflows:
   version: 2
   build-and-deploy-to-cloud:
     jobs:
+      - init
       - build:
+          requires:
+            - init
           filters:
             tags:
               only: /.*/
