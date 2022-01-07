@@ -51,9 +51,6 @@ $(<$VALUES_TEMPLATE)
 EOF
 " 2>/dev/null 1>"${VALUES_FILE}"
 
-# configure $HELM_HOME
-helm init --client-only
-
 # put Helm dependencies into correct folder
 cd $CHART_PATH
 helm dependency update
@@ -61,7 +58,6 @@ helm dependency update
 # install/update release
 helm upgrade \
   --install \
-  --force \
   --values $VALUES_FILE \
   --namespace $NAMESPACE \
   $RELEASE_NAME \
