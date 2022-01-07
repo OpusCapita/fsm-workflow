@@ -53,7 +53,7 @@ spec:
         #   httpGet:
         #     path: {{ .Values.ingress.path }}
         #     port: 3020
-          periodSeconds: 3
-          timeoutSeconds: 240
+          # periodSeconds: 3
+          # timeoutSeconds: 240
       imagePullSecrets:
         - name: {{.Values.dockerSecret}}
