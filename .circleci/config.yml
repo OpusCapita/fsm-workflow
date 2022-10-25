@@ -112,7 +112,7 @@ jobs:
           name: Build applcation Docker image and push it into Docker repository
           command: |
             docker build -t ${DOCKER_IMAGE_REPOSITORY}:${DOCKER_IMAGE_TAG} .
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker login docker.artifacts.dev.prodexa.com -u $DOCKER_USER -p $DOCKER_PASS
             docker push ${DOCKER_IMAGE_REPOSITORY}:${DOCKER_IMAGE_TAG}
 
   deploy-demo:
