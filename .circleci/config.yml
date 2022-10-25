@@ -135,8 +135,8 @@ jobs:
 
             [branch:${CIRCLE_BRANCH}]
             [commit:${CIRCLE_SHA1}]
-            [docker_image_repository:${DOCKER_IMAGE_REPOSITORY}]
-            [docker_image_tag:${DOCKER_IMAGE_TAG}]
+            [docker_image_repository:docker.artifacts.dev.prodexa.com/${DOCKER_IMAGE_REPOSITORY}]
+            [docker_image_tag:docker.artifacts.dev.prodexa.com/${DOCKER_IMAGE_TAG}]
             EOF
 
             git push
