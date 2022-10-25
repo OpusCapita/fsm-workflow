@@ -50,7 +50,8 @@ aliases:
 
 defaults: &defaults
   docker:
-    - image: opuscapita/minsk-core-ci:4
+    - image: docker.artifacts.dev.prodexa.com/minsk-core-ci:4
+      auth: *auth
   working_directory: ~/build
 
 jobs:
